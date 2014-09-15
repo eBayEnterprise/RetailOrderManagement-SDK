@@ -21,4 +21,4 @@ namespace eBayEnterprise\RetailOrderManagement\Transport;
  */
 interface IRequest {
 
-} 
+}

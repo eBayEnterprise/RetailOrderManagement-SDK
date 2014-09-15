@@ -5,10 +5,10 @@ namespace eBayEnterprise\RetailOrderManagement\Transport;
 interface IConfig
 {
     /**
-     * Return the tender type code that corresponds to the parameter.
+     * The url for interacting with the Retail Order Management API
      *
-     * @param mixed $tenderType
-     * @return string tender type code that corresponds to the parameter
+     * @return string
      */
-    function getTenderTypeCode($tenderType);
+    function getUrl();
+
 }
