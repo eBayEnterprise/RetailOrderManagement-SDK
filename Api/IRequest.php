@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Transport;
 
 /**
  * Interface IRequest
- * @package eBayEnterprise\RetailOrderManagement\Transport
+ * @package eBayEnterprise\RetailOrderManagement\Api
  */
 interface IRequest {
 

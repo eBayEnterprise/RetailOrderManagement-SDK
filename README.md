@@ -20,12 +20,12 @@ We need a PHP implementation of the Retail Order Management API(s) that hides un
 
 Explicitly. For each service and operation, we will attempt to build a flat, clean and consistent interface. We'll use abstraction to provide consistent behavior between different services and operations, but you will have to craft the concrete implementations to smooth over the rough parts of the API.
 
-Let's start with a concrete, but prototypical usage example:
+Let's start with a concrete, but prototypical usage example*:
 
 #### Example Usage: Getting the Api Object
 
 ```php
-use \eBayEnterprise\RetailOrderManagement;
+use \eBayEnterprise\RetailOrderManagement\Api;
 class EbayEnterprise_CreditCard_Helper_Data
 {
     /**
@@ -36,15 +36,16 @@ class EbayEnterprise_CreditCard_Helper_Data
      */
     public function getApi();
     {
-        $this->_cfg = $this->getConfigModel();
-        $apiKey = $this->_cfg->apiKey;
-        $host = $this->_cfg->apiHostname;
-        $majorVersion = $this->_cfg->apiMajorVersion;
-        $minorVersion = $this->_cfg->apiMinorVersion;
-        $storeId = $this->_cfg->storeId;
+        $cfg = $this->getConfigModel();
+        $apiKey = $cfg->apiKey;
+        $host = $cfg->apiHostname;
+        $majorVersion = $cfg->apiMajorVersion;
+        $minorVersion = $cfg->apiMinorVersion;
+        $storeId = $cfg->storeId;
         $service = 'payments';
         $operation = 'creditcard/auth/VC';
-        return new Api($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation);
+        $apiConfig = new HttpApiConfig($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation);
+        return new Api($apiConfig);
     }
 }
 ```
@@ -83,7 +84,8 @@ class EbayEnterprise_CreditCard_Model_Method
         $shippingAddress = $this->getShippingAddress($payment);
         $api = $this->_helper->getApi();
         $requestId = $this->getRequestId();
-        $requestPayload = $api->getEmptyRequestPayload();
+        /** @var Payload\PaymentService\CreditCardAuth $requestPayload */
+        $requestPayload = $api->getRequestBody();
         $requestPayload
             ->setRequestId($requestId)
             ->setOrderId($payment->getOrderId())
@@ -94,10 +96,7 @@ class EbayEnterprise_CreditCard_Model_Method
             ->setAmount($amount)
             ->setCurrencyCode($payment->getCurrency())
             ->setEmail($billingAddress->getEmail())
-            ->setIp($payment->getIp());
-        $api->updateRequestPayload($requestPayload)
-        $addressPayload = $api->getEmptyRequestPayload();
-        $addressPayload
+            ->setIp($payment->getIp())
             ->setBillingFirstName($billingAddress->getFirstname())
             ->setBillingLastName($billingAddress->getLastname())
             ->setBillingPhone($billingAddress->getTelephone())
@@ -121,26 +120,38 @@ class EbayEnterprise_CreditCard_Model_Method
             ->setShipToCountryCode($shippingAddress->getCountry())
             ->setShipToPostalCode($shippingAddress->getPostcode());
             // ->setIsRequestToCorrectCvvOrAvsError(false)
-            // ->setSecureVerificationData()
-        $api->updateRequestPayload($addressPayload);
+            // ->setSecureVerificationData(???)
+        $api->setRequestBody($requestPayload);
         try {
             $api->send();
-        } catch (Api\Exception\InvalidPayload $e) {
+        } catch (Payload\Exception\InvalidPayload $e) {
             $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
             throw Mage::exception('Mage_Core', 'Unable to validate credit card info');
         } catch (Api\Exception\NetworkError $e) {
             $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
             throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
-        } catch (Api\Exception\UnexpectedResponse $e) {
-            $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
-            throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
         }
-        $responsePayload = $api->getResponsePayload();
-        if ($this->validateAuthCode($responsePayload->getAuthorizationResponseCode()) &&
-            $this->validateBankCode($responsePayload->getBankAuthorizationCode()) &&
-            $this->validateCvvCode($responsePayload->getCvvCode())) {
 
-            $payment->setResponsePayload($responsePayload);
+        /** @var Payload\IPayloadIterator $responses */
+        $responses = $api->getResponsePayloadIterator();
+        while ($responses->valid()) {
+            try {
+                /** @var Payload\PaymentService\CreditCardAuthResponse $ccAuthResponse */
+                $ccAuthResponse = $responses->current();
+            } catch (Payload\Exception\UnexpectedResponse $e) {
+                $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
+                throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
+            }
+            // Only expecting one response here; so we can just `break`,
+            // but calling next() should result in a `false` on the loop condition.
+            $responses->next();
+        }
+
+        if ($this->validateAuthCode($ccAuthResponse->getAuthorizationResponseCode()) &&
+            $this->validateBankCode($ccAuthResponse->getBankAuthorizationCode()) &&
+            $this->validateCvvCode($ccAuthResponse->getCvvCode())) {
+
+            $payment->setResponsePayload($ccAuthResponse);
             $payment->setTransactionId($requestId);
         }
 
@@ -155,7 +166,7 @@ The interesting parts are:
 - `updateRequestPayload($pld)`, which merges any new information on top of what the API already knows about.
 - You can set the payload fields in any order as long as all required business data is supplied to the api before calling `send` on the api or `validate` on the payload object (the latter not shown).
 - When you call `send`, the api:
-    1. validates the payload by calling the `validate` method of the payload object, which:
+    1. validates the payload, which:
         - Alters any values that can be trivially altered to pass validation, such as by truncation or numeric conversion.
         - Attempts to construct an xml string from the payload.
         - Attempts to xsd-validate the resultant string.
@@ -167,9 +178,11 @@ The interesting parts are:
         - Throws an UnexpectedResponse if it can't
         - Otherwise, the response payload is available at `getResponsePayload()` and contains fields from the response.
 
-## Explicit
+## Payloads, in general
 
-The http part is pretty generic, but we will need to craft the payloads specifically to smooth over the rough parts. Most of the payloads are simple, which means we can flatten them. In some cases (usually those involving order lines) we can't flatten the entire payload, so in those cases we may want special methods for adding multiple rows:
+The payloads need to be crafted specifically for each service/operation, but there are some general guidances:
+
+1. Make things flat when possible. In a few cases (such as when maxOccurrences > 1) we can't assume there will only be one of a node, so the payload can't be perfectly flat. In these cases the payload should have _add_ operations as well as the normal `set`. Here's an example usage as it might be seen in order create:
 
 ```php
 use \eBayEnterprise\RetailOrderManagement\Payload;
@@ -184,3 +197,23 @@ foreach ($items as $item) {
     $orderCreatePayload->addItemPayload($itemPayload); // e.g. not an update
 }
 ```
+
+2. The payload should be retrievable from the api object, but it should also be distinct from it. It will be useful to be able to recover a payload far down the line (for example, to see the credit card auth reply during order create), but the api object it came from should be much more perishable. Thus, you should be able to detach the payload from the api object and store it independently.
+
+## Network Issues
+
+The API operates over the TCP/IP stack. The design is intended to abstract the various differences between application protocols, so the `NetworkError` type is very generic. Besides the error object itself, details about what happened should be accessible from the api object. This will allow the api to be used both synchronously and asynchronously, so that error handlers can get details from the api object when error _events_ happen. For example, in HTTP:
+
+```php
+try {
+    $api->send();
+} catch (Api\Exception\NetworkError $e) {
+    // You don't have to use this exception for anything. It's here for your convenience.
+    // If this exception occurs, though, then you must assume certain other properties won't be well-defined:
+}
+
+$httpMessage = $api->getHttpMessage();
+$httpStatus = $api->getHttpMessage()->getResponseCode();
+```
+
+*The examples assume some things about the implementation that may not make it into the real world. We need to try not to change the interface, but things like constructor argument order, or even the use of non-default constructors at all, may change.
