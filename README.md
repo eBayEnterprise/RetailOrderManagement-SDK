@@ -50,7 +50,7 @@ class EbayEnterprise_CreditCard_Helper_Data
 }
 ```
 
-The API object needs particular values just to exist at all, so those must be provided in the constructor, and are specifically:
+The API object needs particular values just to exist at all, so those must be provided by the config object. For HTTP, they are:
 
 - host
 - major and minor version
@@ -137,25 +137,20 @@ class EbayEnterprise_CreditCard_Model_Method
             throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
         }
 
-        /** @var Payload\IPayloadIterator $responses */
-        $responses = $api->getResponsePayloadIterator();
-        while ($responses->valid()) {
-            try {
-                /** @var Payload\PaymentService\CreditCardAuthResponse $ccAuthResponse */
-                $ccAuthResponse = $responses->current();
-            } catch (Payload\Exception\UnexpectedResponse $e) {
-                $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
-                throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
-            }
-            // Only expecting one response here; so we can just `break`,
-            // but calling next() should result in a `false` on the loop condition.
-            $responses->next();
+        try {
+            /** @var Payload\PaymentService\CreditCardAuthResponse $ccAuthResponse */
+            $ccAuthResponse = $api->getResponseBody();
+        } catch (Payload\Exception\UnexpectedResponse $e) {
+            $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
+            throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
         }
 
         if ($this->validateAuthCode($ccAuthResponse->getAuthorizationResponseCode()) &&
             $this->validateBankCode($ccAuthResponse->getBankAuthorizationCode()) &&
             $this->validateCvvCode($ccAuthResponse->getCvvCode())) {
 
+            // Maybe the payment object has a method to store the response payload
+            // in additional_information for later use.
             $payment->setResponsePayload($ccAuthResponse);
             $payment->setTransactionId($requestId);
         }
@@ -167,25 +162,22 @@ class EbayEnterprise_CreditCard_Model_Method
 
 The interesting parts are:
 
-- `getEmptyRequestPayload()`, which returns a new, empty payload object specific to the service/operation request that API instance was instantiated with.
-- `updateRequestPayload($pld)`, which merges any new information on top of what the API already knows about.
-- You can set the payload fields in any order as long as all required business data is supplied to the api before calling `send` on the api or `validate` on the payload object (the latter not shown).
+- `getRequestBody()`, which returns a new, empty payload object specific to the service/operation request that API instance was instantiated with.
+- `setRequestBody($pld)`, which sets the request payload.
+- You can set the payload fields in any order as long as all required business data is supplied to the api before calling `send` on the api or `validate` or `serialize` on the payload object (the latter not shown).
 - When you call `send`, the api:
     1. validates the payload, which:
-        - Alters any values that can be trivially altered to pass validation, such as by truncation or numeric conversion.
-        - Attempts to construct an xml string from the payload.
-        - Attempts to xsd-validate the resultant string.
-        - Throws an InvalidPayload if the xml cannot be constructed.
+        1. Does any supplied validation; e.g. business validation in addition to xsd validation.
+        2. Attempts to construct an xml string from the payload.
+        3. Throws an InvalidPayload if the xml cannot be constructed.
     2. sets up an http request object and POSTs the serialized request payload
         - Blocks, waiting for a response
         - Throws a NetworkError if the http object can't connect to the host or the connection times out or is closed unexpectedly
-    3. attempts to parse the response into a response payload object
-        - Throws an UnexpectedResponse if it can't
-        - Otherwise, the response payload is available at `getResponsePayload()` and contains fields from the response.
+- When you call `getResponseBody`, the api attempts to parse the response into a response payload object, and throws an `UnexpectedResponse` if it can't
 
 ## Payloads, in general
 
-The payloads need to be crafted specifically for each service/operation, but there are some general guidances:
+The payloads need to be crafted specifically for each service/operation, but they can all be serialized, deserialized and validated. General guidance:
 
 1. Make things flat when possible. In a few cases (such as when maxOccurrences > 1) we can't assume there will only be one of a node, so the payload can't be perfectly flat. In these cases the payload should have _add_ operations as well as the normal `set`. Here's an example usage as it might be seen in order create:
 
@@ -203,7 +195,7 @@ foreach ($items as $item) {
 }
 ```
 
-2. The payload should be retrievable from the api object, but it should also be distinct from it. It will be useful to be able to recover a payload far down the line (for example, to see the credit card auth reply during order create), but the api object it came from should be much more perishable. Thus, you should be able to detach the payload from the api object and store it independently.
+2. The payload should be retrievable from the api object, but it should also be distinct from it. It will be useful to be able to recover a payload far down the line (for example, to see the credit card auth reply during order create), but the api object it came from can perish. Thus, you should be able to detach the payload from the api object and store it independently.
 
 ## Network Issues
 
@@ -220,5 +212,38 @@ try {
 $httpMessage = $api->getHttpMessage();
 $httpStatus = $api->getHttpMessage()->getResponseCode();
 ```
+
+## Implementing Interfaces
+
+The interfaces define certain contracts that implementations must follow. Even though PHP doesn't always provide the means to statically guarantee adherence to the contract, you, the developer, should not consider them optional (even the things in the docblocks). An implementation may (probably even should) have some public methods that are not mentioned in the interface, but please try to understand if you're creating a new normative type as a pure implementation, and bring that up for discussion. In other words, don't create new defacto interfaces unconsciously.
+
+As a rule, interfaces make the best type hints because the parameters to a method should only care what a passed object does, not how it does it. Anyway, you should always require the least specific type that does exactly what you need. Assume that:
+
+1. You can't change the type later.
+2. Someone will subclass your class later and abuse anything you didn't specify.
+
+The contract idea means that if I say a method (e.g. `setRequestBody`) takes an interface type (e.g. `IPayload`), I'm guaranteeing statically that I can validate and serialize that object, but beyond that I don't care _how_ the payload does it. So, for example, this does not restrict the payload to doing all its validation internally. The below is a perfectly acceptable example of a partial implementation:
+
+```php
+/**
+ * Uses an injected validator to actually validate the payload object
+ */
+abstract class ExternallyValidatedPayload implements IPayload
+{
+    function __construct(IValidator $v) {
+        $this->validator = $v;
+    }
+    function validate() {
+        $this->validator->validate($this);
+    }
+    // ...
+}
+```
+
+Anyway, this whole interface thing is designed to limit what you have to worry about when you're implementing a thing. It's a scope-control mechanism, so if your class does a whole lot more than the interface promises, you might be doing too much.
+
+## More Later
+
+I anticipate later additions to this document to include more specific interfaces for unidirectional apis such as feed and queues. We need to have a concrete Http implementation first, as a proof of concept.
 
 *The examples assume some things about the implementation that may not make it into the real world. We need to try not to change the interface, but things like constructor argument order, or even the use of non-default constructors at all, may change.
