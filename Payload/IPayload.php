@@ -19,7 +19,32 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
  * Interface IPayload
  * @package eBayEnterprise\RetailOrderManagement\Payload
  *
- * Marker interface for payload objects
+ * Interface for payload objects
  */
-interface IPayload {
+interface IPayload
+{
+    /**
+     * Validate that the payload meets the requirements
+     * for transmission. This can be over and above what
+     * is required for serialization.
+     *
+     * @throws Exception\InvalidPayload
+     * @return self
+     */
+    function validate();
+    /**
+     * Return the string form of the payload data for transmission.
+     * Validation is implied.
+     *
+     * @throws Exception\InvalidPayload
+     * @return string
+     */
+    function serialize();
+    /**
+     * Fill out this payload object with data from the supplied string.
+     *
+     * @param string $string
+     * @return self
+     */
+    function deserialize($string);
 }

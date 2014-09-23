@@ -45,7 +45,7 @@ class EbayEnterprise_CreditCard_Helper_Data
         $service = 'payments';
         $operation = 'creditcard/auth/VC';
         $apiConfig = new HttpApiConfig($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation);
-        return new Api($apiConfig);
+        return new HttpApi($apiConfig);
     }
 }
 ```
@@ -84,7 +84,12 @@ class EbayEnterprise_CreditCard_Model_Method
         $shippingAddress = $this->getShippingAddress($payment);
         $api = $this->_helper->getApi();
         $requestId = $this->getRequestId();
-        /** @var Payload\PaymentService\CreditCardAuth $requestPayload */
+        /**
+         * @var Payload\PaymentService\FlatCreditCardAuth $requestPayload
+         *      Here, we assume there's a payload implementation for credit card auth
+         *      that's fairly flat. That's not a requirement of the interface, but
+         *      seems easiest to work with right now.
+         */
         $requestPayload = $api->getRequestBody();
         $requestPayload
             ->setRequestId($requestId)

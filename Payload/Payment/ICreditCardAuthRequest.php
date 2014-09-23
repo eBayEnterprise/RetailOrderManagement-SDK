@@ -14,12 +14,24 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-use DateTime;
-use eBayEnterprise\RetailOrderManagement\Payload\Checkout;
-use eBayEnterprise\RetailOrderManagement\Payload\ISerializable;
 
-interface ICreditCardAuthRequest extends ISerializable
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
+interface ICreditCardAuthRequest extends IPayload
 {
+    /**
+     * RequestId is used to globally identify a request message and is used
+     * for duplicate request protection.
+     *
+     * @return Checkout\IRequestId
+     */
+    function getRequestId();
+    /**
+     * @param Checkout\IRequestId $requestId
+     * @return self
+     */
+    function setRequestId($requestId);
     /**
      * The PaymentContext combines with the tender type in the URI to uniquely identify
      * a Payment Transaction for an order.
@@ -28,11 +40,21 @@ interface ICreditCardAuthRequest extends ISerializable
      */
     function getPaymentContext();
     /**
+     * @param IPaymentContext $context
+     * @return self
+     */
+    function setPaymentContext(IPaymentContext $context);
+    /**
      * Expiration date of the credit card.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     function getExpirationDate();
+    /**
+     * @param \DateTime $date
+     * @return self
+     */
+    function setExpirationDate(\DateTime $date);
     /**
      * The CVV2 code found on the back of credit cards.
      *
@@ -40,11 +62,21 @@ interface ICreditCardAuthRequest extends ISerializable
      */
     function getCardSecurityCode();
     /**
+     * @param ICardSecurityCode $code
+     * @return self
+     */
+    function setCardSecurityCode(ICardSecurityCode $code);
+    /**
      * Amount to authorize
      *
      * @return IAmount
      */
     function getAmount();
+    /**
+     * @param IAmount $amount
+     * @return self
+     */
+    function setAmount(IAmount $amount);
     /**
      * First name of the person on the Billing Address of the credit card
      *
@@ -52,11 +84,21 @@ interface ICreditCardAuthRequest extends ISerializable
      */
     function getBillingFirstName();
     /**
+     * @param string $name
+     * @return self
+     */
+    function setBillingFirstName($name);
+    /**
      * Last name of the person on the Billing Address of the credit card
      *
      * @return string
      */
     function getBillingLastName();
+    /**
+     * @param string $name
+     * @return self
+     */
+    function setBillingLastName($name);
     /**
      * Billing phone number of the person on the Billing Address of the credit card
      *
@@ -64,11 +106,21 @@ interface ICreditCardAuthRequest extends ISerializable
      */
     function getBillingPhoneNo();
     /**
+     * @param string $phone
+     * @return self
+     */
+    function setBillingPhoneNo($phone);
+    /**
      * Billing Address of the credit card.
      *
      * @return Checkout\IPhysicalAddress
      */
     function getBillingAddress();
+    /**
+     * @param Checkout\IPhysicalAddress $address
+     * @return self
+     */
+    function setBillingAddress(Checkout\IPhysicalAddress $address);
     /**
      * E-mail address of the customer making the purchase.
      *
@@ -76,11 +128,21 @@ interface ICreditCardAuthRequest extends ISerializable
      */
     function getCustomerEmail();
     /**
+     * @param Checkout\IEmailAddress $email
+     * @return self
+     */
+    function setCustomerEmail(Checkout\IEmailAddress $email);
+    /**
      * IP Address of the customer making the purchase.
      *
      * @return Checkout\IIPv4Address
      */
     function getCustomerIPAddress();
+    /**
+     * @param Checkout\IIPv4Address $ip
+     * @return self
+     */
+    function setCustomerIPAddress(Checkout\IIPv4Address $ip);
     /**
      * First name of the person on the Shipping Address of the Order.
      *
@@ -88,11 +150,21 @@ interface ICreditCardAuthRequest extends ISerializable
      */
     function getShipToFirstName();
     /**
+     * @param string $name
+     * @return self
+     */
+    function setShipToFirstName($name);
+    /**
      * Last name of the person on the Shipping Address of the Order.
      *
      * @return string
      */
     function getShipToLastName();
+    /**
+     * @param string $name
+     * @return self
+     */
+    function setShipToLastName($name);
     /**
      * Billing phone number of the person on the Billing Address of the credit card
      *
@@ -100,9 +172,19 @@ interface ICreditCardAuthRequest extends ISerializable
      */
     function getShipToPhoneNo();
     /**
+     * @param string $phone
+     * @return self
+     */
+    function setShipToPhoneNo($phone);
+    /**
      * @return Checkout\IPhysicalAddress
      */
     function getShippingAddress();
+    /**
+     * @param Checkout\IPhysicalAddress $address
+     * @return self
+     */
+    function setShippingAddress(Checkout\IPhysicalAddress $address);
     /**
      * Indicates that this is an authorization re-submission to correct AVS or CVV2 error.
      * If set to true, this will process the transaction specifically as an AVS/CVV check.
@@ -111,11 +193,21 @@ interface ICreditCardAuthRequest extends ISerializable
      *
      * @return bool
      */
-    function isRequestToCorrectCVVOrAVSError();
+    function getIsRequestToCorrectCVVOrAVSError();
+    /**
+     * @param bool $flag
+     * @return self
+     */
+    function setIsRequestToCorrectCVVOrAVSError($flag);
     /**
      * 3D-Secure(Master Card)/Verified-by-Visa Data
      *
      * @return ISecureVerificationData
      */
     function getSecureVerificationData();
+    /**
+     * @param ISecureVerificationData $data
+     * @return self
+     */
+    function setSecureVerificationData(ISecureVerificationData $data);
 }

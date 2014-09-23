@@ -13,14 +13,9 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload;
+namespace eBayEnterprise\RetailOrderManagement\Payload\Checkout;
 
-/**
- * Payload object that can be serialized and unserialized
- *
- * Interface ISerializable
- * @package eBayEnterprise\RetailOrderManagement\Payload
- */
-interface ISerializable
+class OrderId extends XsdPrimitive
 {
-}
+
+} 

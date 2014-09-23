@@ -16,6 +16,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Api;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
+/**
+ * Interface IApi
+ * @package eBayEnterprise\RetailOrderManagement\Api
+ *
+ * A generic api object that serves as the basis for other API objects.
+ */
 interface IApi
 {
     /**
@@ -26,40 +32,4 @@ interface IApi
      * @param array $args
      */
     function __construct(IConfig $config=null, array $args=array());
-    /**
-     * Get the request payload object.
-     * Initially, create and return a new empty payload
-     * of the type of payload for the configured service.
-     * (Users should not rely on the mutability of the returned object;
-     * Use `setRequestBody` to ensure a payload is attached for sending.)
-     *
-     * @return Payload\IPayload
-     */
-    function getRequestBody();
-    /**
-     * Set the payload for the configured request.
-     * This is the only way to guarantee an api has
-     * a payload to send.
-     *
-     * @param Payload\IPayload $payload
-     * @return self
-     */
-    function setRequestBody(Payload\IPayload $payload);
-    /**
-     * Send the request.
-     * May validate the payload before sending.
-     * In some unidirectional implementations this may do nothing.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @throws NetworkError
-     * @return self
-     */
-    function send();
-    /**
-     * Retrieve the response payload.
-     * May validate the payload before delivering.
-     *
-     * @return Payload\IPayloadIterator
-     */
-    function getResponseBodyIterator();
 }

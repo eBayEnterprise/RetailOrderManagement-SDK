@@ -15,24 +15,51 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IOrderId;
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-/**
- * Interface IPaymentContextBase
- * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- */
-interface IPaymentContextBase extends IPayload
+class PaymentContext implements IPaymentContext
 {
+    protected $paymentAccountUniqueId;
+    protected $orderId;
+
+    /**
+     * Either a raw PAN or a token representing a PAN.
+     * The type includes an attribute, isToken, to indicate if the PAN is tokenized.
+     *
+     * @return IPaymentAccountUniqueId
+     */
+    function getPaymentAccountUniqueId()
+    {
+        return $this->paymentAccountUniqueId;
+    }
+
+    /**
+     * @param IPaymentAccountUniqueId $id
+     * @return self
+     */
+    function setPaymentAccountUniqueId(IPaymentAccountUniqueId $id)
+    {
+        $this->paymentAccountUniqueId = $id;
+        return $this;
+    }
+
     /**
      * A unique identifier for the order
      * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
      *
      * @return IOrderId
      */
-    function getOrderId();
+    function getOrderId()
+    {
+        return $this->orderId;
+    }
+
     /**
      * @param IOrderId $id
      * @return self
      */
-    function setOrderId(IOrderId $id);
+    function setOrderId(IOrderId $id)
+    {
+        $this->orderId = $id;
+        return $this;
+    }
 }

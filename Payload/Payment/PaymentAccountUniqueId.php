@@ -15,28 +15,27 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-/**
- * Global type to cover Payment Account Numbers (PAN)
- * Examples include: credit card numbers, gift card numbers, bank account numbers.
- * Credit cards and gift cards are typically length 14-19.
- * Bank Account numbers have a much higher range of lengths, up to 30 digits in Europe.
- * Either a raw PAN or a token representing a PAN.
- * The type includes an attribute, isToken, to indicate if the PAN is tokenized
- *
- * Interface IPaymentAccountUniqueId
- * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- */
-interface IPaymentAccountUniqueId extends IAccountUniqueId
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout\XsdPrimitive;
+
+class PaymentAccountUniqueId extends XsdPrimitive implements IPaymentAccountUniqueId
 {
+    protected $isToken = false;
     /**
      * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
      *
      * @return bool
      */
-    function getIsToken();
+    function getIsToken()
+    {
+        return $this->isToken;
+    }
+
     /**
      * @param bool $isToken
      * @return self
      */
-    function setIsToken($isToken);
+    function setIsToken($isToken)
+    {
+        $this->isToken = (bool) $isToken;
+    }
 }

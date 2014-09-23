@@ -13,15 +13,8 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Api;
+namespace eBayEnterprise\RetailOrderManagement\Payload\Checkout;
 
-/**
- * Interface IConfig
- * @package eBayEnterprise\RetailOrderManagement\Api
- *
- * A marker interface for providing an IApi object
- * with the metadata it needs to send and/or receive
- * the right payload objects to the right place
- */
-interface IConfig {
-}
+interface IOrderId extends IXsdPrimitive {
+
+} 

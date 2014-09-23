@@ -36,7 +36,6 @@ interface IPayloadIterator extends \Iterator {
      * deserializing one IPayload doesn't disrupt the entire
      * iteration.
      *
-     * @throws Exception\UnexpectedResponse
      * @return IPayload
      */
     function current();

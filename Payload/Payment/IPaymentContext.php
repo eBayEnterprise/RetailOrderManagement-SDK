@@ -28,4 +28,9 @@ interface IPaymentContext extends IPaymentContextBase
      * @return IPaymentAccountUniqueId
      */
     function getPaymentAccountUniqueId();
+    /**
+     * @param IPaymentAccountUniqueId $id
+     * @return self
+     */
+    function setPaymentAccountUniqueId(IPaymentAccountUniqueId $id);
 }

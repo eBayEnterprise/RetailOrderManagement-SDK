@@ -7,9 +7,10 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Checkout;
-use eBayEnterprise\RetailOrderManagement\Payload\ISerializable;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-interface IXsdPrimitive extends ISerializable {
+interface IXsdPrimitive extends IPayload
+{
     /**
      * The string representation of the contained anonymous XML node
      *

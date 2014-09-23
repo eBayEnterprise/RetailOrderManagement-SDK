@@ -13,14 +13,22 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload;
+namespace eBayEnterprise\RetailOrderManagement\Payload\Checkout;
 
-/**
- * A tool for serializing and unserializing payload objects to XML for transport
- *
- * Interface ISerializer
- * @package eBayEnterprise\RetailOrderManagement\Payload
- */
-interface IXmlSerializer {
-
-} 
+class XsdPrimitive implements IXsdPrimitive
+{
+    protected $val;
+    public function __construct($val)
+    {
+        $this->val = (string) $val;
+    }
+    /**
+     * The string representation of the contained anonymous XML node
+     *
+     * @return string
+     */
+    function __toString()
+    {
+        return $this->val;
+    }
+}
