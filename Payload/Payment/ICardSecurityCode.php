@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Checkout;
 
 /**
- * The card security code is the number on the back of the credit card that is normally required for authorizations.
+ * the card security code is the number on the back of the credit card that is normally required for authorizations.
  *
  * Interface ICardSecurityCode
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
