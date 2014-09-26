@@ -2,8 +2,6 @@
 
 by eBay Enterprise
 
-This document is a combination of developer guidelines and specification. (When the work is more mature, this can live in DEVELOPING.md.)
-
 ## The Problem
 
 Our implementation of Retail Order Management as a Magento extension is too tightly coupled to Magento 1. Among other things, that means
@@ -175,7 +173,11 @@ The interesting parts are:
         - Throws a NetworkError if the http object can't connect to the host or the connection times out or is closed unexpectedly
 - When you call `getResponseBody`, the api attempts to parse the response into a response payload object, and throws an `UnexpectedResponse` if it can't
 
-## Payloads, in general
+## Guidelines
+
+Note: Please use [PSR style](STYLE.md) for this codebase, as opposed to the old style we use for Magento 1 code.
+
+### Payloads
 
 The payloads need to be crafted specifically for each service/operation, but they can all be serialized, deserialized and validated. General guidance:
 
@@ -197,7 +199,7 @@ foreach ($items as $item) {
 
 2. The payload should be retrievable from the api object, but it should also be distinct from it. It will be useful to be able to recover a payload far down the line (for example, to see the credit card auth reply during order create), but the api object it came from can perish. Thus, you should be able to detach the payload from the api object and store it independently.
 
-## Network Issues
+### Network Issues
 
 The API operates over the TCP/IP stack. The design is intended to abstract the various differences between application protocols, so the `NetworkError` type is very generic. Besides the error object itself, details about what happened should be accessible from the api object. This will allow the api to be used both synchronously and asynchronously, so that error handlers can get details from the api object when error _events_ happen. For example, in HTTP:
 
@@ -213,7 +215,7 @@ $httpMessage = $api->getHttpMessage();
 $httpStatus = $api->getHttpMessage()->getResponseCode();
 ```
 
-## Implementing Interfaces
+### Implementing Interfaces
 
 The interfaces define certain contracts that implementations must follow. Even though PHP doesn't always provide the means to statically guarantee adherence to the contract, you, the developer, should not consider them optional (even the things in the docblocks). An implementation may (probably even should) have some public methods that are not mentioned in the interface, but please try to understand if you're creating a new normative type as a pure implementation, and bring that up for discussion. In other words, don't create new defacto interfaces unconsciously.
 
