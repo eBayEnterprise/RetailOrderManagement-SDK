@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CreditCardAuthReply xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <PaymentContext>
+        <OrderId>0005410400443</OrderId>
+        <PaymentAccountUniqueId isToken="true">411111vjOiXS1111</PaymentAccountUniqueId>
+    </PaymentContext>
+    <AuthorizationResponseCode>AP01</AuthorizationResponseCode>
+    <BankAuthorizationCode>000027</BankAuthorizationCode>
+    <CVV2ResponseCode>M</CVV2ResponseCode>
+    <AVSResponseCode>M</AVSResponseCode>
+    <PhoneResponseCode/>
+    <NameResponseCode/>
+    <EmailResponseCode/>
+    <AmountAuthorized currencyCode="USD">26.91</AmountAuthorized>
+</CreditCardAuthReply>

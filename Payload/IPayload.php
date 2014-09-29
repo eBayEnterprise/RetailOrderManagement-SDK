@@ -43,7 +43,7 @@ interface IPayload
     /**
      * Fill out this payload object with data from the supplied string.
      *
-     * @throws Exception\UnexpectedPayload
+     * @throws Exception\InvalidPayload
      * @param string $string
      * @return self
      */

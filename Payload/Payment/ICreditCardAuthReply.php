@@ -23,11 +23,17 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISerializable;
 interface ICreditCardAuthReply extends ISerializable
 {
     /**
-     * The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment Transaction for an order.
+     * A unique identifier for the order
+     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
      *
-     * @return IPaymentContext
+     * xsd restrictions: 1-20 characters
+     * @return string
      */
-    function getPaymentContext();
+    function getOrderId();
+    /**
+     * @return string
+     */
+    function getPaymentAccountUniqueId();
     /**
      * Response code of the credit card authorization. This includes approval, timeout, and several decline codes.
      * Please see supporting documentation for a full list of these codes.
@@ -66,7 +72,15 @@ interface ICreditCardAuthReply extends ISerializable
      * The amount authorized by the credit card processor.
      * Includes a required attribute for a three character ISO currency code.
      *
-     * @return IAmount
+     * @return float
      */
     function getAmountAuthorized();
+    /**
+     * The 3-character ISO 4217 code that represents
+     * the type of currency being used for a transaction.
+     *
+     * @link http://www.iso.org/iso/home/standards/currency_codes.htm
+     * @return string
+     */
+    function getCurrencyCode();
 }
