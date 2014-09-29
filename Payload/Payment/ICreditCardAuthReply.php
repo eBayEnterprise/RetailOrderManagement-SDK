@@ -92,4 +92,21 @@ interface ICreditCardAuthReply extends IPayload
      * @return string
      */
     function getCurrencyCode();
+    /**
+     * Was the credit card auth an unqualified success - no errors or failed response codes.
+     * @return bool
+     */
+    function getIsAuthSuccessful();
+    /**
+     * Can the credit card auth reply be accepted.
+     * True if the reply was successful or the request reported a timeout.
+     * @return bool
+     */
+    function getIsAuthAcceptable();
+    /**
+     * Authorization response code acceptable to send to the OMS.
+     * Only valid values for the OMS are "APPROVED" or "TIMEOUT".
+     * @return string
+     */
+    function getReponseCode();
 }
