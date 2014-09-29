@@ -96,4 +96,4 @@ class HttpApiTests extends PHPUnit_Framework_TestCase
 
         $ccAuthResponse = $api->getResponseBody();
     }
-} 
+}

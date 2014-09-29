@@ -13,7 +13,6 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
@@ -171,4 +170,4 @@ class CreditCardAuthReplyTests extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($payload, $newPayload);
     }
-} 
+}

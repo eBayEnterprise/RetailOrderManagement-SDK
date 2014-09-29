@@ -170,4 +170,4 @@ class CreditCardAuthRequestTests extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($payload, $newPayload);
     }
-} 
+}

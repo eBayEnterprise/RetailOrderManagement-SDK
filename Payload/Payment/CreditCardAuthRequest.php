@@ -14,7 +14,6 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-use eBayEnterprise\RetailOrderManagement\Payload\Checkout;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
