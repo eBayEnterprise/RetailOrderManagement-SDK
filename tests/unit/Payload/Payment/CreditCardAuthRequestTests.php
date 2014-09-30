@@ -15,13 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
-
-class CreditCardAuthRequestTests extends PHPUnit_Framework_TestCase
+class CreditCardAuthRequestTests extends \PHPUnit_Framework_TestCase
 {
     public function provideInvalidPayload()
     {
-        $payload = new Payment\ICreditCardAuthRequest();
+        $payload = new CreditCardAuthRequest();
 
         return array(
             array($payload)
@@ -80,7 +78,7 @@ class CreditCardAuthRequestTests extends PHPUnit_Framework_TestCase
 
     protected function buildPayload($properties)
     {
-        $payload = new Payment\ICreditCardAuthRequest();
+        $payload = new CreditCardAuthRequest();
 
         foreach ($properties as $property => $value) {
             $payload->$property($value);
@@ -91,7 +89,7 @@ class CreditCardAuthRequestTests extends PHPUnit_Framework_TestCase
 
     protected function xmlTestString()
     {
-        $dom = DOMDocument::loadXML('./Fixtures/CreditCardAuthRequest.xml');
+        $dom = \DOMDocument::loadXML('./Fixtures/CreditCardAuthRequest.xml');
         $string = $dom->C14N();
 
         return $string;
@@ -99,73 +97,73 @@ class CreditCardAuthRequestTests extends PHPUnit_Framework_TestCase
 
     protected function xmlInvalidTestString()
     {
-        $dom = DOMDocument::loadXML('./Fixtures/InvalidCreditCardAuthRequest.xml');
+        $dom = \DOMDocument::loadXML('./Fixtures/InvalidCreditCardAuthRequest.xml');
         $string = $dom->C14N();
 
         return $string;
     }
 
     /**
-     * @param Payment\ICreditCardAuthRequest $payload
+     * @param ICreditCardAuthRequest $payload
      * @dataProvider provideInvalidPayload
-     * @expectedException Exception\InvalidPayload
+     * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testValidateWillFail(Payment\ICreditCardAuthRequest $payload)
+    public function testValidateWillFail(ICreditCardAuthRequest $payload)
     {
         $payload->validate();
     }
 
     /**
-     * @param Payment\ICreditCardAuthRequest $payload
+     * @param ICreditCardAuthRequest $payload
      * @dataProvider provideValidPayload
      */
-    public function testValidateWillPass(Payment\ICreditCardAuthRequest $payload)
+    public function testValidateWillPass(ICreditCardAuthRequest $payload)
     {
         $this->assertSame($payload, $payload->validate());
     }
 
     /**
-     * @param Payment\ICreditCardAuthRequest $payload
+     * @param ICreditCardAuthRequest $payload
      * @dataProvider provideInvalidPayload
-     * @expectedException Exception\InvalidPayload
+     * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testSerializeWillFail(Payment\ICreditCardAuthRequest $payload)
+    public function testSerializeWillFail(ICreditCardAuthRequest $payload)
     {
         $payload->serialize();
     }
 
     /**
-     * @param Payment\ICreditCardAuthRequest $payload
+     * @param ICreditCardAuthRequest $payload
      * @dataProvider provideValidPayload
      */
-    public function testSerializeWillPass(Payment\ICreditCardAuthRequest $payload)
+    public function testSerializeWillPass(ICreditCardAuthRequest $payload)
     {
-        $domPayload = DOMDocument::loadXML($payload->serialize());
+        $domPayload = \DOMDocument::loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
 
         $this->assertEquals($this->xmlTestString(), $serializedString);
     }
 
     /**
-     * @expectedException Exception\InvalidPayload
+     * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFail()
     {
         $xml = $this->xmlInvalidTestString();
 
-        $newPayload = new Payment\ICreditCardAuthRequest();
+        $newPayload = new CreditCardAuthRequest();
         $newPayload->deserialize($xml);
     }
 
     /**
-     * @param Payment\ICreditCardAuthRequest $payload
+     * @param ICreditCardAuthRequest $payload
      * @dataProvider provideXML
      */
-    public function testDeserializeWillPass(Payment\ICreditCardAuthRequest $payload)
+    public function testDeserializeWillPass(ICreditCardAuthRequest $payload)
     {
         $xml = $this->xmlTestString();
 
-        $newPayload = new Payment\ICreditCardAuthRequest();
+        $newPayload = new CreditCardAuthRequest();
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
