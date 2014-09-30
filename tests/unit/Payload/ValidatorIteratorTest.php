@@ -25,7 +25,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         // create and hold a static reference to the validator in the iterator
-        self::$validator = $this->getMock('eBayEnterprise\RetailOrderManagement\Payload\IValidator');
+        self::$validator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $iterator = new ValidatorIterator(array(self::$validator));
         return $iterator;
     }
