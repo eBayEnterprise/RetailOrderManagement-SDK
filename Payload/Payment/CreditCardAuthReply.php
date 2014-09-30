@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-class CreditCardAuthRequest implements ICreditCardAuthRequest
+class CreditCardAuthReply implements ICreditCardAuthReply
 {
     /** @var string **/
     protected $orderId;
@@ -83,5 +83,17 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function getResponseCode($value='')
     {
 
+    }
+    public function serialize()
+    {
+
+    }
+    public function deserialize($string)
+    {
+
+    }
+    public function validate()
+    {
+        return $this;
     }
 }

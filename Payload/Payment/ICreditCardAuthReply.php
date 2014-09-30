@@ -108,5 +108,5 @@ interface ICreditCardAuthReply extends IPayload
      * Only valid values for the OMS are "APPROVED" or "TIMEOUT".
      * @return string
      */
-    function getReponseCode();
+    function getResponseCode();
 }
