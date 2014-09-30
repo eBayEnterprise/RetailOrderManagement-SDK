@@ -14,6 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Api;
+
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 /**
@@ -31,5 +32,5 @@ interface IApi
      * @param IConfig|null $config
      * @param array $args
      */
-    function __construct(IConfig $config=null, array $args=array());
+    function __construct(IConfig $config = null, array $args = array());
 }

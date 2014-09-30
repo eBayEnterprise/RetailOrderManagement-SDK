@@ -136,7 +136,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
         $xmlString = sprintf(
             '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE, self::XML_NS, $this->serializeContents()
+            self::ROOT_NODE,
+            self::XML_NS,
+            $this->serializeContents()
         );
         $doc = new \DOMDocument();
         $doc->loadXML($xmlString);
@@ -164,7 +166,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
         return sprintf(
             '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
-            $this->getOrderId(), $this->getPanIsToken() ? 'true' : 'false', $this->getPaymentAccountUniqueId()
+            $this->getOrderId(),
+            $this->getPanIsToken() ? 'true' : 'false',
+            $this->getPaymentAccountUniqueId()
         );
     }
 
@@ -177,7 +181,10 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
         return sprintf(
             '<AuthorizationResponseCode>%s</AuthorizationResponseCode><BankAuthorizationCode>%s</BankAuthorizationCode><CVV2ResponseCode>%s</CVV2ResponseCode><AVSResponseCode>%s</AVSResponseCode>',
-            $this->getAuthorizationResponseCode(), $this->getBankAuthorizationCode(), $this->getCVV2ResponseCode(), $this->getAVSResponseCode()
+            $this->getAuthorizationResponseCode(),
+            $this->getBankAuthorizationCode(),
+            $this->getCVV2ResponseCode(),
+            $this->getAVSResponseCode()
         );
     }
     /**
@@ -204,7 +211,8 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         $this->validate();
         return sprintf(
             '<AmountAuthorized currencyCode="%s">%01.2F</AmountAuthorized>',
-            $this->getCurrencyCode(), $this->getAmountAuthorized()
+            $this->getCurrencyCode(),
+            $this->getAmountAuthorized()
         );
     }
 

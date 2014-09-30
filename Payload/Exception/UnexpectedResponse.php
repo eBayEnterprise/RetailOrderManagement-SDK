@@ -21,5 +21,6 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Exception;
  *
  * Thrown when a string received from a remote location could not be de-serialized into a valid Payload object.
  */
-class UnexpectedResponse extends Payload {
+class UnexpectedResponse extends Payload
+{
 }

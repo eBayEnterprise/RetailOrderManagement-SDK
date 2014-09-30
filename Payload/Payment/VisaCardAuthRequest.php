@@ -84,5 +84,4 @@ class VisaCardAuthRequest extends CreditCardAuthRequest implements ICreditCardAu
     protected $isRequestToCorrectCvvOrAvsError;
     protected $secureVerificationData;
     protected $requestId;
-
 }

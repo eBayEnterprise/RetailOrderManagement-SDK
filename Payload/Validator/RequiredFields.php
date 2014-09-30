@@ -46,7 +46,9 @@ class RequiredFields implements Payload\IValidator
             }
         }
         if ($invalidDataAccessors) {
-            throw new Payload\Exception\InvalidPayload(sprintf('Payload missing required data: %s.', implode(', ', $invalidDataAccessors)));
+            throw new Payload\Exception\InvalidPayload(
+                sprintf('Payload missing required data: %s.', implode(', ', $invalidDataAccessors))
+            );
         }
         return $this;
     }

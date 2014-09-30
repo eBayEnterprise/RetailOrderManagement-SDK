@@ -24,5 +24,6 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Exception;
  * so a superclass provides for the possibility that you might want to catch all Payload-related
  * exceptions at once. This could be YAGNI, but it's cheap.)
  */
-class Payload extends \Exception {
+class Payload extends \Exception
+{
 }

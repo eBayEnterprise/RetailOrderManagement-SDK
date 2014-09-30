@@ -27,7 +27,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
  * @see \Iterator
  * @method bool valid should not be used to validate the payload itself; only the iterator position.
  */
-interface IPayloadIterator extends \Iterator {
+interface IPayloadIterator extends \Iterator
+{
     /**
      * Deserializes and returns the current IPayload object
      * (but doesn't return it). The important thing about

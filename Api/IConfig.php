@@ -23,5 +23,6 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
  * with the metadata it needs to send and/or receive
  * the right payload objects to the right place
  */
-interface IConfig {
+interface IConfig
+{
 }
