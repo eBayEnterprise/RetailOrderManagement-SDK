@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-class CreditCardAuthRequestTests extends \PHPUnit_Framework_TestCase
+class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
 {
     public function provideInvalidPayload()
     {
@@ -34,7 +34,7 @@ class CreditCardAuthRequestTests extends \PHPUnit_Framework_TestCase
             'setOrderId' => 'testOrderId',
             'setPanIsToken' => false,
             'setCardNumber' => '4111111111111111',
-            'setExpirationDate' => date_create('2015-12'),
+            'setExpirationDate' => date_create('2015-12', new \DateTimeZone('UTC')),
             'setCardSecurityCode' => '123',
             'setAmount' => 43.45,
             'setCurrencyCode' => 'USD',
@@ -43,21 +43,15 @@ class CreditCardAuthRequestTests extends \PHPUnit_Framework_TestCase
             'setBillingFirstName' => 'First',
             'setBillingLastName' => 'Last',
             'setBillingPhone' => '1234567890',
-            'setBillingLine1' => 'Street 1',
-            'setBillingLine2' => 'Street 2',
-            'setBillingLine3' => 'Street 3',
-            'setBillingLine4' => 'Street 4',
+            'setBillingLines' => 'Street 1\nStreet 2\nStreet 3\nStreet4',
             'setBillingCity' => 'King of Prussia',
             'setBillingMainDivision' => 'PA',
             'setBillingCountryCode' => 'US',
             'setBillingPostalCode' => '19406',
             'setShipToFirstName' => 'First',
             'setShipToLastName' => 'Last',
-            'setShipToPhone' => 'Street 1',
-            'setShipToLine1' => 'Street 2',
-            'setShipToLine2' => 'Street 3',
-            'setShipToLine3' => 'Street 4',
-            'setShipToLine4' => 'Street 5',
+            'setShipToPhone' => '123-456-7890',
+            'setShipToLines' => 'Street 1\nStreet 2\nStreet 3\nStreet4',
             'setShipToCity' => 'City',
             'setShipToMainDivision' => 'PA',
             'setShipToCountryCode' => 'US',

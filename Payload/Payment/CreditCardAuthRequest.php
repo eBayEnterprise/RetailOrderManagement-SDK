@@ -17,222 +17,447 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
+    /** @var string **/
     protected $requestId;
-    protected $paymentContext;
+    /** @var string **/
+    protected $orderId;
+    /** @var bool **/
+    protected $panIsToken;
+    /** @var string **/
+    protected $cardNumber;
+    /** @var DateTime **/
     protected $expirationDate;
+    /** @var string **/
     protected $cardSecurityCode;
+    /** @var float **/
     protected $amount;
+    /** @var string **/
+    protected $currencyCode;
+    /** @var string **/
     protected $billingFirstName;
+    /** @var string **/
     protected $billingLastName;
-    protected $billingPhoneNo;
-    protected $billingAddress;
+    /** @var string **/
+    protected $billingPhone;
+    /** @var string **/
+    protected $billingLines;
+    /** @var string **/
+    protected $billingCity;
+    /** @var string **/
+    protected $billingMainDivision;
+    /** @var string **/
+    protected $billingCountryCode;
+    /** @var string **/
+    protected $billingPostalCode;
+    /** @var string **/
     protected $customerEmail;
+    /** @var string **/
     protected $customerIpAddress;
+    /** @var string **/
     protected $shipToFirstName;
+    /** @var string **/
     protected $shipToLastName;
-    protected $shipToPhoneNo;
-    protected $shippingAddress;
+    /** @var string **/
+    protected $shipToPhone;
+    /** @var string **/
+    protected $shipToLines;
+    /** @var string **/
+    protected $shipToCity;
+    /** @var string **/
+    protected $shipToMainDivision;
+    /** @var string **/
+    protected $shipToCountryCode;
+    /** @var string **/
+    protected $shipToPostalCode;
+    /** @var bool **/
     protected $isRequestToCorrectCVVOrAVSError;
-    protected $secureVerificationData;
+    /** @var string **/
+    protected $authenticationAvailable;
+    /** @var string **/
+    protected $getAuthenticationStatus;
+    /** @var string **/
+    protected $cavvUcaf;
+    /** @var string **/
+    protected $transactionId;
+    /** @var string **/
+    protected $eci;
+    /** @var string **/
+    protected $payerAuthenticationResponse;
 
-    public function getRequestId()
+    function getRequestId()
     {
         return $this->requestId;
     }
 
-    public function setRequestId($requestId)
+    function setRequestId($requestId)
     {
         $this->requestId = $requestId;
         return $this;
     }
 
-    public function getPaymentContext()
+    function getOrderId()
     {
-        return $this->paymentContext;
+        return $this->orderId;
     }
 
-    public function setPaymentContext($context)
+    function setOrderId($orderId)
     {
-        $this->paymentContext = $context;
+        $this->requestId = $orderId;
         return $this;
     }
 
-    public function getExpirationDate()
+    function getPanIsToken()
+    {
+        return $this->panIsToken;
+    }
+
+    function setPanIsToken($isToken)
+    {
+        $this->requestId = $isToken;
+        return $this;
+    }
+
+    function getCardNumber()
+    {
+        return $this->cardNumber;
+    }
+
+    function setCardNumber($ccNum)
+    {
+        $this->requestId = $ccNum;
+        return $this;
+    }
+
+    function getExpirationDate()
     {
         return $this->expirationDate;
     }
 
-    public function setExpirationDate(\DateTime $date)
+    function setExpirationDate(\DateTime $date)
     {
-        $this->expirationDate = $date;
+        $this->requestId = $date;
         return $this;
     }
 
-    public function getCardSecurityCode()
+    function getCardSecurityCode()
     {
         return $this->cardSecurityCode;
     }
 
-    public function setCardSecurityCode($code)
+    function setCardSecurityCode($cvv)
     {
-        $this->cardSecurityCode = $code;
+        $this->requestId = $cvv;
         return $this;
     }
 
-    public function getAmount()
+    function getAmount()
     {
         return $this->amount;
     }
 
-    public function setAmount($amount)
+    function setAmount($amount)
     {
-        $this->amount = $amount;
+        $this->requestId = $amount;
         return $this;
     }
 
-    public function getBillingFirstName()
+    function getCurrencyCode()
     {
-        return $this->billingFirstName;
+        return $this->currencyCode;
     }
 
-    public function setBillingFirstName($name)
+    function setCurrencyCode($code)
     {
-        $this->billingFirstName = $name;
+        $this->requestId = $code;
         return $this;
     }
 
-    public function getBillingLastName()
-    {
-        return $this->billingLastName;
-    }
-
-    public function setBillingLastName($name)
-    {
-        $this->billingLastName = $name;
-        return $this;
-    }
-
-    public function getBillingPhoneNo()
-    {
-        return $this->billingPhoneNo;
-    }
-
-    public function setBillingPhoneNo($phone)
-    {
-        $this->billingPhoneNo = $phone;
-        return $this;
-    }
-
-    public function getBillingAddress()
-    {
-        return $this->billingAddress;
-    }
-
-    public function setBillingAddress($address)
-    {
-        $this->billingAddress = $address;
-        return $this;
-    }
-
-    public function getCustomerEmail()
+    function getEmail()
     {
         return $this->customerEmail;
     }
 
-    public function setCustomerEmail($email)
+    function setEmail($email)
     {
-        $this->customerEmail = $email;
+        $this->requestId = $email;
         return $this;
     }
 
-    public function getCustomerIPAddress()
+    function getIp()
     {
         return $this->customerIpAddress;
     }
 
-    public function setCustomerIPAddress($ip)
+    function setIp($ip)
     {
-        $this->customerIpAddress = $ip;
+        $this->requestId = $ip;
         return $this;
     }
 
-    public function getShipToFirstName()
+    function getBillingFirstName()
+    {
+        return $this->billingFirstName;
+    }
+
+    function setBillingFirstName($name)
+    {
+        $this->requestId = $name;
+        return $this;
+    }
+
+    function getBillingLastName()
+    {
+        return $this->billingLastName;
+    }
+
+    function setBillingLastName($name)
+    {
+        $this->requestId = $name;
+        return $this;
+    }
+
+    function getBillingPhone()
+    {
+        return $this->billingPhone;
+    }
+
+    function setBillingPhone($phone)
+    {
+        $this->requestId = $phone;
+        return $this;
+    }
+
+    function getBillingLines()
+    {
+        return $this->billingLines;
+    }
+
+    function setBillingLines($lines)
+    {
+        $this->requestId = $lines;
+        return $this;
+    }
+
+    function getBillingCity()
+    {
+        return $this->billingCity;
+    }
+
+    function setBillingCity($city)
+    {
+        $this->requestId = $city;
+        return $this;
+    }
+
+    function getBillingMainDivision()
+    {
+        return $this->billingMainDivision;
+    }
+
+    function setBillingMainDivision($div)
+    {
+        $this->requestId = $div;
+        return $this;
+    }
+
+    function getBillingCountryCode()
+    {
+        return $this->billingCountryCode;
+    }
+
+    function setBillingCountryCode($code)
+    {
+        $this->requestId = $code;
+        return $this;
+    }
+
+    function getBillingPostalCode()
+    {
+        return $this->billingPostalCode;
+    }
+
+    function setBillingPostalCode($code)
+    {
+        $this->requestId = $code;
+        return $this;
+    }
+
+    function getShipToFirstName()
     {
         return $this->shipToFirstName;
     }
 
-    public function setShipToFirstName($name)
+    function setShipToFirstName($name)
     {
-        $this->shipToFirstName = $name;
+        $this->requestId = $name;
         return $this;
     }
 
-    public function getShipToLastName()
+    function getShipToLastName()
     {
         return $this->shipToLastName;
     }
 
-    public function setShipToLastName($name)
+    function setShipToLastName($name)
     {
-        $this->shipToLastName = $name;
+        $this->requestId = $name;
         return $this;
     }
 
-    public function getShipToPhoneNo()
+    function getShipToPhone()
     {
-        return $this->shipToPhoneNo;
+        return $this->shipToPhone;
     }
 
-    public function setShipToPhoneNo($phone)
+    function setShipToPhone($phone)
     {
-        $this->shipToPhoneNo = $phone;
+        $this->requestId = $phone;
         return $this;
     }
 
-    public function getShippingAddress()
+    function getShipToLines()
     {
-        return $this->shippingAddress;
+        return $this->shipToLines;
     }
 
-    public function setShippingAddress($address)
+    function setShipToLines($lines)
     {
-        $this->shippingAddress = $address;
+        $this->requestId = $lines;
         return $this;
     }
 
-    public function getIsRequestToCorrectCVVOrAVSError()
+    function getShipToCity()
     {
-        return $this->isRequestToCorrectCVVOrAVSError;
+        return $this->requestId;
     }
 
-    public function setIsRequestToCorrectCVVOrAVSError($flag)
+    function setShipToCity($city)
     {
-        $this->isRequestToCorrectCVVOrAVSError = (bool) $flag;
+        $this->requestId = $city;
         return $this;
     }
 
-    public function getSecureVerificationData()
+    function getShipToMainDivision()
     {
-        return $this->secureVerificationData;
+        return $this->shipToCity;
     }
 
-    public function setSecureVerificationData($data)
+    function setShipToMainDivision($div)
     {
-        $this->secureVerificationData = $data;
+        $this->requestId = $div;
         return $this;
     }
 
-    public function validate()
+    function getShipToCountryCode()
+    {
+        return $this->shipToCountryCode;
+    }
+
+    function setShipToCountryCode($code)
+    {
+        $this->requestId = $code;
+        return $this;
+    }
+
+    function getShipToPostalCode()
+    {
+        return $this->shipToPostalCode;
+    }
+
+    function setShipToPostalCode($code)
+    {
+        $this->requestId = $code;
+        return $this;
+    }
+
+    function getIsRequestToCorrectCvvOrAvsError()
+    {
+        return $this->isRequestToCorrectCvvOrAvsError;
+    }
+
+    function setIsRequestToCorrectCvvOrAvsError($flag)
+    {
+        $this->requestId = $flag;
+        return $this;
+    }
+
+    function getAuthenticationAvailable()
+    {
+        return $this->authenticationAvailable;
+    }
+
+    function setAuthenticationAvailable($token)
+    {
+        $this->requestId = $token;
+        return $this;
+    }
+
+    function getAuthenticationStatus()
+    {
+        return $this->authenticationStatus;
+    }
+
+    function setAuthenticationStatus($token)
+    {
+        $this->requestId = $token;
+        return $this;
+    }
+
+    function getCavvUcaf()
+    {
+        return $this->cavvUcaf;
+    }
+
+    function setCavvUcaf($data)
+    {
+        $this->requestId = $data;
+        return $this;
+    }
+
+    function getTransactionId()
+    {
+        return $this->transactionId;
+    }
+
+    function setTransactionId($id)
+    {
+        $this->requestId = $id;
+        return $this;
+    }
+
+    function getEci()
+    {
+        return $this->eci;
+    }
+
+    function setEci($eci)
+    {
+        $this->requestId = $eci;
+        return $this;
+    }
+
+    function getPayerAuthenticationResponse()
+    {
+        return $this->payerAuthenticationResponse;
+    }
+
+    function setPayerAuthenticationResponse($response)
+    {
+        $this->requestId = $response;
+        return $this;
+    }
+
+    function validate()
     {
 
     }
 
-    public function serialize()
+    function serialize()
     {
 
     }
 
-    public function deserialize($string)
+    function deserialize($string)
     {
 
     }

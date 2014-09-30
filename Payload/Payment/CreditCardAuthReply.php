@@ -80,7 +80,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
 
     }
-    public function getResponseCode($value='')
+    public function getResponseCode()
     {
 
     }
