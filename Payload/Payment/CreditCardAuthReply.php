@@ -15,6 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
     /** @var string **/
@@ -35,6 +37,13 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected $amountAuthorized;
     /** @var string **/
     protected $currencyCode;
+    /** @var IValidatorIterator */
+    protected $validators;
+
+    public function __construct(IValidatorIterator $validators)
+    {
+        $this->validators = $validators;
+    }
 
     public function getOrderId()
     {
@@ -94,6 +103,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     }
     public function validate()
     {
+        foreach ($this->validators as $validator) {
+            $validator->validate($this);
+        }
         return $this;
     }
 }

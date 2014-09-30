@@ -15,6 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     /** @var string **/
@@ -83,381 +85,392 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $eci;
     /** @var string **/
     protected $payerAuthenticationResponse;
+    /** @var IValidatorIterator */
+    protected $validators;
 
-    function getRequestId()
+    public function __construct(IValidatorIterator $validators)
+    {
+        $this->validators = $validators;
+    }
+
+    public function getRequestId()
     {
         return $this->requestId;
     }
 
-    function setRequestId($requestId)
+    public function setRequestId($requestId)
     {
         $this->requestId = $requestId;
         return $this;
     }
 
-    function getOrderId()
+    public function getOrderId()
     {
         return $this->orderId;
     }
 
-    function setOrderId($orderId)
+    public function setOrderId($orderId)
     {
         $this->requestId = $orderId;
         return $this;
     }
 
-    function getPanIsToken()
+    public function getPanIsToken()
     {
         return $this->panIsToken;
     }
 
-    function setPanIsToken($isToken)
+    public function setPanIsToken($isToken)
     {
         $this->requestId = $isToken;
         return $this;
     }
 
-    function getCardNumber()
+    public function getCardNumber()
     {
         return $this->cardNumber;
     }
 
-    function setCardNumber($ccNum)
+    public function setCardNumber($ccNum)
     {
         $this->requestId = $ccNum;
         return $this;
     }
 
-    function getExpirationDate()
+    public function getExpirationDate()
     {
         return $this->expirationDate;
     }
 
-    function setExpirationDate(\DateTime $date)
+    public function setExpirationDate(\DateTime $date)
     {
         $this->requestId = $date;
         return $this;
     }
 
-    function getCardSecurityCode()
+    public function getCardSecurityCode()
     {
         return $this->cardSecurityCode;
     }
 
-    function setCardSecurityCode($cvv)
+    public function setCardSecurityCode($cvv)
     {
         $this->requestId = $cvv;
         return $this;
     }
 
-    function getAmount()
+    public function getAmount()
     {
         return $this->amount;
     }
 
-    function setAmount($amount)
+    public function setAmount($amount)
     {
         $this->requestId = $amount;
         return $this;
     }
 
-    function getCurrencyCode()
+    public function getCurrencyCode()
     {
         return $this->currencyCode;
     }
 
-    function setCurrencyCode($code)
+    public function setCurrencyCode($code)
     {
         $this->requestId = $code;
         return $this;
     }
 
-    function getEmail()
+    public function getEmail()
     {
         return $this->customerEmail;
     }
 
-    function setEmail($email)
+    public function setEmail($email)
     {
         $this->requestId = $email;
         return $this;
     }
 
-    function getIp()
+    public function getIp()
     {
         return $this->customerIpAddress;
     }
 
-    function setIp($ip)
+    public function setIp($ip)
     {
         $this->requestId = $ip;
         return $this;
     }
 
-    function getBillingFirstName()
+    public function getBillingFirstName()
     {
         return $this->billingFirstName;
     }
 
-    function setBillingFirstName($name)
+    public function setBillingFirstName($name)
     {
         $this->requestId = $name;
         return $this;
     }
 
-    function getBillingLastName()
+    public function getBillingLastName()
     {
         return $this->billingLastName;
     }
 
-    function setBillingLastName($name)
+    public function setBillingLastName($name)
     {
         $this->requestId = $name;
         return $this;
     }
 
-    function getBillingPhone()
+    public function getBillingPhone()
     {
         return $this->billingPhone;
     }
 
-    function setBillingPhone($phone)
+    public function setBillingPhone($phone)
     {
         $this->requestId = $phone;
         return $this;
     }
 
-    function getBillingLines()
+    public function getBillingLines()
     {
         return $this->billingLines;
     }
 
-    function setBillingLines($lines)
+    public function setBillingLines($lines)
     {
         $this->requestId = $lines;
         return $this;
     }
 
-    function getBillingCity()
+    public function getBillingCity()
     {
         return $this->billingCity;
     }
 
-    function setBillingCity($city)
+    public function setBillingCity($city)
     {
         $this->requestId = $city;
         return $this;
     }
 
-    function getBillingMainDivision()
+    public function getBillingMainDivision()
     {
         return $this->billingMainDivision;
     }
 
-    function setBillingMainDivision($div)
+    public function setBillingMainDivision($div)
     {
         $this->requestId = $div;
         return $this;
     }
 
-    function getBillingCountryCode()
+    public function getBillingCountryCode()
     {
         return $this->billingCountryCode;
     }
 
-    function setBillingCountryCode($code)
+    public function setBillingCountryCode($code)
     {
         $this->requestId = $code;
         return $this;
     }
 
-    function getBillingPostalCode()
+    public function getBillingPostalCode()
     {
         return $this->billingPostalCode;
     }
 
-    function setBillingPostalCode($code)
+    public function setBillingPostalCode($code)
     {
         $this->requestId = $code;
         return $this;
     }
 
-    function getShipToFirstName()
+    public function getShipToFirstName()
     {
         return $this->shipToFirstName;
     }
 
-    function setShipToFirstName($name)
+    public function setShipToFirstName($name)
     {
         $this->requestId = $name;
         return $this;
     }
 
-    function getShipToLastName()
+    public function getShipToLastName()
     {
         return $this->shipToLastName;
     }
 
-    function setShipToLastName($name)
+    public function setShipToLastName($name)
     {
         $this->requestId = $name;
         return $this;
     }
 
-    function getShipToPhone()
+    public function getShipToPhone()
     {
         return $this->shipToPhone;
     }
 
-    function setShipToPhone($phone)
+    public function setShipToPhone($phone)
     {
         $this->requestId = $phone;
         return $this;
     }
 
-    function getShipToLines()
+    public function getShipToLines()
     {
         return $this->shipToLines;
     }
 
-    function setShipToLines($lines)
+    public function setShipToLines($lines)
     {
         $this->requestId = $lines;
         return $this;
     }
 
-    function getShipToCity()
+    public function getShipToCity()
     {
         return $this->requestId;
     }
 
-    function setShipToCity($city)
+    public function setShipToCity($city)
     {
         $this->requestId = $city;
         return $this;
     }
 
-    function getShipToMainDivision()
+    public function getShipToMainDivision()
     {
         return $this->shipToCity;
     }
 
-    function setShipToMainDivision($div)
+    public function setShipToMainDivision($div)
     {
         $this->requestId = $div;
         return $this;
     }
 
-    function getShipToCountryCode()
+    public function getShipToCountryCode()
     {
         return $this->shipToCountryCode;
     }
 
-    function setShipToCountryCode($code)
+    public function setShipToCountryCode($code)
     {
         $this->requestId = $code;
         return $this;
     }
 
-    function getShipToPostalCode()
+    public function getShipToPostalCode()
     {
         return $this->shipToPostalCode;
     }
 
-    function setShipToPostalCode($code)
+    public function setShipToPostalCode($code)
     {
         $this->requestId = $code;
         return $this;
     }
 
-    function getIsRequestToCorrectCvvOrAvsError()
+    public function getIsRequestToCorrectCvvOrAvsError()
     {
         return $this->isRequestToCorrectCvvOrAvsError;
     }
 
-    function setIsRequestToCorrectCvvOrAvsError($flag)
+    public function setIsRequestToCorrectCvvOrAvsError($flag)
     {
         $this->requestId = $flag;
         return $this;
     }
 
-    function getAuthenticationAvailable()
+    public function getAuthenticationAvailable()
     {
         return $this->authenticationAvailable;
     }
 
-    function setAuthenticationAvailable($token)
+    public function setAuthenticationAvailable($token)
     {
         $this->requestId = $token;
         return $this;
     }
 
-    function getAuthenticationStatus()
+    public function getAuthenticationStatus()
     {
         return $this->authenticationStatus;
     }
 
-    function setAuthenticationStatus($token)
+    public function setAuthenticationStatus($token)
     {
         $this->requestId = $token;
         return $this;
     }
 
-    function getCavvUcaf()
+    public function getCavvUcaf()
     {
         return $this->cavvUcaf;
     }
 
-    function setCavvUcaf($data)
+    public function setCavvUcaf($data)
     {
         $this->requestId = $data;
         return $this;
     }
 
-    function getTransactionId()
+    public function getTransactionId()
     {
         return $this->transactionId;
     }
 
-    function setTransactionId($id)
+    public function setTransactionId($id)
     {
         $this->requestId = $id;
         return $this;
     }
 
-    function getEci()
+    public function getEci()
     {
         return $this->eci;
     }
 
-    function setEci($eci)
+    public function setEci($eci)
     {
         $this->requestId = $eci;
         return $this;
     }
 
-    function getPayerAuthenticationResponse()
+    public function getPayerAuthenticationResponse()
     {
         return $this->payerAuthenticationResponse;
     }
 
-    function setPayerAuthenticationResponse($response)
+    public function setPayerAuthenticationResponse($response)
     {
         $this->requestId = $response;
         return $this;
     }
 
-    function validate()
+    public function validate()
+    {
+        foreach ($this->validators as $validator) {
+            $validator->validate($this);
+        }
+
+        return $this;
+    }
+
+    public function serialize()
     {
 
     }
 
-    function serialize()
-    {
-
-    }
-
-    function deserialize($string)
+    public function deserialize($string)
     {
 
     }
