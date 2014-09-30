@@ -27,7 +27,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $panIsToken;
     /** @var string **/
     protected $cardNumber;
-    /** @var DateTime **/
+    /** @var \DateTime **/
     protected $expirationDate;
     /** @var string **/
     protected $cardSecurityCode;
@@ -76,7 +76,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     /** @var string **/
     protected $authenticationAvailable;
     /** @var string **/
-    protected $getAuthenticationStatus;
+    protected $authenticationStatus;
     /** @var string **/
     protected $cavvUcaf;
     /** @var string **/
@@ -87,6 +87,65 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $payerAuthenticationResponse;
     /** @var IValidatorIterator */
     protected $validators;
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    protected function cleanString($string, $maxLength)
+    {
+        $value = null;
+
+        if (is_a($string, 'string')) {
+            $trimmed = substr(trim($string), 0, $maxLength);
+            $value = empty($trimmed) ? null : $trimmed;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Make sure we have max 4 address lines of 70 chars max
+     *
+     * If there are more than 4 lines concatenate all extra lines with the 4th line.
+     *
+     * Truncate any lines to 70 chars max.
+     *
+     * @param string $lines
+     * @return string or null
+     */
+    protected function cleanAddressLines($lines)
+    {
+        $value = null;
+
+        if (is_a($lines, 'string')) {
+            $trimmed = trim($lines);
+            $addressLines = explode('\n', $trimmed);
+
+            $newLines = array();
+            foreach ($addressLines as $line) {
+                $newLines[] = substr(trim($line), 0, 70);
+            }
+
+            if (count($newLines) > 4) {
+                $extraLines = array_slice($newLines, 3);
+                $lastLine = implode('', $extraLines);
+                $lastLine = substr(trim($lastLine), 0, 70);
+                $newLines[3] = $lastLine;
+            }
+
+            $finalLines = array_slice($newLines, 0, 4);
+
+            $value = implode('\n', $finalLines);
+        }
+
+        return $value;
+    }
 
     public function __construct(IValidatorIterator $validators)
     {
@@ -100,7 +159,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setRequestId($requestId)
     {
-        $this->requestId = $requestId;
+        $this->requestId = $this->cleanString($requestId, 40);
         return $this;
     }
 
@@ -111,7 +170,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setOrderId($orderId)
     {
-        $this->requestId = $orderId;
+        $this->orderId = $this->cleanString($orderId, 20);
         return $this;
     }
 
@@ -122,7 +181,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setPanIsToken($isToken)
     {
-        $this->requestId = $isToken;
+        $this->panIsToken = is_a($isToken, 'bool') ? $isToken : null;
         return $this;
     }
 
@@ -133,7 +192,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setCardNumber($ccNum)
     {
-        $this->requestId = $ccNum;
+        $this->cardNumber = $this->cleanString($ccNum, 22);
         return $this;
     }
 
@@ -144,7 +203,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setExpirationDate(\DateTime $date)
     {
-        $this->requestId = $date;
+        $month = $date->format('j');
+        $year = $date->format('Y');
+        $this->expirationDate = checkdate($month, 1, $year) ? $date->format('Y-m') : null;
         return $this;
     }
 
@@ -155,7 +216,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setCardSecurityCode($cvv)
     {
-        $this->requestId = $cvv;
+        $value = null;
+
+        $cleaned = $this->cleanString($cvv, 4);
+        if ($cleaned !== null) {
+            if (strlen($cleaned) < 3) {
+                $value = $cleaned;
+            }
+        }
+        $this->cardSecurityCode = $value;
+
         return $this;
     }
 
@@ -166,7 +236,11 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setAmount($amount)
     {
-        $this->requestId = $amount;
+        if (is_a($amount, 'float')) {
+            $this->amount = round($amount, 2, PHP_ROUND_HALF_UP);
+        } else {
+            $this->amount = null;
+        }
         return $this;
     }
 
@@ -177,7 +251,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setCurrencyCode($code)
     {
-        $this->requestId = $code;
+        $value = null;
+
+        $cleaned = $this->cleanString($code, 3);
+        if ($cleaned !== null) {
+            if (strlen($cleaned) < 3) {
+                $value = $cleaned;
+            }
+        }
+        $this->currencyCode = $value;
+
         return $this;
     }
 
@@ -188,7 +271,20 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setEmail($email)
     {
-        $this->requestId = $email;
+        $value = null;
+
+        $cleaned = $this->cleanString($email, 70);
+        if ($cleaned !== null) {
+            $match = preg_match(
+                '([a-zA-Z0-9_\-])([a-zA-Z0-9_\-\.]*)@(\[((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}|((([a-zA-Z0-9\-]+)\.)+))([a-zA-Z]{2,}|(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\])',
+                $cleaned);
+
+            if ($match === 1) {
+                $value = $cleaned;
+            }
+        }
+        $this->customerEmail = $value;
+
         return $this;
     }
 
@@ -199,7 +295,20 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setIp($ip)
     {
-        $this->requestId = $ip;
+        $value = null;
+
+        $cleaned = $this->cleanString($ip, 70);
+        if ($cleaned !== null) {
+            $match = preg_match(
+                '((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])',
+                $cleaned);
+
+            if ($match === 1) {
+                $value = $cleaned;
+            }
+        }
+        $this->customerIpAddress = $value;
+
         return $this;
     }
 
@@ -210,7 +319,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingFirstName($name)
     {
-        $this->requestId = $name;
+        $value = null;
+
+        if (is_a($name, 'string')) {
+            $trimmed = trim($name);
+            if (!empty($trimmed)) {
+                $value = $trimmed;
+            }
+        }
+        $this->billingFirstName = $value;
+
         return $this;
     }
 
@@ -221,7 +339,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingLastName($name)
     {
-        $this->requestId = $name;
+        $value = null;
+
+        if (is_a($name, 'string')) {
+            $trimmed = trim($name);
+            if (!empty($trimmed)) {
+                $value = $trimmed;
+            }
+        }
+        $this->billingLastName = $value;
+
         return $this;
     }
 
@@ -232,7 +359,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingPhone($phone)
     {
-        $this->requestId = $phone;
+        $value = null;
+
+        if (is_a($phone, 'string')) {
+            $trimmed = trim($phone);
+            if (!empty($trimmed)) {
+                $value = $trimmed;
+            }
+        }
+        $this->billingPhone = $value;
+
         return $this;
     }
 
@@ -243,7 +379,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingLines($lines)
     {
-        $this->requestId = $lines;
+        $this->billingLines = $this->cleanAddressLines($lines);
         return $this;
     }
 
@@ -254,7 +390,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingCity($city)
     {
-        $this->requestId = $city;
+        $this->requestId = $this->cleanString($city, 35);
         return $this;
     }
 
@@ -265,7 +401,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingMainDivision($div)
     {
-        $this->requestId = $div;
+        $this->billingMainDivision = $this->cleanString($div, 35);
         return $this;
     }
 
@@ -276,7 +412,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingCountryCode($code)
     {
-        $this->requestId = $code;
+        $cleaned = $this->cleanString($code, 40);
+        if (strlen($cleaned) < 2) {
+            $this->billingCountryCode = null;
+        } else {
+            $this->billingCountryCode = $cleaned;
+        }
+
         return $this;
     }
 
@@ -287,7 +429,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingPostalCode($code)
     {
-        $this->requestId = $code;
+        $this->requestId = $this->cleanString($code, 15);
         return $this;
     }
 
@@ -298,7 +440,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToFirstName($name)
     {
-        $this->requestId = $name;
+        $value = null;
+
+        if (is_a($name, 'string')) {
+            $trimmed = trim($name);
+            if (!empty($trimmed)) {
+                $value = $trimmed;
+            }
+        }
+        $this->shipToFirstName = $value;
+
         return $this;
     }
 
@@ -309,7 +460,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToLastName($name)
     {
-        $this->requestId = $name;
+        $value = null;
+
+        if (is_a($name, 'string')) {
+            $trimmed = trim($name);
+            if (!empty($trimmed)) {
+                $value = $trimmed;
+            }
+        }
+        $this->shipToLastName = $value;
+
         return $this;
     }
 
@@ -320,7 +480,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToPhone($phone)
     {
-        $this->requestId = $phone;
+        $value = null;
+
+        if (is_a($phone, 'string')) {
+            $trimmed = trim($phone);
+            if (!empty($trimmed)) {
+                $value = $trimmed;
+            }
+        }
+        $this->shipToPhone = $value;
+
         return $this;
     }
 
@@ -331,7 +500,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToLines($lines)
     {
-        $this->requestId = $lines;
+        $this->requestId = $this->cleanAddressLines($lines);
         return $this;
     }
 
@@ -342,7 +511,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToCity($city)
     {
-        $this->requestId = $city;
+        $cleaned = $this->cleanString($city, 40);
+        if (strlen($cleaned) < 2) {
+            $this->shipToCity = null;
+        } else {
+            $this->shipToCity = $cleaned;
+        }
+
         return $this;
     }
 
@@ -353,7 +528,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToMainDivision($div)
     {
-        $this->requestId = $div;
+        $this->shipToMainDivision = $this->cleanString($div, 35);
         return $this;
     }
 
@@ -364,7 +539,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToCountryCode($code)
     {
-        $this->requestId = $code;
+        $cleaned = $this->cleanString($code, 40);
+        if (strlen($cleaned) < 2) {
+            $this->shipToCountryCode = null;
+        } else {
+            $this->shipToCountryCode = $cleaned;
+        }
+
         return $this;
     }
 
@@ -375,18 +556,23 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToPostalCode($code)
     {
-        $this->requestId = $code;
+        $this->shipToPostalCode = $this->cleanString($code, 15);
         return $this;
     }
 
     public function getIsRequestToCorrectCvvOrAvsError()
     {
-        return $this->isRequestToCorrectCvvOrAvsError;
+        return $this->$isRequestToCorrectCVVOrAVSError;
     }
 
     public function setIsRequestToCorrectCvvOrAvsError($flag)
     {
-        $this->requestId = $flag;
+        if (is_a($flag, 'bool')) {
+            $this->isRequestToCorrectCVVOrAVSError = $flag;
+        } else {
+            $this->isRequestToCorrectCVVOrAVSError = null;
+        }
+
         return $this;
     }
 
@@ -397,7 +583,17 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setAuthenticationAvailable($token)
     {
-        $this->requestId = $token;
+        $value = null;
+
+        $cleaned = $this->cleanString($token, 1);
+        if ($cleaned !== null) {
+            $cleaned = strtoupper($cleaned);
+            if (strstr('YNU', $cleaned)) {
+                $value = $cleaned;
+            }
+        }
+        $this->authenticationAvailable = $value;
+
         return $this;
     }
 
@@ -408,7 +604,17 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setAuthenticationStatus($token)
     {
-        $this->requestId = $token;
+        $value = null;
+
+        $cleaned = $this->cleanString($token, 1);
+        if ($cleaned !== null) {
+            $cleaned = strtoupper($cleaned);
+            if (strstr('YNUA', $cleaned)) {
+                $value = $cleaned;
+            }
+        }
+        $this->authenticationStatus = $value;
+
         return $this;
     }
 
@@ -419,7 +625,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setCavvUcaf($data)
     {
-        $this->requestId = $data;
+        $this->cavvUcaf = $this->cleanString($data, 64);
         return $this;
     }
 
@@ -430,7 +636,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setTransactionId($id)
     {
-        $this->requestId = $id;
+        $this->transactionId = $this->cleanString($id, 64);
         return $this;
     }
 
@@ -441,7 +647,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setEci($eci)
     {
-        $this->requestId = $eci;
+        $value = null;
+
+        if (is_a($eci, 'string')) {
+            $trimmed = trim($eci);
+            if (!empty($trimmed)) {
+                $value = $trimmed;
+            }
+        }
+        $this->eci = $value;
+
         return $this;
     }
 
@@ -452,7 +667,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setPayerAuthenticationResponse($response)
     {
-        $this->requestId = $response;
+        $this->payerAuthenticationResponse = $this->cleanString($response, 10000);
         return $this;
     }
 
