@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-class CreditCardAuthReplyTests extends \PHPUnit_Framework_TestCase
+class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 {
     public function provideInvalidPayload()
     {

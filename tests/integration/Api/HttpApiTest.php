@@ -16,7 +16,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
-class HttpApiTests extends \PHPUnit_Framework_TestCase
+class HttpApiTest extends \PHPUnit_Framework_TestCase
 {
     protected $apiKey;
     protected $host;
