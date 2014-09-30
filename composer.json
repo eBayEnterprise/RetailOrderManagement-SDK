@@ -1,8 +1,19 @@
 {
-    "name": "eBayEnterprise/RetailOrderManagement", 
-    "license": "OSL-3.0", 
+    "name": "eBayEnterprise/RetailOrderManagement",
+    "license": "OSL-3.0",
     "description": "Software Development Kit for working with the Retail Order Management Web API",
     "require-dev": {
         "phpunit/phpunit": "~4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "eBayEnterprise\\RetailOrderManagement\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "eBayEnterprise\\RetailOrderManagement\\": "tests/unit/",
+            "eBayEnterprise\\RetailOrderManagement\\": "tests/integration/"
+        }
     }
 }
