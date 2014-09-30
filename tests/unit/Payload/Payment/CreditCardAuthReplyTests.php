@@ -21,7 +21,7 @@ class CreditCardAuthReplyTests extends \PHPUnit_Framework_TestCase
 {
     public function provideInvalidPayload()
     {
-        $payload = new Payment\ICreditCardAuthReply();
+        $payload = new CreditCardAuthReply();
 
         return array(
             array($payload)
@@ -32,45 +32,15 @@ class CreditCardAuthReplyTests extends \PHPUnit_Framework_TestCase
     {
         // move to JSON
         $properties = array(
-            'setRequestId' => 'testReqId',
-            'setOrderId' => 'testOrderId',
-            'setPanIsToken' => false,
-            'setCardNumber' => '4111111111111111',
-            'setExpirationDate' => date_create('2015-12'),
-            'setCardSecurityCode' => '123',
-            'setAmount' => 43.45,
-            'setCurrencyCode' => 'USD',
-            'setEmail' => 'test@example.com',
-            'setIp' => '127.0.0.1',
-            'setBillingFirstName' => 'First',
-            'setBillingLastName' => 'Last',
-            'setBillingPhone' => '1234567890',
-            'setBillingLine1' => 'Street 1',
-            'setBillingLine2' => 'Street 2',
-            'setBillingLine3' => 'Street 3',
-            'setBillingLine4' => 'Street 4',
-            'setBillingCity' => 'King of Prussia',
-            'setBillingMainDivision' => 'PA',
-            'setBillingCountryCode' => 'US',
-            'setBillingPostalCode' => '19406',
-            'setShipToFirstName' => 'First',
-            'setShipToLastName' => 'Last',
-            'setShipToPhone' => 'Street 1',
-            'setShipToLine1' => 'Street 2',
-            'setShipToLine2' => 'Street 3',
-            'setShipToLine3' => 'Street 4',
-            'setShipToLine4' => 'Street 5',
-            'setShipToCity' => 'City',
-            'setShipToMainDivision' => 'PA',
-            'setShipToCountryCode' => 'US',
-            'setShipToPostalCode' => '12345',
-            'setIsRequestToCorrectCvvOrAvsError' => false,
-            'setAuthenticationAvailable' => 'Y',
-            'setAuthenticationStatus' => 'Y',
-            'setCavvUcaf' => 'abcd1234',
-            'setTransactionId' => 'transId',
-            'setEci' => 'ECI',
-            'setPayerAuthenticationResponse' => 'some REALLY big string'
+            'orderId' => 'ORDER_ID',
+            'paymentAccountUniqueId' => '4111ABC123ZYX987',
+            'panIsToken' => true,
+            'authorizationResponseCode' => 'AP01',
+            'bankAuthorizationCode' => 'OK',
+            'cvv2ResponseCode' => 'M',
+            'avsResponseCode' => 'M',
+            'amountAuthorized' => 55.99,
+            'currencyCode' => 'USD',
         );
 
         return array(
@@ -80,92 +50,98 @@ class CreditCardAuthReplyTests extends \PHPUnit_Framework_TestCase
 
     protected function buildPayload($properties)
     {
-        $payload = new Payment\ICreditCardAuthReply();
-
+        $payload = new CreditCardAuthReply();
+        $payloadReflection = new \ReflectionClass($payload);
         foreach ($properties as $property => $value) {
-            $payload->$property($value);
+            if ($payloadReflection->hasProperty($property)) {
+                $property = $payloadReflection->getProperty($property);
+                $property->setAccessible(true);
+                $property->setValue($payload, $value);
+            }
         }
-
         return $payload;
     }
 
-    protected function xmlTestString()
+    protected function loadXmlTestString()
     {
-        $dom = DOMDocument::loadXML('./Fixtures/CreditCardAuthReply.xml');
+        $dom = new \DOMDocument();
+        $dom->loadXML('./Fixtures/CreditCardAuthReply.xml');
         $string = $dom->C14N();
 
         return $string;
     }
 
-    protected function xmlInvalidTestString()
+    protected function loadXmlInvalidTestString()
     {
-        $dom = DOMDocument::loadXML('./Fixtures/InvalidCreditCardAuthReply.xml');
+        $dom = new \DOMDocument();
+        $dom->loadXML('./Fixtures/InvalidCreditCardAuthReply.xml');
         $string = $dom->C14N();
 
         return $string;
     }
 
     /**
-     * @param Payment\ICreditCardAuthReply $payload
+     * @param ICreditCardAuthReply $payload
      * @dataProvider provideInvalidPayload
-     * @expectedException Exception\InvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testValidateWillFail(Payment\ICreditCardAuthReply $payload)
+    public function testValidateWillFail(ICreditCardAuthReply $payload)
     {
         $payload->validate();
     }
 
     /**
-     * @param Payment\ICreditCardAuthReply $payload
+     * @param ICreditCardAuthReply $payload
      * @dataProvider provideValidPayload
      */
-    public function testValidateWillPass(Payment\ICreditCardAuthReply $payload)
+    public function testValidateWillPass(ICreditCardAuthReply $payload)
     {
         $this->assertSame($payload, $payload->validate());
     }
 
     /**
-     * @param Payment\ICreditCardAuthReply $payload
+     * @param ICreditCardAuthReply $payload
      * @dataProvider provideInvalidPayload
-     * @expectedException Exception\InvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testSerializeWillFail(Payment\ICreditCardAuthReply $payload)
+    public function testSerializeWillFail(ICreditCardAuthReply $payload)
     {
         $payload->serialize();
     }
 
     /**
-     * @param Payment\ICreditCardAuthReply $payload
+     * @param ICreditCardAuthReply $payload
      * @dataProvider provideValidPayload
      */
-    public function testSerializeWillPass(Payment\ICreditCardAuthReply $payload)
+    public function testSerializeWillPass(ICreditCardAuthReply $payload)
     {
-        $domPayload = DOMDocument::loadXML($payload->serialize());
+        $domPayload = new \DOMDocument();
+        $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
 
-        $this->assertEquals($this->xmlTestString(), $serializedString);
+        $this->assertEquals($this->loadXmlTestString(), $serializedString);
     }
 
     /**
-     * @expectedException Exception\InvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFail()
     {
-        $xml = $this->xmlInvalidTestString();
+        $xml = $this->loadXmlInvalidTestString();
 
-        $newPayload = new Payment\ICreditCardAuthReply();
+        $newPayload = new CreditCardAuthReply();
         $newPayload->deserialize($xml);
     }
 
     /**
-     * @param Payment\ICreditCardAuthReply $payload
-     * @dataProvider provideXML
+     * @param ICreditCardAuthReply $payload
+     * @dataProvider provideValidPayload
      */
-    public function testDeserializeWillPass(Payment\ICreditCardAuthReply $payload)
+    public function testDeserializeWillPass(ICreditCardAuthReply $payload)
     {
-        $xml = $this->xmlTestString();
+        $xml = $this->loadXmlTestString();
 
-        $newPayload = new Payment\ICreditCardAuthReply();
+        $newPayload = new CreditCardAuthReply();
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
