@@ -41,7 +41,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $billingLastName;
     /** @var string **/
     protected $billingPhone;
-    /** @var string **/
+    /** @var array **/
     protected $billingLines;
     /** @var string **/
     protected $billingCity;
@@ -121,7 +121,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function cleanAddressLines($lines)
     {
-        $value = null;
+        $finalLines = null;
 
         if (is_a($lines, 'string')) {
             $trimmed = trim($lines);
@@ -140,11 +140,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             }
 
             $finalLines = array_slice($newLines, 0, 4);
-
-            $value = implode('\n', $finalLines);
         }
 
-        return $value;
+        return $finalLines;
     }
 
     public function __construct(IValidatorIterator $validators)
@@ -374,7 +372,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getBillingLines()
     {
-        return $this->billingLines;
+        return implode('\n', $this->billingLines);
     }
 
     public function setBillingLines($lines)
@@ -495,7 +493,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getShipToLines()
     {
-        return $this->shipToLines;
+        return implode('\n', $this->shipToLines);
     }
 
     public function setShipToLines($lines)
@@ -682,7 +680,156 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function serialize()
     {
+        $writer = new XMLWriter();
+        $writer->openMemory();
+        $writer->startDocument('1.0', 'URF-8');
 
+        $writer->startElement('CreditCardAuthRequest');
+        if (!is_null($this->requestId)) {
+            $writer->writeAttribute('requestId', $this->requestId);
+        }
+        $writer->writeAttribute('xmlns', 'http://api.gsicommerce.com/schema/checkout/1.0');
+
+        if (!is_null($this->orderId) && !is_null($this->cardNumber)) {
+            $writer->startElement('PaymentContext');
+            $writer->writeElement('orderId', $this->orderId);
+            $writer->startElement('PaymentAccountUniqueId', $this->cardNumber);
+            if (!is_null($this->panIsToken)) {
+                $writer->writeAttribute('isToken', $this->panIsToken);
+            }
+            $writer->endElement('PaymentAccountUniqueId');
+            $writer->endElement('PaymentContext');
+        }
+
+        if (!is_null($this->expirationDate)) {
+            $writer->writeElement('ExpirationDate', $this->expirationDate);
+        }
+
+        if (!is_null($this->cardSecurityCode)) {
+            $writer->writeElement('CardSecurityCode', $this->cardSecurityCode);
+        }
+
+        if (!is_null($this->amount)) {
+            $writer->writeElement('Amount', $this->expirationDate);
+        }
+
+        if (!is_null($this->billingFirstName)) {
+            $writer->writeElement('BillingFirstName', $this->billingFirstName);
+        }
+
+        if (!is_null($this->billingLastName)) {
+            $writer->writeElement('BillingLasttName', $this->billingLastName);
+        }
+
+        if (!is_null($this->billingPhone)) {
+            $writer->writeElement('BillingPhoneNo', $this->billingPhone);
+        }
+
+        $writer->startElement('BillingAddress');
+        if (!is_null($this->billingLines)) {
+            foreach ($this->billingLines as $line) {
+                $writer->writeElement('Line'.$this->billingLines->index(), $this->billingLines);
+            }
+        }
+
+        if (!is_null($this->billingCity)) {
+            $writer->writeElement('City', $this->billingCity);
+        }
+
+        if (!is_null($this->billingMainDivision)) {
+            $writer->writeElement('MainDivision', $this->billingMainDivision);
+        }
+
+        if (!is_null($this->billingCountryCode)) {
+            $writer->writeElement('CountryCode', $this->billingCountryCode);
+        }
+
+        if (!is_null($this->billingPostalCode)) {
+            $writer->writeElement('PostalCode', $this->billingPostalCode);
+        }
+        $writer->endelement('BillingAddress');
+
+        if (!is_null($this->customerEmail)) {
+            $writer->writeElement('CustomerEmail', $this->customerEmail);
+        }
+
+        if (!is_null($this->customerIpAddress)) {
+            $writer->writeElement('CustomerIPAddress', $this->customerIpAddress);
+        }
+
+        if (!is_null($this->billingFirstName)) {
+            $writer->writeElement('BillingFirstName', $this->billingFirstName);
+        }
+
+        if (!is_null($this->billingLastName)) {
+            $writer->writeElement('BillingLasttName', $this->billingLastName);
+        }
+
+        if (!is_null($this->billingPhone)) {
+            $writer->writeElement('BillingPhoneNo', $this->billingPhone);
+        }
+
+        $writer->startElement('ShippingAddress');
+        if (!is_null($this->shipToLines)) {
+            foreach ($this->shipToLines as $line) {
+                $writer->writeElement('Line'.$this->shipToLines->index(), $this->shipToLines);
+            }
+        }
+
+        if (!is_null($this->shipToCity)) {
+            $writer->writeElement('City', $this->shipToCity);
+        }
+
+        if (!is_null($this->shipToMainDivision)) {
+            $writer->writeElement('MainDivision', $this->shipToMainDivision);
+        }
+
+        if (!is_null($this->shipToCountryCode)) {
+            $writer->writeElement('CountryCode', $this->shipToCountryCode);
+        }
+
+        if (!is_null($this->shipToPostalCode)) {
+            $writer->writeElement('PostalCode', $this->shipToPostalCode);
+        }
+        $writer->endelement('ShippingAddress');
+
+        if (!is_null($this->isRequestToCorrectCVVOrAVSError)) {
+            $writer->writeElement('isRequestToCorrectCVVOrAVSError', $this->isRequestToCorrectCVVOrAVSError);
+        }
+
+        $writer->startElement('SecureVerificationData');
+        if (!is_null($this->authenticationAvailable)) {
+            $writer->writeElement('AuthenticationAvailable', $this->authenticationAvailable);
+        }
+
+        if (!is_null($this->authenticationStatus)) {
+            $writer->writeElement('AuthenticationStatus', $this->authenticationStatus);
+        }
+
+        if (!is_null($this->cavvUcaf)) {
+            $writer->writeElement('CavvUcaf', $this->cavvUcaf);
+        }
+
+        if (!is_null($this->transactionId)) {
+            $writer->writeElement('TransactionId', $this->transactionId);
+        }
+
+        if (!is_null($this->eci)) {
+            $writer->writeElement('ECI', $this->eci);
+        }
+
+        if (!is_null($this->payerAuthenticationResponse)) {
+            $writer->writeElement('PayerAuthenticationResponse', $this->payerAuthenticationResponse);
+        }
+        $writer->endElement('SecureVerificationData');
+        $writer->startElement('CreditCardAuthRequest');
+        $writer->endDocument();
+
+        $xml = $writer->outputMemory();
+
+        $doc = DOMDocument::loadXML($xml);
+
+        return $doc->C14N();
     }
 
     public function deserialize($string)
