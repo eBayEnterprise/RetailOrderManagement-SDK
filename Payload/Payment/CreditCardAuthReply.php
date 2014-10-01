@@ -16,13 +16,23 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
+    // XML related values - document root node, XMLNS and name of the xsd schema file
     const ROOT_NODE = 'CreditCardAuthReply';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     const PAYLOAD_SCHEMA = 'Payment-Service-CreditCardAuth-1.0.xsd';
+    // API response codes relevent to payload success/failure and OMS response code
+    const AUTHORIZATION_APPROVED = 'AP01';
+    const AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER = 'TO01';
+    const AUTHORIZATION_TIMEOUT_CARD_PROCESSOR = 'NR01';
+    // response codes that are to be reported to the OMS
+    const APPROVED_RESPONSE_CODE = 'APPROVED';
+    const TIMEOUT_RESPONSE_CODE = 'TIMEOUT';
+
     /** @var string **/
     protected $orderId;
     /** @var string **/
@@ -49,10 +59,41 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected $currencyCode;
     /** @var IValidatorIterator */
     protected $validators;
+    /** @var ISchemaValidator */
+    protected $schemaValidator;
+    /** @var array XPath expressions to extract required data from the serialized payload (XML) */
+    protected $extractionPaths = array(
+        'orderId' => 'string(x:PaymentContext/x:OrderId)',
+        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'panIsToken' => 'boolean(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
+        'authorizationResponseCode' => 'string(x:AuthorizationResponseCode)',
+        'bankAuthorizationCode' => 'string(x:BankAuthorizationCode)',
+        'cvv2ResponseCode' => 'string(x:CVV2ResponseCode)',
+        'avsResponseCode' => 'string(x:AVSResponseCode)',
+        'amountAuthorized' => 'number(x:AmountAuthorized)',
+        'currencyCode' => 'string(x:AmountAuthorized/@currencyCode)',
+    );
+    /** @var array XPath expressions to match optional nodes in the serialized payload (XML) */
+    protected $optionalExtractionPaths = array(
+        'phoneResponseCode' => 'x:PhoneResponseCode',
+        'nameResponseCode' => 'x:NameResponseCode',
+        'emailResponseCode' => 'x:EmailResponseCode',
+    );
+    /** @var array Mapping of reply authorization response code to OMS response code */
+    protected $responseCodeMap = array(
+        self::AUTHORIZATION_APPROVED => self::APPROVED_RESPONSE_CODE,
+        self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER => self::TIMEOUT_RESPONSE_CODE,
+        self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR => self::TIMEOUT_RESPONSE_CODE,
+    );
+    /** @var string[] AVS response codes that should be rejected */
+    protected $invalidAvsCodes = array('N', 'AW');
+    /** @var string[] CVV response codes that should be rejected */
+    protected $invalidCvvCodes = array('N');
 
-    public function __construct(IValidatorIterator $validators)
+    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
         $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
     }
 
     public function getOrderId()
@@ -117,17 +158,79 @@ class CreditCardAuthReply implements ICreditCardAuthReply
 
     public function getIsAuthSuccessful()
     {
-
+        $authResponseCode = $this->getAuthorizationResponseCode();
+        return (
+            $authResponseCode === self::AUTHORIZATION_APPROVED
+            && !in_array($this->getCVV2ResponseCode(), $this->invalidCvvCodes)
+            && !in_array($this->getAVSResponseCode(), $this->invalidAvsCodes)
+        ) || (
+            $authResponseCode === self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER
+            || $authResponseCode === self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR
+        );
     }
 
     public function getIsAuthAcceptable()
     {
-
+        // if there is a response code accpetable by the OMS self::getResponseCode
+        // doesn't return null, then the reply is acceptable
+        return !is_null($this->getResponseCode());
     }
 
     public function getResponseCode()
     {
+        $replyAuthCode = $this->getAuthorizationResponseCode();
+        return isset($this->responseCodeMap[$replyAuthCode]) ? $this->responseCodeMap[$replyAuthCode] : null;
+    }
 
+    /**
+     * Serialize the data into a string of XML.
+     * @throws Exception\InvalidPayload
+     * @return string
+     */
+    public function serialize()
+    {
+        // validate the payload data
+        $this->validate();
+        $xmlString = sprintf(
+            '<%s xmlns="%s">%s</%1$s>',
+            self::ROOT_NODE,
+            self::XML_NS,
+            $this->serializeContents()
+        );
+        $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
+        $this->schemaValidate($canonicalXml);
+        return $canonicalXml;
+    }
+
+    public function deserialize($serializedPayload)
+    {
+        // make sure we received a valid serialization of the payload.
+        $this->schemaValidate($serializedPayload);
+
+        $xpath = $this->getPayloadAsXPath($serializedPayload);
+        foreach ($this->extractionPaths as $property => $path) {
+            $this->$property = $xpath->evaluate($path);
+        }
+        // When optional nodes are not included in the serialized data,
+        // they should not be set in the payload. Fortunately, these
+        // are all string values so no additional type conversion is necessary.
+        foreach ($this->optionalExtractionPaths as $property => $path) {
+            $foundNode = $xpath->query($path)->item(0);
+            if ($foundNode) {
+                $this->$property = $foundNode->nodeValue;
+            }
+        }
+        // payload is only valid of the unserialized data is also valid
+        $this->validate();
+        return $this;
+    }
+
+    public function validate()
+    {
+        foreach ($this->validators as $validator) {
+            $validator->validate($this);
+        }
+        return $this;
     }
 
     protected function getSchemaFile()
@@ -148,22 +251,15 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     }
 
     /**
-     * Serialize the data into a string of XML.
-     * @return string
+     * Load the payload XML into a DOMXPath for querying.
+     * @param string $xmlString
+     * @return DOMXPath
      */
-    public function serialize()
+    protected function getPayloadAsXPath($xmlString)
     {
-        // validate the payload data
-        $this->validate();
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeContents()
-        );
-        $doc = $this->getPayloadAsDoc($xmlString);
-        $this->schemaValidateSerializedPayload($doc);
-        return $doc->C14N();
+        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
+        $xpath->registerNamespace('x', self::XML_NS);
+        return $xpath;
     }
 
     /**
@@ -208,6 +304,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             $this->getAVSResponseCode()
         );
     }
+
     /**
      * Create an XML string representing any of the optional response codes,
      * e.g. EmailResponseCode, PhoneResponseCode, etc.
@@ -222,6 +319,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             . ($nameResponseCode ? "<NameResponseCode>{$nameResponseCode}</NameResponseCode>" : '')
             . ($emailResponseCode ? "<EmailResponseCode>{$emailResponseCode}</EmailResponseCode>" : '');
     }
+
     /**
      * Create an XML string representing the amount authorized.
      * @return string
@@ -235,33 +333,14 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         );
     }
 
-    public function deserialize($string)
-    {
-
-    }
-
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
-    }
-
     /**
-     * Validate the serialized payload against the schema.
-     * @param  DOMDocument $doc
+     * Validate the serialized data via the schema validator.
+     * @param  string $serializedData
      * @return self
-     * @throws Exception\InvalidPayload If [this condition is met]
      */
-    protected function schemaValidateSerializedPayload(\DOMDocument $doc)
+    protected function schemaValidate($serializedData)
     {
-        $libxmlUseErrors = libxml_use_internal_errors(true);
-        if (!$doc->schemaValidate($this->getSchemaFile())) {
-            var_dump(libxml_get_errors());
-            throw new Exception\InvalidPayload();
-        }
-        libxml_use_internal_errors($libxmlUseErrors);
+        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
         return $this;
     }
 }
