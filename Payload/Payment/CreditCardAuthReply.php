@@ -16,11 +16,13 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
     const ROOT_NODE = 'CreditCardAuthReply';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+    const PAYLOAD_SCHEMA = 'Payment-Service-CreditCardAuth-1.0.xsd';
     /** @var string **/
     protected $orderId;
     /** @var string **/
@@ -128,21 +130,40 @@ class CreditCardAuthReply implements ICreditCardAuthReply
 
     }
 
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::PAYLOAD_SCHEMA;
+    }
+
+    /**
+     * Load the payload XML into a DOMDocument
+     * @param  string $xmlString
+     * @return \DOMDocument
+     */
+    protected function getPayloadAsDoc($xmlString)
+    {
+        $d = new \DOMDocument();
+        $d->loadXML($xmlString);
+        return $d;
+    }
+
     /**
      * Serialize the data into a string of XML.
      * @return string
      */
     public function serialize()
     {
+        // validate the payload data
+        $this->validate();
         $xmlString = sprintf(
             '<%s xmlns="%s">%s</%1$s>',
             self::ROOT_NODE,
             self::XML_NS,
             $this->serializeContents()
         );
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        return $doc->saveXML();
+        $doc = $this->getPayloadAsDoc($xmlString);
+        $this->schemaValidateSerializedPayload($doc);
+        return $doc->C14N();
     }
 
     /**
@@ -207,8 +228,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
      */
     protected function serializeAmount()
     {
-        // make sure the payload is valid before attempting to serialize
-        $this->validate();
         return sprintf(
             '<AmountAuthorized currencyCode="%s">%01.2F</AmountAuthorized>',
             $this->getCurrencyCode(),
@@ -226,6 +245,23 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         foreach ($this->validators as $validator) {
             $validator->validate($this);
         }
+        return $this;
+    }
+
+    /**
+     * Validate the serialized payload against the schema.
+     * @param  DOMDocument $doc
+     * @return self
+     * @throws Exception\InvalidPayload If [this condition is met]
+     */
+    protected function schemaValidateSerializedPayload(\DOMDocument $doc)
+    {
+        $libxmlUseErrors = libxml_use_internal_errors(true);
+        if (!$doc->schemaValidate($this->getSchemaFile())) {
+            var_dump(libxml_get_errors());
+            throw new Exception\InvalidPayload();
+        }
+        libxml_use_internal_errors($libxmlUseErrors);
         return $this;
     }
 }

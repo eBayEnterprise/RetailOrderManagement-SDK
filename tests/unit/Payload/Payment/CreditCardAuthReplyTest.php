@@ -54,7 +54,21 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payloadData = array();
 
         return array(
-            array($payloadData)
+            array(array()),
+            array(array(
+                // order id should fail XSD validation
+                'orderId' => '1234567890123456789012345',
+                'paymentAccountUniqueId' => '4111ABC123ZYX987',
+                'panIsToken' => true,
+                'authorizationResponseCode' => 'AP01',
+                'bankAuthorizationCode' => 'OK',
+                'cvv2ResponseCode' => 'M',
+                'avsResponseCode' => 'M',
+                'amountAuthorized' => 55.99,
+                'currencyCode' => 'USD',
+                'phoneResponseCode' => 'PHONE_OK',
+                'nameResponseCode' => 'NAME_OK',
+            )),
         );
     }
 
@@ -124,6 +138,8 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Simply ensure that when one validator fails validation, the exception
+     * is thrown - is not validating the actual payload data.
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
@@ -139,6 +155,8 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Simply ensure that when none of the validators fail, the payload is
+     * considered valid - is not validating actual payload data.
      * @param array $payloadData
      * @dataProvider provideValidPayload
      */
@@ -153,11 +171,13 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that serialize will perform validation. Should any validator
+     * fail, serialization should also fail.
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testSerializeWillFail(array $payloadData)
+    public function testSerializeWillFailWithInvalidPayload(array $payloadData)
     {
         $this->stubValidator->expects($this->any())
             ->method('validate')
@@ -166,6 +186,18 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload->serialize();
     }
 
+    /**
+     * Test that if a payload should pass validation but still produce an
+     * XSD invalid payload, serialization should fail.
+     * @param array $payloadData
+     * @dataProvider provideInvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testSerializeWillFailWithXsdInvalidPayloadData(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $payload->serialize();
+    }
     /**
      * @param array $payloadData
      * @dataProvider provideValidPayload
