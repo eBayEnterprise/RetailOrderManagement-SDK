@@ -15,10 +15,15 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
+    const ROOT_NODE = 'CreditCardAuthRequest';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+    const XSD = './schema/Payment-Service-CreditCardAuth-1.0.xsd';
+
     /** @var string **/
     protected $requestId;
     /** @var string **/
@@ -87,6 +92,8 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $payerAuthenticationResponse;
     /** @var IValidatorIterator */
     protected $validators;
+    /** @var ISchemaValidator */
+    protected $schemaValidator;
 
     /**
      * Trim any white space and return the resulting string truncating to $maxLength.
@@ -145,9 +152,10 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $finalLines;
     }
 
-    public function __construct(IValidatorIterator $validators)
+    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
         $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
     }
 
     public function getRequestId()
@@ -682,157 +690,143 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function serialize()
     {
-        $writer = new \XMLWriter();
-        $writer->openMemory();
-        $writer->startDocument('1.0', 'URF-8');
-
-        $writer->startElement('CreditCardAuthRequest');
-        if (!is_null($this->requestId)) {
-            $writer->writeAttribute('requestId', $this->requestId);
-        }
-        $writer->writeAttribute('xmlns', 'http://api.gsicommerce.com/schema/checkout/1.0');
-
-        if (!is_null($this->orderId) && !is_null($this->cardNumber)) {
-            $writer->startElement('PaymentContext');
-            $writer->writeElement('orderId', $this->orderId);
-            $writer->startElement('PaymentAccountUniqueId', $this->cardNumber);
-            if (!is_null($this->panIsToken)) {
-                $writer->writeAttribute('isToken', $this->panIsToken);
-            }
-            $writer->endElement('PaymentAccountUniqueId');
-            $writer->endElement('PaymentContext');
-        }
-
-        if (!is_null($this->expirationDate)) {
-            $writer->writeElement('ExpirationDate', $this->expirationDate);
-        }
-
-        if (!is_null($this->cardSecurityCode)) {
-            $writer->writeElement('CardSecurityCode', $this->cardSecurityCode);
-        }
-
-        if (!is_null($this->amount)) {
-            $writer->writeElement('Amount', $this->expirationDate);
-        }
-
-        if (!is_null($this->billingFirstName)) {
-            $writer->writeElement('BillingFirstName', $this->billingFirstName);
-        }
-
-        if (!is_null($this->billingLastName)) {
-            $writer->writeElement('BillingLasttName', $this->billingLastName);
-        }
-
-        if (!is_null($this->billingPhone)) {
-            $writer->writeElement('BillingPhoneNo', $this->billingPhone);
-        }
-
-        $writer->startElement('BillingAddress');
-        if (!is_null($this->billingLines)) {
-            foreach ($this->billingLines as $line) {
-                $writer->writeElement('Line'.$this->billingLines->index(), $this->billingLines);
-            }
-        }
-
-        if (!is_null($this->billingCity)) {
-            $writer->writeElement('City', $this->billingCity);
-        }
-
-        if (!is_null($this->billingMainDivision)) {
-            $writer->writeElement('MainDivision', $this->billingMainDivision);
-        }
-
-        if (!is_null($this->billingCountryCode)) {
-            $writer->writeElement('CountryCode', $this->billingCountryCode);
-        }
-
-        if (!is_null($this->billingPostalCode)) {
-            $writer->writeElement('PostalCode', $this->billingPostalCode);
-        }
-        $writer->endelement('BillingAddress');
-
-        if (!is_null($this->customerEmail)) {
-            $writer->writeElement('CustomerEmail', $this->customerEmail);
-        }
-
-        if (!is_null($this->customerIpAddress)) {
-            $writer->writeElement('CustomerIPAddress', $this->customerIpAddress);
-        }
-
-        if (!is_null($this->billingFirstName)) {
-            $writer->writeElement('BillingFirstName', $this->billingFirstName);
-        }
-
-        if (!is_null($this->billingLastName)) {
-            $writer->writeElement('BillingLasttName', $this->billingLastName);
-        }
-
-        if (!is_null($this->billingPhone)) {
-            $writer->writeElement('BillingPhoneNo', $this->billingPhone);
-        }
-
-        $writer->startElement('ShippingAddress');
-        if (!is_null($this->shipToLines)) {
-            foreach ($this->shipToLines as $line) {
-                $writer->writeElement('Line'.$this->shipToLines->index(), $this->shipToLines);
-            }
-        }
-
-        if (!is_null($this->shipToCity)) {
-            $writer->writeElement('City', $this->shipToCity);
-        }
-
-        if (!is_null($this->shipToMainDivision)) {
-            $writer->writeElement('MainDivision', $this->shipToMainDivision);
-        }
-
-        if (!is_null($this->shipToCountryCode)) {
-            $writer->writeElement('CountryCode', $this->shipToCountryCode);
-        }
-
-        if (!is_null($this->shipToPostalCode)) {
-            $writer->writeElement('PostalCode', $this->shipToPostalCode);
-        }
-        $writer->endelement('ShippingAddress');
-
-        if (!is_null($this->isRequestToCorrectCVVOrAVSError)) {
-            $writer->writeElement('isRequestToCorrectCVVOrAVSError', $this->isRequestToCorrectCVVOrAVSError);
-        }
-
-        $writer->startElement('SecureVerificationData');
-        if (!is_null($this->authenticationAvailable)) {
-            $writer->writeElement('AuthenticationAvailable', $this->authenticationAvailable);
-        }
-
-        if (!is_null($this->authenticationStatus)) {
-            $writer->writeElement('AuthenticationStatus', $this->authenticationStatus);
-        }
-
-        if (!is_null($this->cavvUcaf)) {
-            $writer->writeElement('CavvUcaf', $this->cavvUcaf);
-        }
-
-        if (!is_null($this->transactionId)) {
-            $writer->writeElement('TransactionId', $this->transactionId);
-        }
-
-        if (!is_null($this->eci)) {
-            $writer->writeElement('ECI', $this->eci);
-        }
-
-        if (!is_null($this->payerAuthenticationResponse)) {
-            $writer->writeElement('PayerAuthenticationResponse', $this->payerAuthenticationResponse);
-        }
-        $writer->endElement('SecureVerificationData');
-        $writer->startElement('CreditCardAuthRequest');
-        $writer->endDocument();
-
-        $xml = $writer->outputMemory();
-
+        $xmlString = sprintf(
+            '<%s xmlns="%s">%s</%1$s>',
+            self::ROOT_NODE,
+            self::XML_NS,
+            $this->serializeContents()
+        );
         $doc = new \DOMDocument();
-        $doc->loadXML($xml);
+        $doc->loadXML($xmlString);
+        $xml = $doc->saveXML();
 
-        return $doc->C14N();
+        return $this->schemaValidator($xml, self::XSD);
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializePaymentContext()
+        . $this->serializeCardInfo()
+        . $this->serializeBillingNamePhone()
+        . $this->serializeBillingAddress()
+        . $this->serializeCustomerInfo()
+        . $this->serializeShippingAddress()
+        . $this->serializeIsCorrectError()
+        . $this->serializeServerVerificationdata();
+    }
+
+    /**
+     * Build the PaymentContext node
+     *
+     * @return string
+     */
+    protected function serializePaymentContext()
+    {
+        return sprintf('<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
+            $this->getOrderId(),
+            $this->getPanIsToken(),
+            $this->getCardNumber());
+    }
+
+    /**
+     * Build the ExpirationDate, CardSecurityCode and Amount nodes
+     *
+     * @return string
+     */
+    protected function serializeCardInfo()
+    {
+        return sprintf( '<ExpirationDate>%s</ExpirationDate><CardSecurityCode>%s</CardSecurityCode><Amount currencyCode="%s">%.2f</Amount>',
+            $this->getExpirationDate(),
+            $this->getCardSecurityCode(),
+            $this->getCurrencyCode(),
+            $this->getAmount());
+    }
+
+    /**
+     * Build the BillingFirstName, BillingLastName and BillingPhoneNo nodes
+     *
+     * @return string
+     */
+    protected function serializeBillingNamePhone()
+    {
+        return sprintf( '<BillingFirstName>%s</BillingFirstName><BillingLastName>%s</BillingLastName><BillingPhoneNo>%s</BillingPhoneNo>',
+            $this->getBillingFirstName(),
+            $this->getBillingLastName(),
+            $this->getBillingPhone());
+    }
+
+    /**
+     * Aggregate the billing address lines into the BillingAddress node
+     *
+     * @return string
+     */
+    protected function serializeBillingAddress()
+    {
+        $lines = array();
+        foreach ($this->billingLines as $line) {
+            sprintf($lines[], '<Line>%s</Line>', $line);
+        }
+
+        return sprintf('<BillingAddress>%s</BillingAddress>', implode('', $lines));
+    }
+
+    /**
+     * Build the CustomerEmail and CustomerIPAddress nodes
+     *
+     * @return string
+     */
+    protected function serializeCustomerInfo()
+    {
+        return sprintf('<CustomerEmail>%s</CustomerEmail><CustomerIPAddress>%s</CustomerIPAddress>',
+            $this->getEmail(),
+            $this->getIp());
+    }
+
+    /**
+     * Aggregate the shipping address lines into the ShippingAddress node
+     *
+     * @return string
+     */
+    protected function serializeShippingAddress()
+    {
+        $lines = array();
+        foreach ($this->shipToLines as $line) {
+            sprintf($lines[], '<Line>%s</Line>', $line);
+        }
+
+        return sprintf('<ShippingAddress>%s</ShippingAddress>', implode('', $lines));
+    }
+
+    /**
+     * Build the isRequestToCorrectCVVOrAVSError node
+     *
+     * @return string
+     */
+    protected function serializeIsCorrectError()
+    {
+        return sprintf('<isRequestToCorrectCVVOrAVSError>$b</isRequestToCorrectCVVOrAVSError>',
+            $this->getIsRequestToCorrectCvvOrAvsError());
+    }
+
+    /**
+     * Build the SecureVerificationData node
+     *
+     * @return string
+     */
+    protected function serializeSecureVerificationData()
+    {
+        return sprintf('<SecureVerificationData><AuthenticationAvailable>%s</AuthenticationAvailable><AuthenticationStatus>%s</AuthenticationStatus><CavvUcaf>%s</CavvUcaf><TransactionId>%s</TransactionId><ECI>%s</ECI><PayerAuthenticationResponse>%s</PayerAuthenticationResponse></SecureVerificationData>',
+            $this->getAuthenticationAvailable(),
+            $this->getAuthenticationStatus(),
+            $this->getCavvUcaf(),
+            $this->getTransactionId(),
+            $this->getEci(),
+            $this->getPayerAuthenticationResponse());
     }
 
     public function deserialize($string)
