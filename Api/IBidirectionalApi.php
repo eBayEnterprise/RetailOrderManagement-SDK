@@ -14,6 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Api;
+
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 /**

@@ -22,4 +22,6 @@ namespace eBayEnterprise\RetailOrderManagement\Api\Exception;
  * An error that happens when you try to interact with the network
  * and can't for some reason.
  */
-class NetworkError {}
+class NetworkError
+{
+}

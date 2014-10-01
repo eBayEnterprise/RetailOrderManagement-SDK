@@ -78,6 +78,26 @@ interface ICreditCardAuthReply extends IPayload
      */
     function getAVSResponseCode();
     /**
+     * Response code for customer phone number verification (only applies to Amex auths).  This data should be
+     * included in the OrderCreateRequest for Orders paid for with Amex to support downstream fraud processing.
+     * @return string
+     */
+    function getPhoneResponseCode();
+    /**
+     * Response code for customer name verification (only applies to Amex auths). This data should be
+     * included in the OrderCreateRequest for Orders paid for with Amex to support downstream fraud processing.
+     *
+     * @return string
+     */
+    function getNameResponseCode();
+    /**
+     * Response code for customer email verification (only applies to Amex auths). This data should be
+     * included in the OrderCreateRequest for Orders paid for with Amex to support downstream fraud processing.
+     *
+     * @return string
+     */
+    function getEmailResponseCode();
+    /**
      * The amount authorized by the credit card processor.
      * Includes a required attribute for a three character ISO currency code.
      *

@@ -21,5 +21,6 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Exception;
  *
  * Thrown when a locally-constructed payload could not validate before being sent.
  */
-class InvalidPayload extends Payload {
+class InvalidPayload extends Payload
+{
 }
