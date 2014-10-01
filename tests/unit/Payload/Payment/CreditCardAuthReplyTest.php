@@ -54,8 +54,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideInvalidPayload()
     {
-        $payloadData = array();
-
         return array(
             array(array()),
             array(array(
