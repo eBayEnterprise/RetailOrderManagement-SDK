@@ -682,7 +682,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function serialize()
     {
-        $writer = new XMLWriter();
+        $writer = new \XMLWriter();
         $writer->openMemory();
         $writer->startDocument('1.0', 'URF-8');
 
@@ -829,13 +829,34 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
         $xml = $writer->outputMemory();
 
-        $doc = DOMDocument::loadXML($xml);
+        $doc = new \DOMDocument();
+        $doc->loadXML($xml);
 
         return $doc->C14N();
     }
 
     public function deserialize($string)
     {
+        $doc  = new \DOMDocument();
+        $doc->loadXML($string);
 
+        $this->setOrderId($doc->getElementsByTagName('orderId')->item(0)->nodeValue);
+
+        $node = $doc->getElementsByTagName('PaymentAccountUniqueId')->item(0);
+        $this->cardNumber = $node->nodeValue;
+        $attributes = $node->attributes();
+        $this->setPanIsToken($attributes['isToken']);
+
+        $this->setExpirationDate($doc->getElementsByTagName('ExpirationDate')->item(0)->nodeValue);
+        $this->setCardSecurityCode($doc->getElementsByTagName('CardSecurityCode')->item(0)->nodeValue);
+        $this->setAmount($doc->getElementsByTagName('Amount')->item(0)->nodeValue);
+        $this->setBillingFirstName($doc->getElementsByTagName('BillingFirstName')->item(0)->nodeValue);
+        $this->setBillingLastName($doc->getElementsByTagName('BillingLastName')->item(0)->nodeValue);
+        $this->setBillingPhone($doc->getElementsByTagName('BillingPhoneNo')->item(0)->nodeValue);
+
+        $lines = $doc->getElementsByTagName('Lines');
+        foreach ($lines as $line) {
+
+        }
     }
 }

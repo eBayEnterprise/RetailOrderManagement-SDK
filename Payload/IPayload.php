@@ -24,9 +24,10 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 interface IPayload
 {
     /**
-     * @param IValidatorIterator $validators
+     * @param IValidatorIterator $validators Payload object validators
+     * @param ISchemaValidator $schemaValidator Serialized object schema validator
      */
-    function __construct(IValidatorIterator $validators);
+    function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator);
     /**
      * Validate that the payload meets the requirements
      * for transmission. This can be over and above what
