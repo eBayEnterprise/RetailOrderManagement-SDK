@@ -33,5 +33,5 @@ interface IValidatorIterator extends \Iterator
     /**
      * @return IValidator
      */
-    function current();
+    public function current();
 }

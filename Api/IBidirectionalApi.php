@@ -34,7 +34,7 @@ interface IBidirectionalApi extends IApi
      *
      * @return Payload\IPayload
      */
-    function getRequestBody();
+    public function getRequestBody();
     /**
      * Set the payload for the configured request.
      * This is the only way to guarantee an api has
@@ -43,7 +43,7 @@ interface IBidirectionalApi extends IApi
      * @param Payload\IPayload $payload
      * @return self
      */
-    function setRequestBody(Payload\IPayload $payload);
+    public function setRequestBody(Payload\IPayload $payload);
     /**
      * Send the request.
      * May validate the payload before sending.
@@ -52,7 +52,7 @@ interface IBidirectionalApi extends IApi
      * @throws Exception\NetworkError
      * @return self
      */
-    function send();
+    public function send();
     /**
      * Retrieve the response payload.
      * May validate the payload before delivering.
@@ -60,5 +60,5 @@ interface IBidirectionalApi extends IApi
      * @throws Payload\Exception\UnexpectedResponse
      * @return Payload\IPayload
      */
-    function getResponseBody();
+    public function getResponseBody();
 }

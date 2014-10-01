@@ -39,5 +39,5 @@ interface IPayloadIterator extends \Iterator
      *
      * @return IPayload
      */
-    function current();
+    public function current();
 }

@@ -30,7 +30,7 @@ interface IAmericanExpressCardAuthReply extends ICreditCardAuthReply
      *
      * @return string
      */
-     function getPhoneResponseCode();
+     public function getPhoneResponseCode();
     /**
      * Response code for customer name verification (only applies to Amex auths).
      * This data should be included in the OrderCreateRequest for Orders paid for with Amex
@@ -38,7 +38,7 @@ interface IAmericanExpressCardAuthReply extends ICreditCardAuthReply
      *
      * @return string
      */
-     function getNameResponseCode();
+     public function getNameResponseCode();
     /**
      * Response code for customer email verification (only applies to Amex auths).
      * This data should be included in the OrderCreateRequest for Orders paid for with Amex
@@ -46,5 +46,5 @@ interface IAmericanExpressCardAuthReply extends ICreditCardAuthReply
      *
      * @return string
      */
-     function getEmailResponseCode();
+     public function getEmailResponseCode();
 }

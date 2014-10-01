@@ -27,7 +27,7 @@ interface IPayload
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator
      */
-    function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator);
+    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator);
     /**
      * Validate that the payload meets the requirements
      * for transmission. This can be over and above what
@@ -36,7 +36,7 @@ interface IPayload
      * @throws Exception\InvalidPayload
      * @return self
      */
-    function validate();
+    public function validate();
     /**
      * Return the string form of the payload data for transmission.
      * Validation is implied.
@@ -44,7 +44,7 @@ interface IPayload
      * @throws Exception\InvalidPayload
      * @return string
      */
-    function serialize();
+    public function serialize();
     /**
      * Fill out this payload object with data from the supplied string.
      *
@@ -52,5 +52,5 @@ interface IPayload
      * @param string $string
      * @return self
      */
-    function deserialize($string);
+    public function deserialize($string);
 }
