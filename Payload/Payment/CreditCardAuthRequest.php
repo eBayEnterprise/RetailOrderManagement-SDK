@@ -61,7 +61,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $shipToLastName;
     /** @var string **/
     protected $shipToPhone;
-    /** @var string **/
+    /** @var array **/
     protected $shipToLines;
     /** @var string **/
     protected $shipToCity;
