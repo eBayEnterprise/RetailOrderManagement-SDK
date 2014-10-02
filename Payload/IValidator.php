@@ -29,5 +29,5 @@ interface IValidator
      * @return self
      * @throws Exception\InvalidPayload
      */
-    function validate(IPayload $payload);
+    public function validate(IPayload $payload);
 }

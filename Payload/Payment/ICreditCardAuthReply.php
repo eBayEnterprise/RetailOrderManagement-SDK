@@ -30,33 +30,33 @@ interface ICreditCardAuthReply extends IPayload
      * xsd restrictions: 1-20 characters
      * @return string
      */
-    function getOrderId();
+    public function getOrderId();
     /**
      * Either a raw PAN or a token representing a PAN.
      *
      * @return string
      */
-    function getPaymentAccountUniqueId();
+    public function getPaymentAccountUniqueId();
     /**
      * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
      *
      * @return bool
      */
-    function getPanIsToken();
+    public function getPanIsToken();
     /**
      * Response code of the credit card authorization. This includes approval, timeout, and several decline codes.
      * Please see supporting documentation for a full list of these codes.
      *
      * @return string
      */
-     function getAuthorizationResponseCode();
+     public function getAuthorizationResponseCode();
     /**
      * Authorization Code returned by the payment processor upon a successful credit card auth.
      * Any order taken by the Order Service that is paid for by Credit Card MUST have this authorization code.
      *
      * @return string
      */
-    function getBankAuthorizationCode();
+    public function getBankAuthorizationCode();
     /**
      * Payment Processor Response for CVV2 (Card Verification Value) check.
      * For most credit cards, you will get an Approval on the AuthorizationResponseCode,
@@ -66,7 +66,7 @@ interface ICreditCardAuthReply extends IPayload
      *
      * @return string
      */
-    function getCVV2ResponseCode();
+    public function getCVV2ResponseCode();
     /**
      * Payment Processor Response for the Address Verification System check.
      * For most credit cards, you will get an Approval on the AuthorizationResponseCode, even
@@ -76,34 +76,34 @@ interface ICreditCardAuthReply extends IPayload
      *
      * @return string
      */
-    function getAVSResponseCode();
+    public function getAVSResponseCode();
     /**
      * Response code for customer phone number verification (only applies to Amex auths).  This data should be
      * included in the OrderCreateRequest for Orders paid for with Amex to support downstream fraud processing.
      * @return string
      */
-    function getPhoneResponseCode();
+    public function getPhoneResponseCode();
     /**
      * Response code for customer name verification (only applies to Amex auths). This data should be
      * included in the OrderCreateRequest for Orders paid for with Amex to support downstream fraud processing.
      *
      * @return string
      */
-    function getNameResponseCode();
+    public function getNameResponseCode();
     /**
      * Response code for customer email verification (only applies to Amex auths). This data should be
      * included in the OrderCreateRequest for Orders paid for with Amex to support downstream fraud processing.
      *
      * @return string
      */
-    function getEmailResponseCode();
+    public function getEmailResponseCode();
     /**
      * The amount authorized by the credit card processor.
      * Includes a required attribute for a three character ISO currency code.
      *
      * @return float
      */
-    function getAmountAuthorized();
+    public function getAmountAuthorized();
     /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
@@ -111,22 +111,22 @@ interface ICreditCardAuthReply extends IPayload
      * @link http://www.iso.org/iso/home/standards/currency_codes.htm
      * @return string
      */
-    function getCurrencyCode();
+    public function getCurrencyCode();
     /**
      * Was the credit card auth an unqualified success - no errors or failed response codes.
      * @return bool
      */
-    function getIsAuthSuccessful();
+    public function getIsAuthSuccessful();
     /**
      * Can the credit card auth reply be accepted.
      * True if the reply was successful or the request reported a timeout.
      * @return bool
      */
-    function getIsAuthAcceptable();
+    public function getIsAuthAcceptable();
     /**
      * Authorization response code acceptable to send to the OMS.
      * Only valid values for the OMS are "APPROVED" or "TIMEOUT".
      * @return string
      */
-    function getResponseCode();
+    public function getResponseCode();
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<Test>
+    <StringElement>A string</StringElement>
+    <IntElement>23</IntElement>
+</Test>

@@ -19,10 +19,12 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 
 class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Payload\IValidator (stub) **/
+    /** @var Payload\IValidator (stub) */
     protected $stubValidator;
     /** @var Payload\IValidatorIterator */
     protected $validatorIterator;
+    /** @var Payload\ISchemaValidator (stub) */
+    protected $stubSchemaValidator;
 
     /**
      * Setup a stub validator and validator iterator for each payload to use
@@ -32,6 +34,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator(array($this->stubValidator));
+        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 
     /**
@@ -42,7 +45,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return new CreditCardAuthReply($this->validatorIterator);
+        return new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
     }
 
     /**
@@ -51,10 +54,22 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideInvalidPayload()
     {
-        $payloadData = array();
-
         return array(
-            array($payloadData)
+            array(array()),
+            array(array(
+                // order id should fail XSD validation
+                'orderId' => '1234567890123456789012345',
+                'paymentAccountUniqueId' => '4111ABC123ZYX987',
+                'panIsToken' => true,
+                'authorizationResponseCode' => 'AP01',
+                'bankAuthorizationCode' => 'OK',
+                'cvv2ResponseCode' => 'M',
+                'avsResponseCode' => 'M',
+                'amountAuthorized' => 55.99,
+                'currencyCode' => 'USD',
+                'phoneResponseCode' => 'PHONE_OK',
+                'nameResponseCode' => 'NAME_OK',
+            )),
         );
     }
 
@@ -84,6 +99,103 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * Provide payloads of data that should result in an unsuccessful payload
+     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
+     */
+    public function provideUnsuccessfulPayload()
+    {
+        return array(
+            // any authorization response code other than AP01, TO01 or NR01 is
+            // unsuccessful, regardless of any other responses
+            array(array(
+                'authorizationResponseCode' => 'ND01',
+            )),
+            // when auth response code is successful, AVS and CVV response
+            // codes must be successful as well, when they are not, reply is unsuccessful
+            array(array(
+                'authorizationResponseCode' => 'AP01',
+                'cvv2ResponseCode' => 'M',
+                'avsResponseCode' => 'N',
+            )),
+            array(array(
+                'authorizationResponseCode' => 'AP01',
+                'cvv2ResponseCode' => 'M',
+                'avsResponseCode' => 'AW',
+            )),
+            array(array(
+                'authorizationResponseCode' => 'AP01',
+                'cvv2ResponseCode' => 'N',
+                'avsResponseCode' => 'P',
+            )),
+        );
+    }
+
+    /**
+     * Provide payloads of data that should result in a successful payload
+     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
+     */
+    public function provideSuccessfulPayload()
+    {
+        return array(
+            array(array(
+                'authorizationResponseCode' => 'AP01',
+                'cvv2ResponseCode' => 'M',
+                'avsResponseCode' => 'P'
+            )),
+        );
+    }
+
+    /**
+     * Provide payloads of data that should result in an unacceptable payload
+     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
+     */
+    public function provideUnacceptableAuthPayload()
+    {
+        return array(
+            array(array('authorizationResponseCode' => 'ND01')),
+        );
+    }
+
+    /**
+     * Provide payloads of data that should result in an acceptable payload
+     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
+     */
+    public function provideAcceptableAuthPayload()
+    {
+        return array(
+            array(array('authorizationResponseCode' => 'AP01')),
+            array(array('authorizationResponseCode' => 'NR01')),
+            array(array('authorizationResponseCode' => 'TO01')),
+        );
+    }
+
+    /**
+     * Provide payloads of data that should produce the provided response code.
+     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload and the expected result of getResponseCode
+     */
+    public function provideResponseCodePayloadAndCode()
+    {
+        return array(
+            array(
+                array('authorizationResponseCode' => 'AP01'),
+                'APPROVED'
+            ),
+            array(
+                array('authorizationResponseCode' => 'NR01'),
+                'TIMEOUT'
+            ),
+            array(
+                array('authorizationResponseCode' => 'TO01'),
+                'TIMEOUT'
+            ),
+            // basically anything else should result in a `null` response code
+            array(
+                array('authorizationResponseCode' => 'NC03'),
+                null
+            ),
+        );
+    }
     /**
      * Create a payload with the provided data injected.
      * @param  mixed[] $properties key/value pairs of property => value
@@ -124,6 +236,8 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Simply ensure that when one validator fails validation, the exception
+     * is thrown - is not validating the actual payload data.
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
@@ -139,6 +253,8 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Simply ensure that when none of the validators fail, the payload is
+     * considered valid - is not validating actual payload data.
      * @param array $payloadData
      * @dataProvider provideValidPayload
      */
@@ -153,11 +269,13 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that serialize will perform validation. Should any validator
+     * fail, serialization should also fail.
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testSerializeWillFail(array $payloadData)
+    public function testSerializeWillFailWithInvalidPayload(array $payloadData)
     {
         $this->stubValidator->expects($this->any())
             ->method('validate')
@@ -166,6 +284,21 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload->serialize();
     }
 
+    /**
+     * Test that if a payload should pass validation but still produce an
+     * XSD invalid payload, serialization should fail.
+     * @param array $payloadData
+     * @dataProvider provideInvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testSerializeWillFailWithXsdInvalidPayloadData(array $payloadData)
+    {
+        $this->stubSchemaValidator->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
+        $payload = $this->buildPayload($payloadData);
+        $payload->serialize();
+    }
     /**
      * @param array $payloadData
      * @dataProvider provideValidPayload
@@ -183,11 +316,28 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testDeserializeWillFail()
+    public function testDeserializeWillFailSchemaInvalid()
     {
+        $this->stubSchemaValidator->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $xml = $this->loadXmlInvalidTestString();
 
-        $newPayload = new CreditCardAuthReply();
+        $newPayload = $this->createNewPayload();
+        $newPayload->deserialize($xml);
+    }
+
+    /**
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testDeserializeWillFailPayloadInvalid()
+    {
+        $this->stubValidator->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
+        $xml = $this->loadXmlInvalidTestString();
+
+        $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
     }
 
@@ -200,7 +350,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $xml = $this->loadXmlTestString();
 
-        $newPayload = new CreditCardAuthReply();
+        $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
