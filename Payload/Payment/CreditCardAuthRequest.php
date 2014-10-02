@@ -99,7 +99,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'requestId' => 'string(@requestId)',
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
         'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
-        'panIsToken' => 'boolean(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
         'expirationDate' => 'string(x:ExpirationDate)',
         'cardSecurityCode' => 'string(x:CardSecurityCode)',
         'amount' => 'number(x:Amount)',
@@ -141,6 +140,11 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'transactionId' => 'x:SecureVerificationData/x:TransactionId',
         'payerAuthenticationResponse' => 'x:SecureVerificationData/x:PayerAuthenticationResponse',
         'eci' => 'x:SecureVerificationData/x:ECI',
+    );
+    /** @var array */
+    protected $booleanXPaths = array(
+        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
+        'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
     );
 
     /**
@@ -910,6 +914,21 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
     }
 
+    /**
+     * Utility function to convert "true" => true and "false" => false
+     * for attributes and elements in our XML that are used to
+     * store boolean values
+     *
+     * @param \DOMXPath $domXPath
+     */
+    protected function getBooleanXPaths(\DOMXPath $domXPath)
+    {
+        foreach ($this->booleanXPaths as $property => $xPath) {
+            $value = $domXPath->evaluate($xPath);
+            $this->$property = ($value === 'true') ? true : false;
+        }
+    }
+
     public function serialize()
     {
         $this->validate();
@@ -953,6 +972,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
 
         $this->addressLinesFromXPath($domXPath);
+        $this->getBooleanXPaths($domXPath);
 
         $this->validate();
 
