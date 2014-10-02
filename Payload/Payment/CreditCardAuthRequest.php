@@ -104,12 +104,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      * @param int $maxLength
      * @return string or null
      */
-    protected function cleanString($string, $maxLength)
+    protected function cleanString($string, $maxLength = null)
     {
         $value = null;
 
-        if (is_a($string, 'string')) {
-            $trimmed = substr(trim($string), 0, $maxLength);
+        if (is_string($string)) {
+            $trimmed = substr(trim($string), 0, $maxLength ? $maxLength : strlen($string));
             $value = empty($trimmed) ? null : $trimmed;
         }
 
@@ -124,13 +124,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      * Truncate any lines to 70 chars max.
      *
      * @param string $lines
-     * @return string or null
+     * @return array or null
      */
     protected function cleanAddressLines($lines)
     {
         $finalLines = null;
 
-        if (is_a($lines, 'string')) {
+        if (is_string($lines)) {
             $trimmed = trim($lines);
             $addressLines = explode('\n', $trimmed);
 
@@ -187,7 +187,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setPanIsToken($isToken)
     {
-        $this->panIsToken = is_a($isToken, 'bool') ? $isToken : null;
+        $this->panIsToken = is_bool($isToken) ? $isToken : null;
         return $this;
     }
 
@@ -226,7 +226,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
         $cleaned = $this->cleanString($cvv, 4);
         if ($cleaned !== null) {
-            if (strlen($cleaned) < 3) {
+            if (!strlen($cleaned) < 3) {
                 $value = $cleaned;
             }
         }
@@ -242,7 +242,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setAmount($amount)
     {
-        if (is_a($amount, 'float')) {
+        if (is_float($amount)) {
             $this->amount = round($amount, 2, PHP_ROUND_HALF_UP);
         } else {
             $this->amount = null;
@@ -261,7 +261,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
         $cleaned = $this->cleanString($code, 3);
         if ($cleaned !== null) {
-            if (strlen($cleaned) < 3) {
+            if (!strlen($cleaned) < 3) {
                 $value = $cleaned;
             }
         }
@@ -278,15 +278,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function setEmail($email)
     {
         $value = null;
-
+        $regex = '([a-zA-Z0-9_\-])([a-zA-Z0-9_\-\.]*)@(\[((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.)';
+        $regex .= '{3}|((([a-zA-Z0-9\-]+)\.)+))([a-zA-Z]{2,}|(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\])';
         $cleaned = $this->cleanString($email, 70);
         if ($cleaned !== null) {
-            $match = preg_match(
-                '([a-zA-Z0-9_\-])([a-zA-Z0-9_\-\.]*)@(\[((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}|((([a-zA-Z0-9\-]+)\.)+))([a-zA-Z]{2,}|(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\])',
-                $cleaned
-            );
-
-            if ($match === 1) {
+            //$match = preg_match($regex, $cleaned);
+            $match = filter_var($cleaned, FILTER_VALIDATE_EMAIL);
+            if ($match) {
                 $value = $cleaned;
             }
         }
@@ -307,7 +305,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $cleaned = $this->cleanString($ip, 70);
         if ($cleaned !== null) {
             $match = preg_match(
-                '((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])',
+                '/((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])/',
                 $cleaned
             );
 
@@ -329,7 +327,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $value = null;
 
-        if (is_a($name, 'string')) {
+        if (is_string($name)) {
             $trimmed = trim($name);
             if (!empty($trimmed)) {
                 $value = $trimmed;
@@ -349,7 +347,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $value = null;
 
-        if (is_a($name, 'string')) {
+        if (is_string($name)) {
             $trimmed = trim($name);
             if (!empty($trimmed)) {
                 $value = $trimmed;
@@ -369,7 +367,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $value = null;
 
-        if (is_a($phone, 'string')) {
+        if (is_string($phone)) {
             $trimmed = trim($phone);
             if (!empty($trimmed)) {
                 $value = $trimmed;
@@ -398,7 +396,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingCity($city)
     {
-        $this->requestId = $this->cleanString($city, 35);
+        $this->billingCity = $this->cleanString($city, 35);
         return $this;
     }
 
@@ -437,7 +435,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setBillingPostalCode($code)
     {
-        $this->requestId = $this->cleanString($code, 15);
+        $this->billingPostalCode = $this->cleanString($code, 15);
         return $this;
     }
 
@@ -450,7 +448,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $value = null;
 
-        if (is_a($name, 'string')) {
+        if (is_string($name)) {
             $trimmed = trim($name);
             if (!empty($trimmed)) {
                 $value = $trimmed;
@@ -470,7 +468,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $value = null;
 
-        if (is_a($name, 'string')) {
+        if (is_string($name)) {
             $trimmed = trim($name);
             if (!empty($trimmed)) {
                 $value = $trimmed;
@@ -490,7 +488,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $value = null;
 
-        if (is_a($phone, 'string')) {
+        if (is_string($phone)) {
             $trimmed = trim($phone);
             if (!empty($trimmed)) {
                 $value = $trimmed;
@@ -508,13 +506,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToLines($lines)
     {
-        $this->requestId = $this->cleanAddressLines($lines);
+        $this->shipToLines = $this->cleanAddressLines($lines);
         return $this;
     }
 
     public function getShipToCity()
     {
-        return $this->requestId;
+        return $this->shipToCity;
     }
 
     public function setShipToCity($city)
@@ -531,7 +529,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getShipToMainDivision()
     {
-        return $this->shipToCity;
+        return $this->shipToMainDivision;
     }
 
     public function setShipToMainDivision($div)
@@ -570,17 +568,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getIsRequestToCorrectCvvOrAvsError()
     {
-        return $this->$isRequestToCorrectCVVOrAVSError;
+        return $this->isRequestToCorrectCVVOrAVSError;
     }
 
     public function setIsRequestToCorrectCvvOrAvsError($flag)
     {
-        if (is_a($flag, 'bool')) {
-            $this->isRequestToCorrectCVVOrAVSError = $flag;
-        } else {
-            $this->isRequestToCorrectCVVOrAVSError = null;
-        }
-
+        $this->isRequestToCorrectCVVOrAVSError = is_bool($flag) ? $flag : null;
         return $this;
     }
 
@@ -657,7 +650,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $value = null;
 
-        if (is_a($eci, 'string')) {
+        if (is_string($eci)) {
             $trimmed = trim($eci);
             if (!empty($trimmed)) {
                 $value = $trimmed;
@@ -691,16 +684,18 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function serialize()
     {
         $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
+            '<%s xmlns="%s" requestId="%s">%s</%1$s>',
             self::ROOT_NODE,
             self::XML_NS,
+            $this->getRequestId(),
             $this->serializeContents()
         );
         $doc = new \DOMDocument();
         $doc->loadXML($xmlString);
         $xml = $doc->saveXML();
+        $this->schemaValidator->validate($xml, self::XSD);
 
-        return $this->schemaValidator($xml, self::XSD);
+        return $xml;
     }
 
     /**
@@ -715,9 +710,10 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         . $this->serializeBillingNamePhone()
         . $this->serializeBillingAddress()
         . $this->serializeCustomerInfo()
+        . $this->serializeShippingNamePhone()
         . $this->serializeShippingAddress()
         . $this->serializeIsCorrectError()
-        . $this->serializeServerVerificationdata();
+        . $this->serializeSecureVerificationData();
     }
 
     /**
@@ -729,7 +725,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         return sprintf('<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
             $this->getOrderId(),
-            $this->getPanIsToken(),
+            $this->getPanIsToken() ? 'true' : 'false',
             $this->getCardNumber());
     }
 
@@ -768,11 +764,21 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected function serializeBillingAddress()
     {
         $lines = array();
-        foreach ($this->billingLines as $line) {
-            sprintf($lines[], '<Line>%s</Line>', $line);
+        $billingLines = is_array($this->billingLines) ? $this->billingLines : array();
+        $idx = 0;
+        foreach ($billingLines as $line) {
+            $idx++;
+            $lines[] = sprintf('<Line%d>%s</Line%1$d>',
+                $idx,
+                $line);
         }
 
-        return sprintf('<BillingAddress>%s</BillingAddress>', implode('', $lines));
+        return sprintf('<BillingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></BillingAddress>',
+            implode('', $lines),
+            $this->getBillingCity(),
+            $this->getBillingMainDivision(),
+            $this->getBillingCountryCode(),
+            $this->getBillingPostalCode());
     }
 
     /**
@@ -788,6 +794,19 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     }
 
     /**
+     * Build the ShippingFirstName, ShippingLastName and ShippinggPhoneNo nodes
+     *
+     * @return string
+     */
+    protected function serializeShippingNamePhone()
+    {
+        return sprintf('<ShipToFirstName>%s</ShipToFirstName><ShipToLastName>%s</ShipToLastName><ShipToPhoneNo>%s</ShipToPhoneNo>',
+            $this->getShipToFirstName(),
+            $this->getShipToLastName(),
+            $this->getShipToPhone());
+    }
+
+    /**
      * Aggregate the shipping address lines into the ShippingAddress node
      *
      * @return string
@@ -795,11 +814,21 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected function serializeShippingAddress()
     {
         $lines = array();
-        foreach ($this->shipToLines as $line) {
-            sprintf($lines[], '<Line>%s</Line>', $line);
+        $shippingLines = is_array($this->shipToLines) ? $this->shipToLines : array();
+        $idx = 0;
+        foreach ($shippingLines as $line) {
+            $idx++;
+            $lines[] = sprintf('<Line%d>%s</Line%1$d>',
+                $idx,
+                $line);
         }
 
-        return sprintf('<ShippingAddress>%s</ShippingAddress>', implode('', $lines));
+        return sprintf('<ShippingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></ShippingAddress>',
+            implode('', $lines),
+            $this->getShipToCity(),
+            $this->getShipToMainDivision(),
+            $this->getShipToCountryCode(),
+            $this->getShipToPostalCode());
     }
 
     /**
@@ -809,8 +838,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeIsCorrectError()
     {
-        return sprintf('<isRequestToCorrectCVVOrAVSError>$b</isRequestToCorrectCVVOrAVSError>',
-            $this->getIsRequestToCorrectCvvOrAvsError());
+        $string = sprintf('<isRequestToCorrectCVVOrAVSError>%s</isRequestToCorrectCVVOrAVSError>',
+            $this->getIsRequestToCorrectCvvOrAvsError() ? 'true' : 'false');
+        return $string;
     }
 
     /**
@@ -831,26 +861,27 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function deserialize($string)
     {
-        $doc  = new \DOMDocument();
-        $doc->loadXML($string);
-
-        $this->setOrderId($doc->getElementsByTagName('orderId')->item(0)->nodeValue);
-
-        $node = $doc->getElementsByTagName('PaymentAccountUniqueId')->item(0);
-        $this->cardNumber = $node->nodeValue;
-        $attributes = $node->attributes();
-        $this->setPanIsToken($attributes['isToken']);
-
-        $this->setExpirationDate($doc->getElementsByTagName('ExpirationDate')->item(0)->nodeValue);
-        $this->setCardSecurityCode($doc->getElementsByTagName('CardSecurityCode')->item(0)->nodeValue);
-        $this->setAmount($doc->getElementsByTagName('Amount')->item(0)->nodeValue);
-        $this->setBillingFirstName($doc->getElementsByTagName('BillingFirstName')->item(0)->nodeValue);
-        $this->setBillingLastName($doc->getElementsByTagName('BillingLastName')->item(0)->nodeValue);
-        $this->setBillingPhone($doc->getElementsByTagName('BillingPhoneNo')->item(0)->nodeValue);
-
-        $lines = $doc->getElementsByTagName('Lines');
-        foreach ($lines as $line) {
-
-        }
+        return $this;
+//        $doc  = new \DOMDocument();
+//        $doc->loadXML($string);
+//
+//        $this->setOrderId($doc->getElementsByTagName('orderId')->item(0)->nodeValue);
+//
+//        $node = $doc->getElementsByTagName('PaymentAccountUniqueId')->item(0);
+//        $this->cardNumber = $node->nodeValue;
+//        $attributes = $node->attributes();
+//        $this->setPanIsToken($attributes['isToken']);
+//
+//        $this->setExpirationDate($doc->getElementsByTagName('ExpirationDate')->item(0)->nodeValue);
+//        $this->setCardSecurityCode($doc->getElementsByTagName('CardSecurityCode')->item(0)->nodeValue);
+//        $this->setAmount($doc->getElementsByTagName('Amount')->item(0)->nodeValue);
+//        $this->setBillingFirstName($doc->getElementsByTagName('BillingFirstName')->item(0)->nodeValue);
+//        $this->setBillingLastName($doc->getElementsByTagName('BillingLastName')->item(0)->nodeValue);
+//        $this->setBillingPhone($doc->getElementsByTagName('BillingPhoneNo')->item(0)->nodeValue);
+//
+//        $lines = $doc->getElementsByTagName('Lines');
+//        foreach ($lines as $line) {
+//
+//        }
     }
 }
