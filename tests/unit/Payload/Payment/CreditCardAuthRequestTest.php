@@ -19,12 +19,16 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 
 class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
 {
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+
     /** @var  Payload\IValidator */
     protected $validatorStub;
     /** @var Payload\IValidatorIterator */
     protected $validatorIterator;
     /** @var  Payload\ISchemaValidator */
     protected $schemaValidatorStub;
+    /** @var string */
+    protected $testXML = '<Root xmlns="http://api.gsicommerce.com/schema/checkout/1.0"><Node1 attrib="true">0</Node1><Node2  attrib="false">1</Node2></Root>';
 
     protected function setUp()
     {
@@ -98,6 +102,55 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Data provider for testing getBooleanXPaths
+     */
+    public function provideBooleanXPathTests()
+    {
+        return array(
+            array(
+                $this->testXML,
+                '$panIsToken',
+                array(
+                    '$panIsToken' => 'x:Node1/@attrib'
+                ),
+                true
+            ),
+            array(
+                $this->testXML,
+                '$panIsToken',
+                array(
+                    '$panIsToken' => 'x:Node1'
+                ),
+                false
+            ),
+            array(
+                $this->testXML,
+                '$panIsToken',
+                array(
+                    '$panIsToken' => 'x:Node2/@attrib'
+                ),
+                false
+            ),
+            array(
+                $this->testXML,
+                '$panIsToken',
+                array(
+                    '$panIsToken' => 'x:Node2'
+                ),
+                true
+            ),
+            array(  // test invalid XPath
+                $this->testXML,
+                '$panIsToken',
+                array(
+                    '$panIsToken' => 'x:Node3'
+                ),
+                null
+            )
+        );
+    }
+
+    /**
      * Take an array of property values with property names as keys and return an IPayload object
      *
      * @param array $properties
@@ -112,6 +165,44 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         }
 
         return $payload;
+    }
+
+    /**
+     * Provide test data for the cleanStrings function
+     * @return array
+     */
+    public function provideCleanStringTests()
+    {
+        return array(
+            // good data
+            array('testReqId', 40, 'testReqId'),
+            // not a string
+            array(100, 40, null),
+            // properly truncates
+            array('abcdefghijklmnopqrstuvwxyz', 5, 'abcde')
+        );
+    }
+
+    /**
+     * Provide test data for the cleanAddressLines function
+     * @return array
+     */
+    public function provideCleanAddressLinesTests()
+    {
+        return array(
+            array(  // good data
+                'Street 1\nStreet 2\n Street 3\nStreet 4',
+                array('Street 1', 'Street 2', 'Street 3', 'Street 4')
+            ),
+            array(  // extra lines
+                'Street 1\nStreet 2\n Street 3\nStreet 4\nStreet 5',
+                array('Street 1', 'Street 2', 'Street 3', 'Street 4Street 5')
+            ),
+            array( // not a string
+                100,
+                null
+            )
+        );
     }
 
     /**
@@ -142,67 +233,57 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         return $string;
     }
 
-    public function testCleanStringCleansValidString()
+    /**
+     * Test the cleanString utility function
+     * @param $value
+     * @param $maxLength
+     * @param $expected
+     * @dataProvider provideCleanStringTests
+     */
+    public function testCleanString($value, $maxLength, $expected)
     {
-        $value = 'testReqId';
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanString');
         $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($value, 40));
-        $this->assertSame($value, $cleaned);
+        $cleaned = $method->invokeArgs($payload, array($value, $maxLength));
+        $this->assertSame($expected, $cleaned);
     }
 
-    public function testCleanStringDetectsNonString()
+    /**
+     * @param $lines
+     * @param $expected
+     * @dataProvider provideCleanAddressLinesTests
+     */
+    public function testCleanAddressLines($lines, $expected)
     {
-        $value = 100;
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanString');
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($value, 40));
-        $this->assertSame(null, $cleaned);
-    }
-
-    public function testCleanStringTruncatesString()
-    {
-        $value = 'abcdefghijklmnopqrstuvwxyz';
-        $truncated = 'abcde';
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanString');
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($value, 5));
-        $this->assertSame($truncated, $cleaned);
-    }
-
-    public function testCleanAddressLinesHandlesValidString()
-    {
-        $lines = 'Street 1\nStreet 2\n Street 3\nStreet 4';
-        $correct = array('Street 1', 'Street 2', 'Street 3', 'Street 4');
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanAddressLines');
         $method->setAccessible(true);
         $cleaned = $method->invokeArgs($payload, array($lines));
-        $this->assertSame($correct, $cleaned);
+        $this->assertSame($expected, $cleaned);
     }
 
-    public function testCleanAddressLinesHandlesExtraLines()
+    /**
+     * @param $xml
+     * @param $xPath
+     * @param $expected
+     * @dataProvider provideBooleanXPathTests
+     */
+    public function testEvaluateBooleanXPaths($xml, $property, $xPath, $expected)
     {
-        $lines = 'Street 1\nStreet 2\n Street 3\nStreet 4\nStreet 5';
-        $correct = array('Street 1', 'Street 2', 'Street 3', 'Street 4Street 5');
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanAddressLines');
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($lines));
-        $this->assertSame($correct, $cleaned);
-    }
+        $dom = new \DOMDocument();
+        $dom->loadXML($xml);
+        $domXPath = new \DOMXPath($dom);
+        $domXPath->registerNamespace('x', self::XML_NS);
 
-    public function testCleanAddressLinesDetectsNoString()
-    {
-        $value = 100;
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanAddressLines');
+        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'evaluateBooleanXPaths');
         $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($value));
-        $this->assertSame(null, $cleaned);
+        $method->invokeArgs($payload, array($domXPath, $xPath));
+
+        $actual = $payload->$property;
+
+        $this->assertSame($expected, $actual);
     }
 
     /**

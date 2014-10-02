@@ -349,7 +349,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     {
         $payload = $this->buildPayload($payloadData);
         $xml = $this->loadXmlTestString();
-
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
 

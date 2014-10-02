@@ -65,13 +65,16 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected $extractionPaths = array(
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
         'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
-        'panIsToken' => 'boolean(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
         'authorizationResponseCode' => 'string(x:AuthorizationResponseCode)',
         'bankAuthorizationCode' => 'string(x:BankAuthorizationCode)',
         'cvv2ResponseCode' => 'string(x:CVV2ResponseCode)',
         'avsResponseCode' => 'string(x:AVSResponseCode)',
         'amountAuthorized' => 'number(x:AmountAuthorized)',
         'currencyCode' => 'string(x:AmountAuthorized/@currencyCode)',
+    );
+    /** @var array property/XPath pairs that take boolean values*/
+    protected $booleanXPaths = array(
+        'panIsToken' => 'x:PaymentContext/x:PaymentAccountUniqueId/@isToken'
     );
     /** @var array XPath expressions to match optional nodes in the serialized payload (XML) */
     protected $optionalExtractionPaths = array(
@@ -220,6 +223,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
                 $this->$property = $foundNode->nodeValue;
             }
         }
+        // boolean values have to be handled specially
+        $this->evaluateBooleanXPaths($xpath, $this->booleanXPaths);
+
         // payload is only valid of the unserialized data is also valid
         $this->validate();
         return $this;
@@ -342,5 +348,29 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
         $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
         return $this;
+    }
+
+    /**
+     * Utility function to convert "true" => true and "false" => false
+     * for attributes and elements in our XML that are used to
+     * store boolean values
+     *
+     * @param \DOMXPath $domXPath
+     * @param array $xPaths
+     */
+    protected function evaluateBooleanXPaths(\DOMXPath $domXPath, $xPaths)
+    {
+        if (!is_array($xPaths)) {
+            return;
+        }
+
+        foreach ($xPaths as $property => $xPath) {
+            $this->$property = null;
+            $nodes = $domXPath->query($xPath);
+            if ($nodes->length > 0) {
+                $value = $nodes->item(0)->nodeValue;
+                $this->$property = (($value === 'true') || ($value === '1')) ? true : false;
+            }
+        }
     }
 }

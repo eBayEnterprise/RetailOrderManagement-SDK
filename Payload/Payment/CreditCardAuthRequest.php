@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
@@ -141,7 +142,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'payerAuthenticationResponse' => 'x:SecureVerificationData/x:PayerAuthenticationResponse',
         'eci' => 'x:SecureVerificationData/x:ECI',
     );
-    /** @var array */
+    /** @var array property/XPath pairs that take boolean values*/
     protected $booleanXPaths = array(
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
         'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
@@ -724,15 +725,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-
-        return $this;
-    }
-
     /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.
@@ -920,17 +912,42 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      * store boolean values
      *
      * @param \DOMXPath $domXPath
+     * @param array $xPaths
      */
-    protected function getBooleanXPaths(\DOMXPath $domXPath)
+    protected function evaluateBooleanXPaths(\DOMXPath $domXPath, $xPaths)
     {
-        foreach ($this->booleanXPaths as $property => $xPath) {
-            $value = $domXPath->evaluate($xPath);
-            $this->$property = ($value === 'true') ? true : false;
+        if (!is_array($xPaths)) {
+            return;
+        }
+
+        foreach ($xPaths as $property => $xPath) {
+            $this->$property = null;
+            $nodes = $domXPath->query($xPath);
+            if ($nodes->length > 0) {
+                $value = $nodes->item(0)->nodeValue;
+                $this->$property = (($value === 'true') || ($value === '1')) ? true : false;
+            }
         }
     }
 
+    public function validate()
+    {
+        foreach ($this->validators as $validator) {
+            $validator->validate($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Serialize the payload into XML
+     *
+     * @throws Exception\InvalidPayload
+     * @return string
+     */
     public function serialize()
     {
+        // make sure this payload is valid first
         $this->validate();
 
         $xmlString = sprintf(
@@ -940,14 +957,24 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             $this->getRequestId(),
             $this->serializeContents()
         );
+
+        // validate the xML we just created
         $doc = new \DOMDocument();
         $doc->loadXML($xmlString);
-        $xml = $doc->saveXML();
+        $xml = $doc->C14N();
+
+        // schemaValidator will throw Exception\InvalidPayload if it fails
         $this->schemaValidator->validate($xml, self::XSD);
 
         return $xml;
     }
 
+    /**
+     * Take and XML string and configure this payload object
+     *
+     * @param string $string
+     * @return $this|\eBayEnterprise\RetailOrderManagement\Payload\IPayload
+     */
     public function deserialize($string)
     {
         // Make sure that the passed string at least passes schema validation.
@@ -971,9 +998,11 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             }
         }
 
+        // address lines and boolean values have to be handled specially
         $this->addressLinesFromXPath($domXPath);
-        $this->getBooleanXPaths($domXPath);
+        $this->evaluateBooleanXPaths($domXPath, $this->booleanXPaths);
 
+        // validate ourself, throws Exception\InvalidPayload if we don't pass
         $this->validate();
 
         return $this;
