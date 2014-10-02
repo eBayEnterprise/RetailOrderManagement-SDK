@@ -96,55 +96,51 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $schemaValidator;
     /** @var array */
     protected $requiredNodesMap = array (
-        'requestId' => '//x:CreditCardAuthRequest/@requestId',
-        'orderId' => '//x:PaymentContext/x:OrderId',
-        'cardNumber' => '//x:PaymentContext/x:PaymentAccountUniqueId',
-        'panIsToken' => '//x:PaymentContext/x:PaymentAccountUniqueId/@isToken',
-        'expirationDate' => '//x:ExpirationDate',
-        'cardSecurityCode' => '//x:CardSecurityCode',
-        'amount' => '//x:Amount',
-        'currencyCode' => '//x:Amount/@currencyCode',
-        'billingFirstName' => '//x:BillingFirstName',
-        'billingLastName' => '//x:BillingLastName',
-        'billingPhone' => '//x:BillingPhoneNo',
-        'billingCity' => '//x:BillingAddress/x:City',
-        'billingCountryCode' => '//x:BillingAddress/x:CountryCode',
-        'customerEmail' => '//x:CustomerEmail',
-        'customerIpAddress' => '//x:CutsomerIPAddress',
-        'shipToFirstName' => '//x:ShipToFirstName',
-        'shipToLastName' => '//x:ShipToLastName',
-        'shipToPhone' => '//x:ShipToPhoneNo',
-        'shipToCity' => '//x:ShipToAddress/x:City',
-        'shipToCountryCode' => '//x:ShipToAddress/x:CountryCode',
-        'isRequestToCorrectCVVOrAVSError' => '//x:isRequestToCorrectCVVOrAVSError',
+        'requestId' => 'string(@requestId)',
+        'orderId' => 'string(x:PaymentContext/x:OrderId)',
+        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'panIsToken' => 'boolean(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
+        'expirationDate' => 'string(x:ExpirationDate)',
+        'cardSecurityCode' => 'string(x:CardSecurityCode)',
+        'amount' => 'number(x:Amount)',
+        'currencyCode' => 'string(x:Amount/@currencyCode)',
+        'billingFirstName' => 'string(x:BillingFirstName)',
+        'billingLastName' => 'string(x:BillingLastName)',
+        'billingPhone' => 'string(x:BillingPhoneNo)',
+        'billingCity' => 'string(x:BillingAddress/x:City)',
+        'billingCountryCode' => 'string(x:BillingAddress/x:CountryCode)',
+        'customerEmail' => 'string(x:CustomerEmail)',
+        'customerIpAddress' => 'string(x:CustomerIPAddress)',
+        'shipToFirstName' => 'string(x:ShipToFirstName)',
+        'shipToLastName' => 'string(x:ShipToLastName)',
+        'shipToPhone' => 'string(x:ShipToPhoneNo)',
+        'shipToCity' => 'string(x:ShippingAddress/x:City)',
+        'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
+        'isRequestToCorrectCVVOrAVSError' => 'boolean(x:isRequestToCorrectCVVOrAVSError)'
     );
-
     /** @var array */
-    protected $billingLines = array (
-        'billingLines' => '//x;BillingAddress/x:Line1',
+    protected $addressLinesMap = array(
+        array(
+            'property' => 'billingLines',
+            'xPath' => "x:BillingAddress/*[starts-with(name(), 'Line')]"
+        ),
+        array(
+            'property' => 'shipToLines',
+            'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]"
+        )
     );
-
     /** @var array */
-    protected $shipToLines = array (
-        'shipToLines' => '//x:ShipToAddress/x:Line1',
-    );
-
-    /** @var array */
-    protected $optionalNodesMap = array (
-        'billingMainDivision' => '//x:BillingAddress/x:MainDivision',
-        'billingPostalCode' => '//x:BillingAddress/x:PostalCode',
-        'shipToMainDivision' => '//x:ShipToAddress/x:MainDivision',
-        'shipToPostalCode' => '//x:ShipToAddress/x:PostalCode',
-        'authenticationAvailable' => '//x:SecureVerificationData/x:AuthenticationAvailable',
-        'authenticationStatus' => '//x:SecureVerificationData/x:AuthenticationStatus',
-        'cavvUcaf' => '//x:SecureVerificationData/x:CavvUcaf',
-        'transactionId' => '//x:SecureVerificationData/x:TransactionId',
-        'payerAuthenticationResponse' => '//x:SecureVerificationData/x:PayerAuthenticationResponse'
-    );
-
-    /** @var array */
-    protected $optionalSecureValidationData = array(
-        'eci' => '//x:SecureVerificationData/x:ECI',
+    protected $optionalNodesMap = array(
+        'billingMainDivision' => 'x:BillingAddress/x:MainDivision',
+        'billingPostalCode' => 'x:BillingAddress/x:PostalCode',
+        'shipToMainDivision' => 'x:ShippingAddress/x:MainDivision',
+        'shipToPostalCode' => 'x:ShippingAddress/x:PostalCode',
+        'authenticationAvailable' => 'x:SecureVerificationData/x:AuthenticationAvailable',
+        'authenticationStatus' => 'x:SecureVerificationData/x:AuthenticationStatus',
+        'cavvUcaf' => 'x:SecureVerificationData/x:CavvUcaf',
+        'transactionId' => 'x:SecureVerificationData/x:TransactionId',
+        'payerAuthenticationResponse' => 'x:SecureVerificationData/x:PayerAuthenticationResponse',
+        'eci' => 'x:SecureVerificationData/x:ECI',
     );
 
     /**
@@ -156,12 +152,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      * @param int $maxLength
      * @return string or null
      */
-    protected function cleanString($string, $maxLength = null)
+    protected function cleanString($string, $maxLength)
     {
         $value = null;
 
         if (is_string($string)) {
-            $trimmed = substr(trim($string), 0, $maxLength ? $maxLength : strlen($string));
+            $trimmed = substr(trim($string), 0, $maxLength);
             $value = empty($trimmed) ? null : $trimmed;
         }
 
@@ -894,6 +890,26 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             $this->getPayerAuthenticationResponse());
     }
 
+    /**
+     * There can be many address lines although only one is required
+     * Find all of the nodes in the address node that
+     * start with 'Line' and add their value to the
+     * proper address lines array
+     *
+     * @param \DOMXPath $domXPath
+     */
+    protected function addressLinesFromXPath(\DOMXPath $domXPath)
+    {
+        foreach ($this->addressLinesMap as $address) {
+            $lines = $domXPath->query($address['xPath']);
+            $property = $address['property'];
+            $this->$property = array();
+            foreach ($lines as $line) {
+                array_push($this->$property, $line->nodeValue);
+            }
+        }
+    }
+
     public function serialize()
     {
         $this->validate();
@@ -925,33 +941,21 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $domXPath = new \DOMXPath($dom);
         $domXPath->registerNamespace('x', self::XML_NS);
 
-        foreach ($this->requiredNodesMap as $property => $xpath) {
-
+        foreach ($this->requiredNodesMap as $property => $xPath) {
+            $this->$property = $domXPath->evaluate($xPath);
         }
 
+        foreach ($this->optionalNodesMap as $property => $xPath) {
+            $node = $domXPath->query($xPath)->item(0);
+            if ($node) {
+                $this->$property = $node->nodeValue;
+            }
+        }
+
+        $this->addressLinesFromXPath($domXPath);
+
         $this->validate();
-        
+
         return $this;
-//        $doc  = new \DOMDocument();
-//        $doc->loadXML($string);
-//
-//        $this->setOrderId($doc->getElementsByTagName('orderId')->item(0)->nodeValue);
-//
-//        $node = $doc->getElementsByTagName('PaymentAccountUniqueId')->item(0);
-//        $this->cardNumber = $node->nodeValue;
-//        $attributes = $node->attributes();
-//        $this->setPanIsToken($attributes['isToken']);
-//
-//        $this->setExpirationDate($doc->getElementsByTagName('ExpirationDate')->item(0)->nodeValue);
-//        $this->setCardSecurityCode($doc->getElementsByTagName('CardSecurityCode')->item(0)->nodeValue);
-//        $this->setAmount($doc->getElementsByTagName('Amount')->item(0)->nodeValue);
-//        $this->setBillingFirstName($doc->getElementsByTagName('BillingFirstName')->item(0)->nodeValue);
-//        $this->setBillingLastName($doc->getElementsByTagName('BillingLastName')->item(0)->nodeValue);
-//        $this->setBillingPhone($doc->getElementsByTagName('BillingPhoneNo')->item(0)->nodeValue);
-//
-//        $lines = $doc->getElementsByTagName('Lines');
-//        foreach ($lines as $line) {
-//
-//        }
     }
 }

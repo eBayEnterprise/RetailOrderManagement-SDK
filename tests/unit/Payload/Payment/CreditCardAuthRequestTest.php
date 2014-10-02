@@ -173,16 +173,6 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($truncated, $cleaned);
     }
 
-    public function testCleanStringNoMaxLengthReturnsFullString()
-    {
-        $value = 'abcdefghijklmnopqrstuvwxyz';
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanString');
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($value));
-        $this->assertSame($value, $cleaned);
-    }
-
     public function testCleanAddressLinesHandlesValidString()
     {
         $lines = 'Street 1\nStreet 2\n Street 3\nStreet 4';
@@ -247,7 +237,21 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      * @dataProvider provideInvalidPayload
      * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testSerializeWillFail(array $payloadData)
+    public function testSerializeWillFailPayloadValidation(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->validatorStub->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload()));
+        $payload->serialize();
+    }
+
+    /**
+     * @param array $payloadData
+     * @dataProvider provideInvalidPayload
+     * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testSerializeWillFailXsdValidation(array $payloadData)
     {
         $payload = $this->buildPayload($payloadData);
         $this->schemaValidatorStub->expects($this->any())
@@ -276,8 +280,25 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
-    public function testDeserializeWillFail()
+    public function testDeserializeWillFailSchemaValidation()
     {
+        $this->schemaValidatorStub->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
+        $xml = $this->xmlInvalidTestString();
+
+        $newPayload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $newPayload->deserialize($xml);
+    }
+
+    /**
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testDeserializeWillFailPayloadValidation()
+    {
+        $this->validatorStub->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $xml = $this->xmlInvalidTestString();
 
         $newPayload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
