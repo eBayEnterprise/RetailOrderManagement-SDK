@@ -94,6 +94,58 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $validators;
     /** @var ISchemaValidator */
     protected $schemaValidator;
+    /** @var array */
+    protected $requiredNodesMap = array (
+        'requestId' => '//x:CreditCardAuthRequest/@requestId',
+        'orderId' => '//x:PaymentContext/x:OrderId',
+        'cardNumber' => '//x:PaymentContext/x:PaymentAccountUniqueId',
+        'panIsToken' => '//x:PaymentContext/x:PaymentAccountUniqueId/@isToken',
+        'expirationDate' => '//x:ExpirationDate',
+        'cardSecurityCode' => '//x:CardSecurityCode',
+        'amount' => '//x:Amount',
+        'currencyCode' => '//x:Amount/@currencyCode',
+        'billingFirstName' => '//x:BillingFirstName',
+        'billingLastName' => '//x:BillingLastName',
+        'billingPhone' => '//x:BillingPhoneNo',
+        'billingCity' => '//x:BillingAddress/x:City',
+        'billingCountryCode' => '//x:BillingAddress/x:CountryCode',
+        'customerEmail' => '//x:CustomerEmail',
+        'customerIpAddress' => '//x:CutsomerIPAddress',
+        'shipToFirstName' => '//x:ShipToFirstName',
+        'shipToLastName' => '//x:ShipToLastName',
+        'shipToPhone' => '//x:ShipToPhoneNo',
+        'shipToCity' => '//x:ShipToAddress/x:City',
+        'shipToCountryCode' => '//x:ShipToAddress/x:CountryCode',
+        'isRequestToCorrectCVVOrAVSError' => '//x:isRequestToCorrectCVVOrAVSError',
+    );
+
+    /** @var array */
+    protected $billingLines = array (
+        'billingLines' => '//x;BillingAddress/x:Line1',
+    );
+
+    /** @var array */
+    protected $shipToLines = array (
+        'shipToLines' => '//x:ShipToAddress/x:Line1',
+    );
+
+    /** @var array */
+    protected $optionalNodesMap = array (
+        'billingMainDivision' => '//x:BillingAddress/x:MainDivision',
+        'billingPostalCode' => '//x:BillingAddress/x:PostalCode',
+        'shipToMainDivision' => '//x:ShipToAddress/x:MainDivision',
+        'shipToPostalCode' => '//x:ShipToAddress/x:PostalCode',
+        'authenticationAvailable' => '//x:SecureVerificationData/x:AuthenticationAvailable',
+        'authenticationStatus' => '//x:SecureVerificationData/x:AuthenticationStatus',
+        'cavvUcaf' => '//x:SecureVerificationData/x:CavvUcaf',
+        'transactionId' => '//x:SecureVerificationData/x:TransactionId',
+        'payerAuthenticationResponse' => '//x:SecureVerificationData/x:PayerAuthenticationResponse'
+    );
+
+    /** @var array */
+    protected $optionalSecureValidationData = array(
+        'eci' => '//x:SecureVerificationData/x:ECI',
+    );
 
     /**
      * Trim any white space and return the resulting string truncating to $maxLength.
@@ -681,23 +733,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    public function serialize()
-    {
-        $xmlString = sprintf(
-            '<%s xmlns="%s" requestId="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->getRequestId(),
-            $this->serializeContents()
-        );
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        $xml = $doc->saveXML();
-        $this->schemaValidator->validate($xml, self::XSD);
-
-        return $xml;
-    }
-
     /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.
@@ -859,8 +894,43 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             $this->getPayerAuthenticationResponse());
     }
 
+    public function serialize()
+    {
+        $this->validate();
+
+        $xmlString = sprintf(
+            '<%s xmlns="%s" requestId="%s">%s</%1$s>',
+            self::ROOT_NODE,
+            self::XML_NS,
+            $this->getRequestId(),
+            $this->serializeContents()
+        );
+        $doc = new \DOMDocument();
+        $doc->loadXML($xmlString);
+        $xml = $doc->saveXML();
+        $this->schemaValidator->validate($xml, self::XSD);
+
+        return $xml;
+    }
+
     public function deserialize($string)
     {
+        // Make sure that the passed string at least passes schema validation.
+        // schemaValidator will throw an exception if it doesn't.
+        $this->schemaValidator->validate($string,self::XSD);
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($string);
+
+        $domXPath = new \DOMXPath($dom);
+        $domXPath->registerNamespace('x', self::XML_NS);
+
+        foreach ($this->requiredNodesMap as $property => $xpath) {
+
+        }
+
+        $this->validate();
+        
         return $this;
 //        $doc  = new \DOMDocument();
 //        $doc->loadXML($string);

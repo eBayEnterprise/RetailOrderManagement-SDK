@@ -121,7 +121,8 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString()
     {
-        $dom = \DOMDocument::load(__DIR__.'/Fixtures/CreditCardAuthRequest.xml');
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__.'/Fixtures/CreditCardAuthRequest.xml');
         $string = $dom->C14N();
 
         return $string;
@@ -134,7 +135,8 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlInvalidTestString()
     {
-        $dom = \DOMDocument::load(__DIR__.'/Fixtures/InvalidCreditCardAuthRequest.xml');
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__.'/Fixtures/InvalidCreditCardAuthRequest.xml');
         $string = $dom->C14N();
 
         return $string;
@@ -264,7 +266,8 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $this->schemaValidatorStub->expects($this->any())
             ->method('validate')
             ->will($this->returnSelf());
-        $domPayload = \DOMDocument::loadXML($payload->serialize());
+        $domPayload = new \DOMDocument();
+        $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
 
         $this->assertEquals($this->xmlTestString(), $serializedString);
