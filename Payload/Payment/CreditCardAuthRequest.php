@@ -930,6 +930,22 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
     }
 
+    /**
+     * Convert "true", "false", "1" or "0" to boolean
+     * Everything else returns null
+     *
+     * @param $string
+     * @return bool|null
+     */
+    protected function booleanFromString($string)
+    {
+        if (!is_string($string)) {
+            return null;
+        }
+        $string = strtolower($string);
+        return (($string === 'true') || ($string === '1'));
+    }
+
     public function validate()
     {
         foreach ($this->validators as $validator) {
@@ -999,8 +1015,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
 
         // address lines and boolean values have to be handled specially
+        //$this->evaluateBooleanXPaths($domXPath, $this->booleanXPaths);
+
         $this->addressLinesFromXPath($domXPath);
-        $this->evaluateBooleanXPaths($domXPath, $this->booleanXPaths);
+        foreach ($this->booleanXPaths as $property => $xPath) {
+            $value = $domXPath->evaluate($xPath);
+                $this->$property = $this->booleanFromString($value);
+        }
 
         // validate ourself, throws Exception\InvalidPayload if we don't pass
         $this->validate();

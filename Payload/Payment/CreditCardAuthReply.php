@@ -74,7 +74,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     );
     /** @var array property/XPath pairs that take boolean values*/
     protected $booleanXPaths = array(
-        'panIsToken' => 'x:PaymentContext/x:PaymentAccountUniqueId/@isToken'
+        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
     );
     /** @var array XPath expressions to match optional nodes in the serialized payload (XML) */
     protected $optionalExtractionPaths = array(
@@ -224,7 +224,12 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             }
         }
         // boolean values have to be handled specially
-        $this->evaluateBooleanXPaths($xpath, $this->booleanXPaths);
+
+        foreach ($this->booleanXPaths as $property => $path) {
+            $value = $xpath->evaluate($path);
+            $this->$property = $this->booleanFromString($value);
+        }
+        //$this->evaluateBooleanXPaths($xpath, $this->booleanXPaths);
 
         // payload is only valid of the unserialized data is also valid
         $this->validate();
@@ -372,5 +377,21 @@ class CreditCardAuthReply implements ICreditCardAuthReply
                 $this->$property = (($value === 'true') || ($value === '1')) ? true : false;
             }
         }
+    }
+
+    /**
+     * Convert "true", "false", "1" or "0" to boolean
+     * Everything else returns null
+     *
+     * @param $string
+     * @return bool|null
+     */
+    protected function booleanFromString($string)
+    {
+        if (!is_string($string)) {
+            return null;
+        }
+        $string = strtolower($string);
+        return (($string === 'true') || ($string === '1'));
     }
 }

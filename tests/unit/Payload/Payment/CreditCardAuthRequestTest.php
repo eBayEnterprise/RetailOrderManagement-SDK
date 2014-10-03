@@ -151,20 +151,20 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Take an array of property values with property names as keys and return an IPayload object
-     *
-     * @param array $properties
-     * @return CreditCardAuthRequest
+     * @return array
      */
-    protected function buildPayload(array $properties)
+    public function provideBooleanFromStringTests()
     {
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-
-        return $payload;
+        return array(
+            array("true", true),
+            array("false", false),
+            array("1", true),
+            array("0", false),
+            array("True", true),
+            array(null, null),
+            array(1, null),
+            array("test", null)
+        );
     }
 
     /**
@@ -203,6 +203,23 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                 null
             )
         );
+    }
+
+    /**
+     * Take an array of property values with property names as keys and return an IPayload object
+     *
+     * @param array $properties
+     * @return CreditCardAuthRequest
+     */
+    protected function buildPayload(array $properties)
+    {
+        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+
+        foreach ($properties as $property => $value) {
+            $payload->$property($value);
+        }
+
+        return $payload;
     }
 
     /**
@@ -284,6 +301,18 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $actual = $payload->$property;
 
         $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @dataProvider provideBooleanFromStringTests
+     */
+    public function testBooleanFromString($value, $expected)
+    {
+        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'booleanFromString');
+        $method->setAccessible(true);
+        $actual = $method->invokeArgs($payload, array($value));
+        $this->assertEquals($expected, $actual);
     }
 
     /**

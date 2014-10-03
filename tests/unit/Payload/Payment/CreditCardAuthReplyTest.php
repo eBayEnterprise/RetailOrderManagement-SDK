@@ -196,6 +196,24 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
+
+    /**
+     * @return array
+     */
+    public function provideBooleanFromStringTests()
+    {
+        return array(
+            array("true", true),
+            array("false", false),
+            array("1", true),
+            array("0", false),
+            array("True", true),
+            array(null, null),
+            array(1, null),
+            array("test", null)
+        );
+    }
+
     /**
      * Create a payload with the provided data injected.
      * @param  mixed[] $properties key/value pairs of property => value
@@ -233,6 +251,18 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     protected function loadXmlInvalidTestString()
     {
         return file_get_contents(__DIR__ . '/Fixtures/InvalidCreditCardAuthReply.xml');
+    }
+
+    /**
+     * @dataProvider provideBooleanFromStringTests
+     */
+    public function testBooleanFromString($value, $expected)
+    {
+        $payload = new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
+        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply', 'booleanFromString');
+        $method->setAccessible(true);
+        $actual = $method->invokeArgs($payload, array($value));
+        $this->assertEquals($expected, $actual);
     }
 
     /**
