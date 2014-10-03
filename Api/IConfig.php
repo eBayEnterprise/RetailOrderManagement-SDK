@@ -25,4 +25,24 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
  */
 interface IConfig
 {
+    /**
+     * Key used to authenticate the API
+     *
+     * @return string
+     */
+    public function getApiKey();
+
+    /**
+     * URI for service operation
+     *
+     * @return string
+     */
+    public function getEndpoint();
+
+    /**
+     * Concatenate service and operation values
+     *
+     * @return string
+     */
+    public function getServiceOperation();
 }

@@ -224,12 +224,10 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             }
         }
         // boolean values have to be handled specially
-
         foreach ($this->booleanXPaths as $property => $path) {
             $value = $xpath->evaluate($path);
             $this->$property = $this->booleanFromString($value);
         }
-        //$this->evaluateBooleanXPaths($xpath, $this->booleanXPaths);
 
         // payload is only valid of the unserialized data is also valid
         $this->validate();
@@ -353,30 +351,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
         $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
         return $this;
-    }
-
-    /**
-     * Utility function to convert "true" => true and "false" => false
-     * for attributes and elements in our XML that are used to
-     * store boolean values
-     *
-     * @param \DOMXPath $domXPath
-     * @param array $xPaths
-     */
-    protected function evaluateBooleanXPaths(\DOMXPath $domXPath, $xPaths)
-    {
-        if (!is_array($xPaths)) {
-            return;
-        }
-
-        foreach ($xPaths as $property => $xPath) {
-            $this->$property = null;
-            $nodes = $domXPath->query($xPath);
-            if ($nodes->length > 0) {
-                $value = $nodes->item(0)->nodeValue;
-                $this->$property = (($value === 'true') || ($value === '1')) ? true : false;
-            }
-        }
     }
 
     /**

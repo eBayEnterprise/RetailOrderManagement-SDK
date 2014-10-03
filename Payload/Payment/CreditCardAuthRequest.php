@@ -907,30 +907,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     }
 
     /**
-     * Utility function to convert "true" => true and "false" => false
-     * for attributes and elements in our XML that are used to
-     * store boolean values
-     *
-     * @param \DOMXPath $domXPath
-     * @param array $xPaths
-     */
-    protected function evaluateBooleanXPaths(\DOMXPath $domXPath, $xPaths)
-    {
-        if (!is_array($xPaths)) {
-            return;
-        }
-
-        foreach ($xPaths as $property => $xPath) {
-            $this->$property = null;
-            $nodes = $domXPath->query($xPath);
-            if ($nodes->length > 0) {
-                $value = $nodes->item(0)->nodeValue;
-                $this->$property = (($value === 'true') || ($value === '1')) ? true : false;
-            }
-        }
-    }
-
-    /**
      * Convert "true", "false", "1" or "0" to boolean
      * Everything else returns null
      *
@@ -1015,12 +991,10 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
 
         // address lines and boolean values have to be handled specially
-        //$this->evaluateBooleanXPaths($domXPath, $this->booleanXPaths);
-
         $this->addressLinesFromXPath($domXPath);
         foreach ($this->booleanXPaths as $property => $xPath) {
             $value = $domXPath->evaluate($xPath);
-                $this->$property = $this->booleanFromString($value);
+            $this->$property = $this->booleanFromString($value);
         }
 
         // validate ourself, throws Exception\InvalidPayload if we don't pass

@@ -102,55 +102,6 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider for testing getBooleanXPaths
-     */
-    public function provideBooleanXPathTests()
-    {
-        return array(
-            array(
-                $this->testXML,
-                '$panIsToken',
-                array(
-                    '$panIsToken' => 'x:Node1/@attrib'
-                ),
-                true
-            ),
-            array(
-                $this->testXML,
-                '$panIsToken',
-                array(
-                    '$panIsToken' => 'x:Node1'
-                ),
-                false
-            ),
-            array(
-                $this->testXML,
-                '$panIsToken',
-                array(
-                    '$panIsToken' => 'x:Node2/@attrib'
-                ),
-                false
-            ),
-            array(
-                $this->testXML,
-                '$panIsToken',
-                array(
-                    '$panIsToken' => 'x:Node2'
-                ),
-                true
-            ),
-            array(  // test invalid XPath
-                $this->testXML,
-                '$panIsToken',
-                array(
-                    '$panIsToken' => 'x:Node3'
-                ),
-                null
-            )
-        );
-    }
-
-    /**
      * @return array
      */
     public function provideBooleanFromStringTests()
@@ -281,29 +232,8 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $xml
-     * @param $xPath
-     * @param $expected
-     * @dataProvider provideBooleanXPathTests
-     */
-    public function testEvaluateBooleanXPaths($xml, $property, $xPath, $expected)
-    {
-        $dom = new \DOMDocument();
-        $dom->loadXML($xml);
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
-
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'evaluateBooleanXPaths');
-        $method->setAccessible(true);
-        $method->invokeArgs($payload, array($domXPath, $xPath));
-
-        $actual = $payload->$property;
-
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
+     * @param string $value
+     * @param boolean $expected
      * @dataProvider provideBooleanFromStringTests
      */
     public function testBooleanFromString($value, $expected)
@@ -345,7 +275,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
-     * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testSerializeWillFailPayloadValidation(array $payloadData)
     {
@@ -359,7 +289,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
-     * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testSerializeWillFailXsdValidation(array $payloadData)
     {
