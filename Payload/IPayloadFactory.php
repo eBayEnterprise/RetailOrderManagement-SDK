@@ -20,6 +20,17 @@ use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 interface IPayloadFactory
 {
     public function __construct(IConfig $config);
+
+    /**
+     * Returns a request payload object based on the configuration information passed in the constructor
+     *
+     * @return IPayload
+     */
     public function requestPayload();
+    /**
+     * Returns a reply payload object based on the configuration information passed in the constructor
+     *
+     * @return IPayload
+     */
     public function replyPayload();
 }

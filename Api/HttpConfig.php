@@ -60,7 +60,7 @@ class HttpConfig implements iConfig
 
     public function getServiceOperation()
     {
-        return "{$this->service}_{$this->operation}";
+        return array($this->service, $this->operation);
     }
 
     /**

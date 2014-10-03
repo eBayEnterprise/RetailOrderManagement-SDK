@@ -42,7 +42,7 @@ interface IConfig
     /**
      * Concatenate service and operation values
      *
-     * @return string
+     * @return array (service, operation)
      */
     public function getServiceOperation();
 }
