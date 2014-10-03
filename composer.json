@@ -8,14 +8,13 @@
         "phpmd/phpmd": "~2.1"
     },
     "autoload": {
-        "psr-4": {
-            "eBayEnterprise\\RetailOrderManagement\\": ""
+        "psr-0": {
+            "eBayEnterprise\\": "src/"
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "eBayEnterprise\\RetailOrderManagement\\": "tests/unit/",
-            "eBayEnterprise\\RetailOrderManagement\\": "tests/integration/"
+        "psr-0": {
+            "eBayEnterprise\\": "tests/unit/"
         }
     },
     "require": {
