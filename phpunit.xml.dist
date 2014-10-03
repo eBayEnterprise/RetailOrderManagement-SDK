@@ -27,7 +27,7 @@ http://opensource.org/licenses/osl-3.0.php
     timeoutForSmallTests="1">
     <testsuites>
         <testsuite name="eBay Enterprise Retail Order Management SDK">
-            <directory>.</directory>
+            <directory>tests</directory>
             <exclude>vendor</exclude>
         </testsuite>
     </testsuites>

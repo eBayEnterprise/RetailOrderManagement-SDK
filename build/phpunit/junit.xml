@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="eBay Enterprise Retail Order Management SDK" tests="66" assertions="62" failures="0" errors="6" time="0.051344">
+    <testsuite name="eBayEnterprise\RetailOrderManagement\Api\HttpApiTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Api/HttpApiTest.php" tests="2" assertions="0" failures="0" errors="2" time="0.005398">
+      <testcase name="testSendInvalidRequestPayload" class="eBayEnterprise\RetailOrderManagement\Api\HttpApiTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Api/HttpApiTest.php" line="48" assertions="0" time="0.004748">
+        <error type="PHPUnit_Framework_ExceptionWrapper">eBayEnterprise\RetailOrderManagement\Api\HttpApiTest::testSendInvalidRequestPayload
+eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation: operation not supported on service
+
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:107
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:112
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Api/HttpApi.php:35
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Api/HttpApiTest.php:32
+</error>
+      </testcase>
+      <testcase name="testSendReceiveInvalidReplyPayload" class="eBayEnterprise\RetailOrderManagement\Api\HttpApiTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Api/HttpApiTest.php" line="59" assertions="0" time="0.000650">
+        <error type="PHPUnit_Framework_ExceptionWrapper">eBayEnterprise\RetailOrderManagement\Api\HttpApiTest::testSendReceiveInvalidReplyPayload
+eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation: operation not supported on service
+
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:107
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:112
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Api/HttpApi.php:35
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Api/HttpApiTest.php:32
+</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactoryTest.php" tests="3" assertions="0" failures="0" errors="3" time="0.008212">
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testRequestPayload" tests="1" assertions="0" failures="0" errors="1" time="0.007113">
+        <testcase name="testRequestPayload with data set #0" assertions="0" time="0.007113">
+          <error type="PHPUnit_Framework_ExceptionWrapper">eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testRequestPayload with data set #0 ('payments_creditcard/auth/VC', '\\eBayEnterprise\\RetailOrderManagement\\Payload\\Payment\\CreditCardAuthRequest')
+eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation: a not supported on p
+
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:107
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:112
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactoryTest.php:68
+</error>
+        </testcase>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testReplyPayload" tests="1" assertions="0" failures="0" errors="1" time="0.000552">
+        <testcase name="testReplyPayload with data set #0" assertions="0" time="0.000552">
+          <error type="PHPUnit_Framework_ExceptionWrapper">eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testReplyPayload with data set #0 ('payments_creditcard/auth/VC', '\\eBayEnterprise\\RetailOrderManagement\\Payload\\Payment\\CreditCardAuthReply')
+eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation: a not supported on p
+
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:107
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:117
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactoryTest.php:82
+</error>
+        </testcase>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testInvalidConfig" tests="1" assertions="0" failures="0" errors="1" time="0.000547">
+        <testcase name="testInvalidConfig with data set #0" assertions="0" time="0.000547">
+          <error type="PHPUnit_Framework_ExceptionWrapper">eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testInvalidConfig with data set #0 ('payments_giftcard/auth/VC')
+eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation: a not supported on p
+
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:107
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/src/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactory.php:112
+/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/PayloadFactoryTest.php:95
+</error>
+        </testcase>
+      </testsuite>
+    </testsuite>
+    <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Payment/CreditCardAuthReplyTest.php" tests="32" assertions="32" failures="0" errors="0" time="0.017003">
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString" tests="8" assertions="8" failures="0" errors="0" time="0.004003">
+        <testcase name="testBooleanFromString with data set #0" assertions="1" time="0.001421"/>
+        <testcase name="testBooleanFromString with data set #1" assertions="1" time="0.000375"/>
+        <testcase name="testBooleanFromString with data set #2" assertions="1" time="0.000364"/>
+        <testcase name="testBooleanFromString with data set #3" assertions="1" time="0.000378"/>
+        <testcase name="testBooleanFromString with data set #4" assertions="1" time="0.000363"/>
+        <testcase name="testBooleanFromString with data set #5" assertions="1" time="0.000360"/>
+        <testcase name="testBooleanFromString with data set #6" assertions="1" time="0.000372"/>
+        <testcase name="testBooleanFromString with data set #7" assertions="1" time="0.000370"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testValidateWillFail" tests="2" assertions="2" failures="0" errors="0" time="0.001461">
+        <testcase name="testValidateWillFail with data set #0" assertions="1" time="0.000967"/>
+        <testcase name="testValidateWillFail with data set #1" assertions="1" time="0.000494"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testValidateWillPass" tests="1" assertions="1" failures="0" errors="0" time="0.000714">
+        <testcase name="testValidateWillPass with data set #0" assertions="1" time="0.000714"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillFailWithInvalidPayload" tests="2" assertions="2" failures="0" errors="0" time="0.000960">
+        <testcase name="testSerializeWillFailWithInvalidPayload with data set #0" assertions="1" time="0.000471"/>
+        <testcase name="testSerializeWillFailWithInvalidPayload with data set #1" assertions="1" time="0.000489"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillFailWithXsdInvalidPayloadData" tests="2" assertions="2" failures="0" errors="0" time="0.001130">
+        <testcase name="testSerializeWillFailWithXsdInvalidPayloadData with data set #0" assertions="1" time="0.000558"/>
+        <testcase name="testSerializeWillFailWithXsdInvalidPayloadData with data set #1" assertions="1" time="0.000572"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillPass" tests="1" assertions="1" failures="0" errors="0" time="0.000583">
+        <testcase name="testSerializeWillPass with data set #0" assertions="1" time="0.000583"/>
+      </testsuite>
+      <testcase name="testDeserializeWillFailSchemaInvalid" class="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Payment/CreditCardAuthReplyTest.php" line="349" assertions="1" time="0.000485"/>
+      <testcase name="testDeserializeWillFailPayloadInvalid" class="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Payment/CreditCardAuthReplyTest.php" line="363" assertions="1" time="0.000675"/>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testDeserializeWillPass" tests="1" assertions="1" failures="0" errors="0" time="0.002413">
+        <testcase name="testDeserializeWillPass with data set #0" assertions="1" time="0.002413"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthSuccessfulPayloadWithErrors" tests="4" assertions="4" failures="0" errors="0" time="0.001472">
+        <testcase name="testGetIsAuthSuccessfulPayloadWithErrors with data set #0" assertions="1" time="0.000463"/>
+        <testcase name="testGetIsAuthSuccessfulPayloadWithErrors with data set #1" assertions="1" time="0.000339"/>
+        <testcase name="testGetIsAuthSuccessfulPayloadWithErrors with data set #2" assertions="1" time="0.000338"/>
+        <testcase name="testGetIsAuthSuccessfulPayloadWithErrors with data set #3" assertions="1" time="0.000332"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthSuccessfulPayloadNoErrors" tests="1" assertions="1" failures="0" errors="0" time="0.000433">
+        <testcase name="testGetIsAuthSuccessfulPayloadNoErrors with data set #0" assertions="1" time="0.000433"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthAcceptableUnacceptablePayload" tests="1" assertions="1" failures="0" errors="0" time="0.000337">
+        <testcase name="testGetIsAuthAcceptableUnacceptablePayload with data set #0" assertions="1" time="0.000337"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthAcceptableAcceptablePayload" tests="3" assertions="3" failures="0" errors="0" time="0.000980">
+        <testcase name="testGetIsAuthAcceptableAcceptablePayload with data set #0" assertions="1" time="0.000329"/>
+        <testcase name="testGetIsAuthAcceptableAcceptablePayload with data set #1" assertions="1" time="0.000321"/>
+        <testcase name="testGetIsAuthAcceptableAcceptablePayload with data set #2" assertions="1" time="0.000330"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetReplyResponseCode" tests="4" assertions="4" failures="0" errors="0" time="0.001358">
+        <testcase name="testGetReplyResponseCode with data set #0" assertions="1" time="0.000326"/>
+        <testcase name="testGetReplyResponseCode with data set #1" assertions="1" time="0.000322"/>
+        <testcase name="testGetReplyResponseCode with data set #2" assertions="1" time="0.000354"/>
+        <testcase name="testGetReplyResponseCode with data set #3" assertions="1" time="0.000356"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Payment/CreditCardAuthRequestTest.php" tests="22" assertions="22" failures="0" errors="0" time="0.015830">
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanString" tests="3" assertions="3" failures="0" errors="0" time="0.002751">
+        <testcase name="testCleanString with data set #0" assertions="1" time="0.002045"/>
+        <testcase name="testCleanString with data set #1" assertions="1" time="0.000349"/>
+        <testcase name="testCleanString with data set #2" assertions="1" time="0.000357"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanAddressLines" tests="3" assertions="3" failures="0" errors="0" time="0.000982">
+        <testcase name="testCleanAddressLines with data set #0" assertions="1" time="0.000327"/>
+        <testcase name="testCleanAddressLines with data set #1" assertions="1" time="0.000336"/>
+        <testcase name="testCleanAddressLines with data set #2" assertions="1" time="0.000319"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString" tests="8" assertions="8" failures="0" errors="0" time="0.003040">
+        <testcase name="testBooleanFromString with data set #0" assertions="1" time="0.000382"/>
+        <testcase name="testBooleanFromString with data set #1" assertions="1" time="0.000366"/>
+        <testcase name="testBooleanFromString with data set #2" assertions="1" time="0.000383"/>
+        <testcase name="testBooleanFromString with data set #3" assertions="1" time="0.000385"/>
+        <testcase name="testBooleanFromString with data set #4" assertions="1" time="0.000375"/>
+        <testcase name="testBooleanFromString with data set #5" assertions="1" time="0.000373"/>
+        <testcase name="testBooleanFromString with data set #6" assertions="1" time="0.000387"/>
+        <testcase name="testBooleanFromString with data set #7" assertions="1" time="0.000388"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testValidateWillFail" tests="1" assertions="1" failures="0" errors="0" time="0.000510">
+        <testcase name="testValidateWillFail with data set #0" assertions="1" time="0.000510"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testValidateWillPass" tests="1" assertions="1" failures="0" errors="0" time="0.000742">
+        <testcase name="testValidateWillPass with data set #0" assertions="1" time="0.000742"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testSerializeWillFailPayloadValidation" tests="1" assertions="1" failures="0" errors="0" time="0.000455">
+        <testcase name="testSerializeWillFailPayloadValidation with data set #0" assertions="1" time="0.000455"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testSerializeWillFailXsdValidation" tests="1" assertions="1" failures="0" errors="0" time="0.000631">
+        <testcase name="testSerializeWillFailXsdValidation with data set #0" assertions="1" time="0.000631"/>
+      </testsuite>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testSerializeWillPass" tests="1" assertions="1" failures="0" errors="0" time="0.000946">
+        <testcase name="testSerializeWillPass with data set #0" assertions="1" time="0.000946"/>
+      </testsuite>
+      <testcase name="testDeserializeWillFailSchemaValidation" class="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Payment/CreditCardAuthRequestTest.php" line="323" assertions="1" time="0.000597"/>
+      <testcase name="testDeserializeWillFailPayloadValidation" class="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Payment/CreditCardAuthRequestTest.php" line="337" assertions="1" time="0.001010"/>
+      <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testDeserializeWillPass" tests="1" assertions="1" failures="0" errors="0" time="0.004167">
+        <testcase name="testDeserializeWillPass with data set #0" assertions="1" time="0.004167"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFieldsTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Validator/RequiredFieldsTest.php" tests="2" assertions="2" failures="0" errors="0" time="0.002145">
+      <testcase name="testValidateInvalidPayload" class="eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFieldsTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Validator/RequiredFieldsTest.php" line="38" assertions="1" time="0.001710"/>
+      <testcase name="testValidateValidPayload" class="eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFieldsTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Validator/RequiredFieldsTest.php" line="46" assertions="1" time="0.000435"/>
+    </testsuite>
+    <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidatorTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Validator/XsdSchemaValidatorTest.php" tests="3" assertions="4" failures="0" errors="0" time="0.001642">
+      <testcase name="testValidateInvalidXml" class="eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidatorTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Validator/XsdSchemaValidatorTest.php" line="23" assertions="2" time="0.000868"/>
+      <testcase name="testValidateValidXml" class="eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidatorTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Validator/XsdSchemaValidatorTest.php" line="35" assertions="1" time="0.000450"/>
+      <testcase name="testBuildErrorMessage" class="eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidatorTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/Validator/XsdSchemaValidatorTest.php" line="47" assertions="1" time="0.000324"/>
+    </testsuite>
+    <testsuite name="eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/ValidatorIteratorTest.php" tests="2" assertions="2" failures="0" errors="1" time="0.001113">
+      <testcase name="testConstruct" class="eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/ValidatorIteratorTest.php" line="25" assertions="0" time="0.000304">
+        <error type="PHPUnit_Framework_RiskyTestError">Risky Test
+</error>
+      </testcase>
+      <testcase name="testIteratorIgnoresOriginalKeys" class="eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest" file="/Users/vanbrugs/projects/RetailOrderManagement-SDK/tests/eBayEnterprise/RetailOrderManagement/Payload/ValidatorIteratorTest.php" line="114" assertions="2" time="0.000809"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

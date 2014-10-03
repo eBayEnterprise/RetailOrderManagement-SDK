@@ -1,0 +1,75 @@
+TAP version 13
+not ok 1 - Error: eBayEnterprise\RetailOrderManagement\Api\HttpApiTest::testSendInvalidRequestPayload
+not ok 2 - Error: eBayEnterprise\RetailOrderManagement\Api\HttpApiTest::testSendReceiveInvalidReplyPayload
+not ok 3 - Error: eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testRequestPayload with data set #0 ('payments_creditcard/auth/VC', '\\eBayEnterprise\\RetailOrderManagement\\Payload\\Payment\\CreditCardAuthRequest')
+not ok 4 - Error: eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testReplyPayload with data set #0 ('payments_creditcard/auth/VC', '\\eBayEnterprise\\RetailOrderManagement\\Payload\\Payment\\CreditCardAuthReply')
+not ok 5 - Error: eBayEnterprise\RetailOrderManagement\Payload\PayloadFactoryTest::testInvalidConfig with data set #0 ('payments_giftcard/auth/VC')
+ok 6 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #0 ('true', true)
+ok 7 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #1 ('false', false)
+ok 8 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #2 ('1', true)
+ok 9 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #3 ('0', false)
+ok 10 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #4 ('True', true)
+ok 11 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #5 (NULL, NULL)
+ok 12 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #6 (1, NULL)
+ok 13 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testBooleanFromString with data set #7 ('test', NULL)
+ok 14 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testValidateWillFail with data set #0 (array())
+ok 15 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testValidateWillFail with data set #1 (array('1234567890123456789012345', '4111ABC123ZYX987', true, 'AP01', 'OK', 'M', 'M', 55.990000000000002, 'USD', 'PHONE_OK', 'NAME_OK'))
+ok 16 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testValidateWillPass with data set #0 (array('ORDER_ID', '4111ABC123ZYX987', true, 'AP01', 'OK', 'M', 'M', 55.990000000000002, 'USD', 'PHONE_OK', 'NAME_OK'))
+ok 17 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillFailWithInvalidPayload with data set #0 (array())
+ok 18 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillFailWithInvalidPayload with data set #1 (array('1234567890123456789012345', '4111ABC123ZYX987', true, 'AP01', 'OK', 'M', 'M', 55.990000000000002, 'USD', 'PHONE_OK', 'NAME_OK'))
+ok 19 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillFailWithXsdInvalidPayloadData with data set #0 (array())
+ok 20 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillFailWithXsdInvalidPayloadData with data set #1 (array('1234567890123456789012345', '4111ABC123ZYX987', true, 'AP01', 'OK', 'M', 'M', 55.990000000000002, 'USD', 'PHONE_OK', 'NAME_OK'))
+ok 21 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testSerializeWillPass with data set #0 (array('ORDER_ID', '4111ABC123ZYX987', true, 'AP01', 'OK', 'M', 'M', 55.990000000000002, 'USD', 'PHONE_OK', 'NAME_OK'))
+ok 22 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testDeserializeWillFailSchemaInvalid
+ok 23 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testDeserializeWillFailPayloadInvalid
+ok 24 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testDeserializeWillPass with data set #0 (array('ORDER_ID', '4111ABC123ZYX987', true, 'AP01', 'OK', 'M', 'M', 55.990000000000002, 'USD', 'PHONE_OK', 'NAME_OK'))
+ok 25 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthSuccessfulPayloadWithErrors with data set #0 (array('ND01'))
+ok 26 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthSuccessfulPayloadWithErrors with data set #1 (array('AP01', 'M', 'N'))
+ok 27 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthSuccessfulPayloadWithErrors with data set #2 (array('AP01', 'M', 'AW'))
+ok 28 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthSuccessfulPayloadWithErrors with data set #3 (array('AP01', 'N', 'P'))
+ok 29 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthSuccessfulPayloadNoErrors with data set #0 (array('AP01', 'M', 'P'))
+ok 30 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthAcceptableUnacceptablePayload with data set #0 (array('ND01'))
+ok 31 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthAcceptableAcceptablePayload with data set #0 (array('AP01'))
+ok 32 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthAcceptableAcceptablePayload with data set #1 (array('NR01'))
+ok 33 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetIsAuthAcceptableAcceptablePayload with data set #2 (array('TO01'))
+ok 34 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetReplyResponseCode with data set #0 (array('AP01'), 'APPROVED')
+ok 35 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetReplyResponseCode with data set #1 (array('NR01'), 'TIMEOUT')
+ok 36 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetReplyResponseCode with data set #2 (array('TO01'), 'TIMEOUT')
+ok 37 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReplyTest::testGetReplyResponseCode with data set #3 (array('NC03'), NULL)
+ok 38 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanString with data set #0 ('testReqId', 40, 'testReqId')
+ok 39 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanString with data set #1 (100, 40, NULL)
+ok 40 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanString with data set #2 ('abcdefghijklmnopqrstuvwxyz', 5, 'abcde')
+ok 41 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanAddressLines with data set #0 ('Street 1\\nStreet 2\\n Street 3\\nStreet 4', array('Street 1', 'Street 2', 'Street 3', 'Street 4'))
+ok 42 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanAddressLines with data set #1 ('Street 1\\nStreet 2\\n Street 3\\nStreet 4\\nStreet 5', array('Street 1', 'Street 2', 'Street 3', 'Street 4Street 5'))
+ok 43 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testCleanAddressLines with data set #2 (100, NULL)
+ok 44 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #0 ('true', true)
+ok 45 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #1 ('false', false)
+ok 46 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #2 ('1', true)
+ok 47 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #3 ('0', false)
+ok 48 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #4 ('True', true)
+ok 49 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #5 (NULL, NULL)
+ok 50 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #6 (1, NULL)
+ok 51 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testBooleanFromString with data set #7 ('test', NULL)
+ok 52 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testValidateWillFail with data set #0 (array())
+ok 53 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testValidateWillPass with data set #0 (array('739a45ba35', 'testOrderId', false, '4111111111111111', DateTime, '123', 43.450000000000003, 'USD', 'test@example.com', '127.0.0.1', 'First', 'Last', '123-456-7890', 'Street 1\\nStreet 2\\nStreet 3\\nStreet 4', 'King of Prussia', 'PA', 'US', '19406', 'First', 'Last', '123-456-7890', 'Street 1\\nStreet 2\\nStreet 3\\nStreet 4', 'King of Prussia', 'PA', 'US', '19406', false, 'Y', 'Y', 'abcd1234', 'transId', 'ECI', 'some REALLY big string'))
+ok 54 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testSerializeWillFailPayloadValidation with data set #0 (array())
+ok 55 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testSerializeWillFailXsdValidation with data set #0 (array())
+ok 56 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testSerializeWillPass with data set #0 (array('739a45ba35', 'testOrderId', false, '4111111111111111', DateTime, '123', 43.450000000000003, 'USD', 'test@example.com', '127.0.0.1', 'First', 'Last', '123-456-7890', 'Street 1\\nStreet 2\\nStreet 3\\nStreet 4', 'King of Prussia', 'PA', 'US', '19406', 'First', 'Last', '123-456-7890', 'Street 1\\nStreet 2\\nStreet 3\\nStreet 4', 'King of Prussia', 'PA', 'US', '19406', false, 'Y', 'Y', 'abcd1234', 'transId', 'ECI', 'some REALLY big string'))
+ok 57 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testDeserializeWillFailSchemaValidation
+ok 58 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testDeserializeWillFailPayloadValidation
+ok 59 - eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequestTest::testDeserializeWillPass with data set #0 (array('739a45ba35', 'testOrderId', false, '4111111111111111', DateTime, '123', 43.450000000000003, 'USD', 'test@example.com', '127.0.0.1', 'First', 'Last', '123-456-7890', 'Street 1\\nStreet 2\\nStreet 3\\nStreet 4', 'King of Prussia', 'PA', 'US', '19406', 'First', 'Last', '123-456-7890', 'Street 1\\nStreet 2\\nStreet 3\\nStreet 4', 'King of Prussia', 'PA', 'US', '19406', false, 'Y', 'Y', 'abcd1234', 'transId', 'ECI', 'some REALLY big string'))
+ok 60 - eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFieldsTest::testValidateInvalidPayload
+ok 61 - eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFieldsTest::testValidateValidPayload
+ok 62 - eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidatorTest::testValidateInvalidXml
+ok 63 - eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidatorTest::testValidateValidXml
+ok 64 - eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidatorTest::testBuildErrorMessage
+ok 65 - # RISKY This test did not perform any assertions
+ok 65 - # SKIP This test depends on "eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testConstruct" to pass.
+ok 65 - # SKIP This test depends on "eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testKey" to pass.
+ok 65 - # SKIP This test depends on "eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testValidIteratorIsValid" to pass.
+ok 65 - # SKIP This test depends on "eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testCurrent" to pass.
+ok 65 - # SKIP This test depends on "eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testNextUpdatesKey" to pass.
+ok 65 - # SKIP This test depends on "eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testInvalidIteratorIsNotValid" to pass.
+ok 66 - eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testCannotConstructWithInvalidItems
+ok 67 - eBayEnterprise\RetailOrderManagement\Payload\ValidatorIteratorTest::testIteratorIgnoresOriginalKeys
+1..67
