@@ -17,5 +17,8 @@
             "eBayEnterprise\\RetailOrderManagement\\": "tests/unit/",
             "eBayEnterprise\\RetailOrderManagement\\": "tests/integration/"
         }
+    },
+    "require": {
+        "rmccue/requests": "~1.6"
     }
 }
