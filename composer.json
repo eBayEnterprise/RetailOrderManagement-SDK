@@ -18,7 +18,7 @@
     },
     "autoload-dev": {
         "psr-0": {
-            "eBayEnterprise\\": "tests/unit/"
+            "eBayEnterprise\\": "tests/"
         }
     },
     "require": {
