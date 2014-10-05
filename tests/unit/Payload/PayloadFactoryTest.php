@@ -35,23 +35,23 @@ class PayloadFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function provideRequestPayloadData()
     {
-       return array(
-           array('payments_creditcard/auth/VC', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest')
-       );
+       return [
+           ['payments', 'creditcard/auth/VC', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest']
+       ];
     }
 
     public function provideReplyPayloadData()
     {
-        return array(
-            array('payments_creditcard/auth/VC', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply')
-        );
+        return [
+            ['payments', 'creditcard/auth/VC', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply']
+        ];
     }
 
     public function provideInvalidConfigData()
     {
-        return array(
-            array('payments_giftcard/auth/VC')
-        );
+        return [
+            ['payments', 'giftcard/auth/VC']
+        ];
     }
 
     /**
@@ -59,11 +59,11 @@ class PayloadFactoryTest extends \PHPUnit_Framework_TestCase
      * @param $payloadType
      * @dataProvider provideRequestPayloadData
      */
-    public function testRequestPayload($serviceOperation, $payloadType)
+    public function testRequestPayload($service, $operation, $payloadType)
     {
         $this->configStub->expects($this->any())
             ->method('getServiceOperation')
-            ->will($this->returnValue($serviceOperation));
+            ->will($this->returnValue([$service, $operation]));
         $factory = new PayloadFactory($this->configStub);
         $this->assertInstanceOf($payloadType, $factory->requestPayload());
     }
@@ -73,11 +73,11 @@ class PayloadFactoryTest extends \PHPUnit_Framework_TestCase
      * @param $payloadType
      * @dataProvider provideReplyPayloadData
      */
-    public function testReplyPayload($serviceOperation, $payloadType)
+    public function testReplyPayload($service, $operation, $payloadType)
     {
         $this->configStub->expects($this->any())
             ->method('getServiceOperation')
-            ->will($this->returnValue($serviceOperation));
+            ->will($this->returnValue([$service, $operation]));
         $factory = new PayloadFactory($this->configStub);
         $this->assertInstanceOf($payloadType, $factory->replyPayload());
     }
@@ -85,12 +85,13 @@ class PayloadFactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $serviceOperation
      * @dataProvider provideInvalidConfigData
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation
      */
-    public function testInvalidConfig($serviceOperation)
+    public function testInvalidConfig($service, $operation)
     {
         $this->configStub->expects($this->any())
             ->method('getServiceOperation')
-            ->will($this->returnValue($serviceOperation));
+            ->will($this->returnValue([$service, $operation]));
         $factory = new PayloadFactory($this->configStub);
         $this->assertNull($factory->requestPayload());
         $this->assertNull($factory->replyPayload());

@@ -26,18 +26,23 @@ class HttpApi implements IBidirectionalApi
     protected $requestPayload;
     /** @var  IPayload */
     protected $replyPayload;
+    /** @var  $IPayloadFactory */
+    protected $payloadFactory;
 
     public function __construct(IConfig $config, array $args = array())
     {
         $this->config = $config;
 
         $factory = new Payload\PayloadFactory($this->config);
-        $this->requestPayload = $factory->requestPayload();
-        $this->resplyPayload = $factory->replyPayload();
     }
 
     public function getRequestBody()
     {
+        if ($this->requestPayload) {
+            return $this->requestPayload;
+        }
+
+        $this->requestPayload = $this->payloadFactory->requestPayload();
         return $this->requestPayload;
     }
 
@@ -49,16 +54,21 @@ class HttpApi implements IBidirectionalApi
 
     public function send()
     {
-        $postData = $this->requestPayload->serialize();
+        $postData = $this->getRequestBody()->serialize();
 
         // actually do POST
 
         $responseData = null;
-        $this->replyPayload->deserialize($responseData);
+        $this->getResponseBody()->deserialize($responseData);
     }
 
     public function getResponseBody()
     {
+        if ($this->replyPayload) {
+            return $this->replyPayload;
+        }
+
+        $this->replyPayload = $this->payloadFactory->replyPayload();
         return $this->replyPayload;
     }
 } 
