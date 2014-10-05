@@ -27,28 +27,8 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         // create and hold a static reference to the validator in the iterator
         self::$validator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $iterator = new ValidatorIterator(array(self::$validator));
-        return $iterator;
-    }
-    /**
-     * Initial key should be 0
-     * @param  ValidatorIterator $iterator
-     * @return ValidatorIterator
-     * @depends testConstruct
-     */
-    public function testKey(ValidatorIterator $iterator)
-    {
+        // new iterator with one validator should have key of 0 and be valid
         $this->assertSame(0, $iterator->key());
-        return $iterator;
-    }
-    /**
-     * While the offset points to a valid item in the iterator, `valid`
-     * should be true
-     * @param  ValidatorIterator $iterator [description]
-     * @return ValidatorIterator
-     * @depends testKey
-     */
-    public function testValidIteratorIsValid(ValidatorIterator $iterator)
-    {
         $this->assertTrue($iterator->valid());
         return $iterator;
     }
@@ -56,7 +36,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
      * Current of new iterator should return the first validator
      * @param  ValidatorIterator $iterator [description]
      * @return ValidatorIterator
-     * @depends testValidIteratorIsValid
+     * @depends testConstruct
      */
     public function testCurrent(ValidatorIterator $iterator)
     {
