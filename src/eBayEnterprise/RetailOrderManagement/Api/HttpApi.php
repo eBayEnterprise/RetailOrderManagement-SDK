@@ -18,6 +18,10 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 
+/**
+ * Class HttpApi
+ * @package eBayEnterprise\RetailOrderManagement\Api
+ */
 class HttpApi implements IBidirectionalApi
 {
     /** @var IConfig  */
@@ -71,4 +75,4 @@ class HttpApi implements IBidirectionalApi
         $this->replyPayload = $this->payloadFactory->replyPayload();
         return $this->replyPayload;
     }
-} 
+}

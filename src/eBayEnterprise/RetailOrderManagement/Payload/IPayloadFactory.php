@@ -17,6 +17,10 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 
+/**
+ * Interface IPayloadFactory
+ * @package eBayEnterprise\RetailOrderManagement\Payload
+ */
 interface IPayloadFactory
 {
     public function __construct(IConfig $config);

@@ -16,7 +16,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
-
+/**
+ * Class HttpConfig
+ * @package eBayEnterprise\RetailOrderManagement\Api
+ */
 class HttpConfig implements iConfig
 {
     /**
@@ -82,4 +85,4 @@ class HttpConfig implements iConfig
         $this->service = $service;
         $this->operation = $operation;
     }
-} 
+}

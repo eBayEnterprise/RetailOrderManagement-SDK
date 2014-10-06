@@ -51,6 +51,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+/**
+ * Class VisaCardAuthRequest
+ * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
+ */
 class VisaCardAuthRequest extends CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     /**

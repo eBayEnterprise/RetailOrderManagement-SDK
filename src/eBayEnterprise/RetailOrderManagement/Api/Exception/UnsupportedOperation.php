@@ -16,7 +16,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Api\Exception;
 
-
+/**
+ * Class UnsupportedOperation
+ * @package eBayEnterprise\RetailOrderManagement\Api\Exception
+ */
 class UnsupportedOperation extends \Exception
 {
 

@@ -17,6 +17,10 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 
+/**
+ * Class XsdSchemaValidator
+ * @package eBayEnterprise\RetailOrderManagement\Payload\Validator
+ */
 class XsdSchemaValidator implements Payload\ISchemaValidator
 {
     /**

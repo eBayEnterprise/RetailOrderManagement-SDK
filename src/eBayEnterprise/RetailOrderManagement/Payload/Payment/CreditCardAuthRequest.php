@@ -19,6 +19,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
+/**
+ * Class CreditCardAuthRequest
+ * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
+ */
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     const ROOT_NODE = 'CreditCardAuthRequest';
@@ -750,10 +754,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializePaymentContext()
     {
-        return sprintf('<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
+        return sprintf(
+            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
             $this->getOrderId(),
             $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber());
+            $this->getCardNumber()
+        );
     }
 
     /**
@@ -763,11 +769,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeCardInfo()
     {
-        return sprintf( '<ExpirationDate>%s</ExpirationDate><CardSecurityCode>%s</CardSecurityCode><Amount currencyCode="%s">%.2f</Amount>',
+        return sprintf(
+            '<ExpirationDate>%s</ExpirationDate><CardSecurityCode>%s</CardSecurityCode><Amount currencyCode="%s">%.2f</Amount>',
             $this->getExpirationDate(),
             $this->getCardSecurityCode(),
             $this->getCurrencyCode(),
-            $this->getAmount());
+            $this->getAmount()
+        );
     }
 
     /**
@@ -777,10 +785,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeBillingNamePhone()
     {
-        return sprintf( '<BillingFirstName>%s</BillingFirstName><BillingLastName>%s</BillingLastName><BillingPhoneNo>%s</BillingPhoneNo>',
+        return sprintf(
+            '<BillingFirstName>%s</BillingFirstName><BillingLastName>%s</BillingLastName><BillingPhoneNo>%s</BillingPhoneNo>',
             $this->getBillingFirstName(),
             $this->getBillingLastName(),
-            $this->getBillingPhone());
+            $this->getBillingPhone()
+        );
     }
 
     /**
@@ -795,17 +805,21 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $idx = 0;
         foreach ($billingLines as $line) {
             $idx++;
-            $lines[] = sprintf('<Line%d>%s</Line%1$d>',
+            $lines[] = sprintf(
+                '<Line%d>%s</Line%1$d>',
                 $idx,
-                $line);
+                $line
+            );
         }
 
-        return sprintf('<BillingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></BillingAddress>',
+        return sprintf(
+            '<BillingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></BillingAddress>',
             implode('', $lines),
             $this->getBillingCity(),
             $this->getBillingMainDivision(),
             $this->getBillingCountryCode(),
-            $this->getBillingPostalCode());
+            $this->getBillingPostalCode()
+        );
     }
 
     /**
@@ -815,9 +829,11 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeCustomerInfo()
     {
-        return sprintf('<CustomerEmail>%s</CustomerEmail><CustomerIPAddress>%s</CustomerIPAddress>',
+        return sprintf(
+            '<CustomerEmail>%s</CustomerEmail><CustomerIPAddress>%s</CustomerIPAddress>',
             $this->getEmail(),
-            $this->getIp());
+            $this->getIp()
+        );
     }
 
     /**
@@ -827,10 +843,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeShippingNamePhone()
     {
-        return sprintf('<ShipToFirstName>%s</ShipToFirstName><ShipToLastName>%s</ShipToLastName><ShipToPhoneNo>%s</ShipToPhoneNo>',
+        return sprintf(
+            '<ShipToFirstName>%s</ShipToFirstName><ShipToLastName>%s</ShipToLastName><ShipToPhoneNo>%s</ShipToPhoneNo>',
             $this->getShipToFirstName(),
             $this->getShipToLastName(),
-            $this->getShipToPhone());
+            $this->getShipToPhone()
+        );
     }
 
     /**
@@ -845,17 +863,21 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $idx = 0;
         foreach ($shippingLines as $line) {
             $idx++;
-            $lines[] = sprintf('<Line%d>%s</Line%1$d>',
+            $lines[] = sprintf(
+                '<Line%d>%s</Line%1$d>',
                 $idx,
-                $line);
+                $line
+            );
         }
 
-        return sprintf('<ShippingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></ShippingAddress>',
+        return sprintf(
+            '<ShippingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></ShippingAddress>',
             implode('', $lines),
             $this->getShipToCity(),
             $this->getShipToMainDivision(),
             $this->getShipToCountryCode(),
-            $this->getShipToPostalCode());
+            $this->getShipToPostalCode()
+        );
     }
 
     /**
@@ -865,8 +887,10 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeIsCorrectError()
     {
-        $string = sprintf('<isRequestToCorrectCVVOrAVSError>%s</isRequestToCorrectCVVOrAVSError>',
-            $this->getIsRequestToCorrectCvvOrAvsError() ? 'true' : 'false');
+        $string = sprintf(
+            '<isRequestToCorrectCVVOrAVSError>%s</isRequestToCorrectCVVOrAVSError>',
+            $this->getIsRequestToCorrectCvvOrAvsError() ? 'true' : 'false'
+        );
         return $string;
     }
 
@@ -877,13 +901,15 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeSecureVerificationData()
     {
-        return sprintf('<SecureVerificationData><AuthenticationAvailable>%s</AuthenticationAvailable><AuthenticationStatus>%s</AuthenticationStatus><CavvUcaf>%s</CavvUcaf><TransactionId>%s</TransactionId><ECI>%s</ECI><PayerAuthenticationResponse>%s</PayerAuthenticationResponse></SecureVerificationData>',
+        return sprintf(
+            '<SecureVerificationData><AuthenticationAvailable>%s</AuthenticationAvailable><AuthenticationStatus>%s</AuthenticationStatus><CavvUcaf>%s</CavvUcaf><TransactionId>%s</TransactionId><ECI>%s</ECI><PayerAuthenticationResponse>%s</PayerAuthenticationResponse></SecureVerificationData>',
             $this->getAuthenticationAvailable(),
             $this->getAuthenticationStatus(),
             $this->getCavvUcaf(),
             $this->getTransactionId(),
             $this->getEci(),
-            $this->getPayerAuthenticationResponse());
+            $this->getPayerAuthenticationResponse()
+        );
     }
 
     /**
@@ -971,7 +997,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         // Make sure that the passed string at least passes schema validation.
         // schemaValidator will throw an exception if it doesn't.
-        $this->schemaValidator->validate($string,self::XSD);
+        $this->schemaValidator->validate($string, self::XSD);
 
         $dom = new \DOMDocument();
         $dom->loadXML($string);

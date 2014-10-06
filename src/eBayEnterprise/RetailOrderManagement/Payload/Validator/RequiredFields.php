@@ -17,6 +17,10 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 
+/**
+ * Class RequiredFields
+ * @package eBayEnterprise\RetailOrderManagement\Payload\Validator
+ */
 class RequiredFields implements Payload\IValidator
 {
     /** @var string[] */

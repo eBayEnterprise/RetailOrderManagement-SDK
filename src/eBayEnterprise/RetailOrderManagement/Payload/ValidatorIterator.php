@@ -15,6 +15,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
+/**
+ * Class ValidatorIterator
+ * @package eBayEnterprise\RetailOrderManagement\Payload
+ */
 class ValidatorIterator implements IValidatorIterator
 {
     /** @var IValidator[] */

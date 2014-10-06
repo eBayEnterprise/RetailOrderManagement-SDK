@@ -15,6 +15,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
+/**
+ * Interface ISchemaValidator
+ * @package eBayEnterprise\RetailOrderManagement\Payload
+ */
 interface ISchemaValidator
 {
     /**

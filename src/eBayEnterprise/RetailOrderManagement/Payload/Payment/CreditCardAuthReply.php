@@ -19,6 +19,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
+/**
+ * Class CreditCardAuthReply
+ * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
+ */
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
     // XML related values - document root node, XMLNS and name of the xsd schema file

@@ -19,6 +19,10 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 
+/**
+ * Class PayloadFactory
+ * @package eBayEnterprise\RetailOrderManagement\Payload
+ */
 class PayloadFactory implements IPayloadFactory
 {
     /** @var  IConfig */
@@ -28,38 +32,12 @@ class PayloadFactory implements IPayloadFactory
     /** @var  IPayload */
     protected $replyPayload;
     /** @var array maps a service_operation pair to a payload object */
-    protected $payloadTypeMap = [
-        'payments' => [
-            'creditcard/auth/VC' => [
-                'request' => [
-                    'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
-                    'validators' => [
-                        [
-                            'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                            'params' => ['']
-                        ]
-                    ],
-                    'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                    'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-                ],
-                'reply' => [
-                    'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply',
-                    'validators' => [
-                        [
-                            'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                            'params' => ['']
-                        ]
-                    ],
-                    'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                    'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-                ]
-            ]
-        ]
-    ];
+    protected $payloadTypeMap;
 
     public function __construct(IConfig $config)
     {
         $this->config = $config;
+        $this->payloadTypeMap = require('PayloadServiceOperationMap.php');
     }
 
     /**
@@ -116,4 +94,4 @@ class PayloadFactory implements IPayloadFactory
     {
         return $this->buildPayload('reply');
     }
-} 
+}
