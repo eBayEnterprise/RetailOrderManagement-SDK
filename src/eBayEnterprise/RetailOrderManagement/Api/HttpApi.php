@@ -18,6 +18,8 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 
+require_once __DIR__.'/../../../../vendor/rmccue/requests/library/Requests.php';
+
 /**
  * Class HttpApi
  * @package eBayEnterprise\RetailOrderManagement\Api
@@ -37,12 +39,14 @@ class HttpApi implements IBidirectionalApi
     {
         $this->config = $config;
 
+        \Requests::register_autoloader();
+
         $factory = new Payload\PayloadFactory($this->config);
     }
 
     public function getRequestBody()
     {
-        if ($this->requestPayload) {
+        if ($this->requestPayload !== null) {
             return $this->requestPayload;
         }
 
@@ -56,19 +60,39 @@ class HttpApi implements IBidirectionalApi
         return $this;
     }
 
+    /**
+     * @return Requests_Response From the Requests library
+     * @throws Requests_Exception
+     */
+    protected function sendRequest()
+    {
+        return \Requests::post($this->config->getEndpoint(), $this->getRequestBody()->serialize());
+    }
+
     public function send()
     {
         $postData = $this->getRequestBody()->serialize();
 
         // actually do POST
+        try {
+            $response = $this->sendRequest();
+            if ($response->success === false) {
+                throw new Exception\NetworkError("HTTP result {$response->status_code} for POST to {$response->url}.");
+            }
+        }
+        catch (Requests_Exception $e) {
+            throw new Exception\NetworkError();
+        }
 
-        $responseData = null;
+        $responseData = $response->body;
         $this->getResponseBody()->deserialize($responseData);
+
+        return $this;
     }
 
     public function getResponseBody()
     {
-        if ($this->replyPayload) {
+        if ($this->replyPayload !== null) {
             return $this->replyPayload;
         }
 
