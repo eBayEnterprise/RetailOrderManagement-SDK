@@ -159,13 +159,23 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return $this->currencyCode;
     }
 
+    public function getIsAVSSuccessful()
+    {
+        return !in_array($this->getAVSResponseCode(), $this->invalidAvsCodes);
+    }
+
+    public function getIsCVV2Successful($value='')
+    {
+        return !in_array($this->getCVV2ResponseCode(), $this->invalidCvvCodes);
+    }
+
     public function getIsAuthSuccessful()
     {
         $authResponseCode = $this->getAuthorizationResponseCode();
         return (
             $authResponseCode === self::AUTHORIZATION_APPROVED
-            && !in_array($this->getCVV2ResponseCode(), $this->invalidCvvCodes)
-            && !in_array($this->getAVSResponseCode(), $this->invalidAvsCodes)
+            && $this->getIsAVSSuccessful()
+            && $this->getIsCVV2Successful()
         ) || (
             $authResponseCode === self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER
             || $authResponseCode === self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR
