@@ -42,6 +42,8 @@ class HttpConfig implements iConfig
     protected $storeId;
     protected $service;
     protected $operation;
+    protected $action;
+    protected $contentType;
 
     public function getApiKey()
     {
@@ -66,6 +68,16 @@ class HttpConfig implements iConfig
         return array($this->service, $this->operation);
     }
 
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
     /**
      * @param $apiKey
      * @param $host
@@ -74,8 +86,9 @@ class HttpConfig implements iConfig
      * @param $storeId
      * @param $service
      * @param $operation
+     * @param $action
      */
-    public function __construct($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation)
+    public function __construct($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation, $action)
     {
         $this->apiKey = $apiKey;
         $this->host = $host;
@@ -84,5 +97,6 @@ class HttpConfig implements iConfig
         $this->storeId = $storeId;
         $this->service = $service;
         $this->operation = $operation;
+        $this->action = $action;
     }
 }

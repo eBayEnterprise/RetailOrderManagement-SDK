@@ -16,6 +16,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
+use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedHttpAction;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 require_once __DIR__.'/../../../../vendor/rmccue/requests/library/Requests.php';
@@ -32,8 +33,10 @@ class HttpApi implements IBidirectionalApi
     protected $requestPayload;
     /** @var  IPayload */
     protected $replyPayload;
-    /** @var  $IPayloadFactory */
+    /** @var  IPayloadFactory */
     protected $payloadFactory;
+    /** @var  Requests_Response Response object from the last call to Requests*/
+    protected $lastRequestsResponse;
 
     public function __construct(IConfig $config, array $args = array())
     {
@@ -60,31 +63,76 @@ class HttpApi implements IBidirectionalApi
         return $this;
     }
 
+    protected function buildHeader()
+    {
+        return [
+            'apikey' => $this->config->getApiKey(),
+            'Content-type' => $this->config->getContentType()
+        ];
+    }
+
     /**
-     * @return Requests_Response From the Requests library
+     * @return Requests_Response
      * @throws Requests_Exception
+     */
+    protected function post()
+    {
+        $this->lastRequestsResponse = \Requests::post(
+            $this->config->getEndpoint(),
+            $this->buildHeader(),
+            $this->getRequestBody()->serialize()
+        );
+        return $this->lastRequestsResponse->success;
+    }
+
+    /**
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
+    protected function get()
+    {
+        $this->lastRequestsResponse = \Requests::post(
+            $this->config->getEndpoint(),
+            $this->buildHeader()
+        );
+        return $this->lastRequestsResponse->success;
+    }
+
+    /**
+     * @return boolean
+     * @throws Exception\UnsupportedHttpAction
      */
     protected function sendRequest()
     {
-        return \Requests::post($this->config->getEndpoint(), $this->getRequestBody()->serialize());
+        // clear the old response
+        $this->lastRequestsResponse = null;
+        $action = strtolower($this->config->getAction());
+        if (!method_exists($this, $action)) {
+            throw new Exception\UnsupportedHttpAction(
+                sprintf(
+                    'HTTP action %s not supported.',
+                    strtoupper($this->config->getAction())
+                )
+            );
+        }
+
+        return $this->$action();
     }
 
     public function send()
     {
         $postData = $this->getRequestBody()->serialize();
 
-        // actually do POST
+        // actually do the request
         try {
-            $response = $this->sendRequest();
-            if ($response->success === false) {
-                throw new Exception\NetworkError("HTTP result {$response->status_code} for POST to {$response->url}.");
+            if ($this->sendRequest() === false) {
+                throw new Exception\NetworkError("HTTP result {$this->lastRequestsResponse->status_code} for {$this->config->getAction()} to {$this->lastRequestsResponse->url}.");
             }
-        }
-        catch (Requests_Exception $e) {
-            throw new Exception\NetworkError();
+        } catch (Requests_Exception $e) {
+            throw new Exception\NetworkError("HTTP result {$this->lastRequestsResponse->status_code} for {$this->config->getAction()} to {$this->lastRequestsResponse->url}.");
         }
 
-        $responseData = $response->body;
+        $responseData = $this->lastRequestsResponse->body;
         $this->getResponseBody()->deserialize($responseData);
 
         return $this;
