@@ -27,7 +27,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     const ROOT_NODE = 'CreditCardAuthRequest';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = './schema/Payment-Service-CreditCardAuth-1.0.xsd';
+    const XSD = 'schema/Payment-Service-CreditCardAuth-1.0.xsd';
 
     /** @var string **/
     protected $requestId;
@@ -982,7 +982,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $xml = $doc->C14N();
 
         // schemaValidator will throw Exception\InvalidPayload if it fails
-        $this->schemaValidator->validate($xml, self::XSD);
+        $this->schemaValidator->validate($xml, __DIR__.'/'.self::XSD);
 
         return $xml;
     }

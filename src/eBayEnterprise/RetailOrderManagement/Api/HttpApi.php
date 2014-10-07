@@ -44,7 +44,7 @@ class HttpApi implements IBidirectionalApi
 
         \Requests::register_autoloader();
 
-        $factory = new Payload\PayloadFactory($this->config);
+        $this->payloadFactory = new Payload\PayloadFactory($this->config);
     }
 
     public function getRequestBody()

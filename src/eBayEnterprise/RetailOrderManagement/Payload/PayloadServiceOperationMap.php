@@ -21,7 +21,36 @@ return [
                 'validators' => [
                     [
                         'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => ['']
+                        'params' => [
+                            'getRequestId',
+                            'getOrderId',
+                            'getPanIsToken',
+                            'getCardNumber',
+                            'getExpirationDate',
+                            'getCardSecurityCode',
+                            'getAmount',
+                            'getCurrencyCode',
+                            'getBillingFirstName',
+                            'getBillingLastName',
+                            'getBillingPhone',
+                            'getBillingLines',
+                            'getBillingCity',
+                            'getBillingCountryCode',
+                            'getEmail',
+                            'getIp',
+                            'getShipToFirstName',
+                            'getShipToLastName',
+                            'getShipToPhone',
+                            'getShipToLines',
+                            'getShipToCity',
+                            'getShipToCountryCode',
+                            'getIsRequestToCorrectCVVOrAVSError',
+                            'getAuthenticationAvailable',
+                            'getAuthenticationStatus',
+                            'getCavvUcaf',
+                            'getTransactionId',
+                            'getPayerAuthenticationResponse'
+                        ]
                     ]
                 ],
                 'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
@@ -32,7 +61,17 @@ return [
                 'validators' => [
                     [
                         'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => ['']
+                        'params' => [
+                            'getOrderId',
+                            'getPaymentAccountUniqueId',
+                            'getPanIsToken',
+                            'getAuthorizationResponseCode',
+                            'getBankAuthorizationCode',
+                            'getCvv2ResponseCode',
+                            'getAvsResponseCode',
+                            'getAmountAuthorized',
+                            'getCurrencyCode'
+                        ]
                     ]
                 ],
                 'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
