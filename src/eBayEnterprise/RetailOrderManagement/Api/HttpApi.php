@@ -19,8 +19,6 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedHttpAction;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
-require_once __DIR__.'/../../../../vendor/rmccue/requests/library/Requests.php';
-
 /**
  * Class HttpApi
  * @package eBayEnterprise\RetailOrderManagement\Api
