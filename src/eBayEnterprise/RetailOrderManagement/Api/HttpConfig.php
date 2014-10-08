@@ -20,7 +20,7 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
  * Class HttpConfig
  * @package eBayEnterprise\RetailOrderManagement\Api
  */
-class HttpConfig implements iConfig
+class HttpConfig implements IConfig
 {
     /**
      * Service URI has the following format:
