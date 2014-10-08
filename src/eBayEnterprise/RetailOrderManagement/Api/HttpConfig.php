@@ -86,9 +86,8 @@ class HttpConfig implements iConfig
      * @param $storeId
      * @param $service
      * @param $operation
-     * @param $action
      */
-    public function __construct($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation, $action)
+    public function __construct($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation)
     {
         $this->apiKey = $apiKey;
         $this->host = $host;
@@ -97,6 +96,7 @@ class HttpConfig implements iConfig
         $this->storeId = $storeId;
         $this->service = $service;
         $this->operation = $operation;
-        $this->action = $action;
+		$this->action = 'post';
+		$this->contentType = 'text/xml';
     }
 }

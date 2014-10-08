@@ -37,7 +37,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
         $this->configStub = $this->getMock(
             'eBayEnterprise\RetailOrderManagement\Api\HttpConfig',
             null,
-            ['key', 'host', 'major', 'minor', 'store', 'service', 'operation', 'post']
+            ['key', 'host', 'major', 'minor', 'store', 'service', 'operation']
         );
         $this->apiStub = $this->getMock(
             'eBayEnterprise\RetailOrderManagement\Api\HttpApi',
