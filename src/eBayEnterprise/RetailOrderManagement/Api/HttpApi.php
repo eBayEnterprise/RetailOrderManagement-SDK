@@ -119,7 +119,7 @@ class HttpApi implements IBidirectionalApi
 
     public function send()
     {
-        $postData = $this->getRequestBody()->serialize();
+        $this->getRequestBody()->serialize();
 
         // actually do the request
         try {

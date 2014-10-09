@@ -112,6 +112,19 @@ interface ICreditCardAuthReply extends IPayload
      * @return string
      */
     public function getCurrencyCode();
+
+    /**
+     * Address verification was successful, no resend required
+     *
+     * @return bool
+     */
+    public function getIsAVSSuccessful();
+
+    /**
+     * CSC verification was successful, no resend required
+     * @return bool
+     */
+    public function getIsCVV2Successful();
     /**
      * Was the credit card auth an unqualified success - no errors or failed response codes.
      * @return bool
