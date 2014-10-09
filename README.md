@@ -10,46 +10,19 @@ Our implementation of Retail Order Management as a Magento extension is too tigh
 - We are prevented from using PHP best practices because Magento 1 does not support many of them.
 - We have to know too much about the API itself, from HTTP to XML.
 
-## What do we need to do?
+## What the SDK does
 
-We need a PHP implementation of the Retail Order Management API(s) that hides unnecessary details such as request/response handling and XML parsing from the API user in order to provide a minimal interface for remote messages and procedure calls.
+The SDK is a PHP implementation of the Retail Order Management API(s) that hides unnecessary details such as request/response handling and XML parsing from the API user in order to provide a minimal interface for remote messages and procedure calls.
 
-## How do we do that?
+## How does it do that?
 
-Explicitly. For each service and operation, we will attempt to build a flat, clean and consistent interface. We'll use abstraction to provide consistent behavior between different services and operations, but you will have to craft the concrete implementations to smooth over the rough parts of the API.
+Explicitly. For each service and operation, we attempt to build a flat, clean and consistent interface. We use abstraction to provide consistent behavior between different services and operations to smooth over the rough parts of the API.
 
 Let's start with a concrete, but prototypical usage example*:
 
-#### Example Usage: Getting the Api Object
-
-```php
-use \eBayEnterprise\RetailOrderManagement\Api;
-class EbayEnterprise_CreditCard_Helper_Data
-{
-    /**
-     * Get the preconfigured api object.
-     * There are several Magento-specific issues I'm ignoring here, such as multi-store configuration diffs.
-     *
-     * @return Api
-     */
-    public function getApi();
-    {
-        $cfg = $this->getConfigModel();
-        $apiKey = $cfg->apiKey;
-        $host = $cfg->apiHostname;
-        $majorVersion = $cfg->apiMajorVersion;
-        $minorVersion = $cfg->apiMinorVersion;
-        $storeId = $cfg->storeId;
-        $service = 'payments';
-        $operation = 'creditcard/auth/VC';
-        $apiConfig = new HttpApiConfig($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation);
-        return new HttpApi($apiConfig);
-    }
-}
-```
-
 The API object needs particular values just to exist at all, so those must be provided by the config object. For HTTP, they are:
 
+- API key
 - host
 - major and minor version
 - store id
@@ -63,105 +36,114 @@ and optionally
 
 The API instance stores these values and uses them to construct the full URL to the service.
 
+#### Example Usage: Creating and configuring the Api Object
+
+```
+/**
+	 * Create a new ROM SDK API object. API will be configured with core configuration
+	 * and the service and operation provided.
+	 * @param  string $service   SDK API service
+	 * @param  string $operation SDK API operation
+	 * @return Api\IBidirectionalApi
+	 */
+	public function getSdkApi($service, $operation)
+	{
+		$config = $this->getConfigModel();
+		$apiConfig = new Api\HttpConfig(
+			$config->apiKey,
+			$config->apiHostname,
+			$config->apiMajorVersion,
+			$config->apiMinorVersion,
+			$config->storeId,
+			$service,   // ex.: payments
+			$operation  // ex.: creditcard/auth/VC
+		);
+		return new Api\HttpApi($apiConfig);
+	}
+```
+ 
+Once you have a valid Api object you will need to configure the request payload according to the ROM service and operation you want. The Api object will create the appropriate request payload type based on the configuration passed in the constructor. 
+  - Ask the Api object for a request payload
+   - `$request = $api->getRequestBody();`
+  - Configure the paylod
+
 #### Example Usage: Authorizing a Credit Card
 
-```php
-use \eBayEnterprise\RetailOrderManagement;
-class EbayEnterprise_CreditCard_Model_Method
-{
-    /**
-     * Authorize payment so OMS can capture later.
-     *
-     * @param Mage_Sales_Model_Order_Payment $payment
-     * @param float $amount
-     * @return self
-     */
-    public function authorize(Varien_Object $payment, $amount)
-    {
-        $billingAddress = $this->getBillingAddress($payment);
-        $shippingAddress = $this->getShippingAddress($payment);
-        $api = $this->_helper->getApi();
-        $requestId = $this->getRequestId();
-        /**
-         * @var Payload\PaymentService\FlatCreditCardAuth $requestPayload
-         *      Here, we assume there's a payload implementation for credit card auth
-         *      that's fairly flat. That's not a requirement of the interface, but
-         *      seems easiest to work with right now.
-         */
-        $requestPayload = $api->getRequestBody();
-        $requestPayload
-            ->setRequestId($requestId)
-            ->setOrderId($payment->getOrderId())
-            ->setPanIsToken($payment->getPanIsToken())
-            ->setCardNumber($payment->getPan())
-            ->setExpirationDate($payment->getExpirationDate())
-            ->setCardSecurityCode($payment->getCardSecurityCode())
-            ->setAmount($amount)
-            ->setCurrencyCode($payment->getCurrency())
-            ->setEmail($billingAddress->getEmail())
-            ->setIp($payment->getIp())
-            ->setBillingFirstName($billingAddress->getFirstname())
-            ->setBillingLastName($billingAddress->getLastname())
-            ->setBillingPhone($billingAddress->getTelephone())
-            ->setBillingLine1($billingAddress->getStreet1())
-            ->setBillingLine2($billingAddress->getStreet2())
-            ->setBillingLine3($billingAddress->getStreet3())
-            ->setBillingLine4($billingAddress->getStreet4())
-            ->setBillingCity($billingAddress->getCity())
-            ->setBillingMainDivision($billingAddress->getRegionCode())
-            ->setBillingCountryCode($billingAddress->getCountry())
-            ->setBillingPostalCode($billingAddress->getPostcode())
-            ->setShipToFirstName($shippingAddress->getFirstname())
-            ->setShipToLastName($shippingAddress->getLastname())
-            ->setShipToPhone($shippingAddress->getTelephone())
-            ->setShipToLine1($shippingAddress->getStreet1())
-            ->setShipToLine2($shippingAddress->getStreet2())
-            ->setShipToLine3($shippingAddress->getStreet3())
-            ->setShipToLine4($shippingAddress->getStreet4())
-            ->setShipToCity($shippingAddress->getCity())
-            ->setShipToMainDivision($shippingAddress->getRegionCode())
-            ->setShipToCountryCode($shippingAddress->getCountry())
-            ->setShipToPostalCode($shippingAddress->getPostcode());
-            // ->setIsRequestToCorrectCvvOrAvsError(false)
-            // ->setSecureVerificationData(???)
-        $api->setRequestBody($requestPayload);
-        try {
-            $api->send();
-        } catch (Payload\Exception\InvalidPayload $e) {
-            $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
-            throw Mage::exception('Mage_Core', 'Unable to validate credit card info');
-        } catch (Api\Exception\NetworkError $e) {
-            $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
-            throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
-        }
-
-        try {
-            /** @var Payload\PaymentService\CreditCardAuthResponse $ccAuthResponse */
-            $ccAuthResponse = $api->getResponseBody();
-        } catch (Payload\Exception\UnexpectedResponse $e) {
-            $this->_log->logWarn('[%s] %s', array(__CLASS__, $e->getMessage()));
-            throw Mage::exception('Mage_Core', 'Unable to authorize payment at this time. Please try again later.');
-        }
-
-        if ($this->validateAuthCode($ccAuthResponse->getAuthorizationResponseCode()) &&
-            $this->validateBankCode($ccAuthResponse->getBankAuthorizationCode()) &&
-            $this->validateCvvCode($ccAuthResponse->getCvvCode())) {
-
-            // Maybe the payment object has a method to store the response payload
-            // in additional_information for later use.
-            $payment->setResponsePayload($ccAuthResponse);
-            $payment->setTransactionId($requestId);
-        }
-
-        return $this;
-    }
-}
 ```
+/**
+	 * Fill out the request payload with payment data and update the API request
+	 * body with the complete request.
+	 * @param Api\IBidirectionalApi $api
+	 * @param Varien_Object $payment Most likely a Mage_Sales_Model_Order_Payment
+	 * @return self
+	 */
+	protected function _prepareApiRequest(Api\IBidirectionalApi $api, Varien_Object $payment)
+	{
+		$request = $api->getRequestBody();
+		$order = $payment->getOrder();
+		$billingAddress = $order->getBillingAddress();
+		$shippingAddress = $order->getShippingAddress() ?: $billingAddress;
+		$request
+			->setRequestId($this->_coreHelper->generateRequestId('CCA-'))
+			->setOrderId($payment->getOrder()->getIncrementId())
+			->setPanIsToken(true)
+			->setCardNumber($payment->getCcNumber())
+			// use first day of month/year so the date can be recognized and parsed
+			->setExpirationDate($this->_coreHelper->getNewDateTime(sprintf('01/%s/%s', $payment->getCcExpMonth(), $payment->getCcExpYear())))
+			->setCardSecurityCode($payment->getCcCid())
+			->setAmount($payment->getBaseAmountAuthorized())
+			->setCurrencyCode(Mage::app()->getStore()->getBaseCurrencyCode())
+			->setEmail($billingAddress->getEmail())
+			->setIp($this->_httpHelper->getRemoteAddr())
+			->setBillingFirstName($billingAddress->getFirstname())
+			->setBillingLastName($billingAddress->getLastname())
+			->setBillingPhone($billingAddress->getTelephone())
+			->setBillingLines($billingAddress->getStreet(-1)) // getStreet(-1) returns all lines, nl separated
+			->setBillingCity($billingAddress->getCity())
+			->setBillingMainDivision($billingAddress->getRegionCode())
+			->setBillingCountryCode($billingAddress->getCountry())
+			->setBillingPostalCode($billingAddress->getPostcode())
+			->setShipToFirstName($shippingAddress->getFirstname())
+			->setShipToLastName($shippingAddress->getLastname())
+			->setShipToPhone($shippingAddress->getTelephone())
+			->setShipToLines($shippingAddress->getStreet(-1)) // getStreet(-1) returns all lines, nl separated
+			->setShipToCity($shippingAddress->getCity())
+			->setShipToMainDivision($shippingAddress->getRegionCode())
+			->setShipToCountryCode($shippingAddress->getCountry())
+			->setShipToPostalCode($shippingAddress->getPostcode())
+			->setIsRequestToCorrectCVVOrAVSError((bool) $payment->getAdditionalInformation('is_correction_request'));
+	}
+```
+  - Call `api->send()` to execute the request
+  - Call `api->getResponseBody()` to check the result
+	
 
+
+#### Example Usage: Validating the response
+```
+/**
+	 * check is success
+	 * - true - return, payment was authorized successfully
+	 * check is avs errors
+	 * - true - throw exception? w/ AVS error message and redir to billing address
+	 * check is cvv errors
+	 * - true - throw exception? w/ CVV error message and redir to payment
+	 * check is acceptable
+	 * - true - return, payment may not be a complete success but is still acceptable
+	 *   with no additional fixes/changes needed - timeout maybe?
+	 */
+	protected function _validateResponse(Payload\Payment\CreditCardAuthReply $response)
+	{
+		if ($response->getIsAuthSuccessful()) {
+			return $this;
+		}
+		throw Mage::exception('EbayEnterprise_CreditCard', $this->_helper->__('Credit card could not be authorized.'));
+	}
+```
 The interesting parts are:
 
 - `getRequestBody()`, which returns a new, empty payload object specific to the service/operation request that API instance was instantiated with.
-- `setRequestBody($pld)`, which sets the request payload.
+- `setRequestBody($payload)`, which sets the request payload.
 - You can set the payload fields in any order as long as all required business data is supplied to the api before calling `send` on the api or `validate` or `serialize` on the payload object (the latter not shown).
 - When you call `send`, the api:
     1. validates the payload, which:
