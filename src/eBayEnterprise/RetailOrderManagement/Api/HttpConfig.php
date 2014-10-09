@@ -96,7 +96,7 @@ class HttpConfig implements IConfig
         $this->storeId = $storeId;
         $this->service = $service;
         $this->operation = $operation;
-		$this->action = 'post';
-		$this->contentType = 'text/xml';
+        $this->action = 'post';
+        $this->contentType = 'text/xml';
     }
 }

@@ -35,9 +35,9 @@ class PayloadFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function provideRequestPayloadData()
     {
-       return [
+        return [
            ['payments', 'creditcard/auth/VC', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest']
-       ];
+        ];
     }
 
     public function provideReplyPayloadData()
@@ -97,4 +97,3 @@ class PayloadFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($factory->replyPayload());
     }
 }
- 

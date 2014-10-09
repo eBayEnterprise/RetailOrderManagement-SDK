@@ -168,7 +168,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return !in_array($this->getAVSResponseCode(), $this->invalidAvsCodes);
     }
 
-    public function getIsCVV2Successful($value='')
+    public function getIsCVV2Successful($value = '')
     {
         return !in_array($this->getCVV2ResponseCode(), $this->invalidCvvCodes);
     }
