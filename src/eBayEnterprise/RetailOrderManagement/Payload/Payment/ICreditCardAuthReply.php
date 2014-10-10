@@ -119,12 +119,31 @@ interface ICreditCardAuthReply extends IPayload
      * @return bool
      */
     public function getIsAVSSuccessful();
-
+    /**
+     * If the auth was approved but AVS failed, the address needs to be corrected.
+     * @return bool
+     */
+    public function getIsAVSCorrectionRequired();
     /**
      * CSC verification was successful, no resend required
      * @return bool
      */
     public function getIsCVV2Successful();
+    /**
+     * If the auth was approved but CVV failed, the CVV needs to be corrected.
+     * @return bool
+     */
+    public function getIsCVV2CorrectionRequired();
+    /**
+     * Was the authorization was approved.
+     * @return bool
+     */
+    public function getIsAuthApproved();
+    /**
+     * Did the authorization resulted in a timeout response.
+     * @return bool
+     */
+    public function getIsAuthTimeout();
     /**
      * Was the credit card auth an unqualified success - no errors or failed response codes.
      * @return bool
