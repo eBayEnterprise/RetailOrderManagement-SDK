@@ -29,7 +29,7 @@
             Codes defining reasons for authorization declines.
             Bank specific authorization response codes are mapped to a canonical set of codes.
             The canonical codes will be returned in this field.
-            The enumeration of the canonical codes and their descriptions will be documented separately. 
+            The enumeration of the canonical codes and their descriptions will be documented separately.
             </xsd:documentation>
 		</xsd:annotation>
 		<xsd:restriction base="xsd:string">
@@ -52,7 +52,7 @@
 	<xsd:simpleType name="PinType">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">
-            The personal identification number or code associated with a gift card or gift certificate. 
+            The personal identification number or code associated with a gift card or gift certificate.
 Allowable Values: Text string.
 Required: Yes
 Length: 1-8
@@ -101,7 +101,7 @@ Aliases: N/A</xsd:documentation>
 				<xsd:attribute name="isToken" type="xsd:boolean" use="required">
 					<xsd:annotation>
 						<xsd:documentation>Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
-Allowable Values: 
+Allowable Values:
 0 - PAN is actual account number
 1 - PAN is tokenized account number
 Required: No
@@ -119,10 +119,10 @@ Aliases: N/A
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">
                 This element identifies the tender type.
-                Example values: 
-                Credit card: VC (Visa), MC (Master Card), AM (American Express) 
-                
-                Stred Value: 
+                Example values:
+                Credit card: VC (Visa), MC (Master Card), AM (American Express)
+
+                Stred Value:
                 Stored Value tender type codes are provider specific (i.e Blackhawk, SVS, etc.)
                 Example: BH (Blackhawk), SP (SVS), OGC (GSI Online Gift Certificate)
             </xsd:documentation>

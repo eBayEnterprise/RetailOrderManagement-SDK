@@ -22,19 +22,30 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  *
  */
-interface IStoredValueBalanceRequest extends IPayload
+interface IStoredValueRedeemVoidRequest extends IPayload
 {
+    /**
+     * Id of the order.
+     *
+     * xsd restrictions: 1-20 characters
+     * @return int
+     */
+    public function getOrderId();
+    /**
+     * @return int
+     */
+    public function setOrderId($orderId);
     /**
      * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
      *
      * @return bool true if the PAN is a token, false if it's the actual number
      */
-    public function getPanIsToken();
+    public function getAccountIdIsToken();
     /**
      * @param bool $isToken
      * @return self
      */
-    public function setPanIsToken($isToken);
+    public function setAccountIdIsToken($isToken);
     /**
      * Either a tokenized or plain text PAN.
      *
@@ -42,16 +53,16 @@ interface IStoredValueBalanceRequest extends IPayload
      * @see get/setPanIsToken
      * @return string
      */
-    public function getCardNumber();
+    public function getAccountId();
     /**
      * @param string $pan
      * @return self
      */
-    public function setCardNumber($pan);
+    public function setAccountId($pan);
     /**
-     * The PIN number used to authenticate a PAN
+     * The PIN number used to authenticate a card number
      *
-     * xsd note: 1-8 characters, exclude if empty
+     * xsd note: maxLength 8
      *           pattern (\d{1,8})?
      * return string
      */
@@ -61,6 +72,19 @@ interface IStoredValueBalanceRequest extends IPayload
      * @return self
      */
     public function setPin($pin);
+    /**
+     * The amount to void.
+     *
+     * xsd note: 1-8 characters, exclude if empty
+     *           pattern (\d{1,8})?
+     * return string
+     */
+    public function getAmount();
+    /**
+     * @param string $amount
+     * @return self
+     */
+    public function setAmount($amount);
     /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
@@ -74,4 +98,17 @@ interface IStoredValueBalanceRequest extends IPayload
      * @return self
      */
     public function setCurrencyCode($code);
+    /**
+     * Identifier for this request.
+     * On serialization, a request id will be generated if not already set.
+     *
+     * xsd notes: required, 1-40 characters
+     * @return string
+     */
+    public function getRequestId();
+    /**
+     * @param string $requestId
+     * @return self
+     */
+    public function setRequestId($requestId);
 }

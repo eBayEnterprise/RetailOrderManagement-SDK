@@ -13,55 +13,45 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-/**
- * <code>
- * $storedValueBalanceRequest = new StoredValueBalanceRequest();
- * $storedValueBalanceRequest
- *    ->setPanIsToken($isToken)
- *    ->setPan($pan)
- *    ->setPin($pin)
- *    ->setCurrencyCode($code);
- * ...
- * </code>
- */
-
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IStoredValueRedeemReply;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 /**
- * Class StoredValueBalanceRequest
+ * StoredValueRedeemVoidReply Payload
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
+ *
  */
-class StoredValueBalanceRequest implements IStoredValueBalanceRequest
+class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
 {
-    const ROOT_NODE = 'StoredValueBalanceRequest';
+    const ROOT_NODE = 'StoredValueRedeemVoidReply';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'schema/Payment-Service-StoredValueBalance-1.0.xsd';
+    const XSD = 'schema/Payment-Service-StoredValueRedeemVoid-1.0.xsd';
 
-    /** @var string $cardNumber */
-    protected $cardNumber;
-    /** @var bool $panIsToken Indicates if the card number is the actual number, or a representation of the number. */
-    protected $pin;
-    protected $panIsToken;
-    protected $currencyCode;
+    /** @var string $orderId id of the order */
+    protected $orderId;
+    /** @var string $accountId Gift tender account id */
+    protected $accountId;
+    /** @var bool $accountIdIsToken Indicates if the card number is the actual number, or a representation of the number. */
+    protected $accountIdIsToken;
+    protected $responseCode;
     /** @var IValidatorIterator */
     protected $validators;
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = array(
-        'cardNumber' => 'string(x:PaymentAccountUniqueId)',
-        'currencyCode' => 'string(x:CurrencyCode)',
-    );
-    protected $optionalExtractionPaths = array(
-        'pin' => 'x:Pin',
+        'orderId' => 'string(x:PaymentContext/x:OrderId)',
+        'accountId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'responseCode' => ' string(x:ResponseCode)',
     );
     /** @var array property/XPath pairs that take boolean values*/
     protected $booleanXPaths = array(
-        'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
+        'accountIdIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
     );
     /**
      * @param IValidatorIterator $validators Payload object validators
@@ -72,90 +62,47 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
-
     /**
-     * Indicates if the Card Number is the actual number, or a representation of the number.
+     * Id of the order.
      *
-     * @return bool true if the card number is a token, false if it's the actual number
+     * xsd restrictions: 1-20 characters
+     * @return string
      */
-    public function getPanIsToken()
+    public function getOrderId()
     {
-        return $this->panIsToken;
+        return $this->orderId;
     }
-
     /**
-     * @param bool $isToken
-     * @return self
+     * Indicates if the account Id is the actual number, or a representation of the number.
+     *
+     * @return bool true if the Id is a token, false if it's the actual number
      */
-    public function setPanIsToken($isToken)
+    public function getAccountIdIsToken()
     {
-        $this->panIsToken = $isToken;
+        return $this->accountIdIsToken;
     }
-
     /**
-     * Either a tokenized or plain text payment account unique id.
+     * Either a tokenized or plain text stored value account id.
      *
      * xsd restrictions: 1-22 characters
      * @see get/setPanIsToken
      * @return string
      */
-    public function getCardNumber()
+    public function getAccountId()
     {
-        return $this->cardNumber;
+        return $this->accountId;
     }
-
     /**
-     * @param string $cardNumber
-     * @return self
-     */
-    public function setCardNumber($cardNumber)
-    {
-        $this->cardNumber = $cardNumber;
-    }
-
-    /**
-     * The personal identification number or code associated with a giftcard
-     * account unique id
+     * The amount to void.
      *
-     * xsd note: 1-8 characters, exclude if empty
-     *           pattern (\d{1,8})?
+     * xsd note: eneration
+     *           pattern (Fail|Success|Timeout)
      * return string
      */
-    public function getPin()
+    public function getResponseCode()
     {
-        return $this->pin;
+        return $this->responseCode;
     }
-
-    /**
-     * @param string $pin
-     * @return self
-     */
-    public function setPin($pin)
-    {
-        $this->pin = $pin;
-    }
-
-    /**
-     * The 3-character ISO 4217 code that represents
-     * the type of currency being used for a transaction.
-     *
-     * @link http://www.iso.org/iso/home/standards/currency_codes.htm
-     * @return string
-     */
-    public function getCurrencyCode()
-    {
-        return $this->currencyCode;
-    }
-
-    /**
-     * @param string $code
-     * @return self
-     */
-    public function setCurrencyCode($code)
-    {
-        $this->currencyCode = $code;
-    }
-
     /**
      * Validate that the payload meets the requirements
      * for transmission. This can be over and above what
@@ -171,7 +118,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         }
         return $this;
     }
-
     /**
      * Return the string form of the payload data for transmission.
      * Validation is implied.
@@ -193,12 +139,11 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         $this->schemaValidate($canonicalXml);
         return $canonicalXml;
     }
-
     /**
      * Fill out this payload object with data from the supplied string.
      *
      * @throws Exception\InvalidPayload
-     * @param string $serializedPayload
+     * @param string $string
      * @return self
      */
     public function deserialize($serializedPayload)
@@ -210,15 +155,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         foreach ($this->extractionPaths as $property => $path) {
             $this->$property = $xpath->evaluate($path);
         }
-        // When optional nodes are not included in the serialized data,
-        // they should not be set in the payload. Fortunately, these
-        // are all string values so no additional type conversion is necessary.
-        foreach ($this->optionalExtractionPaths as $property => $path) {
-            $foundNode = $xpath->query($path)->item(0);
-            if ($foundNode) {
-                $this->$property = $foundNode->nodeValue;
-            }
-        }
         // boolean values have to be handled specially
         foreach ($this->booleanXPaths as $property => $path) {
             $value = $xpath->evaluate($path);
@@ -229,7 +165,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         $this->validate();
         return $this;
     }
-
     /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.
@@ -237,49 +172,35 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
      */
     protected function serializeContents()
     {
-        return $this->serializePan()
-            . $this->serializePin()
-            . sprintf(
-                '<CurrencyCode>%s</CurrencyCode>',
-                $this->getCurrencyCode()
-            );
-    }
-
-    /**
-     * Return the XML representation of the PIN if it exists;
-     * otherwise, return the empty string.
-     * @return string
-     */
-    protected function serializePin()
-    {
-        return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
+        return $this->serializePaymentContext()
+            . $this->serializeResponseCode();
     }
 
     /**
      * Create an XML string representing the PaymentContext nodes
      * @return string
      */
-    protected function serializePan()
+    protected function serializePaymentContext()
     {
         return sprintf(
-            '<PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId>',
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
+            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
+            $this->getOrderId(),
+            $this->getAccountIdIsToken() ? 'true' : 'false',
+            $this->getAccountId()
         );
     }
 
-    // all methods below should be refactored as they are literal copies
-    // from somewhere else
-
     /**
-     * Return the schema file path.
+     * Create an XML string representing the response code.
      * @return string
      */
-    protected function getSchemaFile()
+    protected function serializeResponseCode()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return sprintf(
+            '<ResponseCode>%s</ResponseCode>',
+            $this->getResponseCode()
+        );
     }
-
     /**
      * Load the payload XML into a DOMDocument
      * @param  string $xmlString
@@ -291,7 +212,20 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         $d->loadXML($xmlString);
         return $d;
     }
-
+    /**
+     * Validate the serialized data via the schema validator.
+     * @param  string $serializedData
+     * @return self
+     */
+    protected function schemaValidate($serializedData)
+    {
+        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+        return $this;
+    }
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
+    }
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
@@ -303,18 +237,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         $xpath->registerNamespace('x', self::XML_NS);
         return $xpath;
     }
-
-    /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
-     */
-    protected function schemaValidate($serializedData)
-    {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
-        return $this;
-    }
-
     /**
      * Convert "true", "false", "1" or "0" to boolean
      * Everything else returns null

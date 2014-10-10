@@ -19,8 +19,6 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 
 class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
 {
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-
     /** @var  Payload\IValidator */
     protected $validatorStub;
     /** @var Payload\IValidatorIterator */
