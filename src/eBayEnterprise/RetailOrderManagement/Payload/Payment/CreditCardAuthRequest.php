@@ -36,7 +36,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     /** @var bool **/
     protected $panIsToken;
     /** @var string **/
-    protected $cardNumber;
+    protected $paymentAccountUniqueId;
     /** @var \DateTime **/
     protected $expirationDate;
     /** @var string **/
@@ -103,7 +103,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $requiredNodesMap = array (
         'requestId' => 'string(@requestId)',
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'expirationDate' => 'string(x:ExpirationDate)',
         'cardSecurityCode' => 'string(x:CardSecurityCode)',
         'amount' => 'number(x:Amount)',
@@ -193,12 +193,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getCardNumber()
     {
-        return $this->cardNumber;
+        return $this->paymentAccountUniqueId;
     }
 
     public function setCardNumber($ccNum)
     {
-        $this->cardNumber = $this->cleanString($ccNum, 22);
+        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
+        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
         return $this;
     }
 

@@ -108,7 +108,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return $this->orderId;
     }
 
-    public function getPaymentAccountUniqueId()
+    public function getCardNumber()
     {
         return $this->paymentAccountUniqueId;
     }
@@ -323,7 +323,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
             $this->getOrderId(),
             $this->getPanIsToken() ? 'true' : 'false',
-            $this->getPaymentAccountUniqueId()
+            $this->getCardNumber()
         );
     }
 

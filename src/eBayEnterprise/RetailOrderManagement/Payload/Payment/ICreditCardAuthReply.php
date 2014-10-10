@@ -36,7 +36,7 @@ interface ICreditCardAuthReply extends IPayload
      *
      * @return string
      */
-    public function getPaymentAccountUniqueId();
+    public function getCardNumber();
     /**
      * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
      *
