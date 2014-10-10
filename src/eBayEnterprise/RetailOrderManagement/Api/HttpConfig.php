@@ -33,7 +33,7 @@ class HttpConfig implements IConfig
      * - operation - specific API call of the specified service
      * - format - extension of the requested response format. Currently only xml is supported
      */
-    const URI_FORMAT = 'https://%s/v%s.%s/stores/%s/%s/%s.xml';
+    const URI_FORMAT = 'https://%s/v%s.%s/stores/%s/%s/%s%s.xml';
 
     protected $apiKey;
     protected $host;
@@ -42,6 +42,7 @@ class HttpConfig implements IConfig
     protected $storeId;
     protected $service;
     protected $operation;
+    protected $endpointParams;
     protected $action;
     protected $contentType;
 
@@ -59,7 +60,8 @@ class HttpConfig implements IConfig
             $this->minorVersion,
             $this->storeId,
             $this->service,
-            $this->operation
+            $this->operation,
+            ($this->endpointParams ? '/' . implode('/', $this->endpointParams) : '')
         );
     }
 
@@ -79,15 +81,16 @@ class HttpConfig implements IConfig
     }
 
     /**
-     * @param $apiKey
-     * @param $host
-     * @param $majorVersion
-     * @param $minorVersion
-     * @param $storeId
-     * @param $service
-     * @param $operation
+     * @param string $apiKey
+     * @param string $host
+     * @param string $majorVersion
+     * @param string $minorVersion
+     * @param string $storeId
+     * @param string $service
+     * @param string $operation
+     * @param array  $endpointParams If additional params are provided, they will be joined on '/' and appended with a '/' to the operation at the end of the endpoint URI.
      */
-    public function __construct($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation)
+    public function __construct($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation, array $endpointParams = array())
     {
         $this->apiKey = $apiKey;
         $this->host = $host;
@@ -96,6 +99,7 @@ class HttpConfig implements IConfig
         $this->storeId = $storeId;
         $this->service = $service;
         $this->operation = $operation;
+        $this->endpointParams = $endpointParams;
         $this->action = 'post';
         $this->contentType = 'text/xml';
     }

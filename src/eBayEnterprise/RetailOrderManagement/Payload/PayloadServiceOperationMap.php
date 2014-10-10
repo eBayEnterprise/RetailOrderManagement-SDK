@@ -15,7 +15,7 @@
 
 return [
     'payments' => [
-        'creditcard/auth/VC' => [
+        'creditcard/auth' => [
             'request' => [
                 'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
                 'validators' => [
@@ -44,7 +44,7 @@ return [
                             'getShipToLines',
                             'getShipToCity',
                             'getShipToCountryCode',
-                            'getIsRequestToCorrectCVVOrAVSError'
+                            'getIsRequestToCorrectCVVOrAVSError',
                         ]
                     ],
                     [
@@ -54,9 +54,9 @@ return [
                             'getAuthenticationStatus',
                             'getCavvUcaf',
                             'getTransactionId',
-                            'getPayerAuthenticationResponse'
+                            'getPayerAuthenticationResponse',
                         ]
-                    ]
+                    ],
                 ],
                 'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
                 'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
@@ -75,217 +75,13 @@ return [
                             'getCvv2ResponseCode',
                             'getAvsResponseCode',
                             'getAmountAuthorized',
-                            'getCurrencyCode'
+                            'getCurrencyCode',
                         ]
-                    ]
+                    ],
                 ],
                 'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
                 'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
             ]
         ],
-        'creditcard/auth/MC' => [
-            'request' => [
-                'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
-                'validators' => [
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => [
-                            'getRequestId',
-                            'getOrderId',
-                            'getPanIsToken',
-                            'getCardNumber',
-                            'getExpirationDate',
-                            'getCardSecurityCode',
-                            'getAmount',
-                            'getCurrencyCode',
-                            'getBillingFirstName',
-                            'getBillingLastName',
-                            'getBillingPhone',
-                            'getBillingLines',
-                            'getBillingCity',
-                            'getBillingCountryCode',
-                            'getEmail',
-                            'getIp',
-                            'getShipToFirstName',
-                            'getShipToLastName',
-                            'getShipToPhone',
-                            'getShipToLines',
-                            'getShipToCity',
-                            'getShipToCountryCode',
-                            'getIsRequestToCorrectCVVOrAVSError'
-                        ]
-                    ],
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup',
-                        'params' => [
-                            'getAuthenticationAvailable',
-                            'getAuthenticationStatus',
-                            'getCavvUcaf',
-                            'getTransactionId',
-                            'getPayerAuthenticationResponse'
-                        ]
-                    ]
-                ],
-                'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-            ],
-            'reply' => [
-                'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply',
-                'validators' => [
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => [
-                            'getOrderId',
-                            'getPaymentAccountUniqueId',
-                            'getPanIsToken',
-                            'getAuthorizationResponseCode',
-                            'getBankAuthorizationCode',
-                            'getCvv2ResponseCode',
-                            'getAvsResponseCode',
-                            'getAmountAuthorized',
-                            'getCurrencyCode'
-                        ]
-                    ]
-                ],
-                'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-            ]
-        ],
-        'creditcard/auth/DC' => [
-            'request' => [
-                'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
-                'validators' => [
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => [
-                            'getRequestId',
-                            'getOrderId',
-                            'getPanIsToken',
-                            'getCardNumber',
-                            'getExpirationDate',
-                            'getCardSecurityCode',
-                            'getAmount',
-                            'getCurrencyCode',
-                            'getBillingFirstName',
-                            'getBillingLastName',
-                            'getBillingPhone',
-                            'getBillingLines',
-                            'getBillingCity',
-                            'getBillingCountryCode',
-                            'getEmail',
-                            'getIp',
-                            'getShipToFirstName',
-                            'getShipToLastName',
-                            'getShipToPhone',
-                            'getShipToLines',
-                            'getShipToCity',
-                            'getShipToCountryCode',
-                            'getIsRequestToCorrectCVVOrAVSError'
-                        ]
-                    ],
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup',
-                        'params' => [
-                            'getAuthenticationAvailable',
-                            'getAuthenticationStatus',
-                            'getCavvUcaf',
-                            'getTransactionId',
-                            'getPayerAuthenticationResponse'
-                        ]
-                    ]
-                ],
-                'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-            ],
-            'reply' => [
-                'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply',
-                'validators' => [
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => [
-                            'getOrderId',
-                            'getPaymentAccountUniqueId',
-                            'getPanIsToken',
-                            'getAuthorizationResponseCode',
-                            'getBankAuthorizationCode',
-                            'getCvv2ResponseCode',
-                            'getAvsResponseCode',
-                            'getAmountAuthorized',
-                            'getCurrencyCode'
-                        ]
-                    ]
-                ],
-                'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-            ]
-        ],
-        'creditcard/auth/AM' => [
-            'request' => [
-                'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
-                'validators' => [
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => [
-                            'getRequestId',
-                            'getOrderId',
-                            'getPanIsToken',
-                            'getCardNumber',
-                            'getExpirationDate',
-                            'getCardSecurityCode',
-                            'getAmount',
-                            'getCurrencyCode',
-                            'getBillingFirstName',
-                            'getBillingLastName',
-                            'getBillingPhone',
-                            'getBillingLines',
-                            'getBillingCity',
-                            'getBillingCountryCode',
-                            'getEmail',
-                            'getIp',
-                            'getShipToFirstName',
-                            'getShipToLastName',
-                            'getShipToPhone',
-                            'getShipToLines',
-                            'getShipToCity',
-                            'getShipToCountryCode',
-                            'getIsRequestToCorrectCVVOrAVSError'
-                        ]
-                    ],
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup',
-                        'params' => [
-                            'getAuthenticationAvailable',
-                            'getAuthenticationStatus',
-                            'getCavvUcaf',
-                            'getTransactionId',
-                            'getPayerAuthenticationResponse'
-                        ]
-                    ]
-                ],
-                'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-            ],
-            'reply' => [
-                'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply',
-                'validators' => [
-                    [
-                        'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
-                        'params' => [
-                            'getOrderId',
-                            'getPaymentAccountUniqueId',
-                            'getPanIsToken',
-                            'getAuthorizationResponseCode',
-                            'getBankAuthorizationCode',
-                            'getCvv2ResponseCode',
-                            'getAvsResponseCode',
-                            'getAmountAuthorized',
-                            'getCurrencyCode'
-                        ]
-                    ]
-                ],
-                'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
-                'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
-            ]
-        ]
-    ]
+    ],
 ];

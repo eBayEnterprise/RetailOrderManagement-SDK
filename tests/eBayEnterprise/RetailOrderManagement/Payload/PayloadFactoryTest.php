@@ -36,21 +36,21 @@ class PayloadFactoryTest extends \PHPUnit_Framework_TestCase
     public function provideRequestPayloadData()
     {
         return [
-           ['payments', 'creditcard/auth/VC', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest']
+           ['payments', 'creditcard/auth', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest']
         ];
     }
 
     public function provideReplyPayloadData()
     {
         return [
-            ['payments', 'creditcard/auth/VC', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply']
+            ['payments', 'creditcard/auth', '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply']
         ];
     }
 
     public function provideInvalidConfigData()
     {
         return [
-            ['payments', 'giftcard/auth/VC']
+            ['payments', 'giftcard/auth']
         ];
     }
 
