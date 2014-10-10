@@ -92,7 +92,7 @@ class XsdSchemaValidator implements Payload\ISchemaValidator
      */
     protected function formatErrors(array $libxmlErrors = array())
     {
-        return 'XSD validation failed with following messages:' . PHP_EOL . implode(PHP_EOL, array_map(
+        return 'XSD validation failed with following messages:' . PHP_EOL . implode('', array_map(
             function (\libXMLError $xmlError) {
                 return sprintf(
                     '[%s:%d] %s',

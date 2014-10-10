@@ -48,19 +48,19 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $warnError = new \libXMLError();
         $warnError->level = LIBXML_ERR_WARNING;
-        $warnError->message = 'Warning message';
+        $warnError->message = "Warning message\n";
         $warnError->file = 'some/file/path.xml';
         $warnError->line = 22;
 
         $errError = new \libXMLError();
         $errError->level = LIBXML_ERR_ERROR;
-        $errError->message = 'Error message';
+        $errError->message = "Error message\n";
         $errError->file = 'some/file/path.xml';
         $errError->line = 23;
 
         $fatalError = new \libXMLError();
         $fatalError->level = LIBXML_ERR_FATAL;
-        $fatalError->message = 'Fatal message';
+        $fatalError->message = "Fatal message\n";
         $fatalError->file = 'some/file/path.xml';
         $fatalError->line = 25;
 
@@ -69,7 +69,7 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($validator, 'formatErrors');
         $method->setAccessible(true);
         $this->assertSame(
-            "XSD validation failed with following messages:\n[some/file/path.xml:22] Warning message\n[some/file/path.xml:23] Error message\n[some/file/path.xml:25] Fatal message",
+            "XSD validation failed with following messages:\n[some/file/path.xml:22] Warning message\n[some/file/path.xml:23] Error message\n[some/file/path.xml:25] Fatal message\n",
             $method->invoke($validator, $errors)
         );
     }
