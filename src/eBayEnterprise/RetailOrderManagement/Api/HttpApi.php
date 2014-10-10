@@ -124,10 +124,13 @@ class HttpApi implements IBidirectionalApi
         // actually do the request
         try {
             if ($this->sendRequest() === false) {
-                throw new Exception\NetworkError("HTTP result {$this->lastRequestsResponse->status_code} for {$this->config->getAction()} to {$this->lastRequestsResponse->url}.");
+                throw new Exception\NetworkError("HTTP result {$this->lastRequestsResponse->status_code} for {$this->config->getAction()} to {$this->lastRequestsResponse->url}.\n{$this->lastRequestsResponse->body}");
             }
-        } catch (Requests_Exception $e) {
-            throw new Exception\NetworkError("HTTP result {$this->lastRequestsResponse->status_code} for {$this->config->getAction()} to {$this->lastRequestsResponse->url}.");
+        } catch (\Requests_Exception $e) {
+            // simply pass throgh the message but with an expected exception type - don't
+            // have any request/response infor to include as this exception only occurs
+            // when the request cannot even be attempted.
+            throw new Exception\NetworkError($e->getMessage());
         }
 
         $responseData = $this->lastRequestsResponse->body;

@@ -161,7 +161,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Requests_Exception
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Api\Exception\NetworkError
      */
     public function testSendHandlesRequestsException()
     {
