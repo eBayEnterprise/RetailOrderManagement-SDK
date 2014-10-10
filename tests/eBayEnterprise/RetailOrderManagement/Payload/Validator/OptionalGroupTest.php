@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 
-class OptionalFieldTest extends \PHPUnit_Framework_TestCase
+class OptionalGroupTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Payload\IPayload */
     protected $payload;

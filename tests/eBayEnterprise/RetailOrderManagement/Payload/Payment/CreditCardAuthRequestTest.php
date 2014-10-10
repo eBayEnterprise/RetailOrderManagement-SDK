@@ -147,13 +147,176 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
             ),
             array(  // extra lines
                 'Street 1\nStreet 2\n Street 3\nStreet 4\nStreet 5',
-                array('Street 1', 'Street 2', 'Street 3', 'Street 4Street 5')
+                array('Street 1', 'Street 2', 'Street 3', 'Street 4 Street 5')
             ),
             array( // not a string
                 100,
                 null
             )
         );
+    }
+
+    /**
+     * Provide test data to verify serializeSecureVerificationData
+     */
+    public function provideVerificationData()
+    {
+        return [
+            [
+                // all fields present
+                [
+                    'authenticationAvailable' => 'Y',
+                    'authenticationStatus' => 'Y',
+                    'cavvUcaf' => 'abcd1234',
+                    'transactionId' => 'transId',
+                    'eci' => 'ECI',
+                    'payerAuthenticationResponse' => 'some REALLY big string'
+                ],
+                // full optional group returned
+                '<SecureVerificationData><AuthenticationAvailable>Y</AuthenticationAvailable><AuthenticationStatus>Y</AuthenticationStatus><CavvUcaf>abcd1234</CavvUcaf><TransactionId>transId</TransactionId><ECI>ECI</ECI><PayerAuthenticationResponse>some REALLY big string</PayerAuthenticationResponse></SecureVerificationData>'
+            ],
+            [
+                // optional field missing - OK
+                [
+                    'authenticationAvailable' => 'Y',
+                    'authenticationStatus' => 'Y',
+                    'cavvUcaf' => 'abcd1234',
+                    'transactionId' => 'transId',
+                    'payerAuthenticationResponse' => 'some REALLY big string'
+                ],
+                // optional group w/o optional node
+                '<SecureVerificationData><AuthenticationAvailable>Y</AuthenticationAvailable><AuthenticationStatus>Y</AuthenticationStatus><CavvUcaf>abcd1234</CavvUcaf><TransactionId>transId</TransactionId><PayerAuthenticationResponse>some REALLY big string</PayerAuthenticationResponse></SecureVerificationData>'
+            ],
+            [
+                // required field mising -
+                [
+                    'authenticationAvailable' => 'Y',
+                    'authenticationStatus' => 'Y',
+                    'cavvUcaf' => 'abcd1234',
+                    'transactionId' => '',
+                    'eci' => 'ECI',
+                    'payerAuthenticationResponse' => 'some REALLY big string'
+                ],
+                // skip optional group
+                ''
+            ]
+        ];
+    }
+
+    /**
+     * Provide test data to verify serializeShippingAddress
+     */
+    public function provideShippingAddressData()
+    {
+        return [
+            [
+                // optional fields present
+                [
+                    'shipToLines' => [
+                        'Street 1',
+                        'Street 2',
+                        'Street 3',
+                        'Street 4'
+                    ],
+                    'shipToCity' => 'King of Prussia',
+                    'shipToMainDivision' => 'PA',
+                    'shipToCountryCode' => 'US',
+                    'shipToPostalCode' => '19406'
+                ],
+                // full section returned
+                '<ShippingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></ShippingAddress>'
+            ],
+            [
+                // mainDivision missing
+                [
+                    'shipToLines' => [
+                        'Street 1',
+                        'Street 2',
+                        'Street 3',
+                        'Street 4'
+                    ],
+                    'shipToCity' => 'King of Prussia',
+                    'shipToCountryCode' => 'US',
+                    'shipToPostalCode' => '19406'
+                ],
+                // skip mainDivision node
+                '<ShippingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></ShippingAddress>'
+            ],
+            [
+                // postalCode missing
+                [
+                    'shipToLines' => [
+                        'Street 1',
+                        'Street 2',
+                        'Street 3',
+                        'Street 4'
+                    ],
+                    'shipToCity' => 'King of Prussia',
+                    'shipToMainDivision' => 'PA',
+                    'shipToCountryCode' => 'US',
+                ],
+                // skip postalCode node
+                '<ShippingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode></ShippingAddress>'
+            ]
+        ];
+    }
+
+    /**
+     * Provide test data to verify serializeBillingAddress
+     */
+    public function provideBillingAddressData()
+    {
+        return [
+            [
+                // optional fields present
+                [
+                    'billingLines' => [
+                        'Street 1',
+                        'Street 2',
+                        'Street 3',
+                        'Street 4'
+                    ],
+                    'billingCity' => 'King of Prussia',
+                    'billingMainDivision' => 'PA',
+                    'billingCountryCode' => 'US',
+                    'billingPostalCode' => '19406'
+                ],
+                // full section returned
+                '<BillingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></BillingAddress>'
+            ],
+            [
+                // mainDivision missing
+                [
+                    'billingLines' => [
+                        'Street 1',
+                        'Street 2',
+                        'Street 3',
+                        'Street 4'
+                    ],
+                    'billingCity' => 'King of Prussia',
+                    'billingCountryCode' => 'US',
+                    'billingPostalCode' => '19406'
+                ],
+                // skip mainDivision node
+                '<BillingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></BillingAddress>'
+            ],
+            [
+                // postalCode missing
+                [
+                    'billingLines' => [
+                        'Street 1',
+                        'Street 2',
+                        'Street 3',
+                        'Street 4'
+                    ],
+                    'billingCity' => 'King of Prussia',
+                    'billingMainDivision' => 'PA',
+                    'billingCountryCode' => 'US',
+                ],
+                // skip postalCode node
+                '<BillingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode></BillingAddress>'
+            ]
+        ];
     }
 
     /**
@@ -199,6 +362,24 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $string = $dom->C14N();
 
         return $string;
+    }
+
+    /**
+     * Inject property values into $class
+     *
+     * @param $class
+     * @param array $properties array of property => value pairs
+     */
+    protected function injectProperties($class, $properties)
+    {
+        // use reflection to inject properties/values into the $class object
+        $reflection = new \ReflectionClass($class);
+        $p = $reflection->getProperties();
+        foreach ($properties as $property => $value) {
+            $requestProperty = $reflection->getProperty($property);
+            $requestProperty->setAccessible(true);
+            $requestProperty->setValue($class, $value);
+        }
     }
 
     /**
@@ -315,6 +496,51 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $serializedString = $domPayload->C14N();
 
         $this->assertEquals($this->xmlTestString(), $serializedString);
+    }
+
+    /**
+     * @param array $properties
+     * @param $expected
+     * @dataProvider provideVerificationData
+     */
+    public function testSerializeVerificationDataHandlesMissingData($properties, $expected)
+    {
+        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);// $this->getMockRequestObject();
+        $this->injectProperties($request, $properties);
+        $method = new \ReflectionMethod($request, 'serializeSecureVerificationData');
+        $method->setAccessible(true);
+        $actual = $method->invoke($request);
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @param array $properties
+     * @param $expected
+     * @dataProvider provideShippingAddressData
+     */
+    public function testSerializeShippingAddressHandlesMissingData($properties, $expected)
+    {
+        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $this->injectProperties($request, $properties);
+        $method = new \ReflectionMethod($request, 'serializeShippingAddress');
+        $method->setAccessible(true);
+        $actual = $method->invoke($request);
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @param array $properties
+     * @param $expected
+     * @dataProvider provideBillingAddressData
+     */
+    public function testSerializeBillingAddressHandlesMissingData($properties, $expected)
+    {
+        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $this->injectProperties($request, $properties);
+        $method = new \ReflectionMethod($request, 'serializeBillingAddress');
+        $method->setAccessible(true);
+        $actual = $method->invoke($request);
+        $this->assertSame($expected, $actual);
     }
 
     /**
