@@ -374,7 +374,6 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     {
         // use reflection to inject properties/values into the $class object
         $reflection = new \ReflectionClass($class);
-        $p = $reflection->getProperties();
         foreach ($properties as $property => $value) {
             $requestProperty = $reflection->getProperty($property);
             $requestProperty->setAccessible(true);
