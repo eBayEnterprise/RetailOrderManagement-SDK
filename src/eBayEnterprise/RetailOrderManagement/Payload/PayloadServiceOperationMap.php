@@ -82,9 +82,7 @@ return [
                 'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
                 'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
             ]
-        ]
-    ],
-    [
+        ],
         'creditcard/auth/MC' => [
             'request' => [
                 'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
@@ -152,9 +150,7 @@ return [
                 'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
                 'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
             ]
-        ]
-    ],
-    [
+        ],
         'creditcard/auth/DC' => [
             'request' => [
                 'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
@@ -222,9 +218,7 @@ return [
                 'validatorIterator' => '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator',
                 'schemaValidator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator'
             ]
-        ]
-    ],
-    [
+        ],
         'creditcard/auth/AM' => [
             'request' => [
                 'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
