@@ -31,13 +31,13 @@ class PayloadFactory implements IPayloadFactory
     protected $requestPayload;
     /** @var  IPayload */
     protected $replyPayload;
-    /** @var array maps a service_operation pair to a payload object */
+    /** @var array maps a config key to a payload object */
     protected $payloadTypeMap;
 
     public function __construct(IConfig $config)
     {
         $this->config = $config;
-        $this->payloadTypeMap = require('PayloadServiceOperationMap.php');
+        $this->payloadTypeMap = require('PayloadConfigMap.php');
     }
 
     /**
@@ -58,19 +58,17 @@ class PayloadFactory implements IPayloadFactory
     }
 
     /**
-     * Use the service/operation tuple from the IConfig object
-     * as a key into an array of information needed to build
-     * the IPayload object
+     * Use the IConfig's key to build the right payload object.
      *
      * @param $type
-     * @return IPayload|UnsupportedOperation
+     * @return IPayload
      * @throws UnsupportedOperation
      */
     protected function buildPayload($type)
     {
-        list($service, $operation) = $this->config->getServiceOperation();
-        if (isset($this->payloadTypeMap[$service][$operation])) {
-            $payloadTypes = $this->payloadTypeMap[$service][$operation];
+        $key = $this->config->getConfigKey();
+        if (isset($this->payloadTypeMap[$key])) {
+            $payloadTypes = $this->payloadTypeMap[$key];
             $payloadType = $payloadTypes[$type];
             $payloadClass = $payloadType['payload'];
             $validators = $payloadType['validators'];
@@ -81,8 +79,7 @@ class PayloadFactory implements IPayloadFactory
 
             return new $payloadClass($iterator, $schemaValidator);
         }
-
-        throw new UnsupportedOperation("$operation not supported on $service");
+        throw new UnsupportedOperation("No configuration found for '$key'");
     }
 
     public function requestPayload()

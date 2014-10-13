@@ -19,30 +19,17 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
  * Interface IConfig
  * @package eBayEnterprise\RetailOrderManagement\Api
  *
- * A marker interface for providing an IApi object
- * with the metadata it needs to send and/or receive
- * the right payload objects to the right place
+ * Provides an IApi object with the metadata it needs to send and/or receive
+ * the right payload objects to the right places.
  */
 interface IConfig
 {
     /**
-     * Key used to authenticate the API
+     * Provide a means to look up constant configuration information
+     * from PayloadConfigMap
      *
+     * @see eBayEnterprise/RetailOrderManagement/Payload/PayloadConfigMap.php
      * @return string
      */
-    public function getApiKey();
-
-    /**
-     * URI for service operation
-     *
-     * @return string
-     */
-    public function getEndpoint();
-
-    /**
-     * Concatenate service and operation values
-     *
-     * @return array (service, operation)
-     */
-    public function getServiceOperation();
+    public function getConfigKey();
 }

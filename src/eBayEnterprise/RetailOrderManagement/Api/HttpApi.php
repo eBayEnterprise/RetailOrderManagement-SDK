@@ -104,17 +104,17 @@ class HttpApi implements IBidirectionalApi
     {
         // clear the old response
         $this->lastRequestsResponse = null;
-        $action = strtolower($this->config->getAction());
-        if (!method_exists($this, $action)) {
+        $httpMethod = strtolower($this->config->getHttpMethod());
+        if (!method_exists($this, $httpMethod)) {
             throw new Exception\UnsupportedHttpAction(
                 sprintf(
                     'HTTP action %s not supported.',
-                    strtoupper($this->config->getAction())
+                    strtoupper($httpMethod)
                 )
             );
         }
 
-        return $this->$action();
+        return $this->$httpMethod();
     }
 
     public function send()
@@ -124,11 +124,18 @@ class HttpApi implements IBidirectionalApi
         // actually do the request
         try {
             if ($this->sendRequest() === false) {
-                throw new Exception\NetworkError("HTTP result {$this->lastRequestsResponse->status_code} for {$this->config->getAction()} to {$this->lastRequestsResponse->url}.\n{$this->lastRequestsResponse->body}");
+                $message = sprintf(
+                    'HTTP result %s for %s to %s.\n%s',
+                    $this->lastRequestsResponse->status_code,
+                    $this->config->getHttpMethod(),
+                    $this->lastRequestsResponse->url,
+                    $this->lastRequestsResponse->body
+                );
+                throw new Exception\NetworkError($message);
             }
         } catch (\Requests_Exception $e) {
-            // simply pass throgh the message but with an expected exception type - don't
-            // have any request/response infor to include as this exception only occurs
+            // simply pass through the message but with an expected exception type - don't
+            // have any request/response to include as this exception only occurs
             // when the request cannot even be attempted.
             throw new Exception\NetworkError($e->getMessage());
         }
