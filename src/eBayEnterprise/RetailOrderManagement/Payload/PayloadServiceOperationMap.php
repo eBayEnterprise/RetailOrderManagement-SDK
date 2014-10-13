@@ -68,7 +68,7 @@ return [
                         'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields',
                         'params' => [
                             'getOrderId',
-                            'getPaymentAccountUniqueId',
+                            'getCardNumber',
                             'getPanIsToken',
                             'getAuthorizationResponseCode',
                             'getBankAuthorizationCode',
