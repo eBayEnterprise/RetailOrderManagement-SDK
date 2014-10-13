@@ -15,14 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-
 /**
  * Interface ICreditCardAuthRequest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- *
  */
-interface ICreditCardAuthRequest extends IPayload
+interface ICreditCardAuthRequest extends ICreditCardAuth
 {
     /**
      * RequestId is used to globally identify a request message and is used
@@ -37,43 +34,6 @@ interface ICreditCardAuthRequest extends IPayload
      * @return self
      */
     public function setRequestId($requestId);
-    /**
-     * A unique identifier for the order
-     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
-     *
-     * xsd restrictions: 1-20 characters
-     * @return string
-     */
-    public function getOrderId();
-    /**
-     * @param string $orderId
-     * @return self
-     */
-    public function setOrderId($orderId);
-    /**
-     * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
-     *
-     * @return bool true if the PAN is a token, false if it's the actual number
-     */
-    public function getPanIsToken();
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken);
-    /**
-     * Either a tokenized or plain credit card number.
-     *
-     * xsd restrictions: 1-22 characters
-     * @see get/setPanIsToken
-     * @return string
-     */
-    public function getCardNumber();
-    /**
-     * @param string $ccNum
-     * @return self
-     */
-    public function setCardNumber($ccNum);
     /**
      * Expiration date of the credit card.
      *

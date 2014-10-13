@@ -25,18 +25,6 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
-    // XML related values - document root node, XMLNS and name of the xsd schema file
-    const ROOT_NODE = 'CreditCardAuthReply';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const PAYLOAD_SCHEMA = 'Payment-Service-CreditCardAuth-1.0.xsd';
-    // API response codes relevent to payload success/failure and OMS response code
-    const AUTHORIZATION_APPROVED = 'AP01';
-    const AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER = 'TO01';
-    const AUTHORIZATION_TIMEOUT_CARD_PROCESSOR = 'NR01';
-    // response codes that are to be reported to the OMS
-    const APPROVED_RESPONSE_CODE = 'APPROVED';
-    const TIMEOUT_RESPONSE_CODE = 'TIMEOUT';
-
     /** @var string **/
     protected $orderId;
     /** @var string **/
@@ -396,5 +384,35 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
+    }
+
+    /**
+     * @param bool $isToken
+     * @return self
+     */
+    public function setPanIsToken($isToken)
+    {
+        $this->panIsToken = is_bool($isToken) ? $isToken : null;
+        return $this;
+    }
+
+    /**
+     * @param string $ccNum
+     * @return self
+     */
+    public function setCardNumber($ccNum)
+    {
+        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
+        return $this;
+    }
+
+    /**
+     * @param string $orderId
+     * @return self
+     */
+    public function setOrderId($orderId)
+    {
+        $this->orderId = $this->cleanString($orderId, 20);
+        return $this;
     }
 }

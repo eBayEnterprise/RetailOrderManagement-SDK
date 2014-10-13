@@ -15,34 +15,13 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-
 /**
  * Interface ICreditCardAuthReply The Reply Message for the Credit Card Authorization Operation
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface ICreditCardAuthReply extends IPayload
+interface ICreditCardAuthReply extends ICreditCardAuth
 {
-    /**
-     * A unique identifier for the order
-     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
-     *
-     * xsd restrictions: 1-20 characters
-     * @return string
-     */
-    public function getOrderId();
-    /**
-     * Either a raw PAN or a token representing a PAN.
-     *
-     * @return string
-     */
-    public function getCardNumber();
-    /**
-     * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
-     *
-     * @return bool
-     */
-    public function getPanIsToken();
+    const ROOT_NODE = 'CreditCardAuthReply';
     /**
      * Response code of the credit card authorization. This includes approval, timeout, and several decline codes.
      * Please see supporting documentation for a full list of these codes.
@@ -112,7 +91,6 @@ interface ICreditCardAuthReply extends IPayload
      * @return string
      */
     public function getCurrencyCode();
-
     /**
      * Address verification was successful, no resend required
      *

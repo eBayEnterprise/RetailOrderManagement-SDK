@@ -26,8 +26,6 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     const ROOT_NODE = 'CreditCardAuthRequest';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'schema/Payment-Service-CreditCardAuth-1.0.xsd';
 
     /** @var string **/
     protected $requestId;
