@@ -385,10 +385,13 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     {
         $payload = $this->buildPayload($payloadData);
         $domPayload = new \DOMDocument();
+        $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
+        $domPayload->loadXML($this->loadXmlTestString());
+        $expectedString = $domPayload->C14N();
 
-        $this->assertEquals($this->loadXmlTestString(), $serializedString);
+        $this->assertEquals($expectedString, $serializedString);
     }
 
     /**
