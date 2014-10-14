@@ -26,7 +26,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
     {
         // create and hold a static reference to the validator in the iterator
         self::$validator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $iterator = new ValidatorIterator(array(self::$validator));
+        $iterator = new ValidatorIterator([self::$validator]);
         // new iterator with one validator should have key of 0 and be valid
         $this->assertSame(0, $iterator->key());
         $this->assertTrue($iterator->valid());
@@ -84,7 +84,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCannotConstructWithInvalidItems()
     {
-        new ValidatorIterator(array('not an IValidator'));
+        new ValidatorIterator(['not an IValidator']);
     }
     /**
      * The ValidatorIterator should be ignore the original keys of the given items,
@@ -95,7 +95,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $threeValidator = $this->getMock('eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $fooValidator = $this->getMock('eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $iterator = new ValidatorIterator(array(3 => $threeValidator, 'foo' => $fooValidator));
+        $iterator = new ValidatorIterator([3 => $threeValidator, 'foo' => $fooValidator]);
         $this->assertSame($threeValidator, $iterator->current());
         $iterator->next();
         $this->assertSame($fooValidator, $iterator->current());

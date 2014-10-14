@@ -32,5 +32,5 @@ interface IApi
      * @param IConfig $config
      * @param array $args
      */
-    public function __construct(IConfig $config, array $args = array());
+    public function __construct(IConfig $config, array $args = []);
 }
