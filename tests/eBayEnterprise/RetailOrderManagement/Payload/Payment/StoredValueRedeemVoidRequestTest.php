@@ -57,10 +57,10 @@ class StoredValueRedeemVoidRequestTest extends \PHPUnit_Framework_TestCase
         return [
             [[]], // Empty payload should fail validation.
             [[
-                'setCardNumber' => '4111ABC123ZYX987',
+                'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
                 'setPanIsToken' => false,
-                'setOrderId' => '00000123456789',
-                'setAmount' => 55.99,
+                'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                'setAmount' => 15.55,
                 'setCurrencyCode' => 'USD',
             ]],
         ];
@@ -73,21 +73,21 @@ class StoredValueRedeemVoidRequestTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         $base = [
-            'setOrderId' => '00000123456789',
-            'setCardNumber' => '4111ABC123ZYX987',
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
             'setPanIsToken' => false,
-            'setAmount' => 55.99,
-            'setPin' => '12345678',
+            'setAmount' => 15.55,
+            'setPin' => 'dmiFblP4',
             'setCurrencyCode' => 'USD',
-            'setRequestId' => 'uniquerequestid',
+            'setRequestId' => '2DkKj6frchv81zQF',
         ];
         $noPin = [
-            'setOrderId' => '00000123456789',
-            'setCardNumber' => '4111ABC123ZYX987',
-            'setPanIsToken' => true,
-            'setAmount' => 55.99,
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setPanIsToken' => false,
+            'setAmount' => 15.55,
             'setCurrencyCode' => 'USD',
-            'setRequestId' => 'uniquerequestid',
+            'setRequestId' => '2DkKj6frchv81zQF',
         ];
         return [
             [$base, ''],

@@ -16,7 +16,6 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-use eBayEnterprise\RetailOrderManagement\Payload\IStoredValueRedeemReply;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
@@ -28,10 +27,6 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
 {
-    const ROOT_NODE = 'StoredValueRedeemVoidReply';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'schema/Payment-Service-StoredValueRedeemVoid-1.0.xsd';
-
     /** @var string $orderId id of the order */
     protected $orderId;
     /** @var string $cardNumber Gift tender payment account unique id (PAN) */
@@ -73,6 +68,14 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
         return $this->orderId;
     }
     /**
+     * @return int
+     */
+    public function setOrderId($orderId)
+    {
+        $this->orderId = $orderId;
+        return $this;
+    }
+    /**
      * Indicates if the account Id is the actual number, or a representation of the number.
      *
      * @return bool true if the Id is a token, false if it's the actual number
@@ -80,6 +83,14 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     public function getPanIsToken()
     {
         return $this->panIsToken;
+    }
+    /**
+     * @param bool $isToken
+     * @return self
+     */
+    public function setPanIsToken($isToken)
+    {
+        $this->panIsToken = $isToken;
     }
     /**
      * Either a tokenized or plain text stored value account id.
@@ -93,6 +104,14 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
         return $this->cardNumber;
     }
     /**
+     * @param string $cardNumber
+     * @return self
+     */
+    public function setCardNumber($cardNumber)
+    {
+        $this->cardNumber = $cardNumber;
+    }
+    /**
      * The amount to void.
      *
      * xsd note: eneration
@@ -102,6 +121,14 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     public function getResponseCode()
     {
         return $this->responseCode;
+    }
+    /**
+     * @param string
+     * @return self
+     */
+    public function setResponseCode($code)
+    {
+        $this->responseCode = $code;
     }
     /**
      * Validate that the payload meets the requirements

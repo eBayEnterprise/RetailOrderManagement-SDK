@@ -57,15 +57,15 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
     {
         // move to JSON
         $properties = array(
-            'setPanIsToken' => false,
-            'setCardNumber' => '80000000000000',
-            'setCurrencyCode' => 'USD',
+            'setPanIsToken' => true,
+            'setCardNumber' => 'KDVXYXCeFCG8GfH6',
+            'setCurrencyCode' => 'GBP',
             'setPin' => '1234',
         );
         $noPin = array(
-            'setPanIsToken' => false,
-            'setCardNumber' => '80000000000000',
-            'setCurrencyCode' => 'USD',
+            'setPanIsToken' => true,
+            'setCardNumber' => 'KDVXYXCeFCG8GfH6',
+            'setCurrencyCode' => 'GBP',
         );
 
         return array(

@@ -37,12 +37,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueBalanceRequest implements IStoredValueBalanceRequest
 {
-    const ROOT_NODE = 'StoredValueBalanceRequest';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'schema/Payment-Service-StoredValueBalance-1.0.xsd';
-
     /** @var string $cardNumber */
     protected $cardNumber;
+    /** @var string $requestId */
+    protected $requestId;
     /** @var bool $panIsToken Indicates if the card number is the actual number, or a representation of the number. */
     protected $pin;
     protected $panIsToken;
@@ -73,6 +71,25 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         $this->schemaValidator = $schemaValidator;
     }
 
+    /**
+     * RequestId is used to globally identify a request message and is used
+     * for duplicate request protection.
+     *
+     * xsd restrictions: 1-40 characters
+     * @return string
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+    /**
+     * @param string $requestId
+     * @return self
+     */
+    public function setRequestId($requestId)
+    {
+        $this->requestId = $requestId;
+    }
     /**
      * Indicates if the Card Number is the actual number, or a representation of the number.
      *
@@ -185,7 +202,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         $this->validate();
         $xmlString = sprintf(
             '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
+            static::ROOT_NODE,
             self::XML_NS,
             $this->serializeContents()
         );

@@ -57,9 +57,9 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
         return [
             [[]], // Empty payload should fail validation.
             [[
-                'cardNumber' => '4111ABC123ZYX987',
+                'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
                 'panIsToken' => false,
-                'orderId' => '00000123456789',
+                'orderId' => 'o3trodZDaS2zhZHirJnA',
             ]],
         ];
     }
@@ -71,10 +71,10 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         $base = [
-            'orderId' => '00000123456789',
-            'cardNumber' => '4111ABC123ZYX987',
+            'orderId' => 'o3trodZDaS2zhZHirJnA',
+            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
             'panIsToken' => false,
-            'responseCode' => 'Success',
+            'responseCode' => 'Fail',
         ];
         return [
             [$base, ''],

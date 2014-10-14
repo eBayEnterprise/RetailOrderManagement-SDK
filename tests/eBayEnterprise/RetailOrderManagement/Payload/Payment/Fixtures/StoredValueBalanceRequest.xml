@@ -1,4 +1,5 @@
 <StoredValueBalanceRequest xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
     <PaymentAccountUniqueId isToken="true">KDVXYXCeFCG8GfH6</PaymentAccountUniqueId>
+    <Pin>1234</Pin>
     <CurrencyCode>GBP</CurrencyCode>
 </StoredValueBalanceRequest>

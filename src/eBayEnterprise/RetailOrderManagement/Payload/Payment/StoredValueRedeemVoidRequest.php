@@ -26,10 +26,6 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
 {
-    const ROOT_NODE = 'StoredValueRedeemVoidRequest';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'schema/Payment-Service-StoredValueRedeemVoid-1.0.xsd';
-
     /** @var string $orderId id of the order */
     protected $orderId;
     protected $amount;
