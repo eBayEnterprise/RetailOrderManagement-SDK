@@ -33,7 +33,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     {
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator(array($this->stubValidator));
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 
@@ -54,9 +54,9 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideInvalidPayload()
     {
-        return array(
-            array(array()),
-            array(array(
+        return [
+            [[]],
+            [[
                 // order id should fail XSD validation
                 'orderId' => '1234567890123456789012345',
                 'paymentAccountUniqueId' => '4111ABC123ZYX987',
@@ -69,8 +69,8 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
                 'currencyCode' => 'USD',
                 'phoneResponseCode' => 'PHONE_OK',
                 'nameResponseCode' => 'NAME_OK',
-            )),
-        );
+            ]],
+        ];
     }
 
     /**
@@ -80,7 +80,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         // move to JSON
-        $properties = array(
+        $properties = [
             'orderId' => 'ORDER_ID',
             'paymentAccountUniqueId' => '4111ABC123ZYX987',
             'panIsToken' => true,
@@ -92,11 +92,11 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             'currencyCode' => 'USD',
             'phoneResponseCode' => 'PHONE_OK',
             'nameResponseCode' => 'NAME_OK',
-        );
+        ];
 
-        return array(
-            array($properties)
-        );
+        return [
+            [$properties]
+        ];
     }
 
     /**
@@ -105,30 +105,30 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideUnsuccessfulPayload()
     {
-        return array(
+        return [
             // any authorization response code other than AP01, TO01 or NR01 is
             // unsuccessful, regardless of any other responses
-            array(array(
+            [[
                 'authorizationResponseCode' => 'ND01',
-            )),
+            ]],
             // when auth response code is successful, AVS and CVV response
             // codes must be successful as well, when they are not, reply is unsuccessful
-            array(array(
+            [[
                 'authorizationResponseCode' => 'AP01',
                 'cvv2ResponseCode' => 'M',
                 'avsResponseCode' => 'N',
-            )),
-            array(array(
+            ]],
+            [[
                 'authorizationResponseCode' => 'AP01',
                 'cvv2ResponseCode' => 'M',
                 'avsResponseCode' => 'AW',
-            )),
-            array(array(
+            ]],
+            [[
                 'authorizationResponseCode' => 'AP01',
                 'cvv2ResponseCode' => 'N',
                 'avsResponseCode' => 'P',
-            )),
-        );
+            ]],
+        ];
     }
 
     /**
@@ -137,13 +137,13 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideSuccessfulPayload()
     {
-        return array(
-            array(array(
+        return [
+            [[
                 'authorizationResponseCode' => 'AP01',
                 'cvv2ResponseCode' => 'M',
                 'avsResponseCode' => 'P'
-            )),
-        );
+            ]],
+        ];
     }
 
     /**
@@ -152,9 +152,9 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideUnacceptableAuthPayload()
     {
-        return array(
-            array(array('authorizationResponseCode' => 'ND01')),
-        );
+        return [
+            [['authorizationResponseCode' => 'ND01']],
+        ];
     }
 
     /**
@@ -163,11 +163,11 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideAcceptableAuthPayload()
     {
-        return array(
-            array(array('authorizationResponseCode' => 'AP01')),
-            array(array('authorizationResponseCode' => 'NR01')),
-            array(array('authorizationResponseCode' => 'TO01')),
-        );
+        return [
+            [['authorizationResponseCode' => 'AP01']],
+            [['authorizationResponseCode' => 'NR01']],
+            [['authorizationResponseCode' => 'TO01']],
+        ];
     }
 
     /**
@@ -176,25 +176,25 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideResponseCodePayloadAndCode()
     {
-        return array(
-            array(
-                array('authorizationResponseCode' => 'AP01'),
+        return [
+            [
+                ['authorizationResponseCode' => 'AP01'],
                 'APPROVED'
-            ),
-            array(
-                array('authorizationResponseCode' => 'NR01'),
+            ],
+            [
+                ['authorizationResponseCode' => 'NR01'],
                 'TIMEOUT'
-            ),
-            array(
-                array('authorizationResponseCode' => 'TO01'),
+            ],
+            [
+                ['authorizationResponseCode' => 'TO01'],
                 'TIMEOUT'
-            ),
+            ],
             // basically anything else should result in a `null` response code
-            array(
-                array('authorizationResponseCode' => 'NC03'),
+            [
+                ['authorizationResponseCode' => 'NC03'],
                 null
-            ),
-        );
+            ],
+        ];
     }
     /**
      * Provide payload data that will require AVS correction
@@ -202,9 +202,9 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideAVSCorrectionRequiredPayload()
     {
-        return array(
-            array(array('authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'N')),
-        );
+        return [
+            [['authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'N']],
+        ];
     }
     /**
      * Provide payload data that will not require AVS correction
@@ -212,10 +212,10 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideAVSCorrectionNotRequiredPayload()
     {
-        return array(
-            array(array('authorizationResponseCode' => 'ND01', 'avsResponseCode' => 'N')),
-            array(array('authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'M')),
-        );
+        return [
+            [['authorizationResponseCode' => 'ND01', 'avsResponseCode' => 'N']],
+            [['authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'M']],
+        ];
     }
     /**
      * Provide payload data that will require CVV2 correction
@@ -223,9 +223,9 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideCVVCorrectionRequiredPayload()
     {
-        return array(
-            array(array('authorizationResponseCode' => 'AP01', 'cvv2ResponseCode' => 'N')),
-        );
+        return [
+            [['authorizationResponseCode' => 'AP01', 'cvv2ResponseCode' => 'N']],
+        ];
     }
     /**
      * Provide payload data that will not require CVV2 correction
@@ -233,33 +233,33 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideCVVCorrectionNotRequiredPayload()
     {
-        return array(
-            array(array('authorizationResponseCode' => 'AP01', 'cvv2ResponseCode' => 'M')),
-            array(array('authorizationResponseCode' => 'ND01', 'cvv2ResponseCode' => 'N')),
-        );
+        return [
+            [['authorizationResponseCode' => 'AP01', 'cvv2ResponseCode' => 'M']],
+            [['authorizationResponseCode' => 'ND01', 'cvv2ResponseCode' => 'N']],
+        ];
     }
     public function provideAuthTimeoutPayload()
     {
-        return array(
-            array(array('authorizationResponseCode' => 'TO01')),
-            array(array('authorizationResponseCode' => 'NR01'))
-        );
+        return [
+            [['authorizationResponseCode' => 'TO01']],
+            [['authorizationResponseCode' => 'NR01']]
+        ];
     }
     /**
      * @return array
      */
     public function provideBooleanFromStringTests()
     {
-        return array(
-            array("true", true),
-            array("false", false),
-            array("1", true),
-            array("0", false),
-            array("True", true),
-            array(null, null),
-            array(1, null),
-            array("test", null)
-        );
+        return [
+            ["true", true],
+            ["false", false],
+            ["1", true],
+            ["0", false],
+            ["True", true],
+            [null, null],
+            [1, null],
+            ["test", null]
+        ];
     }
 
     /**
@@ -309,7 +309,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
         $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply', 'booleanFromString');
         $method->setAccessible(true);
-        $actual = $method->invokeArgs($payload, array($value));
+        $actual = $method->invokeArgs($payload, [$value]);
         $this->assertEquals($expected, $actual);
     }
 

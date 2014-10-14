@@ -51,7 +51,7 @@ class OptionalGroup implements Payload\IValidator
      */
     public function validate(Payload\IPayload $payload)
     {
-        $invalidDataAccessors = array();
+        $invalidDataAccessors = [];
         foreach ($this->requiredDataAccessors as $method) {
             if (is_null($payload->$method())) {
                 $invalidDataAccessors[] = $method;

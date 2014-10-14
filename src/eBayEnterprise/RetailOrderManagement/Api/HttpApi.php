@@ -36,7 +36,7 @@ class HttpApi implements IBidirectionalApi
     /** @var  Requests_Response Response object from the last call to Requests*/
     protected $lastRequestsResponse;
 
-    public function __construct(IConfig $config, array $args = array())
+    public function __construct(IConfig $config, array $args = [])
     {
         $this->config = $config;
 

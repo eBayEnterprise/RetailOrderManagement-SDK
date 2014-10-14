@@ -64,7 +64,7 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
         $fatalError->file = 'some/file/path.xml';
         $fatalError->line = 25;
 
-        $errors = array($warnError, $errError, $fatalError);
+        $errors = [$warnError, $errError, $fatalError];
         $validator = new XsdSchemaValidator();
         $method = new \ReflectionMethod($validator, 'formatErrors');
         $method->setAccessible(true);
