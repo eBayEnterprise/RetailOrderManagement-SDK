@@ -25,12 +25,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
+    use TPaymentAccountUniqueId;
+
     /** @var string **/
     protected $orderId;
-    /** @var string **/
-    protected $paymentAccountUniqueId;
-    /** @var bool **/
-    protected $panIsToken;
     /** @var string **/
     protected $authorizationResponseCode;
     /** @var string **/
@@ -94,16 +92,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     public function getOrderId()
     {
         return $this->orderId;
-    }
-
-    public function getCardNumber()
-    {
-        return $this->paymentAccountUniqueId;
-    }
-
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
     }
 
     public function getAuthorizationResponseCode()
@@ -308,10 +296,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected function serializePaymentContext()
     {
         return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
+            '<PaymentContext><OrderId>%s</OrderId>%s</PaymentContext>',
             $this->getOrderId(),
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
+            $this->serializePaymentAccountUniqueId()
         );
     }
 

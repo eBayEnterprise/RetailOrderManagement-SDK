@@ -25,10 +25,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueBalanceReply implements IStoredValueBalanceReply
 {
-    /** @var string **/
-    protected $cardNumber;
-    /** @var bool **/
-    protected $panIsToken;
+    use TPaymentAccountUniqueId;
     /** @var float **/
     protected $balanceAmount;
     /** @var string **/
@@ -41,7 +38,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     protected $schemaValidator;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [
-        'cardNumber' => 'string(x:PaymentAccountUniqueId)',
+        'paymentAccountUniqueId' => 'string(x:PaymentAccountUniqueId)',
         'balanceAmount' => 'number(x:BalanceAmount)',
         'currencyCode' => 'string(x:BalanceAmount/@currencyCode)',
         'responseCode' => 'string(x:ResponseCode)',
@@ -55,36 +52,6 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
-    }
-
-    public function getCardNumber()
-    {
-        return $this->cardNumber;
-    }
-
-    /**
-     * @param string $ccNum
-     * @return self
-     */
-    public function setCardNumber($ccNum)
-    {
-        $this->cardNumber = $this->cleanString($ccNum, 22);
-        return $this;
-    }
-
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
-    }
-
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = is_bool($isToken) ? $isToken : null;
-        return $this;
     }
 
     public function getBalanceAmount()
@@ -208,22 +175,9 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
      */
     protected function serializeContents()
     {
-        return $this->serializePaymentContext()
+        return $this->serializePaymentAccountUniqueId()
         . $this->serializeResponseCodes()
         . $this->serializeAmount();
-    }
-
-    /**
-     * Create an XML string representing the PaymentContext nodes
-     * @return string
-     */
-    protected function serializePaymentContext()
-    {
-        return sprintf(
-            '<PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId>',
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
-        );
     }
 
     /**

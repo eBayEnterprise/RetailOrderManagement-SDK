@@ -25,16 +25,12 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
-    const ROOT_NODE = 'CreditCardAuthRequest';
+    use TPaymentAccountUniqueId;
 
     /** @var string **/
     protected $requestId;
     /** @var string **/
     protected $orderId;
-    /** @var bool **/
-    protected $panIsToken;
-    /** @var string **/
-    protected $paymentAccountUniqueId;
     /** @var \DateTime **/
     protected $expirationDate;
     /** @var string **/
@@ -175,29 +171,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function setOrderId($orderId)
     {
         $this->orderId = $this->cleanString($orderId, 20);
-        return $this;
-    }
-
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
-    }
-
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = is_bool($isToken) ? $isToken : null;
-        return $this;
-    }
-
-    public function getCardNumber()
-    {
-        return $this->paymentAccountUniqueId;
-    }
-
-    public function setCardNumber($ccNum)
-    {
-        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
-        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
         return $this;
     }
 
@@ -697,10 +670,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected function serializePaymentContext()
     {
         return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
+            '<PaymentContext><OrderId>%s</OrderId>%s</PaymentContext>',
             $this->getOrderId(),
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
+            $this->serializePaymentAccountUniqueId()
         );
     }
 

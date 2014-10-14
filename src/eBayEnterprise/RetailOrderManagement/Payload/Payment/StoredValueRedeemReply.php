@@ -25,6 +25,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
  */
 class StoredValueRedeemReply implements IStoredValueRedeemReply
 {
+    use TPaymentAccountUniqueId;
+
     /** @var string **/
     protected $pin;
     /** @var float **/
@@ -37,16 +39,12 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     protected $balanceAmountCurrencyCode;
     /** @var string **/
     protected $responseCode;
-    /** @var string **/
-    protected $cardNumber;
-    /** @var bool */
-    protected $panIsToken;
     /** @var  string */
     protected $orderId;
     /** @var array */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'responseCode' => 'string(x:ResponseCode)',
         'amountRedeemed' => 'number(x:AmountRedeemed)',
         'amountRedeemedCurrencyCode' => 'string(x:AmountRedeemed/@currencyCode)',
@@ -333,36 +331,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     }
 
     /**
-     * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
-     *
-     * @return bool true if the PAN is a token, false if it's the actual number
-     */
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
-    }
-
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = is_bool($isToken) ? $isToken : null;
-        return $this;
-    }
-
-    /**
-     * @param string $ccNum
-     * @return self
-     */
-    public function setCardNumber($ccNum)
-    {
-        $this->cardNumber = $this->cleanString($ccNum, 22);
-        return $this;
-    }
-
-    /**
      * @param string $orderId
      * @return self
      */
@@ -370,17 +338,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     {
         $this->orderId = $this->cleanString($orderId, 20);
         return $this;
-    }
-    /**
-     * Either a tokenized or plain credit card number.
-     *
-     * xsd restrictions: 1-22 characters
-     * @see get/setPanIsToken
-     * @return string
-     */
-    public function getCardNumber()
-    {
-        return $this->cardNumber;
     }
 
     /**
@@ -443,10 +400,9 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     protected function serializePaymentContext()
     {
         return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
+            '<PaymentContext><OrderId>%s</OrderId>%s</PaymentContext>',
             $this->getOrderId(),
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
+            $this->serializePaymentAccountUniqueId()
         );
     }
 
