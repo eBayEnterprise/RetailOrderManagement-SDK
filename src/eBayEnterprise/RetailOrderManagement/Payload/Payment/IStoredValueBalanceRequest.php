@@ -60,5 +60,4 @@ interface IStoredValueBalanceRequest extends IStoredValueBalance
      * @return self
      */
     public function setCurrencyCode($code);
-
 }
