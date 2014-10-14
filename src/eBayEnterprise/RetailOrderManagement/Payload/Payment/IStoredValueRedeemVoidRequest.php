@@ -40,12 +40,12 @@ interface IStoredValueRedeemVoidRequest extends IPayload
      *
      * @return bool true if the PAN is a token, false if it's the actual number
      */
-    public function getAccountIdIsToken();
+    public function getPanIsToken();
     /**
      * @param bool $isToken
      * @return self
      */
-    public function setAccountIdIsToken($isToken);
+    public function setPanIsToken($isToken);
     /**
      * Either a tokenized or plain text PAN.
      *
@@ -53,12 +53,12 @@ interface IStoredValueRedeemVoidRequest extends IPayload
      * @see get/setPanIsToken
      * @return string
      */
-    public function getAccountId();
+    public function getCardNumber();
     /**
      * @param string $pan
      * @return self
      */
-    public function setAccountId($pan);
+    public function setCardNumber($pan);
     /**
      * The PIN number used to authenticate a card number
      *

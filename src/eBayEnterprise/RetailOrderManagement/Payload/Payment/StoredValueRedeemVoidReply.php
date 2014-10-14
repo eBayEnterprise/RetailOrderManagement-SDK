@@ -34,10 +34,10 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
 
     /** @var string $orderId id of the order */
     protected $orderId;
-    /** @var string $accountId Gift tender account id */
-    protected $accountId;
-    /** @var bool $accountIdIsToken Indicates if the card number is the actual number, or a representation of the number. */
-    protected $accountIdIsToken;
+    /** @var string $cardNumber Gift tender payment account unique id (PAN) */
+    protected $cardNumber;
+    /** @var bool $panIsToken Indicates if the PAN is the actual number, or a representation of the number. */
+    protected $panIsToken;
     protected $responseCode;
     /** @var IValidatorIterator */
     protected $validators;
@@ -46,12 +46,12 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = array(
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'accountId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'responseCode' => ' string(x:ResponseCode)',
     );
     /** @var array property/XPath pairs that take boolean values*/
     protected $booleanXPaths = array(
-        'accountIdIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
+        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
     );
     /**
      * @param IValidatorIterator $validators Payload object validators
@@ -77,9 +77,9 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
      *
      * @return bool true if the Id is a token, false if it's the actual number
      */
-    public function getAccountIdIsToken()
+    public function getPanIsToken()
     {
-        return $this->accountIdIsToken;
+        return $this->panIsToken;
     }
     /**
      * Either a tokenized or plain text stored value account id.
@@ -88,9 +88,9 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
      * @see get/setPanIsToken
      * @return string
      */
-    public function getAccountId()
+    public function getCardNumber()
     {
-        return $this->accountId;
+        return $this->cardNumber;
     }
     /**
      * The amount to void.
@@ -185,8 +185,8 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
         return sprintf(
             '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
             $this->getOrderId(),
-            $this->getAccountIdIsToken() ? 'true' : 'false',
-            $this->getAccountId()
+            $this->getPanIsToken() ? 'true' : 'false',
+            $this->getCardNumber()
         );
     }
 

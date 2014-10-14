@@ -33,11 +33,11 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     /** @var string $orderId id of the order */
     protected $orderId;
     protected $amount;
-    /** @var string $accountId Gift tender account id */
-    protected $accountId;
+    /** @var string $cardNumber Gift tender account id */
+    protected $cardNumber;
     protected $pin;
-    /** @var bool $accountIdIsToken Indicates if the card number is the actual number, or a representation of the number. */
-    protected $accountIdIsToken;
+    /** @var bool $panIsToken Indicates if the card number is the actual number, or a representation of the number. */
+    protected $panIsToken;
     protected $currencyCode;
     protected $requestId;
     /** @var IValidatorIterator */
@@ -47,7 +47,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = array(
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'accountId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'amount' => 'number(x:Amount)',
         'currencyCode' => 'string(x:Amount/@currencyCode)',
         'requestId' => ' string(@requestId)',
@@ -57,7 +57,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     );
     /** @var array property/XPath pairs that take boolean values*/
     protected $booleanXPaths = array(
-        'accountIdIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
+        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
     );
     /**
      * @param IValidatorIterator $validators Payload object validators
@@ -112,22 +112,22 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     }
 
     /**
-     * Indicates if the account id is the account identifier, or a representation of the identifier.
+     * Indicates if the PAN is the account identifier, or a representation of the identifier.
      *
      * @return bool true if the account identifier is a token, false if it's the actual identifier
      */
-    public function getAccountIdIsToken()
+    public function getPanIsToken()
     {
-        return $this->accountIdIsToken;
+        return $this->panIsToken;
     }
 
     /**
      * @param bool $isToken
      * @return self
      */
-    public function setAccountIdIsToken($isToken)
+    public function setPanIsToken($isToken)
     {
-        $this->accountIdIsToken = $isToken;
+        $this->panIsToken = $isToken;
     }
 
     /**
@@ -137,18 +137,18 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
      * @see get/setPanIsToken
      * @return string
      */
-    public function getAccountId()
+    public function getCardNumber()
     {
-        return $this->accountId;
+        return $this->cardNumber;
     }
 
     /**
-     * @param string $accountId
+     * @param string $cardNumber
      * @return self
      */
-    public function setAccountId($accountId)
+    public function setCardNumber($cardNumber)
     {
-        $this->accountId = $accountId;
+        $this->cardNumber = $cardNumber;
     }
 
     /**
@@ -326,8 +326,8 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
         return sprintf(
             '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
             $this->getOrderId(),
-            $this->getAccountIdIsToken() ? 'true' : 'false',
-            $this->getAccountId()
+            $this->getPanIsToken() ? 'true' : 'false',
+            $this->getCardNumber()
         );
     }
 

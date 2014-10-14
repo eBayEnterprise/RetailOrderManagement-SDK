@@ -36,7 +36,7 @@ interface IStoredValueRedeemVoidReply extends IPayload
      *
      * @return bool true if the PAN is a token, false if it's the actual number
      */
-    public function getAccountIdIsToken();
+    public function getPanIsToken();
     /**
      * Either a tokenized or plain text stored value account id.
      *
@@ -44,7 +44,7 @@ interface IStoredValueRedeemVoidReply extends IPayload
      * @see get/setPanIsToken
      * @return string
      */
-    public function getAccountId();
+    public function getCardNumber();
     /**
      * The amount to void.
      *

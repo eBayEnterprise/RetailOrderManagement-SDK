@@ -57,8 +57,8 @@ class StoredValueRedeemVoidRequestTest extends \PHPUnit_Framework_TestCase
         return [
             [[]], // Empty payload should fail validation.
             [[
-                'setAccountId' => '4111ABC123ZYX987',
-                'setAccountIdIsToken' => false,
+                'setCardNumber' => '4111ABC123ZYX987',
+                'setPanIsToken' => false,
                 'setOrderId' => '00000123456789',
                 'setAmount' => 55.99,
                 'setCurrencyCode' => 'USD',
@@ -74,8 +74,8 @@ class StoredValueRedeemVoidRequestTest extends \PHPUnit_Framework_TestCase
     {
         $base = [
             'setOrderId' => '00000123456789',
-            'setAccountId' => '4111ABC123ZYX987',
-            'setAccountIdIsToken' => false,
+            'setCardNumber' => '4111ABC123ZYX987',
+            'setPanIsToken' => false,
             'setAmount' => 55.99,
             'setPin' => '12345678',
             'setCurrencyCode' => 'USD',
@@ -83,8 +83,8 @@ class StoredValueRedeemVoidRequestTest extends \PHPUnit_Framework_TestCase
         ];
         $noPin = [
             'setOrderId' => '00000123456789',
-            'setAccountId' => '4111ABC123ZYX987',
-            'setAccountIdIsToken' => true,
+            'setCardNumber' => '4111ABC123ZYX987',
+            'setPanIsToken' => true,
             'setAmount' => 55.99,
             'setCurrencyCode' => 'USD',
             'setRequestId' => 'uniquerequestid',
