@@ -73,5 +73,4 @@ interface IStoredValueRedeemVoidRequest extends IStoredValueRedeemVoid
      * @return self
      */
     public function setCurrencyCode($code);
-
 }

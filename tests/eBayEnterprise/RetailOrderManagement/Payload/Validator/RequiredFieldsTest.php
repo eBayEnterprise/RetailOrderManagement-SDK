@@ -20,7 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 class RequiredFieldsTest extends \PHPUnit_Framework_TestCase
 {
     /** @var string[] */
-    protected $requiredFields = array('getRequiredField');
+    protected $requiredFields = ['getRequiredField'];
     /** @var Payload\IPayload */
     protected $payload;
 

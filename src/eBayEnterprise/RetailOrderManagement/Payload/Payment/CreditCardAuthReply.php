@@ -54,7 +54,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
-    protected $extractionPaths = array(
+    protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
         'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'authorizationResponseCode' => 'string(x:AuthorizationResponseCode)',
@@ -63,27 +63,27 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         'avsResponseCode' => 'string(x:AVSResponseCode)',
         'amountAuthorized' => 'number(x:AmountAuthorized)',
         'currencyCode' => 'string(x:AmountAuthorized/@currencyCode)',
-    );
+    ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = array(
+    protected $booleanXPaths = [
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
-    );
+    ];
     /** @var array XPath expressions to match optional nodes in the serialized payload (XML) */
-    protected $optionalExtractionPaths = array(
+    protected $optionalExtractionPaths = [
         'phoneResponseCode' => 'x:PhoneResponseCode',
         'nameResponseCode' => 'x:NameResponseCode',
         'emailResponseCode' => 'x:EmailResponseCode',
-    );
+    ];
     /** @var array Mapping of reply authorization response code to OMS response code */
-    protected $responseCodeMap = array(
+    protected $responseCodeMap = [
         self::AUTHORIZATION_APPROVED => self::APPROVED_RESPONSE_CODE,
         self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER => self::TIMEOUT_RESPONSE_CODE,
         self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR => self::TIMEOUT_RESPONSE_CODE,
-    );
+    ];
     /** @var string[] AVS response codes that should be rejected */
-    protected $invalidAvsCodes = array('N', 'AW');
+    protected $invalidAvsCodes = ['N', 'AW'];
     /** @var string[] CVV response codes that should be rejected */
-    protected $invalidCvvCodes = array('N');
+    protected $invalidCvvCodes = ['N'];
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {

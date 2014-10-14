@@ -23,10 +23,10 @@ class OptionalGroupTest extends \PHPUnit_Framework_TestCase
     /** @var Payload\IPayload */
     protected $payload;
     /** @var string[] */
-    protected $requiredFields = array(
+    protected $requiredFields = [
         'getRequiredField',
         'getAnotherRequiredField'
-    );
+    ];
 
     public function setUp()
     {

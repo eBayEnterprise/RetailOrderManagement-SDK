@@ -86,7 +86,7 @@ class HttpConfig implements IHttpConfig
         $storeId,
         $service,
         $operation,
-        array $endpointParams = array()
+        array $endpointParams = []
     ) {
         $this->apiKey = $apiKey;
         $this->host = $host;

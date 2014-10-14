@@ -22,7 +22,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 class ValidatorIterator implements IValidatorIterator
 {
     /** @var IValidator[] */
-    protected $validators = array();
+    protected $validators = [];
     /** @var int */
     protected $offset = 0;
     /**

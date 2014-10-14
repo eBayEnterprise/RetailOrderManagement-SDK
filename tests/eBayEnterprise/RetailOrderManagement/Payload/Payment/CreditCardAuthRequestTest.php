@@ -33,7 +33,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator(array($this->validatorStub));
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 
@@ -45,11 +45,11 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideInvalidPayload()
     {
-        $payloadData = array();
+        $payloadData = [];
 
-        return array(
-            array($payloadData)
-        );
+        return [
+            [$payloadData]
+        ];
     }
 
     /**
@@ -60,7 +60,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         // move to JSON
-        $properties = array(
+        $properties = [
             'setRequestId' => '739a45ba35',
             'setOrderId' => 'testOrderId',
             'setPanIsToken' => false,
@@ -94,11 +94,11 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
             'setTransactionId' => 'transId',
             'setEci' => 'ECI',
             'setPayerAuthenticationResponse' => 'some REALLY big string'
-        );
+        ];
 
-        return array(
-            array($properties)
-        );
+        return [
+            [$properties]
+        ];
     }
 
     /**
@@ -106,16 +106,16 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideBooleanFromStringTests()
     {
-        return array(
-            array("true", true),
-            array("false", false),
-            array("1", true),
-            array("0", false),
-            array("True", true),
-            array(null, null),
-            array(1, null),
-            array("test", null)
-        );
+        return [
+            ["true", true],
+            ["false", false],
+            ["1", true],
+            ["0", false],
+            ["True", true],
+            [null, null],
+            [1, null],
+            ["test", null]
+        ];
     }
 
     /**
@@ -124,14 +124,14 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideCleanStringTests()
     {
-        return array(
+        return [
             // good data
-            array('testReqId', 40, 'testReqId'),
+            ['testReqId', 40, 'testReqId'],
             // not a string
-            array(100, 40, null),
+            [100, 40, null],
             // properly truncates
-            array('abcdefghijklmnopqrstuvwxyz', 5, 'abcde')
-        );
+            ['abcdefghijklmnopqrstuvwxyz', 5, 'abcde']
+        ];
     }
 
     /**
@@ -140,20 +140,20 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideCleanAddressLinesTests()
     {
-        return array(
-            array(  // good data
+        return [
+            [  // good data
                 'Street 1\nStreet 2\n Street 3\nStreet 4',
-                array('Street 1', 'Street 2', 'Street 3', 'Street 4')
-            ),
-            array(  // extra lines
+                ['Street 1', 'Street 2', 'Street 3', 'Street 4']
+            ],
+            [  // extra lines
                 'Street 1\nStreet 2\n Street 3\nStreet 4\nStreet 5',
-                array('Street 1', 'Street 2', 'Street 3', 'Street 4 Street 5')
-            ),
-            array( // not a string
+                ['Street 1', 'Street 2', 'Street 3', 'Street 4 Street 5']
+            ],
+            [ // not a string
                 100,
                 null
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -393,7 +393,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanString');
         $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($value, $maxLength));
+        $cleaned = $method->invokeArgs($payload, [$value, $maxLength]);
         $this->assertSame($expected, $cleaned);
     }
 
@@ -407,7 +407,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanAddressLines');
         $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, array($lines));
+        $cleaned = $method->invokeArgs($payload, [$lines]);
         $this->assertSame($expected, $cleaned);
     }
 
@@ -421,7 +421,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'booleanFromString');
         $method->setAccessible(true);
-        $actual = $method->invokeArgs($payload, array($value));
+        $actual = $method->invokeArgs($payload, [$value]);
         $this->assertEquals($expected, $actual);
     }
 

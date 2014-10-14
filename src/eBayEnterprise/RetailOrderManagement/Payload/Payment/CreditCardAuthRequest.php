@@ -98,7 +98,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var array */
-    protected $requiredNodesMap = array (
+    protected $requiredNodesMap = [
         'requestId' => 'string(@requestId)',
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
         'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
@@ -119,20 +119,20 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'shipToCity' => 'string(x:ShippingAddress/x:City)',
         'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
         'isRequestToCorrectCVVOrAVSError' => 'boolean(x:isRequestToCorrectCVVOrAVSError)'
-    );
+    ];
     /** @var array */
-    protected $addressLinesMap = array(
-        array(
+    protected $addressLinesMap = [
+        [
             'property' => 'billingLines',
             'xPath' => "x:BillingAddress/*[starts-with(name(), 'Line')]"
-        ),
-        array(
+        ],
+        [
             'property' => 'shipToLines',
             'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]"
-        )
-    );
+        ]
+    ];
     /** @var array */
-    protected $optionalNodesMap = array(
+    protected $optionalNodesMap = [
         'billingMainDivision' => 'x:BillingAddress/x:MainDivision',
         'billingPostalCode' => 'x:BillingAddress/x:PostalCode',
         'shipToMainDivision' => 'x:ShippingAddress/x:MainDivision',
@@ -143,12 +143,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'transactionId' => 'x:SecureVerificationData/x:TransactionId',
         'payerAuthenticationResponse' => 'x:SecureVerificationData/x:PayerAuthenticationResponse',
         'eci' => 'x:SecureVerificationData/x:ECI',
-    );
+    ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = array(
+    protected $booleanXPaths = [
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
         'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
-    );
+    ];
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
@@ -742,8 +742,8 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeBillingAddress()
     {
-        $lines = array();
-        $billingLines = is_array($this->billingLines) ? $this->billingLines : array();
+        $lines = [];
+        $billingLines = is_array($this->billingLines) ? $this->billingLines : [];
         $idx = 0;
         foreach ($billingLines as $line) {
             $idx++;
@@ -800,8 +800,8 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeShippingAddress()
     {
-        $lines = array();
-        $shippingLines = is_array($this->shipToLines) ? $this->shipToLines : array();
+        $lines = [];
+        $shippingLines = is_array($this->shipToLines) ? $this->shipToLines : [];
         $idx = 0;
         foreach ($shippingLines as $line) {
             $idx++;
@@ -905,7 +905,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             $trimmed = trim($lines);
             $addressLines = explode('\n', $trimmed);
 
-            $newLines = array();
+            $newLines = [];
             foreach ($addressLines as $line) {
                 $newLines[] = substr(trim($line), 0, 70);
             }
@@ -950,7 +950,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         foreach ($this->addressLinesMap as $address) {
             $lines = $domXPath->query($address['xPath']);
             $property = $address['property'];
-            $this->$property = array();
+            $this->$property = [];
             foreach ($lines as $line) {
                 array_push($this->$property, $line->nodeValue);
             }

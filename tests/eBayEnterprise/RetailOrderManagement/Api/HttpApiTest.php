@@ -86,7 +86,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
      * @param array $parameters
      * @return mixed
      */
-    protected function invokeProtectedMethod($class, $method, $parameters = array())
+    protected function invokeProtectedMethod($class, $method, $parameters = [])
     {
         $reflection = new \ReflectionClass($class);
         $reflectedMethod = $reflection->getMethod($method);
