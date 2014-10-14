@@ -15,7 +15,13 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-trait TPaymentAccountUniqueId {
+/**
+ * trait TPaymentAccountUniqueId
+ * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
+ * @example <PaymentAccountUniqueId isToken="true">{card number}</PaymentAccountUniqueId>
+ */
+trait TPaymentAccountUniqueId
+{
     /** @var bool **/
     protected $panIsToken;
     /** @var string **/

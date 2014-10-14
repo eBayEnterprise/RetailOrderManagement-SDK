@@ -25,12 +25,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
-    use TPaymentAccountUniqueId;
+    use TPaymentContext;
 
     /** @var string **/
     protected $requestId;
-    /** @var string **/
-    protected $orderId;
     /** @var \DateTime **/
     protected $expirationDate;
     /** @var string **/
@@ -160,17 +158,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function setRequestId($requestId)
     {
         $this->requestId = $this->cleanString($requestId, 40);
-        return $this;
-    }
-
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $this->cleanString($orderId, 20);
         return $this;
     }
 
@@ -660,20 +647,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         . $this->serializeShippingAddress()
         . $this->serializeIsCorrectError()
         . $this->serializeSecureVerificationData();
-    }
-
-    /**
-     * Build the PaymentContext node
-     *
-     * @return string
-     */
-    protected function serializePaymentContext()
-    {
-        return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId>%s</PaymentContext>',
-            $this->getOrderId(),
-            $this->serializePaymentAccountUniqueId()
-        );
     }
 
     /**

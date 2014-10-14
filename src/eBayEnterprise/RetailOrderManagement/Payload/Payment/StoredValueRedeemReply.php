@@ -25,7 +25,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
  */
 class StoredValueRedeemReply implements IStoredValueRedeemReply
 {
-    use TPaymentAccountUniqueId;
+    use TPaymentContext;
 
     /** @var string **/
     protected $pin;
@@ -39,8 +39,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     protected $balanceAmountCurrencyCode;
     /** @var string **/
     protected $responseCode;
-    /** @var  string */
-    protected $orderId;
     /** @var array */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
@@ -331,28 +329,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     }
 
     /**
-     * @param string $orderId
-     * @return self
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $this->cleanString($orderId, 20);
-        return $this;
-    }
-
-    /**
-     * A unique identifier for the order
-     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
-     *
-     * xsd restrictions: 1-20 characters
-     * @return string
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
      *
@@ -393,19 +369,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     {
         $this->balanceAmountCurrencyCode = $code;
     }
-    /**
-     * Create an XML string representing the PaymentContext nodes
-     * @return string
-     */
-    protected function serializePaymentContext()
-    {
-        return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId>%s</PaymentContext>',
-            $this->getOrderId(),
-            $this->serializePaymentAccountUniqueId()
-        );
-    }
-
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
