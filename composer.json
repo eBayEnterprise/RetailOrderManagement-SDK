@@ -2,6 +2,32 @@
     "name": "ebayenterprise/retail-order-management",
     "license": "OSL-3.0",
     "description": "Software Development Kit for working with the Retail Order Management Web API",
+    "authors": [
+        {
+            "name": "Scott van Brug",
+            "email": "svanbrug@ebay.com"
+        },
+        {
+            "name": "Michael Phang",
+            "email": "mphang@ebay.com"
+        },
+        {
+            "name": "Michael A. Smith",
+            "email": "msmith3@ebay.com"
+        },
+        {
+            "name": "Mike West",
+            "email": "micwest@ebay.com"
+        },
+        {
+            "name": "Reginald Gabriel",
+            "email": "rgabriel@ebay.com"
+        },
+        {
+            "name": "Chris Kemmerer",
+            "email": "ckemmerer@ebay.com"
+        }
+    ],
     "require-dev": {
         "pdepend/pdepend": "~1.1",
         "phpdocumentor/phpdocumentor": "~2.4",
