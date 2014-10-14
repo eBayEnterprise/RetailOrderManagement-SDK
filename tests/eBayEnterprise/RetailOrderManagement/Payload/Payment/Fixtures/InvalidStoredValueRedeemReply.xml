@@ -1,0 +1,9 @@
+<StoredValueRedeemReply xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <PaymentContext>
+        <OrderId>o3trodZDaS2zhZHirJnA</OrderId>
+        <PaymentAccountUniqueId isToken="false">hmrROxcsoE8BDmbZFUME0+</PaymentAccountUniqueId>
+    </PaymentContext>
+    <ResponseCode>Fail</ResponseCode>
+    <AmountRedeemed>0.00</AmountRedeemed>
+    <BalanceAmount currencyCode="GBP">15.55</BalanceAmount>
+</StoredValueRedeemReply>
