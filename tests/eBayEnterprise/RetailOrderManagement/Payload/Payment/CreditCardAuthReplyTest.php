@@ -196,7 +196,55 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
-
+    /**
+     * Provide payload data that will require AVS correction
+     * @return array
+     */
+    public function provideAVSCorrectionRequiredPayload()
+    {
+        return array(
+            array(array('authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'N')),
+        );
+    }
+    /**
+     * Provide payload data that will not require AVS correction
+     * @return array
+     */
+    public function provideAVSCorrectionNotRequiredPayload()
+    {
+        return array(
+            array(array('authorizationResponseCode' => 'ND01', 'avsResponseCode' => 'N')),
+            array(array('authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'M')),
+        );
+    }
+    /**
+     * Provide payload data that will require CVV2 correction
+     * @return array
+     */
+    public function provideCVVCorrectionRequiredPayload()
+    {
+        return array(
+            array(array('authorizationResponseCode' => 'AP01', 'cvv2ResponseCode' => 'N')),
+        );
+    }
+    /**
+     * Provide payload data that will not require CVV2 correction
+     * @return array
+     */
+    public function provideCVVCorrectionNotRequiredPayload()
+    {
+        return array(
+            array(array('authorizationResponseCode' => 'AP01', 'cvv2ResponseCode' => 'M')),
+            array(array('authorizationResponseCode' => 'ND01', 'cvv2ResponseCode' => 'N')),
+        );
+    }
+    public function provideAuthTimeoutPayload()
+    {
+        return array(
+            array(array('authorizationResponseCode' => 'TO01')),
+            array(array('authorizationResponseCode' => 'NR01'))
+        );
+    }
     /**
      * @return array
      */
@@ -337,10 +385,13 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     {
         $payload = $this->buildPayload($payloadData);
         $domPayload = new \DOMDocument();
+        $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
+        $domPayload->loadXML($this->loadXmlTestString());
+        $expectedString = $domPayload->C14N();
 
-        $this->assertEquals($this->loadXmlTestString(), $serializedString);
+        $this->assertEquals($expectedString, $serializedString);
     }
 
     /**
@@ -441,5 +492,59 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     {
         $payload = $this->buildPayload($payloadData);
         $this->assertSame($responseCode, $payload->getResponseCode());
+    }
+    /**
+     * Test checking for if AVS corrections are needed.
+     * @param array $payloadData
+     * @param bool  $isRequired
+     * @dataProvider provideAVSCorrectionRequiredPayload
+     */
+    public function testAvsCorrectionRequired(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->assertTrue($payload->getIsAVSCorrectionRequired());
+    }
+    /**
+     * Test checking for if AVS corrections are needed.
+     * @param array $payloadData
+     * @param bool  $isRequired
+     * @dataProvider provideAVSCorrectionNotRequiredPayload
+     */
+    public function testAvsCorrectionNotRequired(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->assertFalse($payload->getIsAVSCorrectionRequired());
+    }
+    /**
+     * Test checking for if AVS corrections are needed.
+     * @param array $payloadData
+     * @param bool  $isRequired
+     * @dataProvider provideCVVCorrectionRequiredPayload
+     */
+    public function testIsCVV2CorrectionRequired(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->assertTrue($payload->getIsCVV2CorrectionRequired());
+    }
+    /**
+     * Test checking for if AVS corrections are needed.
+     * @param array $payloadData
+     * @param bool  $isRequired
+     * @dataProvider provideCVVCorrectionNotRequiredPayload
+     */
+    public function testIsCVV2CorrectionNotRequired(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->assertFalse($payload->getIsCVV2CorrectionRequired());
+    }
+    /**
+     * Test checking for auth timeout responses.
+     * @param  array  $payloadData
+     * @dataProvider provideAuthTimeoutPayload
+     */
+    public function testIsAuthTimeout(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->assertTrue($payload->getIsAuthTimeout());
     }
 }

@@ -20,21 +20,8 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
  * Class HttpConfig
  * @package eBayEnterprise\RetailOrderManagement\Api
  */
-class HttpConfig implements IConfig
+class HttpConfig implements IHttpConfig
 {
-    /**
-     * Service URI has the following format:
-     * https://{host}/v{M}.{m}/stores/{storeid}/{service}/{operation}{/parameters}.{format}
-     * - host - EE Excnahge Platform domain
-     * - M - major version of the API
-     * - m - minor version of the API
-     * - storeid - GSI assigned store identifier
-     * - service - API call service/subject area
-     * - operation - specific API call of the specified service
-     * - format - extension of the requested response format. Currently only xml is supported
-     */
-    const URI_FORMAT = 'https://%s/v%s.%s/stores/%s/%s/%s.xml';
-
     protected $apiKey;
     protected $host;
     protected $majorVersion;
@@ -42,8 +29,9 @@ class HttpConfig implements IConfig
     protected $storeId;
     protected $service;
     protected $operation;
-    protected $action;
-    protected $contentType;
+    protected $endpointParams;
+    protected $action = 'post';
+    protected $contentType = 'text/xml';
 
     public function getApiKey()
     {
@@ -59,16 +47,17 @@ class HttpConfig implements IConfig
             $this->minorVersion,
             $this->storeId,
             $this->service,
-            $this->operation
+            $this->operation,
+            ($this->endpointParams ? '/' . implode('/', $this->endpointParams) : '')
         );
     }
 
-    public function getServiceOperation()
+    public function getConfigKey()
     {
-        return array($this->service, $this->operation);
+        return $this->service . '/' . $this->operation;
     }
 
-    public function getAction()
+    public function getHttpMethod()
     {
         return $this->action;
     }
@@ -79,16 +68,26 @@ class HttpConfig implements IConfig
     }
 
     /**
-     * @param $apiKey
-     * @param $host
-     * @param $majorVersion
-     * @param $minorVersion
-     * @param $storeId
-     * @param $service
-     * @param $operation
+     * @param string $apiKey
+     * @param string $host
+     * @param string $majorVersion
+     * @param string $minorVersion
+     * @param string $storeId
+     * @param string $service
+     * @param string $operation
+     * @param array  $endpointParams If additional params are provided, they will be joined on '/' and appended
+     *                               with a '/' to the operation at the end of the endpoint URI.
      */
-    public function __construct($apiKey, $host, $majorVersion, $minorVersion, $storeId, $service, $operation)
-    {
+    public function __construct(
+        $apiKey,
+        $host,
+        $majorVersion,
+        $minorVersion,
+        $storeId,
+        $service,
+        $operation,
+        array $endpointParams = array()
+    ) {
         $this->apiKey = $apiKey;
         $this->host = $host;
         $this->majorVersion = $majorVersion;
@@ -96,7 +95,6 @@ class HttpConfig implements IConfig
         $this->storeId = $storeId;
         $this->service = $service;
         $this->operation = $operation;
-		$this->action = 'post';
-		$this->contentType = 'text/xml';
+        $this->endpointParams = $endpointParams;
     }
 }

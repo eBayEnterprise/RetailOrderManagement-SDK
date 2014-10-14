@@ -15,24 +15,16 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
 /**
- * Interface IStoredValueRedeemVoidReply
+ * Interface IStoredValueRedeem
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IStoredValueRedeemVoidReply extends IStoredValueRedeemVoid
+interface IStoredValueRedeem extends IPayload, IPaymentContext
 {
-    const ROOT_NODE = 'StoredValueRedeemVoidReply';
-    /**
-     * The result of the request transaction.
-     * In the case of a StoredValue, you would never accept an order unless the redeem was successful.
-     *
-     * xsd restriction: possible values "Fail", "Success", "Timeout"
-     * @return string
-     */
-    public function getResponseCode();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setResponseCode($code);
+    // XML related values - document root node, XMLNS and name of the xsd schema file
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+    const PAYLOAD_SCHEMA = 'Payment-Service-StoredValueRedeem-1.0.xsd';
+    const XSD = 'schema/Payment-Service-StoredValueRedeem-1.0.xsd';
 }

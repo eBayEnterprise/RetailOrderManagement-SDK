@@ -26,8 +26,6 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     const ROOT_NODE = 'CreditCardAuthRequest';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'schema/Payment-Service-CreditCardAuth-1.0.xsd';
 
     /** @var string **/
     protected $requestId;
@@ -36,7 +34,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     /** @var bool **/
     protected $panIsToken;
     /** @var string **/
-    protected $cardNumber;
+    protected $paymentAccountUniqueId;
     /** @var \DateTime **/
     protected $expirationDate;
     /** @var string **/
@@ -103,7 +101,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $requiredNodesMap = array (
         'requestId' => 'string(@requestId)',
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'expirationDate' => 'string(x:ExpirationDate)',
         'cardSecurityCode' => 'string(x:CardSecurityCode)',
         'amount' => 'number(x:Amount)',
@@ -152,63 +150,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
     );
 
-    /**
-     * Trim any white space and return the resulting string truncating to $maxLength.
-     *
-     * Return null if the result is an empty string or not a string
-     *
-     * @param string $string
-     * @param int $maxLength
-     * @return string or null
-     */
-    protected function cleanString($string, $maxLength)
-    {
-        $value = null;
-
-        if (is_string($string)) {
-            $trimmed = substr(trim($string), 0, $maxLength);
-            $value = empty($trimmed) ? null : $trimmed;
-        }
-
-        return $value;
-    }
-
-    /**
-     * Make sure we have max 4 address lines of 70 chars max
-     *
-     * If there are more than 4 lines concatenate all extra lines with the 4th line.
-     *
-     * Truncate any lines to 70 chars max.
-     *
-     * @param string $lines
-     * @return array or null
-     */
-    protected function cleanAddressLines($lines)
-    {
-        $finalLines = null;
-
-        if (is_string($lines)) {
-            $trimmed = trim($lines);
-            $addressLines = explode('\n', $trimmed);
-
-            $newLines = array();
-            foreach ($addressLines as $line) {
-                $newLines[] = substr(trim($line), 0, 70);
-            }
-
-            if (count($newLines) > 4) {
-                $extraLines = array_slice($newLines, 3);
-                $lastLine = implode('', $extraLines);
-                $lastLine = substr(trim($lastLine), 0, 70);
-                $newLines[3] = $lastLine;
-            }
-
-            $finalLines = array_slice($newLines, 0, 4);
-        }
-
-        return $finalLines;
-    }
-
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
         $this->validators = $validators;
@@ -250,12 +191,13 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getCardNumber()
     {
-        return $this->cardNumber;
+        return $this->paymentAccountUniqueId;
     }
 
     public function setCardNumber($ccNum)
     {
-        $this->cardNumber = $this->cleanString($ccNum, 22);
+        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
+        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
         return $this;
     }
 
@@ -813,12 +755,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
 
         return sprintf(
-            '<BillingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></BillingAddress>',
+            '<BillingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</BillingAddress>',
             implode('', $lines),
             $this->getBillingCity(),
-            $this->getBillingMainDivision(),
+            $this->nodeNullCoalesce('MainDivision', $this->getBillingMainDivision()),
             $this->getBillingCountryCode(),
-            $this->getBillingPostalCode()
+            $this->nodeNullCoalesce('PostalCode', $this->getBillingPostalCode())
         );
     }
 
@@ -871,12 +813,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
 
         return sprintf(
-            '<ShippingAddress>%s<City>%s</City><MainDivision>%s</MainDivision><CountryCode>%s</CountryCode><PostalCode>%s</PostalCode></ShippingAddress>',
+            '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
             implode('', $lines),
             $this->getShipToCity(),
-            $this->getShipToMainDivision(),
+            $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
             $this->getShipToCountryCode(),
-            $this->getShipToPostalCode()
+            $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
         );
     }
 
@@ -901,15 +843,98 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeSecureVerificationData()
     {
-        return sprintf(
-            '<SecureVerificationData><AuthenticationAvailable>%s</AuthenticationAvailable><AuthenticationStatus>%s</AuthenticationStatus><CavvUcaf>%s</CavvUcaf><TransactionId>%s</TransactionId><ECI>%s</ECI><PayerAuthenticationResponse>%s</PayerAuthenticationResponse></SecureVerificationData>',
-            $this->getAuthenticationAvailable(),
-            $this->getAuthenticationStatus(),
-            $this->getCavvUcaf(),
-            $this->getTransactionId(),
-            $this->getEci(),
+        // make sure we have all of the required fields for this node
+        // if we don't then don't serialize it at all
+        if (
+            $this->getAuthenticationAvailable() &&
+            $this->getAuthenticationStatus() &&
+            $this->getCavvUcaf() &&
+            $this->getTransactionId() &&
             $this->getPayerAuthenticationResponse()
-        );
+        ) {
+            return sprintf(
+                '<SecureVerificationData><AuthenticationAvailable>%s</AuthenticationAvailable><AuthenticationStatus>%s</AuthenticationStatus><CavvUcaf>%s</CavvUcaf><TransactionId>%s</TransactionId>%s<PayerAuthenticationResponse>%s</PayerAuthenticationResponse></SecureVerificationData>',
+                $this->getAuthenticationAvailable(),
+                $this->getAuthenticationStatus(),
+                $this->getCavvUcaf(),
+                $this->getTransactionId(),
+                $this->nodeNullCoalesce('ECI', $this->getEci()),
+                $this->getPayerAuthenticationResponse()
+            );
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    protected function cleanString($string, $maxLength)
+    {
+        $value = null;
+
+        if (is_string($string)) {
+            $trimmed = substr(trim($string), 0, $maxLength);
+            $value = empty($trimmed) ? null : $trimmed;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Make sure we have max 4 address lines of 70 chars max
+     *
+     * If there are more than 4 lines concatenate all extra lines with the 4th line.
+     *
+     * Truncate any lines to 70 chars max.
+     *
+     * @param string $lines
+     * @return array or null
+     */
+    protected function cleanAddressLines($lines)
+    {
+        $finalLines = null;
+
+        if (is_string($lines)) {
+            $trimmed = trim($lines);
+            $addressLines = explode('\n', $trimmed);
+
+            $newLines = array();
+            foreach ($addressLines as $line) {
+                $newLines[] = substr(trim($line), 0, 70);
+            }
+
+            if (count($newLines) > 4) {
+                $extraLines = array_slice($newLines, 3);
+                $lastLine = implode(' ', $extraLines);
+                $lastLine = substr(trim($lastLine), 0, 70);
+                $newLines[3] = $lastLine;
+            }
+
+            $finalLines = array_slice($newLines, 0, 4);
+        }
+
+        return $finalLines;
+    }
+
+    /**
+     * @param string $nodeName
+     * @param string $value
+     * @return string
+     */
+    protected function nodeNullCoalesce($nodeName, $value)
+    {
+        if (!$value) {
+            return '';
+        }
+
+        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
     }
 
     /**

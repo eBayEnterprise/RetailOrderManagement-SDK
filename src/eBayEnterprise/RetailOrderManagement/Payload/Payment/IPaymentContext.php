@@ -16,23 +16,27 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 /**
- * Interface IStoredValueRedeemVoidReply
+ * Interface IPaymentContext
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
+ *
+ * <PaymentContext>
+ *     <OrderId>I7mDiCpD4k4YUejr</OrderId>
+ *     <PaymentAccountUniqueId…/>
+ * </PaymentContext>
  */
-interface IStoredValueRedeemVoidReply extends IStoredValueRedeemVoid
+interface IPaymentContext extends IPaymentAccountUniqueId
 {
-    const ROOT_NODE = 'StoredValueRedeemVoidReply';
     /**
-     * The result of the request transaction.
-     * In the case of a StoredValue, you would never accept an order unless the redeem was successful.
+     * A unique identifier for the order
+     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
      *
-     * xsd restriction: possible values "Fail", "Success", "Timeout"
+     * xsd restrictions: 1-20 characters
      * @return string
      */
-    public function getResponseCode();
+    public function getOrderId();
     /**
-     * @param string
+     * @param string $orderId
      * @return self
      */
-    public function setResponseCode($code);
+    public function setOrderId($orderId);
 }

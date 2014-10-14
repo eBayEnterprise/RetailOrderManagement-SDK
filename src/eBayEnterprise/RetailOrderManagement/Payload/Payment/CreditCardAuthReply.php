@@ -25,18 +25,6 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
-    // XML related values - document root node, XMLNS and name of the xsd schema file
-    const ROOT_NODE = 'CreditCardAuthReply';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const PAYLOAD_SCHEMA = 'Payment-Service-CreditCardAuth-1.0.xsd';
-    // API response codes relevent to payload success/failure and OMS response code
-    const AUTHORIZATION_APPROVED = 'AP01';
-    const AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER = 'TO01';
-    const AUTHORIZATION_TIMEOUT_CARD_PROCESSOR = 'NR01';
-    // response codes that are to be reported to the OMS
-    const APPROVED_RESPONSE_CODE = 'APPROVED';
-    const TIMEOUT_RESPONSE_CODE = 'TIMEOUT';
-
     /** @var string **/
     protected $orderId;
     /** @var string **/
@@ -108,7 +96,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return $this->orderId;
     }
 
-    public function getPaymentAccountUniqueId()
+    public function getCardNumber()
     {
         return $this->paymentAccountUniqueId;
     }
@@ -168,35 +156,50 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return !in_array($this->getAVSResponseCode(), $this->invalidAvsCodes);
     }
 
-    public function getIsCVV2Successful($value='')
+    public function getIsAVSCorrectionRequired()
+    {
+        return $this->getIsAuthApproved() && !$this->getIsAVSSuccessful();
+    }
+
+    public function getIsCVV2Successful($value = '')
     {
         return !in_array($this->getCVV2ResponseCode(), $this->invalidCvvCodes);
     }
 
+    public function getIsCVV2CorrectionRequired()
+    {
+        return $this->getIsAuthApproved() && !$this->getIsCVV2Successful();
+    }
+
+    public function getIsAuthApproved()
+    {
+        return $this->getAuthorizationResponseCode() === self::AUTHORIZATION_APPROVED;
+    }
+
+    public function getIsAuthTimeout()
+    {
+        $responseCode = $this->getAuthorizationResponseCode();
+        return $responseCode === self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER
+            || $responseCode === self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR;
+    }
+
     public function getIsAuthSuccessful()
     {
-        $authResponseCode = $this->getAuthorizationResponseCode();
-        return (
-            $authResponseCode === self::AUTHORIZATION_APPROVED
-            && $this->getIsAVSSuccessful()
-            && $this->getIsCVV2Successful()
-        ) || (
-            $authResponseCode === self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER
-            || $authResponseCode === self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR
-        );
+        return ($this->getIsAuthApproved() && $this->getIsAVSSuccessful() && $this->getIsCVV2Successful())
+            || ($this->getIsAuthTimeout());
     }
 
     public function getIsAuthAcceptable()
     {
-        // if there is a response code accpetable by the OMS self::getResponseCode
+        // If there is a response code accpetable by the OMS self::getResponseCode
         // doesn't return null, then the reply is acceptable
         return !is_null($this->getResponseCode());
     }
 
     public function getResponseCode()
     {
-        $replyAuthCode = $this->getAuthorizationResponseCode();
-        return isset($this->responseCodeMap[$replyAuthCode]) ? $this->responseCodeMap[$replyAuthCode] : null;
+        $responseCode = $this->getAuthorizationResponseCode();
+        return isset($this->responseCodeMap[$responseCode]) ? $this->responseCodeMap[$responseCode] : null;
     }
 
     /**
@@ -308,7 +311,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
             $this->getOrderId(),
             $this->getPanIsToken() ? 'true' : 'false',
-            $this->getPaymentAccountUniqueId()
+            $this->getCardNumber()
         );
     }
 
@@ -381,5 +384,35 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
+    }
+
+    /**
+     * @param bool $isToken
+     * @return self
+     */
+    public function setPanIsToken($isToken)
+    {
+        $this->panIsToken = is_bool($isToken) ? $isToken : null;
+        return $this;
+    }
+
+    /**
+     * @param string $ccNum
+     * @return self
+     */
+    public function setCardNumber($ccNum)
+    {
+        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
+        return $this;
+    }
+
+    /**
+     * @param string $orderId
+     * @return self
+     */
+    public function setOrderId($orderId)
+    {
+        $this->orderId = $this->cleanString($orderId, 20);
+        return $this;
     }
 }

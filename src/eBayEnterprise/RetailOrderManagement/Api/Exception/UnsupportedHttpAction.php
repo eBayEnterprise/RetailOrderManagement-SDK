@@ -23,4 +23,4 @@ namespace eBayEnterprise\RetailOrderManagement\Api\Exception;
 class UnsupportedHttpAction extends \Exception
 {
 
-} 
+}

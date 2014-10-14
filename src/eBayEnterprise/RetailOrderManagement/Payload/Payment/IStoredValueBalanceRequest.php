@@ -15,49 +15,35 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-
 /**
  * Interface IStoredValueBalanceRequest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- *
  */
-interface IStoredValueBalanceRequest extends IPayload
+interface IStoredValueBalanceRequest extends IStoredValueBalance
 {
+    const ROOT_NODE = 'StoredValueBalanceRequest';
     /**
-     * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
+     * RequestId is used to globally identify a request message and is used
+     * for duplicate request protection.
      *
-     * @return bool true if the PAN is a token, false if it's the actual number
-     */
-    public function getPanIsToken();
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken);
-    /**
-     * Either a tokenized or plain text PAN.
-     *
-     * xsd restrictions: 1-22 characters
-     * @see get/setPanIsToken
+     * xsd restrictions: 1-40 characters
      * @return string
      */
-    public function getCardNumber();
+    public function getRequestId();
     /**
-     * @param string $pan
+     * @param string $requestId
      * @return self
      */
-    public function setCardNumber($pan);
+    public function setRequestId($requestId);
     /**
-     * The PIN number used to authenticate a PAN
+     * The personal identification number or code associated with a gift card or gift certificate.
      *
-     * xsd note: 1-8 characters, exclude if empty
-     *           pattern (\d{1,8})?
-     * return string
+     * xsd restrictions: 1-8 characters.
+     * @return string
      */
     public function getPin();
     /**
-     * @param string $pin
+     * @param string
      * @return self
      */
     public function setPin($pin);

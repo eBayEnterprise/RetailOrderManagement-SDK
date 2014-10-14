@@ -16,12 +16,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 /**
- * Interface IStoredValueRedeemVoidRequest
+ * Interface IStoredValueRedeemRequest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IStoredValueRedeemVoidRequest extends IStoredValueRedeemVoid
+interface IStoredValueRedeemRequest extends IStoredValueRedeem
 {
-    const ROOT_NODE = 'StoredValueRedeemVoidRequest';
+    const ROOT_NODE = 'StoredValueRedeemRequest';
     /**
      * RequestId is used to globally identify a request message and is used
      * for duplicate request protection.
@@ -73,5 +73,4 @@ interface IStoredValueRedeemVoidRequest extends IStoredValueRedeemVoid
      * @return self
      */
     public function setCurrencyCode($code);
-
 }
