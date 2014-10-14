@@ -50,17 +50,17 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
-    protected $extractionPaths = array(
+    protected $extractionPaths = [
         'cardNumber' => 'string(x:PaymentAccountUniqueId)',
         'currencyCode' => 'string(x:CurrencyCode)',
-    );
-    protected $optionalExtractionPaths = array(
+    ];
+    protected $optionalExtractionPaths = [
         'pin' => 'x:Pin',
-    );
+    ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = array(
+    protected $booleanXPaths = [
         'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
-    );
+    ];
     /**
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator

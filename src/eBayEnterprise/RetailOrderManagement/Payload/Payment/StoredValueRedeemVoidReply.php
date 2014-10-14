@@ -39,15 +39,15 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
-    protected $extractionPaths = array(
+    protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
         'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'responseCode' => ' string(x:ResponseCode)',
-    );
+    ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = array(
+    protected $booleanXPaths = [
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
-    );
+    ];
     /**
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator
@@ -114,8 +114,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     /**
      * The amount to void.
      *
-     * xsd note: eneration
-     *           pattern (Fail|Success|Timeout)
+     * xsd note: enumeration, pattern (Fail|Success|Timeout)
      * return string
      */
     public function getResponseCode()

@@ -41,20 +41,20 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
-    protected $extractionPaths = array(
+    protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
         'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'amount' => 'number(x:Amount)',
         'currencyCode' => 'string(x:Amount/@currencyCode)',
         'requestId' => ' string(@requestId)',
-    );
-    protected $optionalExtractionPaths = array(
+    ];
+    protected $optionalExtractionPaths = [
         'pin' => 'x:Pin',
-    );
+    ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = array(
+    protected $booleanXPaths = [
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
-    );
+    ];
     /**
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator

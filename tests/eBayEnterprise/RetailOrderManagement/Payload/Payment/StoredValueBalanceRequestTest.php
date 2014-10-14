@@ -29,7 +29,7 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator(array($this->validatorStub));
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 
@@ -41,11 +41,11 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideInvalidPayload()
     {
-        $payloadData = array();
+        $payloadData = [];
 
-        return array(
-            array($payloadData)
-        );
+        return [
+            [$payloadData]
+        ];
     }
 
     /**
@@ -56,22 +56,22 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         // move to JSON
-        $properties = array(
+        $properties = [
             'setPanIsToken' => true,
             'setCardNumber' => 'KDVXYXCeFCG8GfH6',
             'setCurrencyCode' => 'GBP',
             'setPin' => '1234',
-        );
-        $noPin = array(
+        ];
+        $noPin = [
             'setPanIsToken' => true,
             'setCardNumber' => 'KDVXYXCeFCG8GfH6',
             'setCurrencyCode' => 'GBP',
-        );
+        ];
 
-        return array(
-            array($properties, ''),
-            array($noPin, 'NoPin'),
-        );
+        return [
+            [$properties, ''],
+            [$noPin, 'NoPin'],
+        ];
     }
 
     /**
