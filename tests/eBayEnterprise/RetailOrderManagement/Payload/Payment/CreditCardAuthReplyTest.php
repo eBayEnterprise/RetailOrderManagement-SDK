@@ -496,7 +496,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
-     * @param bool  $isRequired
      * @dataProvider provideAVSCorrectionRequiredPayload
      */
     public function testAvsCorrectionRequired(array $payloadData)
@@ -507,7 +506,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
-     * @param bool  $isRequired
      * @dataProvider provideAVSCorrectionNotRequiredPayload
      */
     public function testAvsCorrectionNotRequired(array $payloadData)
@@ -518,7 +516,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
-     * @param bool  $isRequired
      * @dataProvider provideCVVCorrectionRequiredPayload
      */
     public function testIsCVV2CorrectionRequired(array $payloadData)
@@ -529,7 +526,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
-     * @param bool  $isRequired
      * @dataProvider provideCVVCorrectionNotRequiredPayload
      */
     public function testIsCVV2CorrectionNotRequired(array $payloadData)

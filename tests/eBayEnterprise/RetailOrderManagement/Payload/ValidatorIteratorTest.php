@@ -70,6 +70,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
      * Rewinding the iterator should set the offset back to the beginning
      * @param  ValidatorIterator $iterator
      * @depends testInvalidIteratorIsNotValid
+     * @return ValidatorIterator
      */
     public function testRewindResetsKey(ValidatorIterator $iterator)
     {

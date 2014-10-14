@@ -37,7 +37,7 @@ class RequiredFields implements Payload\IValidator
     /**
      * Validate that each required data accessor method returns an non-null
      * value.
-     * @param  PayloadIPayload $payload
+     * @param  Payload\IPayload $payload
      * @return self
      * @throws Payload\Exception\InvalidPayload If any required field returns a null value.
      */
