@@ -36,6 +36,8 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     protected $validators;
     /** @var ISchemaValidator */
     protected $schemaValidator;
+    /** @var array response codes that are considered a success */
+    protected $successResponseCodes = ['Success'];
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [
         'paymentAccountUniqueId' => 'string(x:PaymentAccountUniqueId)',
@@ -230,5 +232,14 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
+    }
+
+    /**
+     * Whether the response should be used.
+     * @return bool
+     */
+    public function isSuccessful()
+    {
+        return in_array($this->getResponseCode(), $this->successResponseCodes, true);
     }
 }

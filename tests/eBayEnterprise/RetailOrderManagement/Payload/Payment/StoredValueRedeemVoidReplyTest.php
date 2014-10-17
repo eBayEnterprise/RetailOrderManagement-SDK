@@ -82,6 +82,29 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Data provider for was voided tests
+     * @return array[]
+     */
+    public function provideResponseCodeConditions()
+    {
+        return [[[
+            'orderId' => 'o3trodZDaS2zhZHirJnA',
+            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'panIsToken' => false,
+            'responseCode' => 'Success',
+        ]], [[
+            'orderId' => 'o3trodZDaS2zhZHirJnA',
+            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'panIsToken' => false,
+            'responseCode' => 'Fail',
+        ]], [[
+            'orderId' => 'o3trodZDaS2zhZHirJnA',
+            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'panIsToken' => false,
+            'responseCode' => 'Timeout',
+        ]]];
+    }
+    /**
      * Create a payload with the provided data injected.
      * @param  mixed[] $properties key/value pairs of property => value
      * @return StoredValueRedeemVoidReply
@@ -253,5 +276,19 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
+    }
+    /**
+     * Test that a response code of "Success" is considered a successful redeem void request/reply.
+     * @dataProvider provideResponseCodeConditions
+     */
+    public function testWasVoided(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $wasVoided = $payload->wasVoided();
+        if ($payload->getResponseCode() === 'Success') {
+            $this->assertTrue($wasVoided);
+        } else {
+            $this->assertFalse($wasVoided);
+        }
     }
 }

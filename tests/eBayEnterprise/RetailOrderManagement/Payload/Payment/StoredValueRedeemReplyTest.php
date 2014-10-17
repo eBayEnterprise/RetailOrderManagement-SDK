@@ -85,6 +85,41 @@ XML;
             [$properties]
         ];
     }
+    /**
+     * Data provider for was redeemed tests
+     * @return array[]
+     */
+    public function provideResponseCodeConditions()
+    {
+        return [[[
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setPanIsToken' => false,
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setAmountRedeemed' => 0.00,
+            'setBalanceAmount' => 15.55,
+            'setAmountRedeemedCurrencyCode' => 'GBP',
+            'setBalanceAmountCurrencyCode' => 'GBP',
+            'setResponseCode' => 'Success',
+        ]], [[
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setPanIsToken' => false,
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setAmountRedeemed' => 0.00,
+            'setBalanceAmount' => 15.55,
+            'setAmountRedeemedCurrencyCode' => 'GBP',
+            'setBalanceAmountCurrencyCode' => 'GBP',
+            'setResponseCode' => 'Fail',
+        ]], [[
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setPanIsToken' => false,
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setAmountRedeemed' => 0.00,
+            'setBalanceAmount' => 15.55,
+            'setAmountRedeemedCurrencyCode' => 'GBP',
+            'setBalanceAmountCurrencyCode' => 'GBP',
+            'setResponseCode' => 'Timeout',
+        ]]];
+    }
 
     /**
      * Take an array of property values with property names as keys and return an IPayload object
@@ -247,5 +282,19 @@ XML;
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
+    }
+    /**
+     * Test that a response code of "Success" is considered a successful redeem request/reply.
+     * @dataProvider provideResponseCodeConditions
+     */
+    public function testWasRedeemed(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $wasRedeemed = $payload->wasRedeemed();
+        if ($payload->getResponseCode() === 'Success') {
+            $this->assertTrue($wasRedeemed);
+        } else {
+            $this->assertFalse($wasRedeemed);
+        }
     }
 }

@@ -38,6 +38,8 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     protected $validators;
     /** @var ISchemaValidator */
     protected $schemaValidator;
+    /** @var array response codes that are considered a success */
+    protected $successResponseCodes = ['Success'];
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
@@ -131,6 +133,14 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     {
         $this->responseCode = $code;
         return $this;
+    }
+    /**
+     * Whether the gift card redeem was successfully voided.
+     * @return bool
+     */
+    public function wasVoided()
+    {
+        return in_array($this->getResponseCode(), $this->successResponseCodes, true);
     }
     /**
      * Validate that the payload meets the requirements

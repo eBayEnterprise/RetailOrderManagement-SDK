@@ -39,6 +39,8 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     protected $balanceAmountCurrencyCode;
     /** @var string **/
     protected $responseCode;
+    /** @var array response codes that are considered a success */
+    protected $successResponseCodes = ['Success'];
     /** @var array */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
@@ -370,6 +372,14 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     {
         $this->balanceAmountCurrencyCode = $code;
         return $this;
+    }
+    /**
+     * Whether the gift card was successfully redeemed.
+     * @return bool
+     */
+    public function wasRedeemed()
+    {
+        return in_array($this->getResponseCode(), $this->successResponseCodes, true);
     }
     /**
      * Load the payload XML into a DOMXPath for querying.

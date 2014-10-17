@@ -35,4 +35,9 @@ interface IStoredValueRedeemVoidReply extends IStoredValueRedeemVoid
      * @return self
      */
     public function setResponseCode($code);
+    /**
+     * Whether the gift card redeem was successfully voided.
+     * @return bool
+     */
+    public function wasVoided();
 }

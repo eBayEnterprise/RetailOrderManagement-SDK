@@ -82,6 +82,33 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Data provider for success and failure tests
+     * @return array[]
+     */
+    public function provideResponseCodeConditions()
+    {
+        return [[[
+            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
+            'panIsToken' => true,
+            'balanceAmount' => 87.44,
+            'currencyCode' => 'USD',
+            'responseCode' => 'Success',
+        ]], [[
+            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
+            'panIsToken' => true,
+            'balanceAmount' => 87.44,
+            'currencyCode' => 'USD',
+            'responseCode' => 'Failure',
+        ]], [[
+            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
+            'panIsToken' => true,
+            'balanceAmount' => 87.44,
+            'currencyCode' => 'USD',
+            'responseCode' => 'Timeout',
+        ]]];
+    }
+
+    /**
      * Create a payload with the provided data injected.
      * @param  mixed[] $properties key/value pairs of property => value
      * @return StoredValueBalanceReply
@@ -241,5 +268,20 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
+    }
+
+    /**
+     * Test that a response code of "Success" is considered a successful balance request/reply.
+     * @dataProvider provideResponseCodeConditions
+     */
+    public function testIsSuccess(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $isSuccessful = $payload->isSuccessful();
+        if ($payload->getResponseCode() === 'Success') {
+            $this->assertTrue($isSuccessful);
+        } else {
+            $this->assertFalse($isSuccessful);
+        }
     }
 }

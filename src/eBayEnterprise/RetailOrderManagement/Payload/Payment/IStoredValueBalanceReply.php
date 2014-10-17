@@ -59,4 +59,9 @@ interface IStoredValueBalanceReply extends IStoredValueBalance
      * @return self
      */
     public function setCurrencyCode($code);
+    /**
+     * Whether the response should be used.
+     * @return bool
+     */
+    public function isSuccessful();
 }

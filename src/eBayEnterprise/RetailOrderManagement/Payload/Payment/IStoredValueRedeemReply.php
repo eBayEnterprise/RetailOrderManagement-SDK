@@ -83,4 +83,9 @@ interface IStoredValueRedeemReply extends IStoredValueRedeem
      * @return self
      */
     public function setBalanceCurrencyCode($code);
+    /**
+     * Whether the gift card was successfully redeemed.
+     * @return bool
+     */
+    public function wasRedeemed();
 }
