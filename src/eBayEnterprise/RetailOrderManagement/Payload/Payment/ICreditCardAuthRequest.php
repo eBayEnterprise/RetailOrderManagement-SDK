@@ -21,6 +21,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  */
 interface ICreditCardAuthRequest extends ICreditCardAuth
 {
+    const ROOT_NODE = 'CreditCardAuthRequest';
+
     /**
      * RequestId is used to globally identify a request message and is used
      * for duplicate request protection.

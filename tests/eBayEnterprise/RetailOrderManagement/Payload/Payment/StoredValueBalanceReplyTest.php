@@ -57,7 +57,7 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
         return [
             [[]], // Empty payload should fail validation.
             [[
-                'cardNumber' => 'RvS1kwB3eCxzk5lI',
+                'paymentAccountUniqueId' => 'RvS1kwB3eCxzk5lI',
                 'panIsToken' => false,
                 'responseCode' => 'glom', // Invalid response code
                 'amountAuthorized' => 55.99,
@@ -73,7 +73,7 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         return [[[
-            'cardNumber' => 'KDVXYXCeFCG8GfH6',
+            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
             'panIsToken' => true,
             'balanceAmount' => 87.44,
             'currencyCode' => 'USD',

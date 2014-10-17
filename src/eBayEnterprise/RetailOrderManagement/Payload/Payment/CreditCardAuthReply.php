@@ -25,12 +25,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
-    /** @var string **/
-    protected $orderId;
-    /** @var string **/
-    protected $paymentAccountUniqueId;
-    /** @var bool **/
-    protected $panIsToken;
+    use TPaymentContext;
     /** @var string **/
     protected $authorizationResponseCode;
     /** @var string **/
@@ -89,21 +84,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
-    }
-
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    public function getCardNumber()
-    {
-        return $this->paymentAccountUniqueId;
-    }
-
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
     }
 
     public function getAuthorizationResponseCode()
@@ -302,20 +282,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     }
 
     /**
-     * Create an XML string representing the PaymentContext nodes
-     * @return string
-     */
-    protected function serializePaymentContext()
-    {
-        return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
-            $this->getOrderId(),
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
-        );
-    }
-
-    /**
      * Create an XML string representing the various response codes, e.g.
      * AuthorizationResponseCode, BankAuthorizationCode, CVV2ResponseCode, etc.
      * @return string
@@ -384,35 +350,5 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
-    }
-
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = is_bool($isToken) ? $isToken : null;
-        return $this;
-    }
-
-    /**
-     * @param string $ccNum
-     * @return self
-     */
-    public function setCardNumber($ccNum)
-    {
-        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
-        return $this;
-    }
-
-    /**
-     * @param string $orderId
-     * @return self
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $this->cleanString($orderId, 20);
-        return $this;
     }
 }
