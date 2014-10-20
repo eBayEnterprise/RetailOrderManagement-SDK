@@ -239,11 +239,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return $this;
     }
 
-    protected function getSchemaFile()
-    {
-        return __DIR__ . '/schema/' . self::PAYLOAD_SCHEMA;
-    }
-
     /**
      * Load the payload XML into a DOMDocument
      * @param  string $xmlString
@@ -350,5 +345,14 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
     }
 }

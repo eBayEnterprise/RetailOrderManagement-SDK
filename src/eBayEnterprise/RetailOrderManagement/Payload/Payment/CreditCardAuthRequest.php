@@ -951,9 +951,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $doc->loadXML($xmlString);
         $xml = $doc->C14N();
 
-        // schemaValidator will throw Exception\InvalidPayload if it fails
-        $this->schemaValidator->validate($xml, __DIR__.'/'.self::XSD);
-
+        $this->schemaValidate($xml);
         return $xml;
     }
 
@@ -965,10 +963,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     public function deserialize($string)
     {
-        // Make sure that the passed string at least passes schema validation.
-        // schemaValidator will throw an exception if it doesn't.
-        $this->schemaValidator->validate($string, self::XSD);
-
+        $this->schemaValidate($string);
         $dom = new \DOMDocument();
         $dom->loadXML($string);
 
@@ -997,5 +992,24 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $this->validate();
 
         return $this;
+    }
+    /**
+     * Validate the serialized data via the schema validator.
+     * @param  string $serializedData
+     * @return self
+     */
+    protected function schemaValidate($serializedData)
+    {
+        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+        return $this;
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
     }
 }
