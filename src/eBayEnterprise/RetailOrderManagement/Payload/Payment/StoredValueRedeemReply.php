@@ -347,6 +347,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     public function setCurrencyCodeRedeemed($code)
     {
         $this->amountRedeemedCurrencyCode = $code;
+        return $this;
     }
 
     /**
@@ -368,6 +369,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     public function setBalanceCurrencyCode($code)
     {
         $this->balanceAmountCurrencyCode = $code;
+        return $this;
     }
     /**
      * Load the payload XML into a DOMXPath for querying.

@@ -89,6 +89,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     public function setRequestId($requestId)
     {
         $this->requestId = $requestId;
+        return $this;
     }
     /**
      * Indicates if the Card Number is the actual number, or a representation of the number.
@@ -107,6 +108,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     public function setPanIsToken($isToken)
     {
         $this->panIsToken = $isToken;
+        return $this;
     }
 
     /**
@@ -128,6 +130,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     public function setCardNumber($cardNumber)
     {
         $this->cardNumber = $cardNumber;
+        return $this;
     }
 
     /**
@@ -150,6 +153,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     public function setPin($pin)
     {
         $this->pin = $pin;
+        return $this;
     }
 
     /**
@@ -171,6 +175,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     public function setCurrencyCode($code)
     {
         $this->currencyCode = $code;
+        return $this;
     }
 
     /**

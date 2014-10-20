@@ -71,6 +71,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     public function setResponseCode($code)
     {
         $this->responseCode = $code;
+        return $this;
     }
 
     /**
@@ -80,6 +81,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     public function setBalanceAmount($amount)
     {
         $this->balanceAmount = $amount;
+        return $this;
     }
 
     /**
@@ -89,6 +91,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     public function setCurrencyCode($code)
     {
         $this->currencyCode = $code;
+        return $this;
     }
 
     /**

@@ -296,6 +296,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     public function setCurrencyCodeRedeemed($code)
     {
         $this->currencyCode = $code;
+        return $this;
     }
 
     /**

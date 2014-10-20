@@ -91,6 +91,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     public function setPanIsToken($isToken)
     {
         $this->panIsToken = $isToken;
+        return $this;
     }
     /**
      * Either a tokenized or plain text stored value account id.
@@ -110,6 +111,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     public function setCardNumber($cardNumber)
     {
         $this->cardNumber = $cardNumber;
+        return $this;
     }
     /**
      * The amount to void.
@@ -128,6 +130,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     public function setResponseCode($code)
     {
         $this->responseCode = $code;
+        return $this;
     }
     /**
      * Validate that the payload meets the requirements

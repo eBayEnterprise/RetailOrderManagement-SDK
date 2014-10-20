@@ -124,6 +124,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     public function setPanIsToken($isToken)
     {
         $this->panIsToken = $isToken;
+        return $this;
     }
 
     /**
@@ -145,6 +146,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     public function setCardNumber($cardNumber)
     {
         $this->cardNumber = $cardNumber;
+        return $this;
     }
 
     /**
@@ -167,6 +169,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     public function setPin($pin)
     {
         $this->pin = $pin;
+        return $this;
     }
 
     /**
@@ -188,6 +191,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     public function setCurrencyCode($code)
     {
         $this->currencyCode = $code;
+        return $this;
     }
 
     /**
@@ -385,4 +389,5 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
-    }}
+    }
+}
