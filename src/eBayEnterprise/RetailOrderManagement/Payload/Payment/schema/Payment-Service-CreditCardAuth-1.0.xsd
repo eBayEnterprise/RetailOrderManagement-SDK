@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  elementFormDefault="qualified" attributeFormDefault="unqualified"
-  targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0"
-  xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
-  version="1.0" >
-  
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0"
+            xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
+            version="${project.version}" >
+
 <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
 <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
 
@@ -14,20 +14,20 @@
       <xsd:documentation xml:lang="en">
         The Request Message for the Credit Card Authorization Operation
       </xsd:documentation>
-    </xsd:annotation>  
-    
+    </xsd:annotation>
+
   </xsd:element>
   <xsd:element name="CreditCardAuthReply" type="CreditCardAuthReplyType" >
     <xsd:annotation>
       <xsd:documentation xml:lang="en">
         The Reply Message for the Credit Card Authorization Operation
       </xsd:documentation>
-    </xsd:annotation>  
+    </xsd:annotation>
   </xsd:element>
-  
+
 <xsd:complexType name="CreditCardAuthRequestType" >
 
-  <xsd:sequence>    
+  <xsd:sequence>
     <xsd:element name="PaymentContext" type="PaymentContextType" >
       <xsd:annotation>
         <xsd:documentation xml:lang="en">
@@ -42,13 +42,24 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:element>
-    <xsd:element name="CardSecurityCode" type="CardSecurityCodeType" >
-      <xsd:annotation>
-        <xsd:documentation xml:lang="en">
-        The CVV2 code found on the back of credit cards.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:element>
+
+      <xsd:choice>
+          <xsd:element name="CardSecurityCode" type="CardSecurityCodeType" minOccurs="0">
+              <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                      The CVV2 code found on the back of credit cards.
+                  </xsd:documentation>
+              </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="EncryptedCardSecurityCode" type="EncryptedPayloadType" minOccurs="0">
+              <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                      Used to validate card not present transactions
+                  </xsd:documentation>
+              </xsd:annotation>
+          </xsd:element>
+      </xsd:choice>
+
     <xsd:element name="Amount" type="AmountType">
       <xsd:annotation>
         <xsd:documentation xml:lang="en">
@@ -62,7 +73,7 @@
         <xsd:documentation xml:lang="en">
           First name of the person on the Billing Address of the credit card
         </xsd:documentation>
-      </xsd:annotation>  
+      </xsd:annotation>
     </xsd:element>
     <xsd:element name="BillingLastName" type="xsd:string" >
       <xsd:annotation>
@@ -124,8 +135,8 @@
     <xsd:element name="isRequestToCorrectCVVOrAVSError" type="xsd:boolean">
       <xsd:annotation>
         <xsd:documentation xml:lang="en">
-        Indicates that this is an authorization re-submission to correct AVS or CVV2 error.  If set to true, this will 
-        process the transaction specifically as an AVS/CVV check.  This is important to set correctly, otherwise the 
+        Indicates that this is an authorization re-submission to correct AVS or CVV2 error.  If set to true, this will
+        process the transaction specifically as an AVS/CVV check.  This is important to set correctly, otherwise the
         cardholder will have their credit card authed multiple times for the full payment amount when correcting
         AVS/CSC errors.
         </xsd:documentation>
@@ -144,14 +155,14 @@
 
 <xsd:complexType name="CreditCardAuthReplyType" >
     <xsd:sequence>
-      <xsd:element name="PaymentContext" type="PaymentContextType" />      
+      <xsd:element name="PaymentContext" type="PaymentContextType" />
       <xsd:element name="AuthorizationResponseCode" type="xsd:string">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
             Response code of the credit card authorization.  This includes approval, timeout, and several decline codes.
             Please see supporting documentation for a full list of these codes.
           </xsd:documentation>
-        </xsd:annotation>  
+        </xsd:annotation>
       </xsd:element>
       <xsd:element name="BankAuthorizationCode" type="xsd:string">
         <xsd:annotation>
@@ -164,9 +175,9 @@
       <xsd:element name="CVV2ResponseCode" type="xsd:string">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
-            Payment Processor Response for CVV2 (Card Verification Value) check.  
+            Payment Processor Response for CVV2 (Card Verification Value) check.
             For most credit cards, you will get an Approval on the AuthorizationResponseCode, even
-            though CVV2ResponseCode returns a CVV2 failure.  
+            though CVV2ResponseCode returns a CVV2 failure.
             You CANNOT accept an order where CVV2ResponseCode returns a CVV2 failure code.
             Please see supporting documentation for a full list of these codes.
           </xsd:documentation>
@@ -177,7 +188,7 @@
           <xsd:documentation xml:lang="en">
             Payment Processor Response for the Address Verification System check.
             For most credit cards, you will get an Approval on the AuthorizationResponseCode, even
-            though AVSResponseCode returns an AVS failure code.  That said, it is typically considered a significant fraud 
+            though AVSResponseCode returns an AVS failure code.  That said, it is typically considered a significant fraud
             risk to accept an order where AVSResponseCode returns an AVS failure code.
             Please see supporting documentation for a full list of these codes.
           </xsd:documentation>
@@ -237,7 +248,7 @@
       </xsd:any>
     </xsd:sequence>
 </xsd:complexType>
-  
-  
+
+
 
 </xsd:schema>

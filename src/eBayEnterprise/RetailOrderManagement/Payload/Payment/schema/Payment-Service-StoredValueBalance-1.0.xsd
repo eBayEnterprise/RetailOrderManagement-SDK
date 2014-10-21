@@ -1,42 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  elementFormDefault="qualified" attributeFormDefault="unqualified"
-  targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0"
-  xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
-  version="1.0" >
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0"
+            xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
+            version="${project.version}">
 
 <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
 <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
-  
+
 <xsd:complexType name="StoredValueBalanceRequestType" >
   <xsd:sequence>
-    <xsd:element name="PaymentAccountUniqueId" type="PaymentAccountUniqueIdType">
-      <xsd:annotation>
-        <xsd:documentation xml:lang="en">
-          Either a raw PAN or a token representing a PAN.
-          The type includes an attribute, isToken, to indicate if the PAN is tokenized.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="Pin" type="PinType" minOccurs="0" />
+      <xsd:choice>
+          <xsd:element name="PaymentAccountUniqueId" type="PaymentAccountUniqueIdType">
+              <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                      Either a raw PAN or a token representing a PAN.
+                      The type includes an attribute, isToken, to indicate if the PAN is tokenized.
+                  </xsd:documentation>
+              </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="EncryptedPaymentAccountUniqueId" type="EncryptedPayloadType">
+              <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                      Client encrypted pan
+                  </xsd:documentation>
+              </xsd:annotation>
+          </xsd:element>
+      </xsd:choice>
+    <xsd:choice>
+        <xsd:element name="Pin" type="PinType" minOccurs="0" />
+        <xsd:element name="EncryptedPin" type="EncryptedPayloadType" minOccurs="0" />
+    </xsd:choice>
     <xsd:element name="CurrencyCode" type="ISOCurrencyCodeType" />
   </xsd:sequence>
 </xsd:complexType>
 
 <xsd:element name="StoredValueBalanceRequest" type="StoredValueBalanceRequestType" />
-  
 
-<xsd:complexType name="StoredValueBalanceReplyType" >    
+
+<xsd:complexType name="StoredValueBalanceReplyType" >
   <xsd:sequence>
-    <xsd:element name="PaymentAccountUniqueId" type="PaymentAccountUniqueIdType">
-      <xsd:annotation>
-        <xsd:documentation xml:lang="en">
-          Either a raw PAN or a token representing a PAN.
-          The type includes an attribute, isToken, to indicate if the PAN is tokenized.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:element>
+      <xsd:choice>
+          <xsd:element name="PaymentAccountUniqueId" type="PaymentAccountUniqueIdType">
+              <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                      Either a raw PAN or a token representing a PAN.
+                      The type includes an attribute, isToken, to indicate if the PAN is tokenized.
+                  </xsd:documentation>
+              </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="EncryptedPaymentAccountUniqueId" type="EncryptedPayloadType">
+              <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                      Client encrypted pan
+                  </xsd:documentation>
+              </xsd:annotation>
+          </xsd:element>
+      </xsd:choice>
     <xsd:element name="ResponseCode" type="SuccessFailResponseCodeType" />
     <xsd:element name="BalanceAmount" type="AmountType" />
     <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="skip" >
@@ -63,5 +84,5 @@
 </xsd:complexType>
 
 <xsd:element name="StoredValueBalanceReply" type="StoredValueBalanceReplyType" />
-  
+
 </xsd:schema>
