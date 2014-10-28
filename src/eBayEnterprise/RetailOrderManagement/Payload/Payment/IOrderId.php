@@ -16,14 +16,23 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 /**
- * Interface IPaymentContext
+ * Interface IOrderId
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- *
- * <PaymentContext>
- *     <OrderId>I7mDiCpD4k4YUejr</OrderId>
- *     <PaymentAccountUniqueId…/>
- * </PaymentContext>
+ * @example <OrderId>I7mDiCpD4k4YUejr</OrderId>
  */
-interface IPaymentContext extends IOrderId, IPaymentAccountUniqueId
+interface IOrderId
 {
+    /**
+     * A unique identifier for the order
+     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
+     *
+     * xsd restrictions: 1-20 characters
+     * @return string
+     */
+    public function getOrderId();
+    /**
+     * @param string $orderId
+     * @return self
+     */
+    public function setOrderId($orderId);
 }

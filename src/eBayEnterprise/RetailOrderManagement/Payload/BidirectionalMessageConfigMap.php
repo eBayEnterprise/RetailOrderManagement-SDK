@@ -35,5 +35,13 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidReply',
     ];
+    $map['payments/paypal/setExpress'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutReply',
+    ];
+    $map['payments/paypal/getExpress'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalGetExpressCheckoutRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalGetExpressCheckoutReply',
+    ];
     return $map;
 });

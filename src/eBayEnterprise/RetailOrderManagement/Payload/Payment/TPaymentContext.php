@@ -18,36 +18,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 /**
  * trait TPaymentContext
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- * @example <PaymentContext><OrderId>{order id}</OrderId>{PaymentAccountUniqueId}</PaymentContext>
+ * @see IPaymentContext
  */
 trait TPaymentContext
 {
-    use TPaymentAccountUniqueId;
-
-    /** @var string */
-    protected $orderId;
-
-    /**
-     * @param string $orderId
-     * @return self
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $this->cleanString($orderId, 20);
-        return $this;
-    }
-
-    /**
-     * A unique identifier for the order
-     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
-     *
-     * xsd restrictions: 1-20 characters
-     * @return string
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
+    use TPaymentAccountUniqueId, TOrderId;
 
     /**
      * Create an XML string representing the PaymentContext nodes
@@ -56,8 +31,8 @@ trait TPaymentContext
     protected function serializePaymentContext()
     {
         return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId>%s</PaymentContext>',
-            $this->getOrderId(),
+            '<PaymentContext>%s%s</PaymentContext>',
+            $this->serializeOrderId(),
             $this->serializePaymentAccountUniqueId()
         );
     }

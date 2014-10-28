@@ -1,0 +1,5 @@
+<LineItems>
+	<LineItemsTotal currencyCode="USD">0.00</LineItemsTotal>
+	<ShippingTotal currencyCode="USD">0.00</ShippingTotal>
+	<TaxTotal currencyCode="USD">0.00</TaxTotal>
+</LineItems>

@@ -1,0 +1,19 @@
+<!-- full -->
+<AddressElement>
+  <Line1>Street 1</Line1>
+  <Line2>Street 2</Line2>
+  <Line3>Street 3</Line3>
+  <Line4>Street 4</Line4>
+  <City>King of Prussia</City>
+  <MainDivision>PA</MainDivision>
+  <CountryCode>US</CountryCode>
+  <PostalCode>19406</PostalCode>
+  <AddressStatus>Confirmed</AddressStatus>
+</AddressElement>
+
+<!-- minimal -->
+<AddressElement>
+  <Line1>Street 1</Line1>
+  <City>King of Prussia</City>
+  <CountryCode>US</CountryCode>
+</AddressElement>

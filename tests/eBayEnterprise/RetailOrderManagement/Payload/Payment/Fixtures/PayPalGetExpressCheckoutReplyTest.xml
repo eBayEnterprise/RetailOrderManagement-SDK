@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PayPalGetExpressCheckoutReply xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+  <OrderId>0005400400154</OrderId>
+  <ResponseCode>Success</ResponseCode>
+  <PayerEmail>tan_1329493113_per@trueaction.com</PayerEmail>
+  <PayerId>P9PMKWC782MJ8</PayerId>
+  <PayerStatus>verified</PayerStatus>
+  <PayerName>
+    <Honorific/>
+    <LastName>Buyer</LastName>
+    <MiddleName/>
+    <FirstName>TAN</FirstName>
+  </PayerName>
+  <PayerCountry>US</PayerCountry>
+  <BillingAddress>billing address data</BillingAddress>
+  <PayerPhone>848-129-8433</PayerPhone>
+  <ShippingAddress>shipping address data</ShippingAddress>
+</PayPalGetExpressCheckoutReply>

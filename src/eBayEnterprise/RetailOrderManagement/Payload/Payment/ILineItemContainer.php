@@ -16,14 +16,21 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 /**
- * Interface IPaymentContext
+ * Interface ILineItemContainer
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- *
- * <PaymentContext>
- *     <OrderId>I7mDiCpD4k4YUejr</OrderId>
- *     <PaymentAccountUniqueId…/>
- * </PaymentContext>
  */
-interface IPaymentContext extends IOrderId, IPaymentAccountUniqueId
+interface ILineItemContainer
 {
+    /**
+     * Get an iterable of the line items for this container.
+     *
+     * @return ILineItemIterable
+     */
+    public function getLineItems();
+
+    /**
+     * @param ILineItemIterable
+     * @return self
+     */
+    public function setLineItems(ILineItemIterable $items);
 }

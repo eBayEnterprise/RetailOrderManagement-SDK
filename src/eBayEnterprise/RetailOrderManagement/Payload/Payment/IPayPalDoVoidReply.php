@@ -16,14 +16,30 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 /**
- * Interface IPaymentContext
+ * Interface IPayPalDoVoidReply
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- *
- * <PaymentContext>
- *     <OrderId>I7mDiCpD4k4YUejr</OrderId>
- *     <PaymentAccountUniqueId…/>
- * </PaymentContext>
  */
-interface IPaymentContext extends IOrderId, IPaymentAccountUniqueId
+interface IPayPalDoVoidReply extends IPayPalDoVoid
 {
+    const ROOT_NODE = 'PayPalDoVoidReply';
+
+    /**
+     * Response code like Success, Failure etc
+     *
+     * @return string
+     */
+    public function getResponseCode();
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setResponseCode($code);
+
+    /**
+     * Should downstream systems consider this reply a success?
+     *
+     * @return bool
+     */
+    public function isSuccess();
 }

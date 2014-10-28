@@ -15,15 +15,18 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-/**
- * Interface IPaymentContext
- * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- *
- * <PaymentContext>
- *     <OrderId>I7mDiCpD4k4YUejr</OrderId>
- *     <PaymentAccountUniqueId…/>
- * </PaymentContext>
- */
-interface IPaymentContext extends IOrderId, IPaymentAccountUniqueId
+interface IPayPalAddress extends IPhysicalAddress
 {
+    /**
+     * Status of street address on file with PayPal.
+     * It is one of the following values: "none", "Confirmed", "Unconfirmed"
+     *
+     * @return string
+     */
+    public function getAddressStatus();
+    /**
+     * @param  string
+     * @return string
+     */
+    public function setAddressStatus($status);
 }

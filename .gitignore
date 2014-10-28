@@ -4,3 +4,4 @@ vendor/
 composer.lock
 composer.phar
 
+/src/eBayEnterprise/RetailOrderManagement/nbproject/private/

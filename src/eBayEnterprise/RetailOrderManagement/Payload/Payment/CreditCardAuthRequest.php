@@ -19,10 +19,6 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
-/**
- * Class CreditCardAuthRequest
- * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- */
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     use TPaymentContext;

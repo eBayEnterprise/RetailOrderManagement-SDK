@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PayPalDoVoidRequest xmlns="http://api.gsicommerce.com/schema/checkout/1.0" requestId="1234567890">
+    <OrderId>1234567</OrderId>
+    <CurrencyCode>USD</CurrencyCode>
+</PayPalDoVoidRequest>

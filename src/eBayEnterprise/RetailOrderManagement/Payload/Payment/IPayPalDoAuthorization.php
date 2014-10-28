@@ -15,15 +15,17 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
 /**
- * Interface IPaymentContext
+ * Interface IPayPalDoAuthorization
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- *
- * <PaymentContext>
- *     <OrderId>I7mDiCpD4k4YUejr</OrderId>
- *     <PaymentAccountUniqueId…/>
- * </PaymentContext>
+ * @link https://developer.paypal.com/docs/classic/api/merchant/DoAuthorization_API_Operation_NVP/
  */
-interface IPaymentContext extends IOrderId, IPaymentAccountUniqueId
+interface IPayPalDoAuthorization extends IPayload, IOrderId
 {
+    // XML related values - document root node, XMLNS and name of the xsd schema file
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+    const PAYLOAD_SCHEMA = 'Payment-Service-PayPalDoAuth-1.0.xsd';
+    const XSD = 'Payment-Service-PayPalDoAuth-1.0.xsd';
 }
