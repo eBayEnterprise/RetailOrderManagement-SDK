@@ -65,7 +65,7 @@ The API instance stores these values and uses them to construct the full URL to 
 Once you have a valid Api object you will need to configure the request payload according to the ROM service and operation you want. The Api object will create the appropriate request payload type based on the configuration passed in the constructor. 
   - Ask the Api object for a request payload
    - `$request = $api->getRequestBody();`
-  - Configure the paylod
+  - Configure the payload
 
 #### Example Usage: Authorizing a Credit Card
 
