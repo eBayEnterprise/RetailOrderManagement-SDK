@@ -21,7 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 /**
  * Class OptionalGroup
  *
- * Validates an optional payload group.
+ * Validates an optional payload group. Valid if all of the given fields are
+ * set (non-null) or none of the fields are set (null).
  *
  * @package eBayEnterprise\RetailOrderManagement\Payload\Validator
  */

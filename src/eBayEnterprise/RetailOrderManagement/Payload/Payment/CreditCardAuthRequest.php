@@ -95,9 +95,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $requiredNodesMap = [
         'requestId' => 'string(@requestId)',
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
         'expirationDate' => 'string(x:ExpirationDate)',
-        'cardSecurityCode' => 'string(x:CardSecurityCode)',
+        'cardSecurityCode' => 'string(x:CardSecurityCode|x:EncryptedCardSecurityCode)',
         'amount' => 'number(x:Amount)',
         'currencyCode' => 'string(x:Amount/@currencyCode)',
         'billingFirstName' => 'string(x:BillingFirstName)',
@@ -112,7 +112,8 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'shipToPhone' => 'string(x:ShipToPhoneNo)',
         'shipToCity' => 'string(x:ShippingAddress/x:City)',
         'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
-        'isRequestToCorrectCVVOrAVSError' => 'boolean(x:isRequestToCorrectCVVOrAVSError)'
+        'isRequestToCorrectCVVOrAVSError' => 'boolean(x:isRequestToCorrectCVVOrAVSError)',
+        'isEncrypted' => 'boolean(x:PaymentContext/x:EncryptedPaymentAccountUniqueId)',
     ];
     /** @var array */
     protected $addressLinesMap = [
@@ -181,16 +182,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setCardSecurityCode($cvv)
     {
-        $value = null;
-
-        $cleaned = $this->cleanString($cvv, 4);
-        if ($cleaned !== null) {
-            if (!strlen($cleaned) < 3) {
-                $value = $cleaned;
-            }
+        if ($this->getIsEncrypted()) {
+            $this->cardSecurityCode = $this->cleanString($cvv, 1000);
+        } else {
+            $cleaned = $this->cleanString($cvv, 4);
+            $this->cardSecurityCode = preg_match('#^\d{3,4}$#', $cleaned) ? $cleaned : null;
         }
-        $this->cardSecurityCode = $value;
-
         return $this;
     }
 
@@ -339,7 +336,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getBillingLines()
     {
-        return implode('\n', $this->billingLines);
+        return is_array($this->billingLines) ? implode('\n', $this->billingLines) : null;
     }
 
     public function setBillingLines($lines)
@@ -378,12 +375,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function setBillingCountryCode($code)
     {
         $cleaned = $this->cleanString($code, 40);
-        if (strlen($cleaned) < 2) {
-            $this->billingCountryCode = null;
-        } else {
-            $this->billingCountryCode = $cleaned;
-        }
-
+        $this->billingCountryCode = strlen($cleaned) >= 2 ? $cleaned : null;
         return $this;
     }
 
@@ -460,7 +452,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getShipToLines()
     {
-        return implode('\n', $this->shipToLines);
+        return is_array($this->shipToLines) ? implode('\n', $this->shipToLines) : null;
     }
 
     public function setShipToLines($lines)
@@ -476,13 +468,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setShipToCity($city)
     {
-        $cleaned = $this->cleanString($city, 40);
-        if (strlen($cleaned) < 2) {
-            $this->shipToCity = null;
-        } else {
-            $this->shipToCity = $cleaned;
-        }
-
+        $this->shipToCity = $this->cleanString($city, 35);
         return $this;
     }
 
@@ -505,12 +491,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function setShipToCountryCode($code)
     {
         $cleaned = $this->cleanString($code, 40);
-        if (strlen($cleaned) < 2) {
-            $this->shipToCountryCode = null;
-        } else {
-            $this->shipToCountryCode = $cleaned;
-        }
-
+        $this->shipToCountryCode = strlen($cleaned) >= 2 ? $cleaned : null;
         return $this;
     }
 
@@ -657,14 +638,28 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected function serializeCardInfo()
     {
         return sprintf(
-            '<ExpirationDate>%s</ExpirationDate><CardSecurityCode>%s</CardSecurityCode><Amount currencyCode="%s">%.2f</Amount>',
+            '<ExpirationDate>%s</ExpirationDate>%s<Amount currencyCode="%s">%.2f</Amount>',
             $this->getExpirationDate(),
-            $this->getCardSecurityCode(),
+            $this->serializeCardSecurityCode(),
             $this->getCurrencyCode(),
             $this->getAmount()
         );
     }
 
+    /**
+     * Build the CardSecurityCode or, if the payload is using encrypted data,
+     * the EncryptedCardSecurityCode.
+     *
+     * @return string
+     */
+    protected function serializeCardSecurityCode()
+    {
+        return sprintf(
+            '<%1$s>%2$s</%1$s>',
+            $this->getIsEncrypted() ? self::ENCRYPTED_CVV_NODE : self::RAW_CVV_NODE,
+            $this->getCardSecurityCode()
+        );
+    }
     /**
      * Build the BillingFirstName, BillingLastName and BillingPhoneNo nodes
      *
@@ -852,14 +847,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
             $newLines = [];
             foreach ($addressLines as $line) {
-                $newLines[] = substr(trim($line), 0, 70);
+                $newLines[] = $this->cleanString($line, 70);
             }
 
             if (count($newLines) > 4) {
-                $extraLines = array_slice($newLines, 3);
-                $lastLine = implode(' ', $extraLines);
-                $lastLine = substr(trim($lastLine), 0, 70);
-                $newLines[3] = $lastLine;
+                // concat lines beyond the four allowed down into the last line
+                $newLines[3] = $this->cleanString(implode(' ', array_slice($newLines, 3)), 70);
             }
 
             $finalLines = array_slice($newLines, 0, 4);

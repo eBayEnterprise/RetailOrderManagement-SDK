@@ -63,10 +63,10 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $properties = [
             'setRequestId' => '739a45ba35',
             'setOrderId' => 'testOrderId',
-            'setPanIsToken' => false,
             'setCardNumber' => '4111111111111111',
-            'setExpirationDate' => date_create('2015-12', new \DateTimeZone('UTC')),
             'setCardSecurityCode' => '123',
+            'setPanIsToken' => false,
+            'setExpirationDate' => date_create('2015-12', new \DateTimeZone('UTC')),
             'setAmount' => 43.45,
             'setCurrencyCode' => 'USD',
             'setEmail' => 'test@example.com',
@@ -96,8 +96,12 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
             'setPayerAuthenticationResponse' => 'some REALLY big string'
         ];
 
+        $encryptionProperties = [
+            'setIsEncrypted' => true
+        ];
         return [
-            [$properties]
+            [$properties, 'UnencryptedCardData'],
+            [array_merge($properties, $encryptionProperties), 'EncryptedCardData']
         ];
     }
 
@@ -320,6 +324,28 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Provide data to set/get for billing and ship to lines.
+     * @return array
+     */
+    public function provideAddressLinesData()
+    {
+        return array(
+            array('Ship to line', 'Billing line'),
+            array(null, null),
+        );
+    }
+
+    public function provideCardSecurityCodes()
+    {
+        return [
+            ['1234', false, '1234'],
+            ['1234567', false, '1234'],
+            ['12', false, null],
+            ['cow', false, null],
+            ['1234567', true, '1234567'],
+        ];
+    }
+    /**
      * Take an array of property values with property names as keys and return an IPayload object
      *
      * @param array $properties
@@ -339,12 +365,14 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     /**
      * Read an XML file with valid payload data and return a canonicalized string
      *
+     * @param string $testCase
      * @return string
      */
-    protected function xmlTestString()
+    protected function xmlTestString($testCase)
     {
         $dom = new \DOMDocument();
-        $dom->load(__DIR__.'/Fixtures/CreditCardAuthRequest.xml');
+        $dom->preserveWhiteSpace = false;
+        $dom->load(__DIR__.'/Fixtures/'.$testCase.'/CreditCardAuthRequest.xml');
         $string = $dom->C14N();
 
         return $string;
@@ -426,6 +454,20 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test setting/getting address lines. Same values that are set, should be
+     * returned - none should result in errors/exceptions.
+     * @param  string|null $shipToLines
+     * @param  string|null $billingLines
+     * @dataProvider provideAddressLinesData
+     */
+    public function testGetAddressLines($shipToLines, $billingLines)
+    {
+        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $payload->setShipToLines($shipToLines)->setBillingLines($billingLines);
+        $this->assertSame($shipToLines, $payload->getShipToLines());
+        $this->assertSame($billingLines, $payload->getBillingLines());
+    }
+    /**
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
@@ -482,9 +524,10 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $payloadData
+     * @param string $testCase
      * @dataProvider provideValidPayload
      */
-    public function testSerializeWillPass(array $payloadData)
+    public function testSerializeWillPass(array $payloadData, $testCase)
     {
         $payload = $this->buildPayload($payloadData);
         $this->schemaValidatorStub->expects($this->any())
@@ -494,7 +537,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
 
-        $this->assertEquals($this->xmlTestString(), $serializedString);
+        $this->assertEquals($this->xmlTestString($testCase), $serializedString);
     }
 
     /**
@@ -572,16 +615,29 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $payloadData
+     * @param string $testCase
      * @dataProvider provideValidPayload
      */
-    public function testDeserializeWillPass(array $payloadData)
+    public function testDeserializeWillPass(array $payloadData, $testCase)
     {
         $payload = $this->buildPayload($payloadData);
-        $xml = $this->xmlTestString();
+        $xml = $this->xmlTestString($testCase);
 
         $newPayload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
+    }
+    /**
+     * Test setting the CVV.
+     * @param string $cvv
+     * @param bool $isEncrypted
+     * @param string|null $expected
+     * @dataProvider provideCardSecurityCodes
+     */
+    public function testSetCardSecurityCode($cvv, $isEncrypted, $expected)
+    {
+        $payload = $this->buildPayload(array('setIsEncrypted' => $isEncrypted, 'setCardSecurityCode' => $cvv));
+        $this->assertSame($expected, $payload->getCardSecurityCode());
     }
 }

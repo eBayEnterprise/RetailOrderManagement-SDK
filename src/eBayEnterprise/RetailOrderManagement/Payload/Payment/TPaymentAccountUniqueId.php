@@ -23,10 +23,21 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 trait TPaymentAccountUniqueId
 {
     /** @var bool **/
+    protected $isEncrypted = false;
+    /** @var bool **/
     protected $panIsToken;
     /** @var string **/
-    protected $paymentAccountUniqueId;
+    protected $cardNumber;
 
+    public function getIsEncrypted()
+    {
+        return $this->isEncrypted;
+    }
+    public function setIsEncrypted($isEncrypted)
+    {
+        $this->isEncrypted = (bool) $isEncrypted;
+        return $this;
+    }
     public function getPanIsToken()
     {
         return $this->panIsToken;
@@ -40,12 +51,12 @@ trait TPaymentAccountUniqueId
 
     public function getCardNumber()
     {
-        return $this->paymentAccountUniqueId;
+        return $this->cardNumber;
     }
 
     public function setCardNumber($ccNum)
     {
-        $this->paymentAccountUniqueId = $this->cleanString($ccNum, 22);
+        $this->cardNumber = $this->getIsEncrypted() ? $this->cleanString($ccNum, 1000) : $this->cleanString($ccNum, 22);
         return $this;
     }
 
@@ -56,7 +67,8 @@ trait TPaymentAccountUniqueId
     protected function serializePaymentAccountUniqueId()
     {
         return sprintf(
-            '<PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId>',
+            '<%1$s %2$s>%3$s</%1$s>',
+            $this->getIsEncrypted() ? IPaymentAccountUniqueId::ENCRYPTED_CARD_NUMBER_NODE : IPaymentAccountUniqueId::RAW_CARD_NUMBER_NODE,
             $this->serializeIsToken(),
             $this->getCardNumber()
         );
@@ -68,6 +80,6 @@ trait TPaymentAccountUniqueId
      */
     protected function serializeIsToken()
     {
-        return $this->getPanIsToken() ? 'true' : 'false';
+        return $this->getIsEncrypted() ? '' : sprintf('isToken="%s"', ($this->getPanIsToken() ? 'true' : 'false'));
     }
 }

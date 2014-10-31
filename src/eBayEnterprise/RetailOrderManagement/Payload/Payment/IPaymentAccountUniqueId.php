@@ -25,6 +25,20 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  */
 interface IPaymentAccountUniqueId
 {
+    const RAW_CARD_NUMBER_NODE = 'PaymentAccountUniqueId';
+    const ENCRYPTED_CARD_NUMBER_NODE = 'EncryptedPaymentAccountUniqueId';
+
+    /**
+     * Indicates if encryptable card data is provided encrypted or as raw text.
+     *
+     * @return bool
+     */
+    public function getIsEncrypted();
+    /**
+     * @param bool $isEncrypted
+     * @return self
+     */
+    public function setIsEncrypted($isEncrypted);
     /**
      * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
      *

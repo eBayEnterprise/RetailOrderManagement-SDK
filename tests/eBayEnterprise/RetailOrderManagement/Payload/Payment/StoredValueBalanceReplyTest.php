@@ -57,7 +57,7 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
         return [
             [[]], // Empty payload should fail validation.
             [[
-                'paymentAccountUniqueId' => 'RvS1kwB3eCxzk5lI',
+                'cardNumber' => 'RvS1kwB3eCxzk5lI',
                 'panIsToken' => false,
                 'responseCode' => 'glom', // Invalid response code
                 'amountAuthorized' => 55.99,
@@ -73,7 +73,7 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         return [[[
-            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
+            'cardNumber' => 'KDVXYXCeFCG8GfH6',
             'panIsToken' => true,
             'balanceAmount' => 87.44,
             'currencyCode' => 'USD',
@@ -88,19 +88,19 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     public function provideResponseCodeConditions()
     {
         return [[[
-            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
+            'cardNumber' => 'KDVXYXCeFCG8GfH6',
             'panIsToken' => true,
             'balanceAmount' => 87.44,
             'currencyCode' => 'USD',
             'responseCode' => 'Success',
         ]], [[
-            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
+            'cardNumber' => 'KDVXYXCeFCG8GfH6',
             'panIsToken' => true,
             'balanceAmount' => 87.44,
             'currencyCode' => 'USD',
             'responseCode' => 'Failure',
         ]], [[
-            'paymentAccountUniqueId' => 'KDVXYXCeFCG8GfH6',
+            'cardNumber' => 'KDVXYXCeFCG8GfH6',
             'panIsToken' => true,
             'balanceAmount' => 87.44,
             'currencyCode' => 'USD',

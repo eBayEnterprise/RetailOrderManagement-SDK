@@ -44,7 +44,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     /** @var array */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'responseCode' => 'string(x:ResponseCode)',
         'amountRedeemed' => 'number(x:AmountRedeemed)',
         'amountRedeemedCurrencyCode' => 'string(x:AmountRedeemed/@currencyCode)',

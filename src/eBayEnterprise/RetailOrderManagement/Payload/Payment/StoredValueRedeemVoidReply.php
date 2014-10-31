@@ -27,12 +27,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
 {
-    /** @var string $orderId id of the order */
-    protected $orderId;
-    /** @var string $cardNumber Gift tender payment account unique id (PAN) */
-    protected $cardNumber;
-    /** @var bool $panIsToken Indicates if the PAN is the actual number, or a representation of the number. */
-    protected $panIsToken;
+    use TPaymentContext;
+
     protected $responseCode;
     /** @var IValidatorIterator */
     protected $validators;
@@ -58,62 +54,6 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
-    }
-    /**
-     * Id of the order.
-     *
-     * xsd restrictions: 1-20 characters
-     * @return string
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-    /**
-     * @return int
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $orderId;
-        return $this;
-    }
-    /**
-     * Indicates if the account Id is the actual number, or a representation of the number.
-     *
-     * @return bool true if the Id is a token, false if it's the actual number
-     */
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
-    }
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = $isToken;
-        return $this;
-    }
-    /**
-     * Either a tokenized or plain text stored value account id.
-     *
-     * xsd restrictions: 1-22 characters
-     * @see get/setPanIsToken
-     * @return string
-     */
-    public function getCardNumber()
-    {
-        return $this->cardNumber;
-    }
-    /**
-     * @param string $cardNumber
-     * @return self
-     */
-    public function setCardNumber($cardNumber)
-    {
-        $this->cardNumber = $cardNumber;
-        return $this;
     }
     /**
      * The amount to void.
@@ -216,20 +156,6 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     }
 
     /**
-     * Create an XML string representing the PaymentContext nodes
-     * @return string
-     */
-    protected function serializePaymentContext()
-    {
-        return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
-            $this->getOrderId(),
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
-        );
-    }
-
-    /**
      * Create an XML string representing the response code.
      * @return string
      */
@@ -275,6 +201,26 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
         $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
         $xpath->registerNamespace('x', self::XML_NS);
         return $xpath;
+    }
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    protected function cleanString($string, $maxLength)
+    {
+        $value = null;
+
+        if (is_string($string)) {
+            $trimmed = substr(trim($string), 0, $maxLength);
+            $value = empty($trimmed) ? null : $trimmed;
+        }
+
+        return $value;
     }
     /**
      * Convert "true", "false", "1" or "0" to boolean

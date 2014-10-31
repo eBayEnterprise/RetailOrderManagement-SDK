@@ -57,9 +57,9 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
         return [
             [[]], // Empty payload should fail validation.
             [[
-                'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-                'panIsToken' => false,
-                'orderId' => 'o3trodZDaS2zhZHirJnA',
+                'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                'setPanIsToken' => false,
+                'setOrderId' => 'o3trodZDaS2zhZHirJnA',
             ]],
         ];
     }
@@ -71,10 +71,10 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         $base = [
-            'orderId' => 'o3trodZDaS2zhZHirJnA',
-            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'panIsToken' => false,
-            'responseCode' => 'Fail',
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setPanIsToken' => false,
+            'setResponseCode' => 'Fail',
         ];
         return [
             [$base, ''],
@@ -88,20 +88,20 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     public function provideResponseCodeConditions()
     {
         return [[[
-            'orderId' => 'o3trodZDaS2zhZHirJnA',
-            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'panIsToken' => false,
-            'responseCode' => 'Success',
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setPanIsToken' => false,
+            'setResponseCode' => 'Success',
         ]], [[
-            'orderId' => 'o3trodZDaS2zhZHirJnA',
-            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'panIsToken' => false,
-            'responseCode' => 'Fail',
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setPanIsToken' => false,
+            'setResponseCode' => 'Fail',
         ]], [[
-            'orderId' => 'o3trodZDaS2zhZHirJnA',
-            'cardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'panIsToken' => false,
-            'responseCode' => 'Timeout',
+            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+            'setPanIsToken' => false,
+            'setResponseCode' => 'Timeout',
         ]]];
     }
     /**
@@ -112,13 +112,8 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     protected function buildPayload($properties)
     {
         $payload = $this->createNewPayload();
-        $payloadReflection = new \ReflectionClass($payload);
         foreach ($properties as $property => $value) {
-            if ($payloadReflection->hasProperty($property)) {
-                $property = $payloadReflection->getProperty($property);
-                $property->setAccessible(true);
-                $property->setValue($payload, $value);
-            }
+            $payload->$property($value);
         }
         return $payload;
     }

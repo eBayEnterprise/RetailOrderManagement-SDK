@@ -37,7 +37,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     /** @var array */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
         'amount' => 'number(x:Amount)',
         'currencyCode' => 'string(x:Amount/@currencyCode)',
         'requestId' => 'string(@requestId)',

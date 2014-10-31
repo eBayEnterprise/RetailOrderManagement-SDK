@@ -1,7 +1,7 @@
 <CreditCardAuthReply xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
     <PaymentContext>
         <OrderId>ORDER_ID</OrderId>
-        <PaymentAccountUniqueId isToken="true">4111ABC123ZYX987</PaymentAccountUniqueId>
+        <EncryptedPaymentAccountUniqueId>4111ABC123ZYX987</EncryptedPaymentAccountUniqueId>
     </PaymentContext>
     <AuthorizationResponseCode>AP01</AuthorizationResponseCode>
     <BankAuthorizationCode>OK</BankAuthorizationCode>

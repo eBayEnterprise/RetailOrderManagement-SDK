@@ -51,13 +51,14 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'paymentAccountUniqueId' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
         'authorizationResponseCode' => 'string(x:AuthorizationResponseCode)',
         'bankAuthorizationCode' => 'string(x:BankAuthorizationCode)',
         'cvv2ResponseCode' => 'string(x:CVV2ResponseCode)',
         'avsResponseCode' => 'string(x:AVSResponseCode)',
         'amountAuthorized' => 'number(x:AmountAuthorized)',
         'currencyCode' => 'string(x:AmountAuthorized/@currencyCode)',
+        'isEncrypted' => 'boolean(x:PaymentContext/x:EncryptedPaymentAccountUniqueId)',
     ];
     /** @var array property/XPath pairs that take boolean values*/
     protected $booleanXPaths = [

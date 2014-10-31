@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CreditCardAuthRequest requestId="739a45ba35" xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <PaymentContext>
+        <OrderId>testOrderId</OrderId>
+        <PaymentAccountUniqueId isToken="false">4111111111111111</PaymentAccountUniqueId>
+    </PaymentContext>
+    <ExpirationDate>2015-12</ExpirationDate>
+    <CardSecurityCode>123</CardSecurityCode>
+    <Amount currencyCode="USD">43.45</Amount>
+    <BillingFirstName>First</BillingFirstName>
+    <BillingLastName>Last</BillingLastName>
+    <BillingPhoneNo>123-456-7890</BillingPhoneNo>
+    <BillingAddress>
+        <Line1>Street 1</Line1>
+        <Line2>Street 2</Line2>
+        <Line3>Street 3</Line3>
+        <Line4>Street 4</Line4>
+        <City>King of Prussia</City>
+        <MainDivision>PA</MainDivision>
+        <CountryCode>US</CountryCode>
+        <PostalCode>19406</PostalCode>
+    </BillingAddress>
+    <CustomerEmail>test@example.com</CustomerEmail>
+    <CustomerIPAddress>127.0.0.1</CustomerIPAddress>
+    <ShipToFirstName>First</ShipToFirstName>
+    <ShipToLastName>Last</ShipToLastName>
+    <ShipToPhoneNo>123-456-7890</ShipToPhoneNo>
+    <ShippingAddress>
+        <Line1>Street 1</Line1>
+        <Line2>Street 2</Line2>
+        <Line3>Street 3</Line3>
+        <Line4>Street 4</Line4>
+        <City>King of Prussia</City>
+        <MainDivision>PA</MainDivision>
+        <CountryCode>US</CountryCode>
+        <PostalCode>19406</PostalCode>
+    </ShippingAddress>
+    <isRequestToCorrectCVVOrAVSError>false</isRequestToCorrectCVVOrAVSError>
+    <SecureVerificationData>
+        <AuthenticationAvailable>Y</AuthenticationAvailable>
+        <AuthenticationStatus>Y</AuthenticationStatus>
+        <CavvUcaf>abcd1234</CavvUcaf>
+        <TransactionId>transId</TransactionId>
+        <ECI>ECI</ECI>
+        <PayerAuthenticationResponse>some REALLY big string</PayerAuthenticationResponse>
+    </SecureVerificationData>
+</CreditCardAuthRequest>

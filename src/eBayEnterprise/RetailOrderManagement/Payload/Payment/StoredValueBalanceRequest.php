@@ -37,13 +37,12 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueBalanceRequest implements IStoredValueBalanceRequest
 {
-    /** @var string $cardNumber */
-    protected $cardNumber;
+    use TPaymentAccountUniqueId;
+
     /** @var string $requestId */
     protected $requestId;
     /** @var bool $panIsToken Indicates if the card number is the actual number, or a representation of the number. */
     protected $pin;
-    protected $panIsToken;
     protected $currencyCode;
     /** @var IValidatorIterator */
     protected $validators;
@@ -51,7 +50,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     protected $schemaValidator;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [
-        'cardNumber' => 'string(x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:EncryptedPaymentAccountUniqueId|x:PaymentAccountUniqueId)',
         'currencyCode' => 'string(x:CurrencyCode)',
     ];
     protected $optionalExtractionPaths = [
@@ -89,47 +88,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     public function setRequestId($requestId)
     {
         $this->requestId = $requestId;
-        return $this;
-    }
-    /**
-     * Indicates if the Card Number is the actual number, or a representation of the number.
-     *
-     * @return bool true if the card number is a token, false if it's the actual number
-     */
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
-    }
-
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = $isToken;
-        return $this;
-    }
-
-    /**
-     * Either a tokenized or plain text payment account unique id.
-     *
-     * xsd restrictions: 1-22 characters
-     * @see get/setPanIsToken
-     * @return string
-     */
-    public function getCardNumber()
-    {
-        return $this->cardNumber;
-    }
-
-    /**
-     * @param string $cardNumber
-     * @return self
-     */
-    public function setCardNumber($cardNumber)
-    {
-        $this->cardNumber = $cardNumber;
         return $this;
     }
 
@@ -259,7 +217,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
      */
     protected function serializeContents()
     {
-        return $this->serializePan()
+        return $this->serializePaymentAccountUniqueId()
             . $this->serializePin()
             . sprintf(
                 '<CurrencyCode>%s</CurrencyCode>',
@@ -275,19 +233,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     protected function serializePin()
     {
         return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
-    }
-
-    /**
-     * Create an XML string representing the PaymentContext nodes
-     * @return string
-     */
-    protected function serializePan()
-    {
-        return sprintf(
-            '<PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId>',
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
-        );
     }
 
     // all methods below should be refactored as they are literal copies
@@ -335,6 +280,27 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     {
         $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
         return $this;
+    }
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    protected function cleanString($string, $maxLength)
+    {
+        $value = null;
+
+        if (is_string($string)) {
+            $trimmed = substr(trim($string), 0, $maxLength);
+            $value = empty($trimmed) ? null : $trimmed;
+        }
+
+        return $value;
     }
 
     /**

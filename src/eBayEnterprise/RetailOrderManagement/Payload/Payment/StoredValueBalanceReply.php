@@ -40,7 +40,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     protected $successResponseCodes = ['Success'];
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [
-        'paymentAccountUniqueId' => 'string(x:PaymentAccountUniqueId)',
+        'cardNumber' => 'string(x:EncryptedPaymentAccountUniqueId|x:PaymentAccountUniqueId)',
         'balanceAmount' => 'number(x:BalanceAmount)',
         'currencyCode' => 'string(x:BalanceAmount/@currencyCode)',
         'responseCode' => 'string(x:ResponseCode)',

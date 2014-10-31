@@ -59,7 +59,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             [[
                 // order id should fail XSD validation
                 'orderId' => '1234567890123456789012345',
-                'paymentAccountUniqueId' => '4111ABC123ZYX987',
+                'cardNumber' => '4111ABC123ZYX987',
                 'panIsToken' => true,
                 'authorizationResponseCode' => 'AP01',
                 'bankAuthorizationCode' => 'OK',
@@ -82,7 +82,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         // move to JSON
         $properties = [
             'orderId' => 'ORDER_ID',
-            'paymentAccountUniqueId' => '4111ABC123ZYX987',
+            'cardNumber' => '4111ABC123ZYX987',
             'panIsToken' => true,
             'authorizationResponseCode' => 'AP01',
             'bankAuthorizationCode' => 'OK',
@@ -94,8 +94,14 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             'nameResponseCode' => 'NAME_OK',
         ];
 
+        $encryptionProperties = [
+            'isEncrypted' => true,
+            // pan will be encrypted, so not a token
+            'panIsToken' => false
+        ];
         return [
-            [$properties]
+            [$properties, 'UnencryptedCardData'],
+            [array_merge($properties, $encryptionProperties), 'EncryptedCardData']
         ];
     }
 
@@ -284,11 +290,17 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     /**
      * Load the XML from a fixture file and canonicalize it. Returns the
      * canonical XML string.
+     * @param string $testCase Spcifies a test case file to load - default to decrypted data
      * @return string
      */
-    protected function loadXmlTestString()
+    protected function loadXmlTestString($testCase = 'UnencryptedCardData')
     {
-        return file_get_contents(__DIR__ . '/Fixtures/CreditCardAuthReply.xml');
+        $dom = new \DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->load(__DIR__.'/Fixtures/'.$testCase.'/CreditCardAuthReply.xml');
+        $string = $dom->C14N();
+
+        return $string;
     }
 
     /**
@@ -298,7 +310,12 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     protected function loadXmlInvalidTestString()
     {
-        return file_get_contents(__DIR__ . '/Fixtures/InvalidCreditCardAuthReply.xml');
+        $dom = new \DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->load(__DIR__ . '/Fixtures/InvalidCreditCardAuthReply.xml');
+        $string = $dom->C14N();
+
+        return $string;
     }
 
     /**
@@ -381,14 +398,14 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      * @param array $payloadData
      * @dataProvider provideValidPayload
      */
-    public function testSerializeWillPass(array $payloadData)
+    public function testSerializeWillPass(array $payloadData, $testCase)
     {
         $payload = $this->buildPayload($payloadData);
         $domPayload = new \DOMDocument();
         $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
-        $domPayload->loadXML($this->loadXmlTestString());
+        $domPayload->loadXML($this->loadXmlTestString($testCase));
         $expectedString = $domPayload->C14N();
 
         $this->assertEquals($expectedString, $serializedString);
@@ -426,10 +443,10 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      * @param array $payloadData
      * @dataProvider provideValidPayload
      */
-    public function testDeserializeWillPass(array $payloadData)
+    public function testDeserializeWillPass(array $payloadData, $testCase)
     {
         $payload = $this->buildPayload($payloadData);
-        $xml = $this->loadXmlTestString();
+        $xml = $this->loadXmlTestString($testCase);
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
 

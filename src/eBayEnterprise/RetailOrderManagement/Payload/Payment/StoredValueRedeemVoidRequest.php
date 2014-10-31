@@ -26,14 +26,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
 {
-    /** @var string $orderId id of the order */
-    protected $orderId;
+    use TPaymentContext;
+
     protected $amount;
-    /** @var string $cardNumber Gift tender account id */
-    protected $cardNumber;
     protected $pin;
-    /** @var bool $panIsToken Indicates if the card number is the actual number, or a representation of the number. */
-    protected $panIsToken;
     protected $currencyCode;
     protected $requestId;
     /** @var IValidatorIterator */
@@ -66,26 +62,6 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     }
 
     /**
-     * Id of the order.
-     *
-     * xsd notes: required, 1-20 characters
-     * @return int
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * @return int
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $orderId;
-        return $this;
-    }
-
-    /**
      * The amount to void.
      *
      * xsd note: 1-8 characters, exclude if empty
@@ -104,48 +80,6 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     public function setAmount($amount)
     {
         $this->amount = $amount;
-        return $this;
-    }
-
-    /**
-     * Indicates if the PAN is the account identifier, or a representation of the identifier.
-     *
-     * @return bool true if the account identifier is a token, false if it's the actual identifier
-     */
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
-    }
-
-    /**
-     * @param bool $isToken
-     * @return self
-     */
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = $isToken;
-        return $this;
-    }
-
-    /**
-     * Either a tokenized or plain text payment account unique id.
-     *
-     * xsd restrictions: 1-22 characters
-     * @see get/setPanIsToken
-     * @return string
-     */
-    public function getCardNumber()
-    {
-        return $this->cardNumber;
-    }
-
-    /**
-     * @param string $cardNumber
-     * @return self
-     */
-    public function setCardNumber($cardNumber)
-    {
-        $this->cardNumber = $cardNumber;
         return $this;
     }
 
@@ -373,6 +307,27 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     {
         $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
         return $this;
+    }
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    protected function cleanString($string, $maxLength)
+    {
+        $value = null;
+
+        if (is_string($string)) {
+            $trimmed = substr(trim($string), 0, $maxLength);
+            $value = empty($trimmed) ? null : $trimmed;
+        }
+
+        return $value;
     }
 
     /**
