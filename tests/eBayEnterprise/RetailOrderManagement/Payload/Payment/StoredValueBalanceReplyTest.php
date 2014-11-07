@@ -16,9 +16,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
 {
+    use TTestReflection;
+
     /** @var Payload\IValidator (stub) */
     protected $stubValidator;
     /** @var Payload\IValidatorIterator */
@@ -60,7 +63,6 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
                 'cardNumber' => 'RvS1kwB3eCxzk5lI',
                 'panIsToken' => false,
                 'responseCode' => 'glom', // Invalid response code
-                'amountAuthorized' => 55.99,
                 'currencyCode' => 'USD',
             ]],
         ];
@@ -116,14 +118,7 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     protected function buildPayload($properties)
     {
         $payload = $this->createNewPayload();
-        $payloadReflection = new \ReflectionClass($payload);
-        foreach ($properties as $property => $value) {
-            if ($payloadReflection->hasProperty($property)) {
-                $property = $payloadReflection->getProperty($property);
-                $property->setAccessible(true);
-                $property->setValue($payload, $value);
-            }
-        }
+        $this->setRestrictedPropertyValues($payload, $properties);
         return $payload;
     }
 

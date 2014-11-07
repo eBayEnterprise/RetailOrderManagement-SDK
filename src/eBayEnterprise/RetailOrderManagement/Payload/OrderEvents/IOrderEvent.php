@@ -13,8 +13,17 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload\Exception;
+namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-class UnsupportedPayload extends Payload
+/**
+ * Interface for order event messages received over AMQP.
+ */
+interface IOrderEvent
 {
+    /**
+     * Return the type of order event being processed. This will likely be
+     * the serialized payload's root XML node name but may not always be.
+     * @return string
+     */
+    public function getEventType();
 }

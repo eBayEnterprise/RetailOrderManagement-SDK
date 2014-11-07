@@ -13,8 +13,8 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload\Exception;
+namespace eBayEnterprise\RetailOrderManagement\Api\Exception;
 
-class UnsupportedPayload extends Payload
+class ConnectionError extends \Exception
 {
 }

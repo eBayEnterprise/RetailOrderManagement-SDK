@@ -16,9 +16,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
 {
+    use TTestReflection;
+
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
 
     /** @var  Payload\IValidator */
@@ -393,23 +396,6 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Inject property values into $class
-     *
-     * @param $class
-     * @param array $properties array of property => value pairs
-     */
-    protected function injectProperties($class, $properties)
-    {
-        // use reflection to inject properties/values into the $class object
-        $reflection = new \ReflectionClass($class);
-        foreach ($properties as $property => $value) {
-            $requestProperty = $reflection->getProperty($property);
-            $requestProperty->setAccessible(true);
-            $requestProperty->setValue($class, $value);
-        }
-    }
-
-    /**
      * Test the cleanString utility function
      * @param $value
      * @param $maxLength
@@ -419,9 +405,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     public function testCleanString($value, $maxLength, $expected)
     {
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanString');
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, [$value, $maxLength]);
+        $cleaned = $this->invokeRestrictedMethod($payload, 'cleanString', [$value, $maxLength]);
         $this->assertSame($expected, $cleaned);
     }
 
@@ -433,9 +417,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     public function testCleanAddressLines($lines, $expected)
     {
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'cleanAddressLines');
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, [$lines]);
+        $cleaned = $this->invokeRestrictedMethod($payload, 'cleanAddressLines', [$lines]);
         $this->assertSame($expected, $cleaned);
     }
 
@@ -447,9 +429,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     public function testBooleanFromString($value, $expected)
     {
         $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest', 'booleanFromString');
-        $method->setAccessible(true);
-        $actual = $method->invokeArgs($payload, [$value]);
+        $actual = $this->invokeRestrictedMethod($payload, 'booleanFromString', [$value]);
         $this->assertEquals($expected, $actual);
     }
 
@@ -548,10 +528,8 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     public function testSerializeVerificationDataHandlesMissingData($properties, $expected)
     {
         $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);// $this->getMockRequestObject();
-        $this->injectProperties($request, $properties);
-        $method = new \ReflectionMethod($request, 'serializeSecureVerificationData');
-        $method->setAccessible(true);
-        $actual = $method->invoke($request);
+        $this->setRestrictedPropertyValues($request, $properties);
+        $actual = $this->invokeRestrictedMethod($request, 'serializeSecureVerificationData');
         $this->assertSame($expected, $actual);
     }
 
@@ -563,10 +541,8 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     public function testSerializeShippingAddressHandlesMissingData($properties, $expected)
     {
         $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $this->injectProperties($request, $properties);
-        $method = new \ReflectionMethod($request, 'serializeShippingAddress');
-        $method->setAccessible(true);
-        $actual = $method->invoke($request);
+        $this->setRestrictedPropertyValues($request, $properties);
+        $actual = $this->invokeRestrictedMethod($request, 'serializeShippingAddress');
         $this->assertSame($expected, $actual);
     }
 
@@ -578,10 +554,8 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     public function testSerializeBillingAddressHandlesMissingData($properties, $expected)
     {
         $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $this->injectProperties($request, $properties);
-        $method = new \ReflectionMethod($request, 'serializeBillingAddress');
-        $method->setAccessible(true);
-        $actual = $method->invoke($request);
+        $this->setRestrictedPropertyValues($request, $properties);
+        $actual = $this->invokeRestrictedMethod($request, 'serializeBillingAddress');
         $this->assertSame($expected, $actual);
     }
 

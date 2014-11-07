@@ -17,9 +17,9 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 
-interface IBidirectionalMessageFactory
+interface IBidirectionalMessageFactory extends IMessageFactory
 {
-    public function __construct(IConfig $config);
+    public function __construct(IConfig $config, IPayloadFactory $payloadFactory = null, array $messageMapping = []);
     /**
      * Returns a request payload object based on the configuration information passed in the constructor
      *

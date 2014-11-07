@@ -70,7 +70,7 @@ class BidirectionalMessageFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getConfigKey')
             ->will($this->returnValue($messageType));
         if ($messageType !== self::SUPPORTED_MESSAGE_TYPE) {
-            $this->setExpectedException('eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation');
+            $this->setExpectedException('eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload');
         }
         $this->assertSame($this->payload, $this->messageFactory->requestPayload());
     }
@@ -85,7 +85,7 @@ class BidirectionalMessageFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('getConfigKey')
             ->will($this->returnValue($messageType));
         if ($messageType !== self::SUPPORTED_MESSAGE_TYPE) {
-            $this->setExpectedException('eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation');
+            $this->setExpectedException('eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload');
         }
         $this->assertSame($this->payload, $this->messageFactory->replyPayload());
     }

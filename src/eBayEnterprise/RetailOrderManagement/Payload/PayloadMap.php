@@ -24,7 +24,7 @@ class PayloadMap implements IPayloadMap
     /** @var SplStack */
     protected $overrides;
 
-    public function __construct(array $classMap = array())
+    public function __construct(array $classMap = [])
     {
         $this->classMap = $classMap;
         $this->overrides = new SplStack;

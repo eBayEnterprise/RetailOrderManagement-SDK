@@ -15,8 +15,12 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
+use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
+
 class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
 {
+    use TTestReflection;
+
     /**
      * XML not matching the schema should result in an exception.
      */
@@ -66,11 +70,9 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
 
         $errors = [$warnError, $errError, $fatalError];
         $validator = new XsdSchemaValidator();
-        $method = new \ReflectionMethod($validator, 'formatErrors');
-        $method->setAccessible(true);
         $this->assertSame(
             "XSD validation failed with following messages:\n[some/file/path.xml:22] Warning message\n[some/file/path.xml:23] Error message\n[some/file/path.xml:25] Fatal message\n",
-            $method->invoke($validator, $errors)
+            $this->invokeRestrictedMethod($validator, 'formatErrors', [$errors])
         );
     }
 }

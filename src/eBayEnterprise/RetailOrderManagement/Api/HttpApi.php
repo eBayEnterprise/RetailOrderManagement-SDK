@@ -17,8 +17,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedHttpAction;
+use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class HttpApi implements IBidirectionalApi
 {
     /** @var IConfig  */
@@ -46,8 +50,13 @@ class HttpApi implements IBidirectionalApi
         if ($this->requestPayload !== null) {
             return $this->requestPayload;
         }
-
-        $this->requestPayload = $this->messageFactory->requestPayload();
+        // If a payload doesn't exist for the request, the operation cannot
+        // be supported.
+        try {
+            $this->requestPayload = $this->messageFactory->requestPayload();
+        } catch (Payload\Exception\UnsupportedPayload $e) {
+            throw new UnsupportedOperation();
+        }
         return $this->requestPayload;
     }
 
@@ -148,7 +157,13 @@ class HttpApi implements IBidirectionalApi
             return $this->replyPayload;
         }
 
-        $this->replyPayload = $this->messageFactory->replyPayload();
+        // If a payload doesn't exist for the response, the operation cannot
+        // be supported.
+        try {
+            $this->replyPayload = $this->messageFactory->replyPayload();
+        } catch (Payload\Exception\UnsupportedPayload $e) {
+            throw new UnsupportedOperation();
+        }
         return $this->replyPayload;
     }
 }

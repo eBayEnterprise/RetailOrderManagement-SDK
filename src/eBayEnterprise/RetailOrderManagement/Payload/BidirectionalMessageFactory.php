@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
-use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 
 class BidirectionalMessageFactory implements IBidirectionalMessageFactory
@@ -30,33 +30,33 @@ class BidirectionalMessageFactory implements IBidirectionalMessageFactory
     public function __construct(IConfig $config, IPayloadFactory $payloadFactory = null, array $messageMapping = [])
     {
         $this->config = $config;
-        $this->messageTypeMap = $messageMapping ?: require('MessageConfigMap.php');
+        $this->messageTypeMap = $messageMapping ?: require('BidirectionalMessageConfigMap.php');
         $this->payloadFactory = $payloadFactory ?: new PayloadFactory();
     }
 
     /**
-     * Use the IConfig's key to build the right payload object.
-     *
-     * @param $type
+     * Use the IConfig's getConfigKey to get a pair of request/reply payloads.
+     * Type will specify if the request or reply payload should be retrieved.
+     * @param string $type
      * @return IPayload
-     * @throws UnsupportedOperation
+     * @throws UnsupportedPayload
      */
-    protected function buildPayload($type)
+    public function messagePayload($type)
     {
         $key = $this->config->getConfigKey();
         if (isset($this->messageTypeMap[$key])) {
             return $this->payloadFactory->buildPayload($this->messageTypeMap[$key][$type]);
         }
-        throw new UnsupportedOperation("No configuration found for '$key'");
+        throw new UnsupportedPayload("No payload found for '$key'");
     }
 
     public function requestPayload()
     {
-        return $this->buildPayload('request');
+        return $this->messagePayload('request');
     }
 
     public function replyPayload()
     {
-        return $this->buildPayload('reply');
+        return $this->messagePayload('reply');
     }
 }

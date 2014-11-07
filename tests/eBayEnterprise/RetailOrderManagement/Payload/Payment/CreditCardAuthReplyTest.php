@@ -16,9 +16,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 {
+    use TTestReflection;
+
     /** @var Payload\IValidator (stub) */
     protected $stubValidator;
     /** @var Payload\IValidatorIterator */
@@ -276,14 +279,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     protected function buildPayload($properties)
     {
         $payload = $this->createNewPayload();
-        $payloadReflection = new \ReflectionClass($payload);
-        foreach ($properties as $property => $value) {
-            if ($payloadReflection->hasProperty($property)) {
-                $property = $payloadReflection->getProperty($property);
-                $property->setAccessible(true);
-                $property->setValue($payload, $value);
-            }
-        }
+        $this->setRestrictedPropertyValues($payload, $properties);
         return $payload;
     }
 
@@ -324,9 +320,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     public function testBooleanFromString($value, $expected)
     {
         $payload = new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply', 'booleanFromString');
-        $method->setAccessible(true);
-        $actual = $method->invokeArgs($payload, [$value]);
+        $actual = $this->invokeRestrictedMethod($payload, 'booleanFromString', [$value]);
         $this->assertEquals($expected, $actual);
     }
 

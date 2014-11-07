@@ -17,9 +17,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class HttpApiTest extends \PHPUnit_Framework_TestCase
 {
+    use TTestReflection;
+
     protected $requestPayloadStub;
     protected $replyPayloadStub;
     protected $api;
@@ -60,39 +63,13 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
     protected function injectPayloads($class, $requestPayload, $replyPayload)
     {
         // use reflection to inject payloads into the HttpApi object
-        $this->injectProperties(
+        $this->setRestrictedPropertyValues(
             $class,
             [
                 'requestPayload' => $requestPayload,
                 'replyPayload' => $replyPayload
             ]
         );
-    }
-
-    protected function injectProperties($class, $properties)
-    {
-        // use reflection to inject properties/values into the $class object
-        $reflection = new \ReflectionClass($class);
-        foreach ($properties as $property => $value) {
-            $requestProperty = $reflection->getProperty($property);
-            $requestProperty->setAccessible(true);
-            $requestProperty->setValue($class, $value);
-        }
-    }
-
-    /**
-     * @param $class
-     * @param $method
-     * @param array $parameters
-     * @return mixed
-     */
-    protected function invokeProtectedMethod($class, $method, $parameters = [])
-    {
-        $reflection = new \ReflectionClass($class);
-        $reflectedMethod = $reflection->getMethod($method);
-        $reflectedMethod->setAccessible(true);
-
-        return $reflectedMethod->invokeArgs($class, $parameters);
     }
 
     public function provideSendRequestAction()
@@ -133,7 +110,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
     public function testSendReceiveInvalidReplyPayload()
     {
         $this->requestsResponseStub->body = '';
-        $this->injectProperties($this->apiStub, ['lastRequestsResponse' => $this->requestsResponseStub]);
+        $this->setRestrictedPropertyValues($this->apiStub, ['lastRequestsResponse' => $this->requestsResponseStub]);
 
         $this->apiStub->expects($this->any())
             ->method('sendRequest')
@@ -152,7 +129,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
         $this->requestsResponseStub->body = '';
         $this->requestsResponseStub->success = false;
         $this->requestsResponseStub->status_code = 404;
-        $this->injectProperties($this->apiStub, ['lastRequestsResponse' => $this->requestsResponseStub]);
+        $this->setRestrictedPropertyValues($this->apiStub, ['lastRequestsResponse' => $this->requestsResponseStub]);
 
         $this->requestsResponseStub->url = 'http://no.such.url';
         $this->apiStub->expects($this->any())
@@ -178,7 +155,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testSendRequestHandlesAction($action)
     {
-        $this->injectProperties($this->configStub, ['action' => $action]);
+        $this->setRestrictedPropertyValues($this->configStub, ['action' => $action]);
         $stub = $this->getMock(
             'eBayEnterprise\RetailOrderManagement\Api\HttpApi',
             ['post', 'get'],
@@ -189,7 +166,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
             ->method($action)
             ->will($this->returnValue(true));
 
-        $actual = $this->invokeProtectedMethod($stub, 'sendRequest');
+        $actual = $this->invokeRestrictedMethod($stub, 'sendRequest');
 
         $this->assertTrue($actual);
     }
@@ -201,7 +178,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
      */
     public function testSendRequestHandlesUnsupportedAction($action)
     {
-        $this->injectProperties($this->configStub, ['action' => $action]);
+        $this->setRestrictedPropertyValues($this->configStub, ['action' => $action]);
         $stub = $this->getMock(
             'eBayEnterprise\RetailOrderManagement\Api\HttpApi',
             ['post', 'get'],
@@ -212,7 +189,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
             ->method($action)
             ->will($this->returnValue(true));
 
-        $actual = $this->invokeProtectedMethod($stub, 'sendRequest');
+        $actual = $this->invokeRestrictedMethod($stub, 'sendRequest');
 
         $this->assertTrue($actual);
     }

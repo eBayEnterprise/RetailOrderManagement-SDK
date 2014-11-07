@@ -13,8 +13,12 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload\Exception;
-
-class UnsupportedPayload extends Payload
-{
-}
+/**
+ * Wrap include in a function to allow variables while protecting scope.
+ * @return array mapping of config keys to message payload types for bidirectional api operations
+ */
+return call_user_func(function () {
+    $map = [];
+    $map['Test'] = '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TestMessage';
+    return $map;
+});
