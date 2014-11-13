@@ -25,182 +25,199 @@ return call_user_func(function () {
     $xsdSchemaValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator';
     $requiredFieldsValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields';
     $optionalGroupValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup';
-    $map['payments/creditcard/auth'] = [
-        'request' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
-            'validators' => [
-                [
-                    'validator' => $requiredFieldsValidator,
-                    'params' => array_merge(
-                        $paymentContextParams,
-                        [
-                            'getRequestId',
-                            'getExpirationDate',
-                            'getCardSecurityCode',
-                            'getAmount',
-                            'getCurrencyCode',
-                            'getBillingFirstName',
-                            'getBillingLastName',
-                            'getBillingPhone',
-                            'getBillingLines',
-                            'getBillingCity',
-                            'getBillingCountryCode',
-                            'getEmail',
-                            'getIp',
-                            'getShipToFirstName',
-                            'getShipToLastName',
-                            'getShipToPhone',
-                            'getShipToLines',
-                            'getShipToCity',
-                            'getShipToCountryCode',
-                            'getIsRequestToCorrectCVVOrAVSError',
-                        ]
-                    ),
-                ],
-                [
-                    'validator' => $optionalGroupValidator,
-                    'params' => [
-                        'getAuthenticationAvailable',
-                        'getAuthenticationStatus',
-                        'getCavvUcaf',
-                        'getTransactionId',
-                        'getPayerAuthenticationResponse',
+    $payloadMap = '\eBayEnterprise\RetailOrderManagement\Payload\PayloadMap';
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $paymentContextParams,
+                    [
+                        'getRequestId',
+                        'getExpirationDate',
+                        'getCardSecurityCode',
+                        'getAmount',
+                        'getCurrencyCode',
+                        'getBillingFirstName',
+                        'getBillingLastName',
+                        'getBillingPhone',
+                        'getBillingLines',
+                        'getBillingCity',
+                        'getBillingCountryCode',
+                        'getEmail',
+                        'getIp',
+                        'getShipToFirstName',
+                        'getShipToLastName',
+                        'getShipToPhone',
+                        'getShipToLines',
+                        'getShipToCity',
+                        'getShipToCountryCode',
+                        'getIsRequestToCorrectCVVOrAVSError',
                     ]
-                ],
+                ),
             ],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => [
+                    'getAuthenticationAvailable',
+                    'getAuthenticationStatus',
+                    'getCavvUcaf',
+                    'getTransactionId',
+                    'getPayerAuthenticationResponse',
+                ]
+            ],
         ],
-        'reply' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply',
-            'validators' => [
-                [
-                    'validator' => $requiredFieldsValidator,
-                    'params' => array_merge(
-                        $paymentContextParams,
-                        [
-                            'getAuthorizationResponseCode',
-                            'getBankAuthorizationCode',
-                            'getCvv2ResponseCode',
-                            'getAvsResponseCode',
-                            'getAmountAuthorized',
-                            'getCurrencyCode',
-                        ]
-                    ),
-                ],
-            ],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
-        ]
-    ];
-    $map['payments/storedvalue/balance'] = [
-        'request' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceRequest',
-            'validators' => [
-                [
-                    'validator' => $requiredFieldsValidator,
-                    'params' => array_merge(
-                        $paymentAccountUniqueIdParams,
-                        ['getCurrencyCode']
-                    ),
-                ],
-                [
-                    'validator' => $optionalGroupValidator,
-                    'params' => [
-                        'getPin',
-                    ]
-                ],
-            ],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
-        ],
-        'reply' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceReply',
-            'validators' => [
-                [
-                    'validator' => $requiredFieldsValidator,
-                    'params' => array_merge(
-                        $paymentAccountUniqueIdParams,
-                        [
-                            'getResponseCode',
-                            'getBalanceAmount',
-                            'getCurrencyCode',
-                        ]
-                    ),
-                ],
-            ],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
         ],
     ];
-    $map['payments/storedvalue/redeem'] = [
-        'request' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest',
-            'validators' => [
-                [
-                    'validator' => $requiredFieldsValidator,
-                    'params' => array_merge(
-                        $paymentContextParams,
-                        [
-                            'getRequestId',
-                            'getAmount',
-                            'getCurrencyCode',
-                        ]
-                    ),
-                ],
-                [
-                    'validator' => $optionalGroupValidator,
-                    'params' => [
-                        'getPin',
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $paymentContextParams,
+                    [
+                        'getAuthorizationResponseCode',
+                        'getBankAuthorizationCode',
+                        'getCvv2ResponseCode',
+                        'getAvsResponseCode',
+                        'getAmountAuthorized',
+                        'getCurrencyCode',
                     ]
-                ],
+                ),
             ],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
         ],
-        'reply' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemReply',
-            'validators' => [
-                [
-                    'validator' => $requiredFieldsValidator,
-                    'params' => array_merge(
-                        $paymentContextParams,
-                        [
-                            'getResponseCode',
-                            'getAmountRedeemed',
-                            'getCurrencyCodeRedeemed',
-                            'getBalanceAmount',
-                            'getBalanceCurrencyCode',
-                        ]
-                    ),
-                ],
-            ],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
         ],
     ];
-    $map['payments/storedvalue/redeemvoid'] = [
-        'request' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidRequest',
-            'validators' => $map['payments/storedvalue/redeem']['request']['validators'],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
-        ],
-        'reply' => [
-            'payload' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidReply',
-            'validators' => [
-                [
-                    'validator' => $requiredFieldsValidator,
-                    'params' => array_merge(
-                        $paymentContextParams,
-                        [
-                            'getResponseCode',
-                        ]
-                    ),
-                ],
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $paymentAccountUniqueIdParams,
+                    ['getCurrencyCode']
+                ),
             ],
-            'validatorIterator' => $validatorIterator,
-            'schemaValidator' => $xsdSchemaValidator
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => [
+                    'getPin',
+                ]
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceReply'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $paymentAccountUniqueIdParams,
+                    [
+                        'getResponseCode',
+                        'getBalanceAmount',
+                        'getCurrencyCode',
+                    ]
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $paymentContextParams,
+                    [
+                        'getRequestId',
+                        'getAmount',
+                        'getCurrencyCode',
+                    ]
+                ),
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => [
+                    'getPin',
+                ]
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemReply'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $paymentContextParams,
+                    [
+                        'getResponseCode',
+                        'getAmountRedeemed',
+                        'getCurrencyCodeRedeemed',
+                        'getBalanceAmount',
+                        'getBalanceCurrencyCode',
+                    ]
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidRequest'] = [
+        'validators' => $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest']['validators'],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidReply'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $paymentContextParams,
+                    [
+                        'getResponseCode',
+                    ]
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
         ],
     ];
     return $map;

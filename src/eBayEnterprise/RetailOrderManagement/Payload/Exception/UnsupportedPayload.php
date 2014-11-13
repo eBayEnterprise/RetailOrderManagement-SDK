@@ -13,15 +13,8 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload;
+namespace eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
-use eBayEnterprise\RetailOrderManagement\Api\IConfig;
-
-interface IPayloadFactory
+class UnsupportedPayload extends \Exception
 {
-    /**
-     * Construct a new payload instance
-     * @return IPayload
-     */
-    public function buildPayload($type);
 }

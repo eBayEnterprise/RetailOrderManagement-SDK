@@ -19,20 +19,16 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedHttpAction;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
-/**
- * Class HttpApi
- * @package eBayEnterprise\RetailOrderManagement\Api
- */
 class HttpApi implements IBidirectionalApi
 {
     /** @var IConfig  */
     protected $config;
-    /** @var IPayload  */
+    /** @var Payload\IPayload  */
     protected $requestPayload;
-    /** @var  IPayload */
+    /** @var  Payload\IPayload */
     protected $replyPayload;
-    /** @var  IPayloadFactory */
-    protected $payloadFactory;
+    /** @var  Payload\IBidirectionalMessageFactory */
+    protected $messageFactory;
     /** @var  Requests_Response Response object from the last call to Requests*/
     protected $lastRequestsResponse;
 
@@ -42,7 +38,7 @@ class HttpApi implements IBidirectionalApi
 
         \Requests::register_autoloader();
 
-        $this->payloadFactory = new Payload\PayloadFactory($this->config);
+        $this->messageFactory = new Payload\BidirectionalMessageFactory($this->config);
     }
 
     public function getRequestBody()
@@ -51,7 +47,7 @@ class HttpApi implements IBidirectionalApi
             return $this->requestPayload;
         }
 
-        $this->requestPayload = $this->payloadFactory->requestPayload();
+        $this->requestPayload = $this->messageFactory->requestPayload();
         return $this->requestPayload;
     }
 
@@ -152,7 +148,7 @@ class HttpApi implements IBidirectionalApi
             return $this->replyPayload;
         }
 
-        $this->replyPayload = $this->payloadFactory->replyPayload();
+        $this->replyPayload = $this->messageFactory->replyPayload();
         return $this->replyPayload;
     }
 }

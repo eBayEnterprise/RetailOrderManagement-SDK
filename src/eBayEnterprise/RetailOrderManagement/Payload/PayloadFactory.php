@@ -13,30 +13,17 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
-use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
-use eBayEnterprise\RetailOrderManagement\Api\IConfig;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
 
-/**
- * Class PayloadFactory
- * @package eBayEnterprise\RetailOrderManagement\Payload
- */
 class PayloadFactory implements IPayloadFactory
 {
-    /** @var  IConfig */
-    protected $config;
-    /** @var  IPayload */
-    protected $requestPayload;
-    /** @var  IPayload */
-    protected $replyPayload;
-    /** @var array maps a config key to a payload object */
+    /** @var array maps a payload type to configuration used to construct the payload */
     protected $payloadTypeMap;
 
-    public function __construct(IConfig $config)
+    public function __construct()
     {
-        $this->config = $config;
         $this->payloadTypeMap = require('PayloadConfigMap.php');
     }
 
@@ -49,46 +36,40 @@ class PayloadFactory implements IPayloadFactory
      */
     protected function buildValidators($validators)
     {
-        $array = [];
-        foreach ($validators as $validator) {
-            $params = $validator['params'];
-            $array[] = new $validator['validator']($params);
-        }
-        return $array;
+        return array_map(
+            function ($validatorConfig) {
+                return new $validatorConfig['validator']($validatorConfig['params']);
+            },
+            $validators
+        );
     }
 
     /**
-     * Use the IConfig's key to build the right payload object.
-     *
-     * @param $type
+     * Build a payload using the payload config mappings.
+     * @param string $type Concrete payload type
      * @return IPayload
-     * @throws UnsupportedOperation
+     * @throws UnsupportedPayload If the payload type is not configured
      */
-    protected function buildPayload($type)
+    public function buildPayload($type, IPayloadMap $cascadedPayloadMap = null)
     {
-        $key = $this->config->getConfigKey();
-        if (isset($this->payloadTypeMap[$key])) {
-            $payloadTypes = $this->payloadTypeMap[$key];
-            $payloadType = $payloadTypes[$type];
-            $payloadClass = $payloadType['payload'];
-            $validators = $payloadType['validators'];
-            $validatorArray = $this->buildValidators($validators);
+        if (isset($this->payloadTypeMap[$type])) {
+            $payloadConfig = $this->payloadTypeMap[$type];
 
-            $iterator = new $payloadType['validatorIterator']($validatorArray);
-            $schemaValidator = new $payloadType['schemaValidator']();
+            $validatorIteratorConfig = $payloadConfig['validatorIterator'];
+            $validatorsConfig = $payloadConfig['validators'];
+            $schemaValidatorConfig = $payloadConfig['schemaValidator'];
+            $payloadMapConfig = $payloadConfig['childPayloads']['payloadMap'];
+            $childPayloadsConfig = $payloadConfig['childPayloads']['types'];
 
-            return new $payloadClass($iterator, $schemaValidator);
+            $validatorIterator = new $validatorIteratorConfig($this->buildValidators($validatorsConfig));
+            $schemaValidator = new $schemaValidatorConfig();
+            $payloadMap = new $payloadMapConfig($childPayloadsConfig);
+            if ($cascadedPayloadMap) {
+                $payloadMap->merge($cascadedPayloadMap);
+            }
+
+            return new $type($validatorIterator, $schemaValidator, $payloadMap);
         }
-        throw new UnsupportedOperation("No configuration found for '$key'");
-    }
-
-    public function requestPayload()
-    {
-        return $this->buildPayload('request');
-    }
-
-    public function replyPayload()
-    {
-        return $this->buildPayload('reply');
+        throw new UnsupportedPayload("No configuration found for '$type'");
     }
 }
