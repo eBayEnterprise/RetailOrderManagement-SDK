@@ -600,6 +600,13 @@
         </xsd:restriction>
     </xsd:simpleType>
 
+    <xsd:simpleType name="FundReasonType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="16"/>
+            <xsd:pattern value="[a-zA-Z0-9]{1,}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
     <xsd:complexType name="InvoiceDataType">
         <xsd:sequence>
             <xsd:element name="VATData" type="VATDataType" minOccurs="0">
