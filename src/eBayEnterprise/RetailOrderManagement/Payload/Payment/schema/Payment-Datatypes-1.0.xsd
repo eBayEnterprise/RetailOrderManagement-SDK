@@ -186,7 +186,7 @@
                 Example values:
                 Credit card: VC (Visa), MC (Master Card), AM (American Express)
 
-                Stred Value:
+                Stored Value:
                 Stored Value tender type codes are provider specific (i.e Blackhawk, SVS, etc.)
                 Example: BH (Blackhawk), SP (SVS), OGC (GSI Online Gift Certificate)
             </xsd:documentation>

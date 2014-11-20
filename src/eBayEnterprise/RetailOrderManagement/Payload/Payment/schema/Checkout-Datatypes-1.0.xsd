@@ -111,7 +111,7 @@
                         Default Value: blank
                         Restrictions: For U.S. addresses, the last Line# component valued before the U.S. state must
                         contain the number and street. Additional address information, such as a building name or a
-                        department mustt precede it.
+                        department must precede it.
                         Aliases: N/A
                     </xsd:documentation>
                 </xsd:annotation>

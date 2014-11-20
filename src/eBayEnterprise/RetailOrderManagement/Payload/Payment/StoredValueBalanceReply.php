@@ -26,9 +26,9 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 class StoredValueBalanceReply implements IStoredValueBalanceReply
 {
     use TPaymentAccountUniqueId;
-    /** @var float **/
+    /** @var float */
     protected $balanceAmount;
-    /** @var string **/
+    /** @var string */
     protected $currencyCode;
     /** @var string */
     protected $responseCode;
@@ -164,7 +164,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {
@@ -241,5 +241,26 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     public function isSuccessful()
     {
         return in_array($this->getResponseCode(), $this->successResponseCodes, true);
+    }
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    protected function cleanString($string, $maxLength)
+    {
+        $value = null;
+
+        if (is_string($string)) {
+            $trimmed = substr(trim($string), 0, $maxLength);
+            $value = empty($trimmed) ? null : $trimmed;
+        }
+
+        return $value;
     }
 }

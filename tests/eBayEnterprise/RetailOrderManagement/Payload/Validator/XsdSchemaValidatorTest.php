@@ -31,7 +31,8 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
             'XSD validation failed with following messages:'
         );
         $validator = new XsdSchemaValidator();
-        $validator->validate(file_get_contents(__DIR__ . '/Fixtures/InvalidXml.xml'), __DIR__ . '/Fixtures/TestSchema.xsd');
+        $xmlString = file_get_contents(__DIR__ . '/Fixtures/InvalidXml.xml');
+        $validator->validate($xmlString, __DIR__ . '/Fixtures/TestSchema.xsd');
     }
     /**
      * XML matching the schema should simply return self.
@@ -39,9 +40,10 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidateValidXml()
     {
         $validator = new XsdSchemaValidator();
+        $xmlString = file_get_contents(__DIR__ . '/Fixtures/ValidXml.xml');
         $this->assertSame(
             $validator,
-            $validator->validate(file_get_contents(__DIR__ . '/Fixtures/ValidXml.xml'), __DIR__ . '/Fixtures/TestSchema.xsd')
+            $validator->validate($xmlString, __DIR__ . '/Fixtures/TestSchema.xsd')
         );
     }
     /**
@@ -71,7 +73,10 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
         $errors = [$warnError, $errError, $fatalError];
         $validator = new XsdSchemaValidator();
         $this->assertSame(
-            "XSD validation failed with following messages:\n[some/file/path.xml:22] Warning message\n[some/file/path.xml:23] Error message\n[some/file/path.xml:25] Fatal message\n",
+            "XSD validation failed with following messages:\n"
+            . "[some/file/path.xml:22] Warning message\n"
+            . "[some/file/path.xml:23] Error message\n"
+            . "[some/file/path.xml:25] Fatal message\n",
             $this->invokeRestrictedMethod($validator, 'formatErrors', [$errors])
         );
     }

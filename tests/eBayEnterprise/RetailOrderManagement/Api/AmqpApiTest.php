@@ -3,7 +3,6 @@
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
-use PhpAmqpLib\Exception\AMQPProtocolException;
 
 class AmqpApiTest extends \PHPUnit_Framework_TestCase
 {
@@ -144,6 +143,7 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
     }
     public function testOpenConnection()
     {
+        /** @var \eBayEnterprise\RetailOrderManagement\Api\AmqpApi $amqpApi */
         $amqpApi = $this->getMock(
             '\eBayEnterprise\RetailOrderManagement\Api\AmqpApi',
             ['connect', 'createChannel', 'declareQueue', 'isConnected'],
@@ -171,12 +171,14 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
     }
     public function testOpenConnectionFailure()
     {
+        /** @var \eBayEnterprise\RetailOrderManagement\Api\AmqpApi $amqpApi */
         $amqpApi = $this->getMock(
             '\eBayEnterprise\RetailOrderManagement\Api\AmqpApi',
             ['connect', 'createChannel', 'declareQueue', 'isConnected'],
             [$this->config]
         );
 
+        /** @var \PhpAmqpLib\Exception\AMQPProtocolException $protocolException */
         $protocolException = $this->getMockBuilder('\PhpAmqpLib\Exception\AMQPProtocolException')
             // Avoid needing to provide valid reply_code, reply_text or method_sig. This exception
             // type comes from PhpAmqpLib internals so it will always know how to construct
@@ -202,6 +204,6 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
         // ConnectionError being thrown
         $this->setExpectedException('\eBayEnterprise\RetailOrderManagement\Api\Exception\ConnectionError');
 
-        $this->invokeRestrictedMethod($amqpApi->openConnection());
+        $amqpApi->openConnection();
     }
 }

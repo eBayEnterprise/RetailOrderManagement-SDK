@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 use eBayEnterprise\RetailOrderManagement\Api\Exception\ConnectionError;
 use eBayEnterprise\RetailOrderManagement\Payload\AmqpPayloadIterator;
 use eBayEnterprise\RetailOrderManagement\Payload;
-use PhpAmqpLib\Channel\AbstractChannel;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Exception\AMQPExceptionInterface;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -34,7 +34,7 @@ class AmqpApi implements IAmqpApi
     protected $config;
     /** @var AbstractConnection */
     protected $connection;
-    /** @var AbstractChannel */
+    /** @var AMQPChannel */
     protected $channel;
     /** @var bool Flag for if the queue has been connected to and is ready to start receiving messages */
     protected $isQueueSetup = false;
@@ -42,15 +42,15 @@ class AmqpApi implements IAmqpApi
     protected $messageFactory;
     /**
      * Inject config and allow a connection and channel to be injected.
-     * @param IAmpqConfig $config
-     * @param mixed[]      $args   May contain:
-     *                             - 'connection' => AbstractConnection
-     *                             - 'channel' => AbstractChannel
+     * @param IAmqpConfig $config
+     * @param mixed[]     $args   May contain:
+     *                            - 'connection' => AbstractConnection
+     *                            - 'channel' => AMQPChannel
      */
     public function __construct(IAmqpConfig $config, array $args = [])
     {
         $this->config = $config;
-        // injectable primarially for testing purposes
+        // injectable primarily for testing purposes
         list($this->connection, $this->channel) = $this->checkTypes(
             isset($args['connection']) ? $args['connection'] : null,
             isset($args['channel']) ? $args['channel'] : null
@@ -60,17 +60,17 @@ class AmqpApi implements IAmqpApi
     /**
      * Check types of dependencies injected via the constructors $args array
      * @param AbstractConnection $connection
-     * @param AbstractChannel    $channel
+     * @param AMQPChannel        $channel
      * @return mixed
      */
-    protected function checkTypes(AbstractConnection $connection = null, AbstractChannel $channel = null)
+    protected function checkTypes(AbstractConnection $connection = null, AMQPChannel $channel = null)
     {
         return [$connection, $channel];
     }
     /**
      * Connect to the AMQP server and create/declare the channel, exchange and queue.
      * Returns a new payload iterator which will consume consume messages from the queue
-     * @return IPayloadIterator
+     * @return Payload\IPayloadIterator
      * @throws ConnectionError Thrown by self::openConnection if connection cannot be established
      */
     public function fetch()
@@ -142,7 +142,7 @@ class AmqpApi implements IAmqpApi
      * Get a reflection class instance for the type of connection to use,
      * separated out to keep the dependency on ReflectionClass secluded.
      * @param string $connectionClass
-     * @return ReflectionClass
+     * @return \ReflectionClass
      */
     protected function getConnectionReflectionClass($connectionClass)
     {

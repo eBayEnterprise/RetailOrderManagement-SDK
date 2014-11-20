@@ -77,7 +77,7 @@ class XsdSchemaValidator implements Payload\ISchemaValidator
     }
 
     /**
-     * Retrive errors encountered while validating the XML against the schema.
+     * Retrieve errors encountered while validating the XML against the schema.
      * @return array
      */
     protected function retrieveErrors()

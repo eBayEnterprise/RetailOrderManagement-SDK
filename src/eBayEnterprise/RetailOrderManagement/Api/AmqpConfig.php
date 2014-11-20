@@ -22,7 +22,8 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 class AmqpConfig implements IAmqpConfig
 {
     protected $connectionConfigTypes = [
-        '\PhpAmqpLib\Connection\AMQPSSLConnection' => '\eBayEnterprise\RetailOrderManagement\Api\Amqp\SslConnectionConfig',
+        '\PhpAmqpLib\Connection\AMQPSSLConnection' =>
+            '\eBayEnterprise\RetailOrderManagement\Api\Amqp\SslConnectionConfig',
         '\PhpAmqpLib\Connection\AMQPConnection' => '\eBayEnterprise\RetailOrderManagement\Api\Amqp\ConnectionConfig',
     ];
     /**
@@ -120,6 +121,9 @@ class AmqpConfig implements IAmqpConfig
      * @var bool
      */
     protected $queueNowait;
+
+    /** @var Amqp\IConnectionConfig */
+    protected $connectionConfig;
 
     /**
      * @param string $connectionType

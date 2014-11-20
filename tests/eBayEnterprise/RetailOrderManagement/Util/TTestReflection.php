@@ -50,7 +50,7 @@ trait TTestReflection
         return $this;
     }
     /**
-     * Set a list of properties. Properies provided as key/value pairs of property => value.
+     * Set a list of properties. Properties provided as key/value pairs of property => value.
      * @param mixed $object     Must be instance of object as it will be used when setting the reflected property values
      * @param array $properties Keys used as property names, values are what the property will be set to
      * @return self

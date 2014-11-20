@@ -34,8 +34,6 @@ class StoredValueRedeemRequestTest extends \PHPUnit_Framework_TestCase
     protected $validatorIterator;
     /** @var  Payload\ISchemaValidator */
     protected $schemaValidatorStub;
-    /** @var string */
-    protected $testXML = '<Root xmlns="http://api.gsicommerce.com/schema/checkout/1.0"><Node1 attrib="true">0</Node1><Node2 attrib="false">1</Node2></Root>';
 
     protected function setUp()
     {

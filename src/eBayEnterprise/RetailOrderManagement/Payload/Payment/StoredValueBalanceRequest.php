@@ -262,7 +262,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {

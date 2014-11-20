@@ -28,6 +28,8 @@ class BidirectionalMessageFactoryTest extends \PHPUnit_Framework_TestCase
     protected $messageTypes;
     /** @var IPayload */
     protected $payload;
+    /** @var IPayloadFactory */
+    protected $payloadFactory;
 
     public function setUp()
     {
@@ -46,7 +48,8 @@ class BidirectionalMessageFactoryTest extends \PHPUnit_Framework_TestCase
                 'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\IPayload',
             ],
         ];
-        $this->messageFactory = new BidirectionalMessageFactory($this->config, $this->payloadFactory, $this->messageTypes);
+        $this->messageFactory =
+            new BidirectionalMessageFactory($this->config, $this->payloadFactory, $this->messageTypes);
     }
     /**
      * Provide message types - supported or unsupported

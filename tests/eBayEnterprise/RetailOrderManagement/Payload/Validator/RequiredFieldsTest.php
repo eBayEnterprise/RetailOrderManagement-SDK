@@ -33,7 +33,8 @@ class RequiredFieldsTest extends \PHPUnit_Framework_TestCase
     }
     /**
      * Test that payloads missing required data causes an InvalidPayload exception.
-     * @expectedException eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     *
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testValidateInvalidPayload()
     {

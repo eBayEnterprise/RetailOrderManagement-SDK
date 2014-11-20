@@ -25,8 +25,11 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
 
     protected $requestPayloadStub;
     protected $replyPayloadStub;
+    /** @var HttpApi */
     protected $api;
+    /** @var HttpConfig */
     protected $configStub;
+    /** @var HttpApi */
     protected $apiStub;
     protected $requestsResponseStub;
 

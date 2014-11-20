@@ -13,10 +13,8 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
-use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedHttpAction;
 use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
@@ -33,10 +31,17 @@ class HttpApi implements IBidirectionalApi
     protected $replyPayload;
     /** @var  Payload\IBidirectionalMessageFactory */
     protected $messageFactory;
-    /** @var  Requests_Response Response object from the last call to Requests*/
+    /** @var  \Requests_Response Response object from the last call to Requests*/
     protected $lastRequestsResponse;
 
-    public function __construct(IConfig $config, array $args = [])
+    /**
+     * Configure the api by supplying an object that informs
+     * what payload object to use, what URI to send to, etc.
+     *
+     * @param IHttpConfig $config
+     * @param array $args
+     */
+    public function __construct(IHttpConfig $config, array $args = [])
     {
         $this->config = $config;
 
@@ -75,8 +80,8 @@ class HttpApi implements IBidirectionalApi
     }
 
     /**
-     * @return Requests_Response
-     * @throws Requests_Exception
+     * @return \Requests_Response
+     * @throws \Requests_Exception
      */
     protected function post()
     {
@@ -89,8 +94,8 @@ class HttpApi implements IBidirectionalApi
     }
 
     /**
-     * @return Requests_Response
-     * @throws Requests_Exception
+     * @return \Requests_Response
+     * @throws \Requests_Exception
      */
     protected function get()
     {

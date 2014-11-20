@@ -25,12 +25,4 @@ use eBayEnterprise\RetailOrderManagement\Payload;
  */
 interface IApi
 {
-    /**
-     * Configure the api by supplying an object that informs
-     * what payload object to use, what URI to send to, etc.
-     *
-     * @param IConfig $config
-     * @param array $args
-     */
-    public function __construct(IConfig $config, array $args = []);
 }

@@ -15,8 +15,6 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
-use eBayEnterprise\RetailOrderManagement\Api\IConfig;
-
 interface IPayloadFactory
 {
     /**

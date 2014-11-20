@@ -181,7 +181,8 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Provide payloads of data that should produce the provided response code.
-     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload and the expected result of getResponseCode
+     * @return array[] Array of arg arrays, each containing a set of payload data suitable
+     *                 for self::buildPayload and the expected result of getResponseCode
      */
     public function provideResponseCodePayloadAndCode()
     {
@@ -286,7 +287,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     /**
      * Load the XML from a fixture file and canonicalize it. Returns the
      * canonical XML string.
-     * @param string $testCase Spcifies a test case file to load - default to decrypted data
+     * @param string $testCase Specifies a test case file to load - default to decrypted data
      * @return string
      */
     protected function loadXmlTestString($testCase = 'UnencryptedCardData')

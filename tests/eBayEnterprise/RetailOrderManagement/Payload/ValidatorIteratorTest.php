@@ -79,8 +79,8 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         return $iterator;
     }
     /**
-     * Tryint to construct a ValidatorIterator with items that are not
-     * IValidators should be an error/exception
+     * Trying to construct a ValidatorIterator with items that are not IValidators should be an error/exception
+     *
      * @expectedException \PHPUnit_Framework_Error
      */
     public function testCannotConstructWithInvalidItems()

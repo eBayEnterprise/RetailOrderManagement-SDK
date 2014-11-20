@@ -22,11 +22,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  */
 trait TPaymentAccountUniqueId
 {
-    /** @var bool **/
+    /** @var bool */
     protected $isEncrypted = false;
-    /** @var bool **/
+    /** @var bool */
     protected $panIsToken;
-    /** @var string **/
+    /** @var string */
     protected $cardNumber;
 
     public function getIsEncrypted()
@@ -61,14 +61,28 @@ trait TPaymentAccountUniqueId
     }
 
     /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    abstract protected function cleanString($string, $maxLength);
+
+    /**
      * XML serialized PaymentAccountUniqueId node
      * @return string
      */
     protected function serializePaymentAccountUniqueId()
     {
+        $cardNumberNode = $this->getIsEncrypted()
+            ? IPaymentAccountUniqueId::ENCRYPTED_CARD_NUMBER_NODE
+            : IPaymentAccountUniqueId::RAW_CARD_NUMBER_NODE;
         return sprintf(
             '<%1$s %2$s>%3$s</%1$s>',
-            $this->getIsEncrypted() ? IPaymentAccountUniqueId::ENCRYPTED_CARD_NUMBER_NODE : IPaymentAccountUniqueId::RAW_CARD_NUMBER_NODE,
+            $cardNumberNode,
             $this->serializeIsToken(),
             $this->getCardNumber()
         );

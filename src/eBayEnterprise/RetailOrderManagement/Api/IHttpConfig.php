@@ -28,7 +28,7 @@ interface IHttpConfig extends IConfig
     /**
      * Service URI has the following format:
      * https://{host}/v{M}.{m}/stores/{storeid}/{service}/{operation}{/parameters}.{format}
-     * - host - EE Excnahge Platform domain
+     * - host - EE Exchange Platform domain
      * - M - major version of the API
      * - m - minor version of the API
      * - storeid - GSI assigned store identifier

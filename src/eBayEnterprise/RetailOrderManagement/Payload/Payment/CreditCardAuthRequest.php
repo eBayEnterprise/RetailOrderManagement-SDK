@@ -27,65 +27,65 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
     use TPaymentContext;
 
-    /** @var string **/
+    /** @var string */
     protected $requestId;
-    /** @var \DateTime **/
+    /** @var \DateTime */
     protected $expirationDate;
-    /** @var string **/
+    /** @var string */
     protected $cardSecurityCode;
-    /** @var float **/
+    /** @var float */
     protected $amount;
-    /** @var string **/
+    /** @var string */
     protected $currencyCode;
-    /** @var string **/
+    /** @var string */
     protected $billingFirstName;
-    /** @var string **/
+    /** @var string */
     protected $billingLastName;
-    /** @var string **/
+    /** @var string */
     protected $billingPhone;
-    /** @var array **/
+    /** @var array */
     protected $billingLines;
-    /** @var string **/
+    /** @var string */
     protected $billingCity;
-    /** @var string **/
+    /** @var string */
     protected $billingMainDivision;
-    /** @var string **/
+    /** @var string */
     protected $billingCountryCode;
-    /** @var string **/
+    /** @var string */
     protected $billingPostalCode;
-    /** @var string **/
+    /** @var string */
     protected $customerEmail;
-    /** @var string **/
+    /** @var string */
     protected $customerIpAddress;
-    /** @var string **/
+    /** @var string */
     protected $shipToFirstName;
-    /** @var string **/
+    /** @var string */
     protected $shipToLastName;
-    /** @var string **/
+    /** @var string */
     protected $shipToPhone;
-    /** @var array **/
+    /** @var array */
     protected $shipToLines;
-    /** @var string **/
+    /** @var string */
     protected $shipToCity;
-    /** @var string **/
+    /** @var string */
     protected $shipToMainDivision;
-    /** @var string **/
+    /** @var string */
     protected $shipToCountryCode;
-    /** @var string **/
+    /** @var string */
     protected $shipToPostalCode;
-    /** @var bool **/
+    /** @var bool */
     protected $isRequestToCorrectCVVOrAVSError;
-    /** @var string **/
+    /** @var string */
     protected $authenticationAvailable;
-    /** @var string **/
+    /** @var string */
     protected $authenticationStatus;
-    /** @var string **/
+    /** @var string */
     protected $cavvUcaf;
-    /** @var string **/
+    /** @var string */
     protected $transactionId;
-    /** @var string **/
+    /** @var string */
     protected $eci;
-    /** @var string **/
+    /** @var string */
     protected $payerAuthenticationResponse;
     /** @var IValidatorIterator */
     protected $validators;
@@ -95,7 +95,8 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $requiredNodesMap = [
         'requestId' => 'string(@requestId)',
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' => 'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' =>
+            'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
         'expirationDate' => 'string(x:ExpirationDate)',
         'cardSecurityCode' => 'string(x:CardSecurityCode|x:EncryptedCardSecurityCode)',
         'amount' => 'number(x:Amount)',
@@ -234,11 +235,8 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     public function setEmail($email)
     {
         $value = null;
-        $regex = '([a-zA-Z0-9_\-])([a-zA-Z0-9_\-\.]*)@(\[((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.)';
-        $regex .= '{3}|((([a-zA-Z0-9\-]+)\.)+))([a-zA-Z]{2,}|(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\])';
         $cleaned = $this->cleanString($email, 70);
         if ($cleaned !== null) {
-            //$match = preg_match($regex, $cleaned);
             $match = filter_var($cleaned, FILTER_VALIDATE_EMAIL);
             if ($match) {
                 $value = $cleaned;
@@ -256,14 +254,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function setIp($ip)
     {
+        $pattern = '/((25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)/';
         $value = null;
 
         $cleaned = $this->cleanString($ip, 70);
         if ($cleaned !== null) {
-            $match = preg_match(
-                '/((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])/',
-                $cleaned
-            );
+            $match = preg_match($pattern, $cleaned);
 
             if ($match === 1) {
                 $value = $cleaned;
@@ -667,8 +663,11 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
      */
     protected function serializeBillingNamePhone()
     {
+        $template = '<BillingFirstName>%s</BillingFirstName>'
+            . '<BillingLastName>%s</BillingLastName>'
+            . '<BillingPhoneNo>%s</BillingPhoneNo>';
         return sprintf(
-            '<BillingFirstName>%s</BillingFirstName><BillingLastName>%s</BillingLastName><BillingPhoneNo>%s</BillingPhoneNo>',
+            $template,
             $this->getBillingFirstName(),
             $this->getBillingLastName(),
             $this->getBillingPhone()
@@ -792,8 +791,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             $this->getTransactionId() &&
             $this->getPayerAuthenticationResponse()
         ) {
+            $template = '<SecureVerificationData>'
+                . '<AuthenticationAvailable>%s</AuthenticationAvailable>'
+                . '<AuthenticationStatus>%s</AuthenticationStatus>'
+                . '<CavvUcaf>%s</CavvUcaf>'
+                . '<TransactionId>%s</TransactionId>'
+                . '%s'
+                . '<PayerAuthenticationResponse>%s</PayerAuthenticationResponse>'
+                . '</SecureVerificationData>';
             return sprintf(
-                '<SecureVerificationData><AuthenticationAvailable>%s</AuthenticationAvailable><AuthenticationStatus>%s</AuthenticationStatus><CavvUcaf>%s</CavvUcaf><TransactionId>%s</TransactionId>%s<PayerAuthenticationResponse>%s</PayerAuthenticationResponse></SecureVerificationData>',
+                $template,
                 $this->getAuthenticationAvailable(),
                 $this->getAuthenticationStatus(),
                 $this->getCavvUcaf(),
@@ -981,7 +988,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             $this->$property = $this->booleanFromString($value);
         }
 
-        // validate ourself, throws Exception\InvalidPayload if we don't pass
+        // validate self, throws Exception\InvalidPayload if we don't pass
         $this->validate();
 
         return $this;

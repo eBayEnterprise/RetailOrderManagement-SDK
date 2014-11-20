@@ -40,7 +40,7 @@ class AmqpPayloadIterator implements IPayloadIterator
 
     /**
      * @param IAmqpApi $api AMQP Api instance used to get messages from a queue
-     * @param IMessageFactory $messageFactory For each message received, should be able to map the message type to a payload
+     * @param IMessageFactory $messageFactory Maps the message type to a payload for each message received
      * @param int $maxMessages Max messages to retrieve from the queue
      */
     public function __construct(IAmqpApi $api, IMessageFactory $messageFactory, $maxMessages)
@@ -51,7 +51,7 @@ class AmqpPayloadIterator implements IPayloadIterator
     }
     /**
      * get the current payload in the iterable
-     * @return Payload\IPayload|null Returns null when attampting to get the current item from an invalid iterator.
+     * @return IPayload|null Returns null when attempting to get the current item from an invalid iterator.
      * @throws Exception\InvalidPayload If message cannot be successfully deserialized into a payload.
      * @throws Exception\UnexpectedResponse If message does not specify the type of message.
      * @throws Exception\UnsupportedPayload If current message does not match a known payload type.
@@ -69,7 +69,7 @@ class AmqpPayloadIterator implements IPayloadIterator
     }
     /**
      * get the key for the current payload in the iterable
-     * @return scalar
+     * @return int|float|string|bool
      */
     public function key()
     {
@@ -119,12 +119,13 @@ class AmqpPayloadIterator implements IPayloadIterator
         // end the iterable
         return false;
     }
+
     /**
      * Get the appropriate payload type for the AMQP message and deserialize
      * the message body with the payload.
      * @param AMQPMessage $message
-     * @return Payload\IPayload
-     * @throws UnexpectedResponse If AMQP message does not specify a type.
+     * @throws Exception\UnexpectedResponse
+     * @return IPayload
      */
     protected function processMessage(AMQPMessage $message)
     {

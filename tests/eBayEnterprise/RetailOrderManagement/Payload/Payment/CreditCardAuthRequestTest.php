@@ -30,8 +30,6 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     protected $validatorIterator;
     /** @var  Payload\ISchemaValidator */
     protected $schemaValidatorStub;
-    /** @var string */
-    protected $testXML = '<Root xmlns="http://api.gsicommerce.com/schema/checkout/1.0"><Node1 attrib="true">0</Node1><Node2  attrib="false">1</Node2></Root>';
 
     protected function setUp()
     {
@@ -168,6 +166,21 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideVerificationData()
     {
+        $fullOptionalGroup = '<SecureVerificationData>'
+            . '<AuthenticationAvailable>Y</AuthenticationAvailable>'
+            . '<AuthenticationStatus>Y</AuthenticationStatus>'
+            . '<CavvUcaf>abcd1234</CavvUcaf>'
+            . '<TransactionId>transId</TransactionId>'
+            . '<ECI>ECI</ECI>'
+            . '<PayerAuthenticationResponse>some REALLY big string</PayerAuthenticationResponse>'
+            . '</SecureVerificationData>';
+        $sansEciNode = '<SecureVerificationData>'
+            . '<AuthenticationAvailable>Y</AuthenticationAvailable>'
+            . '<AuthenticationStatus>Y</AuthenticationStatus>'
+            . '<CavvUcaf>abcd1234</CavvUcaf>'
+            . '<TransactionId>transId</TransactionId>'
+            . '<PayerAuthenticationResponse>some REALLY big string</PayerAuthenticationResponse>'
+            . '</SecureVerificationData>';
         return [
             [
                 // all fields present
@@ -180,7 +193,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'payerAuthenticationResponse' => 'some REALLY big string'
                 ],
                 // full optional group returned
-                '<SecureVerificationData><AuthenticationAvailable>Y</AuthenticationAvailable><AuthenticationStatus>Y</AuthenticationStatus><CavvUcaf>abcd1234</CavvUcaf><TransactionId>transId</TransactionId><ECI>ECI</ECI><PayerAuthenticationResponse>some REALLY big string</PayerAuthenticationResponse></SecureVerificationData>'
+                $fullOptionalGroup
             ],
             [
                 // optional field missing - OK
@@ -192,10 +205,10 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'payerAuthenticationResponse' => 'some REALLY big string'
                 ],
                 // optional group w/o optional node
-                '<SecureVerificationData><AuthenticationAvailable>Y</AuthenticationAvailable><AuthenticationStatus>Y</AuthenticationStatus><CavvUcaf>abcd1234</CavvUcaf><TransactionId>transId</TransactionId><PayerAuthenticationResponse>some REALLY big string</PayerAuthenticationResponse></SecureVerificationData>'
+                $sansEciNode
             ],
             [
-                // required field mising -
+                // required field missing
                 [
                     'authenticationAvailable' => 'Y',
                     'authenticationStatus' => 'Y',
@@ -215,6 +228,34 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideShippingAddressData()
     {
+        $fullAddress = '<ShippingAddress>'
+            . '<Line1>Street 1</Line1>'
+            . '<Line2>Street 2</Line2>'
+            . '<Line3>Street 3</Line3>'
+            . '<Line4>Street 4</Line4>'
+            . '<City>King of Prussia</City>'
+            . '<MainDivision>PA</MainDivision>'
+            . '<CountryCode>US</CountryCode>'
+            . '<PostalCode>19406</PostalCode>'
+            . '</ShippingAddress>';
+        $sansMainDivision = '<ShippingAddress>'
+            . '<Line1>Street 1</Line1>'
+            . '<Line2>Street 2</Line2>'
+            . '<Line3>Street 3</Line3>'
+            . '<Line4>Street 4</Line4>'
+            . '<City>King of Prussia</City>'
+            . '<CountryCode>US</CountryCode>'
+            . '<PostalCode>19406</PostalCode>'
+            . '</ShippingAddress>';
+        $sansPostalCode = '<ShippingAddress>'
+            . '<Line1>Street 1</Line1>'
+            . '<Line2>Street 2</Line2>'
+            . '<Line3>Street 3</Line3>'
+            . '<Line4>Street 4</Line4>'
+            . '<City>King of Prussia</City>'
+            . '<MainDivision>PA</MainDivision>'
+            . '<CountryCode>US</CountryCode>'
+            . '</ShippingAddress>';
         return [
             [
                 // optional fields present
@@ -231,7 +272,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'shipToPostalCode' => '19406'
                 ],
                 // full section returned
-                '<ShippingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></ShippingAddress>'
+                $fullAddress
             ],
             [
                 // mainDivision missing
@@ -247,7 +288,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'shipToPostalCode' => '19406'
                 ],
                 // skip mainDivision node
-                '<ShippingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></ShippingAddress>'
+                $sansMainDivision
             ],
             [
                 // postalCode missing
@@ -263,7 +304,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'shipToCountryCode' => 'US',
                 ],
                 // skip postalCode node
-                '<ShippingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode></ShippingAddress>'
+                $sansPostalCode
             ]
         ];
     }
@@ -273,6 +314,34 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideBillingAddressData()
     {
+        $fullAddress = '<BillingAddress>'
+            . '<Line1>Street 1</Line1>'
+            . '<Line2>Street 2</Line2>'
+            . '<Line3>Street 3</Line3>'
+            . '<Line4>Street 4</Line4>'
+            . '<City>King of Prussia</City>'
+            . '<MainDivision>PA</MainDivision>'
+            . '<CountryCode>US</CountryCode>'
+            . '<PostalCode>19406</PostalCode>'
+            . '</BillingAddress>';
+        $sansMainDivision = '<BillingAddress>'
+            . '<Line1>Street 1</Line1>'
+            . '<Line2>Street 2</Line2>'
+            . '<Line3>Street 3</Line3>'
+            . '<Line4>Street 4</Line4>'
+            . '<City>King of Prussia</City>'
+            . '<CountryCode>US</CountryCode>'
+            . '<PostalCode>19406</PostalCode>'
+            . '</BillingAddress>';
+        $sansPostalCode = '<BillingAddress>'
+            . '<Line1>Street 1</Line1>'
+            . '<Line2>Street 2</Line2>'
+            . '<Line3>Street 3</Line3>'
+            . '<Line4>Street 4</Line4>'
+            . '<City>King of Prussia</City>'
+            . '<MainDivision>PA</MainDivision>'
+            . '<CountryCode>US</CountryCode>'
+            . '</BillingAddress>';
         return [
             [
                 // optional fields present
@@ -289,7 +358,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'billingPostalCode' => '19406'
                 ],
                 // full section returned
-                '<BillingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></BillingAddress>'
+                $fullAddress
             ],
             [
                 // mainDivision missing
@@ -305,7 +374,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'billingPostalCode' => '19406'
                 ],
                 // skip mainDivision node
-                '<BillingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></BillingAddress>'
+                $sansMainDivision
             ],
             [
                 // postalCode missing
@@ -321,7 +390,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
                     'billingCountryCode' => 'US',
                 ],
                 // skip postalCode node
-                '<BillingAddress><Line1>Street 1</Line1><Line2>Street 2</Line2><Line3>Street 3</Line3><Line4>Street 4</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode></BillingAddress>'
+                $sansPostalCode
             ]
         ];
     }
@@ -332,10 +401,10 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideAddressLinesData()
     {
-        return array(
-            array('Ship to line', 'Billing line'),
-            array(null, null),
-        );
+        return [
+            ['Ship to line', 'Billing line'],
+            [null, null],
+        ];
     }
 
     public function provideCardSecurityCodes()
@@ -527,7 +596,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializeVerificationDataHandlesMissingData($properties, $expected)
     {
-        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);// $this->getMockRequestObject();
+        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $this->setRestrictedPropertyValues($request, $properties);
         $actual = $this->invokeRestrictedMethod($request, 'serializeSecureVerificationData');
         $this->assertSame($expected, $actual);
@@ -611,7 +680,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetCardSecurityCode($cvv, $isEncrypted, $expected)
     {
-        $payload = $this->buildPayload(array('setIsEncrypted' => $isEncrypted, 'setCardSecurityCode' => $cvv));
+        $payload = $this->buildPayload(['setIsEncrypted' => $isEncrypted, 'setCardSecurityCode' => $cvv]);
         $this->assertSame($expected, $payload->getCardSecurityCode());
     }
 }

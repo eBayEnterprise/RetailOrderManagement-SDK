@@ -39,9 +39,9 @@ abstract class AbstractConnectionConfig implements IConnectionConfig
     protected $connectionLoginMethod;
     /** @var string */
     protected $connectionLocale;
-    /** @var ing */
+    /** @var string */
     protected $connectionTimeout;
-    /** @var ing */
+    /** @var string */
     protected $connectionReadWriteTimeout;
     /**
      * @param string $connectionHostname

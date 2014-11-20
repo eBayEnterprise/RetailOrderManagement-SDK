@@ -26,13 +26,13 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
     use TPaymentContext;
-    /** @var string **/
+    /** @var string */
     protected $authorizationResponseCode;
-    /** @var string **/
+    /** @var string */
     protected $bankAuthorizationCode;
-    /** @var string **/
+    /** @var string */
     protected $cvv2ResponseCode;
-    /** @var string **/
+    /** @var string */
     protected $avsResponseCode;
     /** @var string */
     protected $phoneResponseCode;
@@ -40,9 +40,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected $nameResponseCode;
     /** @var string */
     protected $emailResponseCode;
-    /** @var float **/
+    /** @var float */
     protected $amountAuthorized;
-    /** @var string **/
+    /** @var string */
     protected $currencyCode;
     /** @var IValidatorIterator */
     protected $validators;
@@ -51,7 +51,8 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' => 'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
+        'cardNumber' =>
+            'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
         'authorizationResponseCode' => 'string(x:AuthorizationResponseCode)',
         'bankAuthorizationCode' => 'string(x:BankAuthorizationCode)',
         'cvv2ResponseCode' => 'string(x:CVV2ResponseCode)',
@@ -172,7 +173,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
 
     public function getIsAuthAcceptable()
     {
-        // If there is a response code accpetable by the OMS self::getResponseCode
+        // If there is a response code acceptable by the OMS self::getResponseCode
         // doesn't return null, then the reply is acceptable
         return !is_null($this->getResponseCode());
     }
@@ -255,7 +256,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {
@@ -284,8 +285,12 @@ class CreditCardAuthReply implements ICreditCardAuthReply
      */
     protected function serializeResponseCodes()
     {
+        $template = '<AuthorizationResponseCode>%s</AuthorizationResponseCode>'
+            . '<BankAuthorizationCode>%s</BankAuthorizationCode>'
+            . '<CVV2ResponseCode>%s</CVV2ResponseCode>'
+            . '<AVSResponseCode>%s</AVSResponseCode>';
         return sprintf(
-            '<AuthorizationResponseCode>%s</AuthorizationResponseCode><BankAuthorizationCode>%s</BankAuthorizationCode><CVV2ResponseCode>%s</CVV2ResponseCode><AVSResponseCode>%s</AVSResponseCode>',
+            $template,
             $this->getAuthorizationResponseCode(),
             $this->getBankAuthorizationCode(),
             $this->getCVV2ResponseCode(),
@@ -355,5 +360,26 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . self::XSD;
+    }
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    protected function cleanString($string, $maxLength)
+    {
+        $value = null;
+
+        if (is_string($string)) {
+            $trimmed = substr(trim($string), 0, $maxLength);
+            $value = empty($trimmed) ? null : $trimmed;
+        }
+
+        return $value;
     }
 }

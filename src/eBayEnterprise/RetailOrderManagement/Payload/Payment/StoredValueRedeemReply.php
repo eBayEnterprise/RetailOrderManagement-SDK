@@ -27,17 +27,17 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
 {
     use TPaymentContext;
 
-    /** @var string **/
+    /** @var string */
     protected $pin;
-    /** @var float **/
+    /** @var float */
     protected $amountRedeemed;
-    /** @var string **/
+    /** @var string */
     protected $amountRedeemedCurrencyCode;
-    /** @var float **/
+    /** @var float */
     protected $balanceAmount;
-    /** @var string **/
+    /** @var string */
     protected $balanceAmountCurrencyCode;
-    /** @var string **/
+    /** @var string */
     protected $responseCode;
     /** @var array response codes that are considered a success */
     protected $successResponseCodes = ['Success'];
@@ -384,7 +384,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {

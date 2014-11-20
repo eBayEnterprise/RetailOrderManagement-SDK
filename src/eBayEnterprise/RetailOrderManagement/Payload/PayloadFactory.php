@@ -63,6 +63,7 @@ class PayloadFactory implements IPayloadFactory
 
             $validatorIterator = new $validatorIteratorConfig($this->buildValidators($validatorsConfig));
             $schemaValidator = new $schemaValidatorConfig();
+            /** @var IPayloadMap $payloadMap */
             $payloadMap = new $payloadMapConfig($childPayloadsConfig);
             if ($cascadedPayloadMap) {
                 $payloadMap->merge($cascadedPayloadMap);

@@ -257,8 +257,12 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
      */
     protected function serializePaymentContext()
     {
+        $template = '<PaymentContext>'
+            . '<OrderId>%s</OrderId>'
+            . '<PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId>'
+            . '</PaymentContext>';
         return sprintf(
-            '<PaymentContext><OrderId>%s</OrderId><PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId></PaymentContext>',
+            $template,
             $this->getOrderId(),
             $this->getPanIsToken() ? 'true' : 'false',
             $this->getCardNumber()
@@ -289,7 +293,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {

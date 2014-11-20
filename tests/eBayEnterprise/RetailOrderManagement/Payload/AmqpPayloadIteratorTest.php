@@ -23,8 +23,11 @@ class AmqpPayloadIteratorTest extends \PHPUnit_Framework_TestCase
 
     /** @var \eBayEnterprise\RetailOrderManagement\Api\IAmqpApi */
     protected $api;
-    /** @var AmqpLazyIterator */
+    /** @var AmqpPayloadIterator */
     protected $iterator;
+    protected $payload;
+    /** @var IMessageFactory */
+    protected $messageFactory;
 
     public function setUp()
     {
@@ -77,7 +80,10 @@ class AmqpPayloadIteratorTest extends \PHPUnit_Framework_TestCase
         $this->api->expects($this->any())
             ->method('getNextMessage')
             // return a new message twice, then null
-            ->will($this->onConsecutiveCalls(new AMQPMessage($body, ['type' => 'Test']), new AMQPMessage($body, ['type' => 'Test'])));
+            ->will($this->onConsecutiveCalls(
+                new AMQPMessage($body, ['type' => 'Test']),
+                new AMQPMessage($body, ['type' => 'Test'])
+            ));
 
         $processed = 0;
         while ($this->iterator->valid()) {

@@ -28,11 +28,11 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     use TPaymentContext;
     /** @var string */
     protected $requestId;
-    /** @var string **/
+    /** @var string */
     protected $pin;
-    /** @var float **/
+    /** @var float */
     protected $amount;
-    /** @var string **/
+    /** @var string */
     protected $currencyCode;
     /** @var array */
     protected $extractionPaths = [
@@ -54,6 +54,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     protected $validators;
     /** @var ISchemaValidator */
     protected $schemaValidator;
+    protected $responseCode;
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
@@ -302,7 +303,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {

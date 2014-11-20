@@ -193,7 +193,8 @@ return call_user_func(function () {
         ],
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidRequest'] = [
-        'validators' => $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest']['validators'],
+        'validators' =>
+            $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest']['validators'],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
         'childPayloads' => [
