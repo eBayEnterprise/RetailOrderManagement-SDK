@@ -1,0 +1,72 @@
+#  Dockerized testing and analysis tools for developers
+# ======================================================
+#
+# 1. Make sure you have docker set up.
+# 2. Make sure you have fig installed.
+# 3. Run `fig run --rm setup` to create necessary directories. It's safe to rerun this.
+# 4. Run `fig run --rm "$test"`, where `$test` is the name of the test to run. For example, `fig run --rm phpunit`.
+# 5. For advanced options, you can still pass commandline flags to the containers, like `fig run --rm phpcpd --help`.
+#
+# Some commands produce output on standard output.
+# Other commands put files in the `build` directory.
+
+setup:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    command: mkdir -p build/doc build/pdepend build/phpmd build/phpunit
+document:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: phpdoc
+    command: -d src -t build/doc
+pdepend:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: pdepend
+    command: --jdepend-chart=build/pdepend-chart.svg
+             --overview-pyramid=build/pdepend-overview-pyramid.svg
+             src,tests
+phpcpd:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: phpcpd
+    command: --fuzzy --progress src tests
+phpcs:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: phpcs
+    command: -p --standard=PSR2 src tests
+phplint:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    command: sh -c 'find src tests \( -name "*.php" -o -name "*.phtml" \) -print0 |
+                    xargs -0 -n1 -P6 -- php -l > /dev/null && echo "no errors"'
+phploc:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: phploc
+    command: --count-tests --progress src tests
+phpmd:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: phpmd
+    command: src,tests text phpmd.xml
+phpunit:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: phpunit
+xmllint:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    command: sh -c 'find src tests \( -name "*.xml" -o -name "*.xsd" -o -name "*.xsl" \) -print0 |
+                    xargs -0 -n1 -P6 -- xmllint --noout'

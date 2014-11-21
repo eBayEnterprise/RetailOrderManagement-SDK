@@ -22,7 +22,8 @@
     stopOnSkipped="false"
     strict="true"
     verbose="true"
-    timeoutForSmallTests="1">
+    timeoutForSmallTests="1"
+    bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="eBay Enterprise Retail Order Management SDK">
             <directory>tests</directory>
