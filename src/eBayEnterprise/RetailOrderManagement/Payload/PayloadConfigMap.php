@@ -509,5 +509,19 @@ return call_user_func(function () {
             'types' => []
         ]
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderRejected'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getCustomerOrderId', 'getStoreId', 'getOrderCreateTimestamp'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [],
+        ],
+    ];
     return $map;
 });

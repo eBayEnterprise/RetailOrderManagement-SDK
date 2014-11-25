@@ -20,5 +20,6 @@
 return call_user_func(function () {
     $map = [];
     $map['Test'] = '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TestMessage';
+    $map['OrderRejected'] = '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderRejected';
     return $map;
 });
