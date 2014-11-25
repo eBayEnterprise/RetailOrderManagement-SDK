@@ -15,6 +15,12 @@ setup:
     volumes:
         - .:/srv/magento
     command: mkdir -p build/doc build/pdepend build/phpmd build/phpunit
+composer:
+    image: kojiromike/magento_tools
+    volumes:
+        - .:/srv/magento
+    entrypoint: composer
+    command: list
 document:
     image: kojiromike/magento_tools
     volumes:
