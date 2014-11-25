@@ -75,7 +75,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
             'setBillingFirstName' => 'First',
             'setBillingLastName' => 'Last',
             'setBillingPhone' => '123-456-7890',
-            'setBillingLines' => 'Street 1\nStreet 2\nStreet 3\nStreet 4',
+            "setBillingLines" => "Street 1\nStreet 2\nStreet 3\nStreet 4",
             'setBillingCity' => 'King of Prussia',
             'setBillingMainDivision' => 'PA',
             'setBillingCountryCode' => 'US',
@@ -83,7 +83,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
             'setShipToFirstName' => 'First',
             'setShipToLastName' => 'Last',
             'setShipToPhone' => '123-456-7890',
-            'setShipToLines' => 'Street 1\nStreet 2\nStreet 3\nStreet 4',
+            "setShipToLines" => "Street 1\nStreet 2\nStreet 3\nStreet 4",
             'setShipToCity' => 'King of Prussia',
             'setShipToMainDivision' => 'PA',
             'setShipToCountryCode' => 'US',
@@ -147,11 +147,11 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [  // good data
-                'Street 1\nStreet 2\n Street 3\nStreet 4',
+                "Street 1\nStreet 2\n Street 3\nStreet 4",
                 ['Street 1', 'Street 2', 'Street 3', 'Street 4']
             ],
             [  // extra lines
-                'Street 1\nStreet 2\n Street 3\nStreet 4\nStreet 5',
+                "Street 1\nStreet 2\n Street 3\nStreet 4\nStreet 5",
                 ['Street 1', 'Street 2', 'Street 3', 'Street 4 Street 5']
             ],
             [ // not a string

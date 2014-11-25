@@ -135,7 +135,7 @@ class HttpApi implements IBidirectionalApi
         try {
             if ($this->sendRequest() === false) {
                 $message = sprintf(
-                    'HTTP result %s for %s to %s.\n%s',
+                    "HTTP result %s for %s to %s.\n%s",
                     $this->lastRequestsResponse->status_code,
                     $this->config->getHttpMethod(),
                     $this->lastRequestsResponse->url,

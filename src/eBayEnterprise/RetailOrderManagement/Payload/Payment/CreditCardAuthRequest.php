@@ -332,7 +332,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getBillingLines()
     {
-        return is_array($this->billingLines) ? implode('\n', $this->billingLines) : null;
+        return is_array($this->billingLines) ? implode("\n", $this->billingLines) : null;
     }
 
     public function setBillingLines($lines)
@@ -448,7 +448,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
     public function getShipToLines()
     {
-        return is_array($this->shipToLines) ? implode('\n', $this->shipToLines) : null;
+        return is_array($this->shipToLines) ? implode("\n", $this->shipToLines) : null;
     }
 
     public function setShipToLines($lines)
@@ -850,7 +850,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
         if (is_string($lines)) {
             $trimmed = trim($lines);
-            $addressLines = explode('\n', $trimmed);
+            $addressLines = explode("\n", $trimmed);
 
             $newLines = [];
             foreach ($addressLines as $line) {
