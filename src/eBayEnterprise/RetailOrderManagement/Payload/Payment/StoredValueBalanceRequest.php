@@ -132,28 +132,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     }
 
     /**
-     * Return the string form of the payload data for transmission.
-     * Validation is implied.
-     *
-     * @throws Exception\InvalidPayload
-     * @return string
-     */
-    public function serialize()
-    {
-        // validate the payload data
-        $this->validate();
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            static::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeContents()
-        );
-        $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
-        $this->schemaValidate($canonicalXml);
-        return $canonicalXml;
-    }
-
-    /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.
      * @return string

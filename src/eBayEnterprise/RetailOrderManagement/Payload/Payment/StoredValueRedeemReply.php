@@ -234,28 +234,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     }
 
     /**
-     * Return the string form of the payload data for transmission.
-     * Validation is implied.
-     *
-     * @throws Exception\InvalidPayload
-     * @return string
-     */
-    public function serialize()
-    {
-        // validate the payload data
-        $this->validate();
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeContents()
-        );
-        $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
-        $this->schemaValidate($canonicalXml);
-        return $canonicalXml;
-    }
-
-    /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
      *

@@ -146,26 +146,16 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     }
 
     /**
-     * Return the string form of the payload data for transmission.
-     * Validation is implied.
+     * Name, value pairs of root attributes
      *
-     * @throws Exception\InvalidPayload
-     * @return string
+     * @return array
      */
-    public function serialize()
+    protected function getRootAttributes()
     {
-        // validate the payload data
-        $this->validate();
-        $xmlString = sprintf(
-            '<%s xmlns="%s" requestId="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->getRequestId(),
-            $this->serializeContents()
-        );
-        $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
-        $this->schemaValidate($canonicalXml);
-        return $canonicalXml;
+        return [
+            'xmlns' => $this->getXmlNamespace(),
+            'requestId' => $this->getRequestId(),
+        ];
     }
 
     /**

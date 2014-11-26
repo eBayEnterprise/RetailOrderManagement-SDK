@@ -894,31 +894,16 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     }
 
     /**
-     * Serialize the payload into XML
+     * Name, value pairs of root attributes
      *
-     * @throws Exception\InvalidPayload
-     * @return string
+     * @return array
      */
-    public function serialize()
+    protected function getRootAttributes()
     {
-        // make sure this payload is valid first
-        $this->validate();
-
-        $xmlString = sprintf(
-            '<%s xmlns="%s" requestId="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->getRequestId(),
-            $this->serializeContents()
-        );
-
-        // validate the xML we just created
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        $xml = $doc->C14N();
-
-        $this->schemaValidate($xml);
-        return $xml;
+        return [
+            'xmlns' => $this->getXmlNamespace(),
+            'requestId' => $this->getRequestId(),
+        ];
     }
 
     /**
