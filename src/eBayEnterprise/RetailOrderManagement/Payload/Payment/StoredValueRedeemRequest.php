@@ -260,17 +260,9 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     }
 
     /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
+     * Return the schema file path.
+     * @return string
      */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
-    }
-
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . static::XSD;

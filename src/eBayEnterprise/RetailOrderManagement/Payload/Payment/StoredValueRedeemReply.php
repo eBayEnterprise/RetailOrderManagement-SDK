@@ -338,18 +338,11 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     {
         return in_array($this->getResponseCode(), $this->successResponseCodes, true);
     }
-    /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
-    }
 
+    /**
+     * Return the schema file path.
+     * @return string
+     */
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . static::XSD;

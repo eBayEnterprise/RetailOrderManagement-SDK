@@ -219,18 +219,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     }
 
     /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
-    }
-
-    /**
      * Trim any white space and return the resulting string truncating to $maxLength.
      *
      * Return null if the result is an empty string or not a string

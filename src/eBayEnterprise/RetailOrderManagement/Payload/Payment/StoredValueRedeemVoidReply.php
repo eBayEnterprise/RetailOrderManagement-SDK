@@ -155,17 +155,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     {
         return __DIR__ . '/schema/' . static::XSD;
     }
-    /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
-    }
+
     /**
      * Trim any white space and return the resulting string truncating to $maxLength.
      *

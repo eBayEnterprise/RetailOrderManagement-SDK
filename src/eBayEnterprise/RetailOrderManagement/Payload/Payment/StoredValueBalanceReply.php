@@ -138,18 +138,6 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     }
 
     /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
-    }
-
-    /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.
      * @return string
