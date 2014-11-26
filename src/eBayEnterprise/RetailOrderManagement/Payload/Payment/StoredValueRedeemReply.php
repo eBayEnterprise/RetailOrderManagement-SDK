@@ -52,7 +52,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
         'balanceAmountCurrencyCode' => 'string(x:BalanceAmount/@currencyCode)',
     ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = [
+    protected $booleanExtractionPaths = [
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
     ];
     protected $optionalExtractionPaths = [];
@@ -304,7 +304,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
             }
         }
         // boolean values have to be handled specially
-        foreach ($this->booleanXPaths as $property => $path) {
+        foreach ($this->booleanExtractionPaths as $property => $path) {
             $value = $xpath->evaluate($path);
             $this->$property = $this->booleanFromString($value);
         }

@@ -88,7 +88,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var array */
-    protected $requiredNodesMap = [
+    protected $extractionPaths = [
         'requestId' => 'string(@requestId)',
         'orderId' => 'string(x:PaymentContext/x:OrderId)',
         'cardNumber' =>
@@ -124,7 +124,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         ]
     ];
     /** @var array */
-    protected $optionalNodesMap = [
+    protected $optionalExtractionPaths = [
         'billingMainDivision' => 'x:BillingAddress/x:MainDivision',
         'billingPostalCode' => 'x:BillingAddress/x:PostalCode',
         'shipToMainDivision' => 'x:ShippingAddress/x:MainDivision',
@@ -137,7 +137,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         'eci' => 'x:SecureVerificationData/x:ECI',
     ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = [
+    protected $booleanExtractionPaths = [
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
         'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
     ];
@@ -966,11 +966,11 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $domXPath = new \DOMXPath($dom);
         $domXPath->registerNamespace('x', self::XML_NS);
 
-        foreach ($this->requiredNodesMap as $property => $xPath) {
+        foreach ($this->extractionPaths as $property => $xPath) {
             $this->$property = $domXPath->evaluate($xPath);
         }
 
-        foreach ($this->optionalNodesMap as $property => $xPath) {
+        foreach ($this->optionalExtractionPaths as $property => $xPath) {
             $node = $domXPath->query($xPath)->item(0);
             if ($node) {
                 $this->$property = $node->nodeValue;
@@ -979,7 +979,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
         // address lines and boolean values have to be handled specially
         $this->addressLinesFromXPath($domXPath);
-        foreach ($this->booleanXPaths as $property => $xPath) {
+        foreach ($this->booleanExtractionPaths as $property => $xPath) {
             $value = $domXPath->evaluate($xPath);
             $this->$property = $this->booleanFromString($value);
         }

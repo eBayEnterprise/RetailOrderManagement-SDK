@@ -48,7 +48,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
         'pin' => 'x:Pin',
     ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = [
+    protected $booleanExtractionPaths = [
         'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
     ];
     /**
@@ -215,7 +215,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
             }
         }
         // boolean values have to be handled specially
-        foreach ($this->booleanXPaths as $property => $path) {
+        foreach ($this->booleanExtractionPaths as $property => $path) {
             $value = $xpath->evaluate($path);
             $this->$property = $this->booleanFromString($value);
         }

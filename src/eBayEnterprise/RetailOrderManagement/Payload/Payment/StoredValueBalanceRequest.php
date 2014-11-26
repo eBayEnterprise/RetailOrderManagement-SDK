@@ -57,7 +57,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         'pin' => 'x:Pin',
     ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = [
+    protected $booleanExtractionPaths = [
         'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
     ];
     /**
@@ -200,7 +200,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
             }
         }
         // boolean values have to be handled specially
-        foreach ($this->booleanXPaths as $property => $path) {
+        foreach ($this->booleanExtractionPaths as $property => $path) {
             $value = $xpath->evaluate($path);
             $this->$property = $this->booleanFromString($value);
         }

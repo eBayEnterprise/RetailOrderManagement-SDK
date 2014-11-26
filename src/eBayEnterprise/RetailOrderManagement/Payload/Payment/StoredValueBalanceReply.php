@@ -46,7 +46,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         'responseCode' => 'string(x:ResponseCode)',
     ];
     /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanXPaths = [
+    protected $booleanExtractionPaths = [
         'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
     ];
 
@@ -126,7 +126,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
             $this->$property = $xpath->evaluate($path);
         }
         // boolean values have to be handled specially
-        foreach ($this->booleanXPaths as $property => $path) {
+        foreach ($this->booleanExtractionPaths as $property => $path) {
             $value = $xpath->evaluate($path);
             $this->$property = $this->booleanFromString($value);
         }
