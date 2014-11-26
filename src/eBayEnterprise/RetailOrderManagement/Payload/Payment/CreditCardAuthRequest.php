@@ -893,15 +893,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
     }
 
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-
-        return $this;
-    }
-
     /**
      * Serialize the payload into XML
      *

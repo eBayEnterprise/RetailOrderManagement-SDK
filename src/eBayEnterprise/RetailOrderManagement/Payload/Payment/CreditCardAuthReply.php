@@ -198,14 +198,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return $canonicalXml;
     }
 
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
-    }
-
     /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.

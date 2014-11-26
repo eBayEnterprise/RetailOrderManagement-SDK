@@ -112,14 +112,6 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         return $canonicalXml;
     }
 
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
-    }
-
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . static::XSD;

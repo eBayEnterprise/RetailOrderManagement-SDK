@@ -146,22 +146,6 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     }
 
     /**
-     * Validate that the payload meets the requirements
-     * for transmission. This can be over and above what
-     * is required for serialization.
-     *
-     * @throws Exception\InvalidPayload
-     * @return self
-     */
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
-    }
-
-    /**
      * Return the string form of the payload data for transmission.
      * Validation is implied.
      *
