@@ -27,7 +27,6 @@ interface ICreditCardAuth extends IPayload, IPaymentContext
 {
     // XML related values - document root node, XMLNS and name of the xsd schema file
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const PAYLOAD_SCHEMA = 'Payment-Service-CreditCardAuth-1.0.xsd';
     const ENCRYPTED_CVV_NODE = 'EncryptedCardSecurityCode';
     const RAW_CVV_NODE = 'CardSecurityCode';
     const XSD = 'Payment-Service-CreditCardAuth-1.0.xsd';

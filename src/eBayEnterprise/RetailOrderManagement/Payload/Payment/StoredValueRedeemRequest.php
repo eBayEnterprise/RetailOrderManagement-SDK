@@ -314,7 +314,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
 
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::PAYLOAD_SCHEMA;
+        return __DIR__ . '/schema/' . static::XSD;
     }
     /**
      * Validate the serialized data via the schema validator.

@@ -275,7 +275,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
      */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return __DIR__ . '/schema/' . static::XSD;
     }
 
     /**

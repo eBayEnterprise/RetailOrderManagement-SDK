@@ -146,7 +146,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
 
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::PAYLOAD_SCHEMA;
+        return __DIR__ . '/schema/' . static::XSD;
     }
 
     /**
