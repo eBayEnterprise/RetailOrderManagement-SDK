@@ -62,7 +62,7 @@ trait TPayload
         // boolean values have to be handled specially
         foreach ($this->booleanExtractionPaths as $property => $path) {
             $value = $xpath->evaluate($path);
-            $this->$property = $this->booleanFromString($value);
+            $this->$property = $this->convertStringToBoolean($value);
         }
 
         // payload is only valid if the unserialized data is also valid
@@ -126,7 +126,7 @@ trait TPayload
      * @param $string
      * @return bool|null
      */
-    protected function booleanFromString($string)
+    protected function convertStringToBoolean($string)
     {
         if (!is_string($string)) {
             return null;

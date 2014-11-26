@@ -321,7 +321,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     public function testBooleanFromString($value, $expected)
     {
         $payload = new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
-        $actual = $this->invokeRestrictedMethod($payload, 'booleanFromString', [$value]);
+        $actual = $this->invokeRestrictedMethod($payload, 'convertStringToBoolean', [$value]);
         $this->assertEquals($expected, $actual);
     }
 

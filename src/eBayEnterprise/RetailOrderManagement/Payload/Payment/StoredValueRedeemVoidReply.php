@@ -165,21 +165,6 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
 
         return $value;
     }
-    /**
-     * Convert "true", "false", "1" or "0" to boolean
-     * Everything else returns null
-     *
-     * @param $string
-     * @return bool|null
-     */
-    protected function booleanFromString($string)
-    {
-        if (!is_string($string)) {
-            return null;
-        }
-        $string = strtolower($string);
-        return (($string === 'true') || ($string === '1'));
-    }
 
     /**
      * Return the name of the xml root node.
