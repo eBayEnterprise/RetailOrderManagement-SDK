@@ -805,27 +805,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     }
 
     /**
-     * Trim any white space and return the resulting string truncating to $maxLength.
-     *
-     * Return null if the result is an empty string or not a string
-     *
-     * @param string $string
-     * @param int $maxLength
-     * @return string or null
-     */
-    protected function cleanString($string, $maxLength)
-    {
-        $value = null;
-
-        if (is_string($string)) {
-            $trimmed = substr(trim($string), 0, $maxLength);
-            $value = empty($trimmed) ? null : $trimmed;
-        }
-
-        return $value;
-    }
-
-    /**
      * Make sure we have max 4 address lines of 70 chars max
      *
      * If there are more than 4 lines concatenate all extra lines with the 4th line.

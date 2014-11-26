@@ -61,27 +61,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
         $this->schemaValidator = $schemaValidator;
     }
 
-    /**
-     * Trim any white space and return the resulting string truncating to $maxLength.
-     *
-     * Return null if the result is an empty string or not a string
-     *
-     * @param string $string
-     * @param int $maxLength
-     * @return string or null
-     */
-    protected function cleanString($string, $maxLength)
-    {
-        $value = null;
-
-        if (is_string($string)) {
-            $trimmed = substr(trim($string), 0, $maxLength);
-            $value = empty($trimmed) ? null : $trimmed;
-        }
-
-        return $value;
-    }
-
     public function getPin()
     {
         return $this->pin;
