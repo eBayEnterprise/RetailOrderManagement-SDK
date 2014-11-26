@@ -83,6 +83,7 @@ trait TPayload
 
     /**
      * Return the schema file path.
+     *
      * @return string
      */
     abstract protected function getSchemaFile();

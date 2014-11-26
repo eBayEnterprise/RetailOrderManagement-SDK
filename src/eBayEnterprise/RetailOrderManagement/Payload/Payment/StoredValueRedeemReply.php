@@ -354,16 +354,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     {
         return __DIR__ . '/schema/' . static::XSD;
     }
-    /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
-     */
-    protected function schemaValidate($serializedData)
-    {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
-        return $this;
-    }
 
     /**
      * Load the payload XML into a DOMDocument

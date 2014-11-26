@@ -145,16 +145,12 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
         $d->loadXML($xmlString);
         return $d;
     }
+
     /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
+     * Return the schema file path.
+     *
+     * @return string
      */
-    protected function schemaValidate($serializedData)
-    {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
-        return $this;
-    }
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . static::XSD;

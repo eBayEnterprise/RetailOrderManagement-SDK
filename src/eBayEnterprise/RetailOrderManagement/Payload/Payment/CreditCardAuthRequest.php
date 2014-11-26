@@ -984,16 +984,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
 
         return $this;
     }
-    /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
-     */
-    protected function schemaValidate($serializedData)
-    {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
-        return $this;
-    }
 
     /**
      * Return the schema file path.

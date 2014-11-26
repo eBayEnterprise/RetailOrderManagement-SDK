@@ -292,17 +292,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     }
 
     /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
-     */
-    protected function schemaValidate($serializedData)
-    {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
-        return $this;
-    }
-
-    /**
      * Convert "true", "false", "1" or "0" to boolean
      * Everything else returns null
      *

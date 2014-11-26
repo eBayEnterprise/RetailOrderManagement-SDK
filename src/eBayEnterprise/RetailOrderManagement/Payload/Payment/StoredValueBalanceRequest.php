@@ -231,17 +231,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     }
 
     /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
-     */
-    protected function schemaValidate($serializedData)
-    {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
-        return $this;
-    }
-
-    /**
      * Trim any white space and return the resulting string truncating to $maxLength.
      *
      * Return null if the result is an empty string or not a string
