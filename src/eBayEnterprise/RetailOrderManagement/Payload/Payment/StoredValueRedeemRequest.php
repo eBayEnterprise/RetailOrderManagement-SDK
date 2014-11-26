@@ -234,42 +234,6 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     }
 
     /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws Exception\InvalidPayload
-     * @param string
-     * @return self
-     */
-    public function deserialize($serializedPayload)
-    {
-        // make sure we received a valid serialization of the payload.
-        $this->schemaValidate($serializedPayload);
-
-        $xpath = $this->getPayloadAsXPath($serializedPayload);
-        foreach ($this->extractionPaths as $property => $path) {
-            $this->$property = $xpath->evaluate($path);
-        }
-        // When optional nodes are not included in the serialized data,
-        // they should not be set in the payload. Fortunately, these
-        // are all string values so no additional type conversion is necessary.
-        foreach ($this->optionalExtractionPaths as $property => $path) {
-            $foundNode = $xpath->query($path)->item(0);
-            if ($foundNode) {
-                $this->$property = $foundNode->nodeValue;
-            }
-        }
-        // boolean values have to be handled specially
-        foreach ($this->booleanExtractionPaths as $property => $path) {
-            $value = $xpath->evaluate($path);
-            $this->$property = $this->booleanFromString($value);
-        }
-
-        // payload is only valid of the unserialized data is also valid
-        $this->validate();
-        return $this;
-    }
-
-    /**
      * Convert "true", "false", "1" or "0" to boolean
      * Everything else returns null
      *

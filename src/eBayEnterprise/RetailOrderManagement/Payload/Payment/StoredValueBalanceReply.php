@@ -112,26 +112,6 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         return $canonicalXml;
     }
 
-    public function deserialize($serializedPayload)
-    {
-        // make sure we received a valid serialization of the payload.
-        $this->schemaValidate($serializedPayload);
-
-        $xpath = $this->getPayloadAsXPath($serializedPayload);
-        foreach ($this->extractionPaths as $property => $path) {
-            $this->$property = $xpath->evaluate($path);
-        }
-        // boolean values have to be handled specially
-        foreach ($this->booleanExtractionPaths as $property => $path) {
-            $value = $xpath->evaluate($path);
-            $this->$property = $this->booleanFromString($value);
-        }
-
-        // payload is only valid of the unserialized data is also valid
-        $this->validate();
-        return $this;
-    }
-
     public function validate()
     {
         foreach ($this->validators as $validator) {
