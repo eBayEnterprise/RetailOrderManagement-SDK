@@ -18,10 +18,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
-    use TPaymentContext;
+    use TPayload, TPaymentContext;
 
     /** @var string */
     protected $requestId;
@@ -83,67 +84,61 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $eci;
     /** @var string */
     protected $payerAuthenticationResponse;
-    /** @var IValidatorIterator */
-    protected $validators;
-    /** @var ISchemaValidator */
-    protected $schemaValidator;
-    /** @var array */
-    protected $extractionPaths = [
-        'requestId' => 'string(@requestId)',
-        'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' =>
-            'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
-        'expirationDate' => 'string(x:ExpirationDate)',
-        'cardSecurityCode' => 'string(x:CardSecurityCode|x:EncryptedCardSecurityCode)',
-        'amount' => 'number(x:Amount)',
-        'currencyCode' => 'string(x:Amount/@currencyCode)',
-        'billingFirstName' => 'string(x:BillingFirstName)',
-        'billingLastName' => 'string(x:BillingLastName)',
-        'billingPhone' => 'string(x:BillingPhoneNo)',
-        'billingCity' => 'string(x:BillingAddress/x:City)',
-        'billingCountryCode' => 'string(x:BillingAddress/x:CountryCode)',
-        'customerEmail' => 'string(x:CustomerEmail)',
-        'customerIpAddress' => 'string(x:CustomerIPAddress)',
-        'shipToFirstName' => 'string(x:ShipToFirstName)',
-        'shipToLastName' => 'string(x:ShipToLastName)',
-        'shipToPhone' => 'string(x:ShipToPhoneNo)',
-        'shipToCity' => 'string(x:ShippingAddress/x:City)',
-        'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
-        'isRequestToCorrectCVVOrAVSError' => 'boolean(x:isRequestToCorrectCVVOrAVSError)',
-        'isEncrypted' => 'boolean(x:PaymentContext/x:EncryptedPaymentAccountUniqueId)',
-    ];
-    /** @var array */
-    protected $addressLinesMap = [
-        [
-            'property' => 'billingLines',
-            'xPath' => "x:BillingAddress/*[starts-with(name(), 'Line')]"
-        ],
-        [
-            'property' => 'shipToLines',
-            'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]"
-        ]
-    ];
-    /** @var array */
-    protected $optionalExtractionPaths = [
-        'billingMainDivision' => 'x:BillingAddress/x:MainDivision',
-        'billingPostalCode' => 'x:BillingAddress/x:PostalCode',
-        'shipToMainDivision' => 'x:ShippingAddress/x:MainDivision',
-        'shipToPostalCode' => 'x:ShippingAddress/x:PostalCode',
-        'authenticationAvailable' => 'x:SecureVerificationData/x:AuthenticationAvailable',
-        'authenticationStatus' => 'x:SecureVerificationData/x:AuthenticationStatus',
-        'cavvUcaf' => 'x:SecureVerificationData/x:CavvUcaf',
-        'transactionId' => 'x:SecureVerificationData/x:TransactionId',
-        'payerAuthenticationResponse' => 'x:SecureVerificationData/x:PayerAuthenticationResponse',
-        'eci' => 'x:SecureVerificationData/x:ECI',
-    ];
-    /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanExtractionPaths = [
-        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
-        'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
-    ];
+    /** @var array[] */
+    protected $addressLinesMap;
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'requestId' => 'string(@requestId)',
+            'orderId' => 'string(x:PaymentContext/x:OrderId)',
+            'cardNumber' =>
+                'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
+            'expirationDate' => 'string(x:ExpirationDate)',
+            'cardSecurityCode' => 'string(x:CardSecurityCode|x:EncryptedCardSecurityCode)',
+            'amount' => 'number(x:Amount)',
+            'currencyCode' => 'string(x:Amount/@currencyCode)',
+            'billingFirstName' => 'string(x:BillingFirstName)',
+            'billingLastName' => 'string(x:BillingLastName)',
+            'billingPhone' => 'string(x:BillingPhoneNo)',
+            'billingCity' => 'string(x:BillingAddress/x:City)',
+            'billingCountryCode' => 'string(x:BillingAddress/x:CountryCode)',
+            'customerEmail' => 'string(x:CustomerEmail)',
+            'customerIpAddress' => 'string(x:CustomerIPAddress)',
+            'shipToFirstName' => 'string(x:ShipToFirstName)',
+            'shipToLastName' => 'string(x:ShipToLastName)',
+            'shipToPhone' => 'string(x:ShipToPhoneNo)',
+            'shipToCity' => 'string(x:ShippingAddress/x:City)',
+            'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
+            'isRequestToCorrectCVVOrAVSError' => 'boolean(x:isRequestToCorrectCVVOrAVSError)',
+            'isEncrypted' => 'boolean(x:PaymentContext/x:EncryptedPaymentAccountUniqueId)',
+        ];
+        $this->addressLinesMap = [
+            [
+                'property' => 'billingLines',
+                'xPath' => "x:BillingAddress/*[starts-with(name(), 'Line')]"
+            ],
+            [
+                'property' => 'shipToLines',
+                'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]"
+            ]
+        ];
+        $this->optionalExtractionPaths = [
+            'billingMainDivision' => 'x:BillingAddress/x:MainDivision',
+            'billingPostalCode' => 'x:BillingAddress/x:PostalCode',
+            'shipToMainDivision' => 'x:ShippingAddress/x:MainDivision',
+            'shipToPostalCode' => 'x:ShippingAddress/x:PostalCode',
+            'authenticationAvailable' => 'x:SecureVerificationData/x:AuthenticationAvailable',
+            'authenticationStatus' => 'x:SecureVerificationData/x:AuthenticationStatus',
+            'cavvUcaf' => 'x:SecureVerificationData/x:CavvUcaf',
+            'transactionId' => 'x:SecureVerificationData/x:TransactionId',
+            'payerAuthenticationResponse' => 'x:SecureVerificationData/x:PayerAuthenticationResponse',
+            'eci' => 'x:SecureVerificationData/x:ECI',
+        ];
+        $this->booleanExtractionPaths = [
+            'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
+            'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
@@ -1007,5 +1002,25 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . static::XSD;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

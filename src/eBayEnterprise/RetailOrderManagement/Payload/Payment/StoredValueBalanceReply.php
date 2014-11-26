@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 /**
  * Class StoredValueBalanceReply
@@ -25,33 +26,28 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueBalanceReply implements IStoredValueBalanceReply
 {
-    use TPaymentAccountUniqueId;
+    use TPayload, TPaymentAccountUniqueId;
     /** @var float */
     protected $balanceAmount;
     /** @var string */
     protected $currencyCode;
     /** @var string */
     protected $responseCode;
-    /** @var IValidatorIterator */
-    protected $validators;
-    /** @var ISchemaValidator */
-    protected $schemaValidator;
     /** @var array response codes that are considered a success */
     protected $successResponseCodes = ['Success'];
-    /** @var array XPath expressions to extract required data from the serialized payload (XML) */
-    protected $extractionPaths = [
-        'cardNumber' => 'string(x:EncryptedPaymentAccountUniqueId|x:PaymentAccountUniqueId)',
-        'balanceAmount' => 'number(x:BalanceAmount)',
-        'currencyCode' => 'string(x:BalanceAmount/@currencyCode)',
-        'responseCode' => 'string(x:ResponseCode)',
-    ];
-    /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanExtractionPaths = [
-        'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
-    ];
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'cardNumber' => 'string(x:EncryptedPaymentAccountUniqueId|x:PaymentAccountUniqueId)',
+            'balanceAmount' => 'number(x:BalanceAmount)',
+            'currencyCode' => 'string(x:BalanceAmount/@currencyCode)',
+            'responseCode' => 'string(x:ResponseCode)',
+        ];
+        /** @var array property/XPath pairs that take boolean values*/
+        $this->booleanExtractionPaths = [
+            'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
@@ -262,5 +258,25 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         }
 
         return $value;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

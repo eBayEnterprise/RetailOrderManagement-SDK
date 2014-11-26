@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 /**
  * Class StoredValueRedeemRequest
@@ -25,7 +26,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
  */
 class StoredValueRedeemRequest implements IStoredValueRedeemRequest
 {
-    use TPaymentContext;
+    use TPayload, TPaymentContext;
     /** @var string */
     protected $requestId;
     /** @var string */
@@ -34,30 +35,24 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     protected $amount;
     /** @var string */
     protected $currencyCode;
-    /** @var array */
-    protected $extractionPaths = [
-        'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
-        'amount' => 'number(x:Amount)',
-        'currencyCode' => 'string(x:Amount/@currencyCode)',
-        'requestId' => 'string(@requestId)',
-    ];
-    /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanExtractionPaths = [
-        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
-    ];
-    protected $optionalExtractionPaths = [
-        'pin' => 'x:Pin',
-    ];
-
-    /** @var IValidatorIterator */
-    protected $validators;
-    /** @var ISchemaValidator */
-    protected $schemaValidator;
     protected $responseCode;
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'orderId' => 'string(x:PaymentContext/x:OrderId)',
+            'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+            'amount' => 'number(x:Amount)',
+            'currencyCode' => 'string(x:Amount/@currencyCode)',
+            'requestId' => 'string(@requestId)',
+        ];
+        $this->booleanExtractionPaths = [
+            'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
+        ];
+        $this->optionalExtractionPaths = [
+            'pin' => 'x:Pin',
+        ];
+
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
@@ -355,5 +350,25 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     {
         $this->requestId = $this->cleanString($requestId, 40);
         return $this;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

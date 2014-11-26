@@ -18,10 +18,13 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use DateTime;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 use SimpleXMLElement;
 
 class TestMessage implements ITestMessage
 {
+    use TPayload;
+
     /** @var DateTime */
     protected $timestamp;
 
@@ -49,6 +52,16 @@ class TestMessage implements ITestMessage
             $validator->validate($this);
         }
         return $this;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return '';
     }
     public function serialize()
     {
@@ -87,5 +100,25 @@ class TestMessage implements ITestMessage
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . static::XSD;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

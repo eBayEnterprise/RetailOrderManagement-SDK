@@ -30,6 +30,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 /**
  * Class StoredValueBalanceRequest
@@ -37,35 +38,29 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class StoredValueBalanceRequest implements IStoredValueBalanceRequest
 {
-    use TPaymentAccountUniqueId;
+    use TPayload, TPaymentAccountUniqueId;
 
     /** @var string $requestId */
     protected $requestId;
     /** @var bool $panIsToken Indicates if the card number is the actual number, or a representation of the number. */
     protected $pin;
     protected $currencyCode;
-    /** @var IValidatorIterator */
-    protected $validators;
-    /** @var ISchemaValidator */
-    protected $schemaValidator;
-    /** @var array XPath expressions to extract required data from the serialized payload (XML) */
-    protected $extractionPaths = [
-        'cardNumber' => 'string(x:EncryptedPaymentAccountUniqueId|x:PaymentAccountUniqueId)',
-        'currencyCode' => 'string(x:CurrencyCode)',
-    ];
-    protected $optionalExtractionPaths = [
-        'pin' => 'x:Pin',
-    ];
-    /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanExtractionPaths = [
-        'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
-    ];
     /**
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator
      */
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'cardNumber' => 'string(x:EncryptedPaymentAccountUniqueId|x:PaymentAccountUniqueId)',
+            'currencyCode' => 'string(x:CurrencyCode)',
+        ];
+        $this->optionalExtractionPaths = [
+            'pin' => 'x:Pin',
+        ];
+        $this->booleanExtractionPaths = [
+            'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
@@ -317,5 +312,25 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

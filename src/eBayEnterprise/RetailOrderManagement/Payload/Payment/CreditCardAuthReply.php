@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 /**
  * Class CreditCardAuthReply
@@ -25,7 +26,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
  */
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
-    use TPaymentContext;
+    use TPayload, TPaymentContext;
     /** @var string */
     protected $authorizationResponseCode;
     /** @var string */
@@ -44,33 +45,6 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected $amountAuthorized;
     /** @var string */
     protected $currencyCode;
-    /** @var IValidatorIterator */
-    protected $validators;
-    /** @var ISchemaValidator */
-    protected $schemaValidator;
-    /** @var array XPath expressions to extract required data from the serialized payload (XML) */
-    protected $extractionPaths = [
-        'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' =>
-            'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
-        'authorizationResponseCode' => 'string(x:AuthorizationResponseCode)',
-        'bankAuthorizationCode' => 'string(x:BankAuthorizationCode)',
-        'cvv2ResponseCode' => 'string(x:CVV2ResponseCode)',
-        'avsResponseCode' => 'string(x:AVSResponseCode)',
-        'amountAuthorized' => 'number(x:AmountAuthorized)',
-        'currencyCode' => 'string(x:AmountAuthorized/@currencyCode)',
-        'isEncrypted' => 'boolean(x:PaymentContext/x:EncryptedPaymentAccountUniqueId)',
-    ];
-    /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanExtractionPaths = [
-        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
-    ];
-    /** @var array XPath expressions to match optional nodes in the serialized payload (XML) */
-    protected $optionalExtractionPaths = [
-        'phoneResponseCode' => 'x:PhoneResponseCode',
-        'nameResponseCode' => 'x:NameResponseCode',
-        'emailResponseCode' => 'x:EmailResponseCode',
-    ];
     /** @var array Mapping of reply authorization response code to OMS response code */
     protected $responseCodeMap = [
         self::AUTHORIZATION_APPROVED => self::APPROVED_RESPONSE_CODE,
@@ -84,6 +58,26 @@ class CreditCardAuthReply implements ICreditCardAuthReply
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'orderId' => 'string(x:PaymentContext/x:OrderId)',
+            'cardNumber' =>
+                'string(x:PaymentContext/x:EncryptedPaymentAccountUniqueId|x:PaymentContext/x:PaymentAccountUniqueId)',
+            'authorizationResponseCode' => 'string(x:AuthorizationResponseCode)',
+            'bankAuthorizationCode' => 'string(x:BankAuthorizationCode)',
+            'cvv2ResponseCode' => 'string(x:CVV2ResponseCode)',
+            'avsResponseCode' => 'string(x:AVSResponseCode)',
+            'amountAuthorized' => 'number(x:AmountAuthorized)',
+            'currencyCode' => 'string(x:AmountAuthorized/@currencyCode)',
+            'isEncrypted' => 'boolean(x:PaymentContext/x:EncryptedPaymentAccountUniqueId)',
+        ];
+        $this->booleanExtractionPaths = [
+            'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)'
+        ];
+        $this->optionalExtractionPaths = [
+            'phoneResponseCode' => 'x:PhoneResponseCode',
+            'nameResponseCode' => 'x:NameResponseCode',
+            'emailResponseCode' => 'x:EmailResponseCode',
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
@@ -381,5 +375,25 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         }
 
         return $value;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

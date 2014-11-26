@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 /**
  * Class StoredValueRedeemReply
@@ -25,7 +26,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
  */
 class StoredValueRedeemReply implements IStoredValueRedeemReply
 {
-    use TPaymentContext;
+    use TPayload, TPaymentContext;
 
     /** @var string */
     protected $pin;
@@ -41,29 +42,21 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     protected $responseCode;
     /** @var array response codes that are considered a success */
     protected $successResponseCodes = ['Success'];
-    /** @var array */
-    protected $extractionPaths = [
-        'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
-        'responseCode' => 'string(x:ResponseCode)',
-        'amountRedeemed' => 'number(x:AmountRedeemed)',
-        'amountRedeemedCurrencyCode' => 'string(x:AmountRedeemed/@currencyCode)',
-        'balanceAmount' => 'number(x:BalanceAmount)',
-        'balanceAmountCurrencyCode' => 'string(x:BalanceAmount/@currencyCode)',
-    ];
-    /** @var array property/XPath pairs that take boolean values*/
-    protected $booleanExtractionPaths = [
-        'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
-    ];
-    protected $optionalExtractionPaths = [];
-
-    /** @var IValidatorIterator */
-    protected $validators;
-    /** @var ISchemaValidator */
-    protected $schemaValidator;
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'orderId' => 'string(x:PaymentContext/x:OrderId)',
+            'cardNumber' => 'string(x:PaymentContext/x:PaymentAccountUniqueId)',
+            'responseCode' => 'string(x:ResponseCode)',
+            'amountRedeemed' => 'number(x:AmountRedeemed)',
+            'amountRedeemedCurrencyCode' => 'string(x:AmountRedeemed/@currencyCode)',
+            'balanceAmount' => 'number(x:BalanceAmount)',
+            'balanceAmountCurrencyCode' => 'string(x:BalanceAmount/@currencyCode)',
+        ];
+        $this->booleanExtractionPaths = [
+            'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
@@ -418,5 +411,25 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
         $d = new \DOMDocument();
         $d->loadXML($xmlString);
         return $d;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }
