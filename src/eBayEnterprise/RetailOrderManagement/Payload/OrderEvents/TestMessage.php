@@ -19,7 +19,6 @@ use DateTime;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
-use SimpleXMLElement;
 
 class TestMessage implements ITestMessage
 {
@@ -33,24 +32,20 @@ class TestMessage implements ITestMessage
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
+
     public function getEventType()
     {
         return self::ROOT_NODE;
     }
+
     public function getTimestamp()
     {
         return $this->timestamp;
     }
+
     public function setTimestamp(DateTime $timestamp)
     {
         $this->timestamp = $timestamp;
-        return $this;
-    }
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
         return $this;
     }
 
@@ -63,34 +58,45 @@ class TestMessage implements ITestMessage
     {
         return '';
     }
-    public function serialize()
-    {
-        $this->validate();
-        $xml = sprintf(
-            '<%s xmlns="%s" timestamp="%s"/>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->getTimestamp()->format('c')
-        );
-        $this->schemaValidate($xml);
-        return $xml;
-    }
-    public function deserialize($string)
-    {
-        $this->schemaValidate($string);
-        $ele = new SimpleXMLElement($string);
-        $this->setTimestamp(new DateTime($ele['timestamp']));
-        return $this;
-    }
+
     /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
+     * Name, value pairs of root attributes
+     *
+     * @return array
      */
-    protected function schemaValidate($serializedData)
+    protected function getRootAttributes()
     {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
-        return $this;
+        return [
+            'xmlns' => $this->getXmlNamespace(),
+            'timestamp' => $this->getFormattedTimestamp(),
+        ];
+    }
+
+    /**
+     * Format the timestamp the way the XSD wants it.
+     *
+     * @return string
+     */
+    protected function getFormattedTimestamp()
+    {
+        return $this->getTimestamp()->format('c');
+    }
+
+
+    /**
+     * Fill out this payload object with data from the supplied string.
+     *
+     * @throws Exception\InvalidPayload
+     * @param string $serializedPayload
+     * @return $this
+     */
+    public function deserialize($serializedPayload)
+    {
+        $this->schemaValidate($serializedPayload);
+        $ele = new \SimpleXMLElement($serializedPayload);
+        return $this
+            ->setTimestamp(new DateTime($ele['timestamp']))
+            ->validate();
     }
 
     /**
