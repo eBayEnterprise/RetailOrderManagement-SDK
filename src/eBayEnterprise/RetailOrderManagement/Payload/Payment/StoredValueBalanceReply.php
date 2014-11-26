@@ -126,18 +126,6 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     }
 
     /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
-     */
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
-
-    /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.
      * @return string

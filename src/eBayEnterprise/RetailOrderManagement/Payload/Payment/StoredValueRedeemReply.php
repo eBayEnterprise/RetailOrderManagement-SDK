@@ -349,18 +349,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     }
 
     /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
-     */
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
-
-    /**
      * Return the name of the xml root node.
      *
      * @return string

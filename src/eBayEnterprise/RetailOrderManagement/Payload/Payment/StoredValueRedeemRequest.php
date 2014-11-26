@@ -269,18 +269,6 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     }
 
     /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
-     */
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
-
-    /**
      * RequestId is used to globally identify a request message and is used
      * for duplicate request protection.
      *

@@ -207,18 +207,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     }
 
     /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
-     */
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
-
-    /**
      * Trim any white space and return the resulting string truncating to $maxLength.
      *
      * Return null if the result is an empty string or not a string

@@ -134,17 +134,6 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
             $this->getResponseCode()
         );
     }
-    /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
-     */
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
 
     /**
      * Return the schema file path.
