@@ -272,18 +272,19 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => array_merge(
-                    $shippingAddressParams,
-                    [
-                        'getReturnUrl',
-                        'getCancelUrl',
-                        'getLocaleCode',
-                        'getAmount',
-                        'getAddressOverride',
-                        'getCurrencyCode',
-                        'getLineItems',
-                    ]
-                )
+                'params' => [
+                    'getReturnUrl',
+                    'getCancelUrl',
+                    'getLocaleCode',
+                    'getAmount',
+                    'getAddressOverride',
+                    'getCurrencyCode',
+                    'getLineItems',
+                ]
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => $shippingAddressParams
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -337,9 +338,7 @@ return call_user_func(function () {
                         'getRequestId',
                         'getOrderId',
                         'getPayerId',
-                        'getAmount',
-                        'getPickUpStoreId',
-                        'getShipToName'
+                        'getAmount'
                     ]
                 )
             ]

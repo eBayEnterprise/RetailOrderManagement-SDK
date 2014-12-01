@@ -15,10 +15,6 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-/**
- * Interface IShippingAddress
- * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- */
 interface IShippingAddress
 {
     /**
