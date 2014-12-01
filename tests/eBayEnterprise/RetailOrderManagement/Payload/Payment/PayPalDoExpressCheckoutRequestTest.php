@@ -32,9 +32,10 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     {
         $this->stubPayloadMap = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
         $this->stubPayloadMap->expects($this->once())
-            ->method('getConcreteType')->will($this->returnValueMap([
-                [PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE, '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable']
-            ]));
+            ->method('getConcreteType')->will($this->returnValueMap([[
+                PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE,
+                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
+            ]]));
         $this->stubPayloadMap->expects($this->any())
             ->method('hasMappingForType')->will($this->returnValueMap([
                 [PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE, true]
@@ -79,7 +80,16 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
                     'shipToPostalCode' => '19406'
                 ],
                 // full section returned
-                '<ShippingAddress><Line1>Chester Cheetah</Line1><Line2></Line2><Line3>630 Allendale Rd</Line3><Line4>2nd FL</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></ShippingAddress>'
+                '<ShippingAddress>'
+                . '<Line1>Chester Cheetah</Line1>'
+                . '<Line2></Line2>'
+                . '<Line3>630 Allendale Rd</Line3>'
+                . '<Line4>2nd FL</Line4>'
+                . '<City>King of Prussia</City>'
+                . '<MainDivision>PA</MainDivision>'
+                . '<CountryCode>US</CountryCode>'
+                . '<PostalCode>19406</PostalCode>'
+                . '</ShippingAddress>'
             ]
         ];
     }
@@ -92,7 +102,11 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function buildPayload(array $properties)
     {
-        $payload = new PayPalDoExpressCheckoutRequest($this->validatorIterator, $this->schemaValidatorStub, $this->stubPayloadMap);
+        $payload = new PayPalDoExpressCheckoutRequest(
+            $this->validatorIterator,
+            $this->schemaValidatorStub,
+            $this->stubPayloadMap
+        );
         foreach ($properties as $property => $value) {
             $payload->$property($value);
         }

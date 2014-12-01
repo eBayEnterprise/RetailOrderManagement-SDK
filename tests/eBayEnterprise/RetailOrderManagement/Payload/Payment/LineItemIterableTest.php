@@ -168,9 +168,10 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->returnSelf());
         $expectedPayload = $this->buildPayload($payloadData);
+        /** @var Payload\Payment\LineItemIterable $payload */
         $payload = $this->getMockBuilder('\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable')
-            ->setConstructorArgs(array($this->validatorIterator, $this->stubSchemaValidator, $this->stubPayloadMap))
-            ->setMethods(array('getEmptyLineItem'))
+            ->setConstructorArgs([$this->validatorIterator, $this->stubSchemaValidator, $this->stubPayloadMap])
+            ->setMethods(['getEmptyLineItem'])
             ->getMock();
         $payload->expects($this->any())
             ->method('getEmptyLineItem')->will($this->returnValue($this->stubLineItem));
@@ -192,7 +193,9 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetEmptyLineItem()
     {
-        $payloadMap = new Payload\PayloadMap([LineItemIterable::LINE_ITEM_INTERFACE => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem']);
+        $payloadMap = new Payload\PayloadMap([
+            LineItemIterable::LINE_ITEM_INTERFACE => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem'
+        ]);
         $payload = new LineItemIterable($this->validatorIterator, $this->stubSchemaValidator, $payloadMap);
         $lineItem = $payload->getEmptyLineItem();
         $this->assertInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem', $lineItem);
@@ -237,7 +240,7 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
      * Get a new LineItemIterable payload. Each payload will contain a
      * ValidatorIterator (self::validatorIterator) containing a single mocked
      * validator (self::$stubValidator).
-     * @return StoredValueBalanceReply
+     * @return LineItemIterable
      */
     protected function createNewPayload()
     {
@@ -247,7 +250,7 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
     /**
      * Create a payload with the provided data.
      * @param  mixed[] $properties key/value pairs of property => value
-     * @return StoredValueRedeemVoidRequest
+     * @return LineItemIterable
      */
     protected function buildPayload($properties)
     {

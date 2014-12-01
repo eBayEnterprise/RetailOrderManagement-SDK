@@ -24,6 +24,10 @@ class PayPalAddressTest extends \PHPUnit_Framework_TestCase
 {
     /** @var  Payload\IValidator */
     protected $stubValidator;
+    /** @var Payload\ISchemaValidator */
+    protected $stubSchemaValidator;
+    /** @var Payload\ValidatorIterator */
+    protected $validatorIterator;
 
     public function setUp()
     {
@@ -125,7 +129,7 @@ class PayPalAddressTest extends \PHPUnit_Framework_TestCase
     public function testDeserializeWillPass(array $payloadData, $case)
     {
         $expectedPayload = $this->buildPayload($payloadData);
-        $payload = $this->buildPayload(array());
+        $payload = $this->buildPayload([]);
         $payload->deserialize($this->loadXmlTestString($case));
         $this->assertEquals($expectedPayload, $payload);
     }
@@ -171,7 +175,9 @@ class PayPalAddressTest extends \PHPUnit_Framework_TestCase
         $contents = file_get_contents(__DIR__ . '/Fixtures/PayPalAddressTest.xml');
         $caseStart = strpos($contents, "<!-- $case -->\n") + strlen("<!-- $case -->\n");
         $caseEnd = strpos($contents, "<!-- ", $caseStart + 1);
-        return ($caseEnd === false) ? substr($contents, $caseStart) : substr($contents, $caseStart, $caseEnd - $caseStart);
+        return ($caseEnd === false) ?
+            substr($contents, $caseStart) :
+            substr($contents, $caseStart, $caseEnd - $caseStart);
     }
     /**
      * Get a new PayPalAddress payload. Each payload will contain a

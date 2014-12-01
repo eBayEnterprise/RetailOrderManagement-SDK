@@ -192,7 +192,7 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->returnSelf());
         $expectedPayload = $this->buildPayload($payloadData);
-        $payload = $this->buildPayload(array());
+        $payload = $this->buildPayload([]);
 
         // inject the xml namespace into the string as the deserialize expects
         // the elements to be in a specific namespace.

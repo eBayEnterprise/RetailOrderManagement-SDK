@@ -17,6 +17,10 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 trait TPayPalValidators
 {
+    /** @var \eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator */
+    protected $validators;
+    /** @var \eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator */
+    protected $schemaValidator;
     /**
      * Run the validators
      * @return self
@@ -38,13 +42,10 @@ trait TPayPalValidators
         $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
         return $this;
     }
+
     /**
      * Return the schema file path.
      * @return string
      */
-    protected function getSchemaFile()
-    {
-        return __DIR__ . '/schema/' . self::XSD;
-    }
+    abstract protected function getSchemaFile();
 }
-

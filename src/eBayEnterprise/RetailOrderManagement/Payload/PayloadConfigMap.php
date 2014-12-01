@@ -270,7 +270,8 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem'
+                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem'
             ]
         ]
     ];
@@ -314,7 +315,8 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
+                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
             ]
         ]
     ];
@@ -339,7 +341,8 @@ return call_user_func(function () {
         'schemaValidator' => $xsdSchemaValidator,
         'childPayloads' => [
             'payloadMap' => $payloadMap,
-            'types' => ['\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalAddress']
+            'types' => ['\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalAddress']
         ]
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalGetExpressCheckoutRequest'] = [
@@ -383,7 +386,8 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
+                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
             ]
         ]
     ];

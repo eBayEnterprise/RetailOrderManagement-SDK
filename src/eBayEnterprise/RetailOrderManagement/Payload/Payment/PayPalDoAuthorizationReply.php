@@ -42,9 +42,9 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
         'reasonCode' => 'string(x:AuthorizationInfo/x:ReasonCode)',
     ];
 
-    /** @var IValidatorIterator */
+    /** @var Payload\IValidatorIterator */
     protected $validators;
-    /** @var ISchemaValidator */
+    /** @var Payload\ISchemaValidator */
     protected $schemaValidator;
 
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
@@ -83,7 +83,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
      * Return the string form of the payload data for transmission.
      * Validation is implied.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @return string
      */
     public function serialize()
@@ -96,12 +96,12 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
             self::ROOT_NODE,
             self::XML_NS,
             $this->serializeOrderId() .
-                "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
-                . "<AuthorizationInfo>"
-                . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
-                . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
-                . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
-                . "</AuthorizationInfo>"
+            "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
+            . "<AuthorizationInfo>"
+            . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
+            . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
+            . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
+            . "</AuthorizationInfo>"
         );
         // validate the xML we just created
         $doc = new \DOMDocument();
@@ -114,7 +114,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     /**
      * Fill out this payload object with data from the supplied string.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @param string $string
      * @return self
      */
@@ -190,5 +190,14 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     {
         $this->reasonCode = $code;
         return $this;
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
     }
 }

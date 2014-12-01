@@ -8,15 +8,15 @@
     <PayerName>
         <Honorific>Mr.</Honorific>
         <LastName>John</LastName>
-        <MiddleName></MiddleName>
+        <MiddleName/>
         <FirstName>Smith</FirstName>
     </PayerName>
     <PayerCountry>US</PayerCountry>
     <BillingAddress>
         <Line1>123 Main St</Line1>
-        <Line2></Line2>
-        <Line3></Line3>
-        <Line4></Line4>
+        <Line2/>
+        <Line3/>
+        <Line4/>
         <City>Anytown</City>
         <MainDivision>ST</MainDivision>
         <CountryCode>US</CountryCode>
@@ -26,9 +26,9 @@
     <PayerPhone>215-123-4567</PayerPhone>
     <ShippingAddress>
         <Line1>123 Main St</Line1>
-        <Line2></Line2>
-        <Line3></Line3>
-        <Line4></Line4>
+        <Line2/>
+        <Line3/>
+        <Line4/>
         <City>Anytown</City>
         <MainDivision>ST</MainDivision>
         <CountryCode>US</CountryCode>

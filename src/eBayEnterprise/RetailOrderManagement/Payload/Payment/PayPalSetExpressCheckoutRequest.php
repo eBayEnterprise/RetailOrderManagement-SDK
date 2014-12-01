@@ -32,17 +32,17 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
 
     const ITERABLE_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable';
 
-    /** @var string **/
+    /** @var string * */
     protected $returnUrl;
-    /** @var string **/
+    /** @var string * */
     protected $cancelUrl;
-    /** @var string **/
+    /** @var string * */
     protected $localeCode;
-    /** @var float **/
+    /** @var float * */
     protected $amount;
-    /** @var boolean **/
+    /** @var boolean * */
     protected $addressOverride;
-    /** @var string **/
+    /** @var string * */
     protected $lineItems;
 
     /** @var array */
@@ -66,7 +66,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
             'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]",
         ]
     ];
-    /** @var array property/XPath pairs that take boolean values*/
+    /** @var array property/XPath pairs that take boolean values */
     protected $booleanXPaths = [
         'addressOverride' => 'string(x:AddressOverride)',
     ];
@@ -76,8 +76,11 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     /** @var ISchemaValidator */
     protected $schemaValidator;
 
-    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator, IPayloadMap $payloadMap)
-    {
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap
+    ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
@@ -87,6 +90,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
             $payloadMap
         );
     }
+
     /**
      * URL to which the customer's browser is returned after choosing to pay with PayPal.
      * PayPal recommends that the value be the final review page on which the customer confirms the order and payment.
@@ -97,6 +101,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return $this->returnUrl;
     }
+
     /**
      * @param string
      * @return self
@@ -106,6 +111,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->returnUrl = $url;
         return $this;
     }
+
     /**
      * URL to which the customer is returned if the customer does not approve the use of PayPal.
      * PayPal recommends that the value be the original page on which the customer chose to pay with PayPal.
@@ -116,6 +122,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return $this->cancelUrl;
     }
+
     /**
      * @param string
      * @return self
@@ -125,6 +132,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->cancelUrl = $url;
         return $this;
     }
+
     /**
      * Locale of pages displayed by PayPal during Express Checkout.
      *
@@ -135,6 +143,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return $this->localeCode;
     }
+
     /**
      * @param string
      * @return self
@@ -144,6 +153,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->localeCode = $localeCode;
         return $this;
     }
+
     /**
      * The amount to authorize
      *
@@ -153,6 +163,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return $this->amount;
     }
+
     /**
      * @param float
      * @return self
@@ -162,6 +173,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->amount = $this->sanitizeAmount($amount);
         return $this;
     }
+
     /**
      * If true, PayPal will display the shipping address provided in the payload.
      * Otherwise PayPal will display whatever shipping address it has for the customer
@@ -175,6 +187,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return $this->addressOverride;
     }
+
     /**
      * @param bool
      * @return self
@@ -184,6 +197,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->addressOverride = $override;
         return $this;
     }
+
     /**
      * Fill out this payload object with data from the supplied string.
      *
@@ -193,7 +207,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
      */
     public function deserialize($serializedPayload)
     {
-        $this->schemaValidation($serializedPayload);
+        $this->schemaValidate($serializedPayload);
         $dom = new \DomDocument();
         $dom->loadXML($serializedPayload);
         $domXPath = new \DOMXPath($dom);
@@ -212,6 +226,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->validate();
         return $this;
     }
+
     /**
      * Get an iterable of the line items for this container.
      *
@@ -221,6 +236,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return $this->lineItems;
     }
+
     /**
      * @param ILineItemIterable
      * @return self
@@ -230,6 +246,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->lineItems = $items;
         return $this;
     }
+
     /**
      * Serialize the various parts of the payload into XML strings and
      * concatenate them together.
@@ -238,13 +255,14 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     protected function serializeContents()
     {
         return $this->serializeOrderId()
-            . $this->serializeUrls()
-            . $this->serializeLocaleCode()
-            . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
-            . $this->serializeAddressOverride()
-            . $this->serializeShippingAddress()
-            . $this->serializeLineItems();
+        . $this->serializeUrls()
+        . $this->serializeLocaleCode()
+        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
+        . $this->serializeAddressOverride()
+        . $this->serializeShippingAddress()
+        . $this->serializeLineItems();
     }
+
     /**
      * Serialize the payload into XML
      *
@@ -271,6 +289,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->schemaValidate($xml);
         return $xml;
     }
+
     /**
      * Serialize the URLs to which PayPal should redirect upon return and cancel, respectively
      * @return string
@@ -278,8 +297,9 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     protected function serializeUrls()
     {
         return "<ReturnUrl>{$this->getReturnUrl()}</ReturnUrl>"
-            . "<CancelUrl>{$this->getCancelUrl()}</CancelUrl>";
+        . "<CancelUrl>{$this->getCancelUrl()}</CancelUrl>";
     }
+
     /**
      * Serialize the Local Code
      * @return string
@@ -288,6 +308,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return "<LocaleCode>{$this->getLocaleCode()}</LocaleCode>";
     }
+
     /**
      * Serialize the AddressOverride indicator, which is a boolean
      * @return string
@@ -296,6 +317,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return '<AddressOverride>' . ($this->getAddressOverride() ? '1' : '0') . '</AddressOverride>';
     }
+
     /**
      * Serialization of line items
      * @return string
@@ -304,6 +326,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         return $this->getLineItems()->serialize();
     }
+
     /**
      * Get Line1 through Line4 for an Address
      * Find all of the nodes in the address node that
@@ -322,5 +345,14 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
                 array_push($this->$property, $line->nodeValue);
             }
         }
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
     }
 }

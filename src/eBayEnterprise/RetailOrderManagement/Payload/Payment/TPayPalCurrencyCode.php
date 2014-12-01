@@ -52,4 +52,3 @@ trait TPayPalCurrencyCode
         return "<CurrencyCode>{$this->getCurrencyCode()}</CurrencyCode>";
     }
 }
-

@@ -14,6 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
+
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface ILineItemIterable extends \Countable, \Iterator, \ArrayAccess, IPayload

@@ -25,12 +25,14 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     protected $validatorIterator;
     /** @var Payload\ISchemaValidator (stub) */
     protected $stubSchemaValidator;
-    /** @var Payment\IPayPalAddress (stub) */
+    /** @var Payload\Payment\IPayPalAddress (stub) */
     protected $stubBillingAddress;
-    /** @var Payment\IPayPalAddress (stub) */
+    /** @var Payload\Payment\IPayPalAddress (stub) */
     protected $stubShippingAddress;
     /** @var Payload\IPayloadMap (stub) */
     protected $stubPayloadMap;
+    /** @var Payload\IPayloadFactory */
+    protected $stubPayloadFactory;
 
     /**
      * Setup a stub validator and validator iterator for each payload to use
@@ -39,10 +41,12 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     {
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator(array($this->stubValidator));
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->stubBillingAddress = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress');
-        $this->stubShippingAddress = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress');
+        $this->stubBillingAddress =
+            $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress');
+        $this->stubShippingAddress =
+            $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress');
         $this->stubPayloadMap = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
         $this->stubPayloadFactory = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadFactory');
     }
@@ -55,7 +59,11 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        $payload = new PayPalGetExpressCheckoutReply($this->validatorIterator, $this->stubSchemaValidator, $this->stubPayloadMap);
+        $payload = new PayPalGetExpressCheckoutReply(
+            $this->validatorIterator,
+            $this->stubSchemaValidator,
+            $this->stubPayloadMap
+        );
         $reflection = new \ReflectionProperty($payload, 'payloadFactory');
         $reflection->setAccessible(true);
         $reflection->setValue($payload, $this->stubPayloadFactory);
@@ -267,7 +275,8 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
 
         // make the payload factory return the stubs.
         $this->stubPayloadFactory->expects($this->at(0))
-            ->method('buildPayload')->with($this->isType('string'),
+            ->method('buildPayload')->with(
+                $this->isType('string'),
                 $this->isInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap')
             )
             ->will($this->returnValue($this->stubBillingAddress));
@@ -305,7 +314,8 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
 
         // make the payload factory return the stubs.
         $this->stubPayloadFactory->expects($this->at(0))
-            ->method('buildPayload')->with($this->isType('string'),
+            ->method('buildPayload')->with(
+                $this->isType('string'),
                 $this->isInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap')
             )
             ->will($this->returnValue($this->stubBillingAddress));

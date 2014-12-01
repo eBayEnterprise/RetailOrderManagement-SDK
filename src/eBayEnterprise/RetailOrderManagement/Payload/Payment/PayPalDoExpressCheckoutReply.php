@@ -46,9 +46,9 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
         'reasonCode' => 'string(x:PaymentInfo/x:ReasonCode)',
     ];
 
-    /** @var IValidatorIterator */
+    /** @var Payload\IValidatorIterator */
     protected $validators;
-    /** @var ISchemaValidator */
+    /** @var Payload\ISchemaValidator */
     protected $schemaValidator;
 
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
@@ -120,13 +120,13 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     public function isSuccess()
     {
         //@TODO Finish body
-        return ($this->getResponseCode === 'Success');
+        return ($this->getResponseCode() === 'Success');
     }
     /**
      * Return the string form of the payload data for transmission.
      * Validation is implied.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @return string
      */
     public function serialize()
@@ -166,7 +166,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     /**
      * Fill out this payload object with data from the supplied string.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @param string $string
      * @return self
      */
@@ -262,5 +262,14 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     {
         $this->reasonCode = $code;
         return $this;
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
     }
 }

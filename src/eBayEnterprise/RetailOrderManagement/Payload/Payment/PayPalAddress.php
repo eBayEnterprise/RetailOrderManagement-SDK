@@ -20,15 +20,18 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 class PayPalAddress implements IPayPalAddress
 {
     use TPhysicalAddress;
-    use TPayPalValidators;
 
+    /** @var \eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator */
+    protected $validators;
+    /** @var \eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator */
+    protected $schemaValidator;
     /** @var string **/
     protected $addressStatus;
 
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
     {
         $this->validators = $validators;
-        $this->schemavalidator = $schemaValidator;
+        $this->schemaValidator = $schemaValidator;
     }
 
     /**
@@ -58,7 +61,7 @@ class PayPalAddress implements IPayPalAddress
     /**
      * Fill out this payload object with data from the supplied string.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @param string $string
      * @return self
      */
@@ -95,7 +98,7 @@ class PayPalAddress implements IPayPalAddress
     /**
      * Load the payload XML into a DOMDocument.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMDocument
      */
     protected function getPayloadAsDoc($xmlString)
     {
@@ -106,11 +109,23 @@ class PayPalAddress implements IPayPalAddress
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {
         $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
         return $xpath;
+    }
+
+    /**
+     * Run the validators
+     * @return self
+     */
+    public function validate()
+    {
+        foreach ($this->validators as $validator) {
+            $validator->validate($this);
+        }
+        return $this;
     }
 }

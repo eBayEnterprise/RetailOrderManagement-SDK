@@ -51,6 +51,11 @@ trait TAmount
      */
     protected function serializeCurrencyAmount($elementName, $amount, $currencyCode)
     {
-        return sprintf('<%1$s currencyCode="%3$s">%2$01.2F</%1$s>', $elementName, $this->sanitizeAmount($amount), $currencyCode);
+        return sprintf(
+            '<%1$s currencyCode="%3$s">%2$01.2F</%1$s>',
+            $elementName,
+            $this->sanitizeAmount($amount),
+            $currencyCode
+        );
     }
 }

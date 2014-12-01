@@ -150,4 +150,13 @@ class PayPalDoAuthorizationRequest implements IPayPalDoAuthorizationRequest
     {
         return $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode());
     }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
+    }
 }

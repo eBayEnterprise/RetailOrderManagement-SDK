@@ -24,7 +24,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
 
     use TOrderId;
     use TPayPalValidators;
-    use TShippingAddress;
+    use TPhysicalAddress;
     use TStrings;
 
     /** @var string **/
@@ -70,13 +70,16 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         'payerCountry' => 'string(x:PayerCountry)',
         'payerPhone' => 'string(x:PayerPhone)',
     ];
-    /** @var IValidatorIterator */
+    /** @var Payload\IValidatorIterator */
     protected $validators;
-    /** @var ISchemaValidator */
+    /** @var Payload\ISchemaValidator */
     protected $schemaValidator;
 
-    public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator, Payload\IPayloadMap $payloadMap)
-    {
+    public function __construct(
+        Payload\IValidatorIterator $validators,
+        Payload\ISchemaValidator $schemaValidator,
+        Payload\IPayloadMap $payloadMap
+    ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
@@ -358,7 +361,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      * Serialize an Address
      * @return string
      */
-    protected function serializeAddress($rootNode, IPayPalAddress $address=null)
+    protected function serializeAddress($rootNode, IPayPalAddress $address = null)
     {
         return $address ? "<$rootNode>". $address->serialize() . "</$rootNode>" : '';
     }
@@ -413,7 +416,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      * Return the string form of the payload data for transmission.
      * Validation is implied.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @return string
      */
     public function serialize()
@@ -433,7 +436,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     /**
      * Fill out this payload object with data from the supplied string.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @param string $string
      * @return self
      */
@@ -474,12 +477,21 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {
         $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
         $xpath->registerNamespace('x', self::XML_NS);
         return $xpath;
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
     }
 }

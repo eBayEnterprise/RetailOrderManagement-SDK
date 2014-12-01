@@ -33,7 +33,7 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
     {
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator(array($this->stubValidator));
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 
@@ -41,7 +41,7 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
      * Get a new PayPalDoVoidRequest payload. Each payload will contain a
      * ValidatorIterator (self::validatorIterator) containing a single mocked
      * validator (self::$stubValidator).
-     * @return PayPalDoVoidRequestTest
+     * @return PayPalDoVoidRequest
      */
     protected function createNewPayload()
     {
@@ -77,7 +77,7 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
     /**
      * Create a payload with the provided data.
      * @param  mixed[] $properties key/value pairs of property => value
-     * @return PayPalDoVoidRequestTest
+     * @return PayPalDoVoidRequest
      */
     protected function buildPayload($properties)
     {

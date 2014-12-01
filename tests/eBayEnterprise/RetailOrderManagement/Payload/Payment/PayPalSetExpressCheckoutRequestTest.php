@@ -32,9 +32,10 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     {
         $this->stubPayloadMap = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
         $this->stubPayloadMap->expects($this->once())
-            ->method('getConcreteType')->will($this->returnValueMap([
-                [PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE, '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable']
-            ]));
+            ->method('getConcreteType')->will($this->returnValueMap([[
+                PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE,
+                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
+            ]]));
         $this->stubPayloadMap->expects($this->any())
             ->method('hasMappingForType')->will($this->returnValueMap([
                 [PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE, true]
@@ -67,12 +68,16 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [  // good data
-                "Street 1\nStreet 2\n Street 3\nStreet 4",
-                ['Street 1', 'Street 2', 'Street 3', 'Street 4']
+                "Street 1\nStreet 2\nStreet 3\nStreet 4",
+                "Street 1\nStreet 2\nStreet 3\nStreet 4",
             ],
             [  // extra lines
-                "Street 1\nStreet 2\n Street 3\nStreet 4\n\n\n\n\nStreet 5      THIS    CAN     BE REALLY REALLY      LONG",
-                ['Street 1', 'Street 2', 'Street 3', 'Street 4 Street 5 THIS CAN BE REALLY REALLY LONG']
+                "Street 1\n"
+                . "Street 2\n"
+                . " Street 3\n"
+                . "Street 4\n\n\n\n\n"
+                . str_repeat('.', 100),
+                "Street 1\nStreet 2\nStreet 3\nStreet 4 " . str_repeat('.', 61),
             ],
             [ // not a string
                 100,
@@ -88,19 +93,25 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    'shipToLines' => [
-                        'Chester Cheetah',
-                        '',
-                        '630 Allendale Rd',
-                        '2nd FL',
-                    ],
-                    'shipToCity' => 'King of Prussia',
-                    'shipToMainDivision' => 'PA',
-                    'shipToCountryCode' => 'US',
-                    'shipToPostalCode' => '19406'
+                    'lines' => "Chester Cheetah\n"
+                        . "\n"
+                        . "630 Allendale Rd\n"
+                        . "2nd FL",
+                    'city' => 'King of Prussia',
+                    'mainDivision' => 'PA',
+                    'countryCode' => 'US',
+                    'postalCode' => '19406'
                 ],
                 // full section returned
-                '<ShippingAddress><Line1>Chester Cheetah</Line1><Line2></Line2><Line3>630 Allendale Rd</Line3><Line4>2nd FL</Line4><City>King of Prussia</City><MainDivision>PA</MainDivision><CountryCode>US</CountryCode><PostalCode>19406</PostalCode></ShippingAddress>'
+                '<ShippingAddress>'
+                . '<Line1>Chester Cheetah</Line1>'
+                . '<Line2>630 Allendale Rd</Line2>'
+                . '<Line3>2nd FL</Line3>'
+                . '<City>King of Prussia</City>'
+                . '<MainDivision>PA</MainDivision>'
+                . '<CountryCode>US</CountryCode>'
+                . '<PostalCode>19406</PostalCode>'
+                . '</ShippingAddress>'
             ]
         ];
     }
@@ -113,7 +124,11 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function buildPayload(array $properties)
     {
-        $payload = new PayPalSetExpressCheckoutRequest($this->validatorIterator, $this->schemaValidatorStub, $this->stubPayloadMap);
+        $payload = new PayPalSetExpressCheckoutRequest(
+            $this->validatorIterator,
+            $this->schemaValidatorStub,
+            $this->stubPayloadMap
+        );
         foreach ($properties as $property => $value) {
             $payload->$property($value);
         }
@@ -156,8 +171,15 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testCleanAddressLines($lines, $expected)
     {
-        $payload = new PayPalSetExpressCheckoutRequest($this->validatorIterator, $this->schemaValidatorStub, $this->stubPayloadMap);
-        $method = new \ReflectionMethod('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest', 'cleanAddressLines');
+        $payload = new PayPalSetExpressCheckoutRequest(
+            $this->validatorIterator,
+            $this->schemaValidatorStub,
+            $this->stubPayloadMap
+        );
+        $method = new \ReflectionMethod(
+            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest',
+            'cleanAddressLines'
+        );
         $method->setAccessible(true);
         $cleaned = $method->invokeArgs($payload, [$lines]);
         $this->assertSame($expected, $cleaned);
@@ -169,7 +191,11 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializeShippingAddress($properties, $expected)
     {
-        $payload = new PayPalSetExpressCheckoutRequest($this->validatorIterator, $this->schemaValidatorStub, $this->stubPayloadMap);
+        $payload = new PayPalSetExpressCheckoutRequest(
+            $this->validatorIterator,
+            $this->schemaValidatorStub,
+            $this->stubPayloadMap
+        );
         $this->injectProperties($payload, $properties);
         $method = new \ReflectionMethod($payload, 'serializeShippingAddress');
         $method->setAccessible(true);

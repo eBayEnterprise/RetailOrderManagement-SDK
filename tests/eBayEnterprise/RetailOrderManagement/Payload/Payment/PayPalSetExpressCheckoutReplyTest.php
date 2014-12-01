@@ -33,7 +33,7 @@ class PayPalSetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     {
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator(array($this->stubValidator));
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 

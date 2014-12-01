@@ -49,7 +49,7 @@ trait TPhysicalAddress
     public function getLines()
     {
         // As from eBayEnterprise\RetailOrderManagement\Payload\Payment\IShippingAddress
-        return  $this->lines;
+        return $this->lines;
     }
     /**
      * @param string $lines
@@ -153,7 +153,8 @@ trait TPhysicalAddress
         return $this;
     }
     /**
-     * Make sure we have a maximum of 4 address lines, each no more than 70 characters. Multiple whitespace is condensed.
+     * Make sure we have a maximum of 4 address lines, each no more than 70 characters.
+     * Multiple whitespace is condensed.
      * Anything over 4 lines gets appended onto the 4th element and the result truncated as needed
      * @param string $lines
      * @return array
@@ -162,7 +163,7 @@ trait TPhysicalAddress
     {
         if (is_string($lines)) {
             $addressLines = array_filter(explode("\n", $lines, 4));
-            array_walk($addressLines, function(&$value) {
+            array_walk($addressLines, function (&$value) {
                 $value = substr(trim(preg_replace('/\s+/', ' ', $value)), 0, 70);
             });
             return implode("\n", $addressLines);

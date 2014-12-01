@@ -35,6 +35,8 @@ trait TOrderId
         return $this;
     }
 
+    abstract protected function cleanString($str, $len);
+
     /**
      * A unique identifier for the order
      * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.

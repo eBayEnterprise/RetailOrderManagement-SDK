@@ -2,8 +2,8 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified"
-		    targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0"
-		    xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
+            targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0"
+            xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
             version="${project.version}">
 
     <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>

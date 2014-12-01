@@ -33,7 +33,7 @@ class PayPalGetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     {
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator(array($this->stubValidator));
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 
@@ -41,7 +41,7 @@ class PayPalGetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      * Get a new PayPalGetExpressCheckoutRequest payload. Each payload will contain a
      * ValidatorIterator (self::validatorIterator) containing a single mocked
      * validator (self::$stubValidator).
-     * @return PayPalGetExpressCheckoutRequestTest
+     * @return PayPalGetExpressCheckoutRequest
      */
     protected function createNewPayload()
     {

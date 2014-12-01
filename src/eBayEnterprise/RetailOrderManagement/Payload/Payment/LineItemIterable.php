@@ -16,9 +16,9 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use \eBayEnterprise\RetailOrderManagement\Payload;
+use \SPLObjectStorage;
 
-class LineItemIterable extends \SPLObjectStorage
-    implements ILineItemIterable
+class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
 {
     use TAmount;
 
@@ -53,8 +53,11 @@ class LineItemIterable extends \SPLObjectStorage
         'lineItemsTotal' => ['float', 'x:LineItemsTotal'],
     ];
 
-    public function __construct(Payload\IValidatorIterator $iterator, Payload\ISchemaValidator $schemaValidator, Payload\IPayloadMap $payloadMap)
-    {
+    public function __construct(
+        Payload\IValidatorIterator $iterator,
+        Payload\ISchemaValidator $schemaValidator,
+        Payload\IPayloadMap $payloadMap
+    ) {
         $this->validatorIterator = $iterator;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
@@ -238,7 +241,7 @@ class LineItemIterable extends \SPLObjectStorage
         $endTag = '</'.ILineItem::ROOT_NODE .'>';
         $startTagPos = strpos($serializedPayload, $startTag);
         if ($startTagPos === false) {
-            return;
+            return $this;
         }
         $endTagPos = strpos($serializedPayload, $endTag, $startTagPos);
         $chunk = substr($serializedPayload, $startTagPos, $endTagPos - $startTagPos + strlen($endTag));
@@ -263,7 +266,7 @@ class LineItemIterable extends \SPLObjectStorage
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {

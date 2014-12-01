@@ -31,7 +31,7 @@ class LineItem implements ILineItem
     protected $unitAmount;
     /** @var float */
     protected $currencyCode;
-    /** @var eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator */
+    /** @var Payload\IValidatorIterator */
     protected $validatorIterator;
 
     protected $extractionPaths = [
@@ -247,7 +247,7 @@ class LineItem implements ILineItem
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {
@@ -255,5 +255,4 @@ class LineItem implements ILineItem
         $xpath->registerNamespace('x', self::XML_NS);
         return $xpath;
     }
-
 }

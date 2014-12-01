@@ -33,20 +33,20 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
 
     const ITERABLE_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable';
 
-	/** @var string**/
-	protected $requestId;
-	/** @var string **/
-	protected $payerId;
-	/** @var float **/
-	protected $amount;
-	/** @var string **/
-	protected $pickUpStoreId;
-	/** @var string **/
-	protected $shipToName;
-	/** @var mixed **/
-	protected $shippingAddress;
-	/** @var ILineItemContainer **/
-	protected $lineItems;
+    /** @var string**/
+    protected $requestId;
+    /** @var string **/
+    protected $payerId;
+    /** @var float **/
+    protected $amount;
+    /** @var string **/
+    protected $pickUpStoreId;
+    /** @var string **/
+    protected $shipToName;
+    /** @var mixed **/
+    protected $shippingAddress;
+    /** @var ILineItemContainer **/
+    protected $lineItems;
 
     protected $nodesMap = [
         'requestId' => 'string(@requestId)',
@@ -73,8 +73,11 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     /** @var ISchemaValidator */
     protected $schemaValidator;
 
-    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator, IPayloadMap $payloadMap)
-    {
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap
+    ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
@@ -85,56 +88,56 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         );
     }
 
-	/**
+    /**
      * RequestId is used to globally identify a request message and is used
      * for duplicate request protection.
      *
      * xsd restrictions: 1-40 characters
      * @return string
      */
-	public function getRequestId()
-	{
-		return $this->requestId;
-	}
-	/**
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+    /**
      * @param string
      * @return self
      */
-	public function setRequestId($requestId)
-	{
-		$this->requestId = $requestId;
-		return $this;
-	}
-	/**
+    public function setRequestId($requestId)
+    {
+        $this->requestId = $requestId;
+        return $this;
+    }
+    /**
      * Unique identifier of the customer's PayPal account, can be retrieved from the PayPalGetExpressCheckoutReply
      * or the URL the customer was redirected with from PayPal.
      *
      * @return string
      */
-	public function getPayerId()
-	{
-		return $this->payerId;
-	}
-	/**
+    public function getPayerId()
+    {
+        return $this->payerId;
+    }
+    /**
      * @param string
      * @return self
      */
-	public function setPayerId($id)
-	{
-		$this->payerId = $id;
-		return $this;
-	}
-	/**
+    public function setPayerId($id)
+    {
+        $this->payerId = $id;
+        return $this;
+    }
+    /**
      * The amount to authorize
      *
      * xsd note: minimum value 0
      *           maximum precision 2 decimal places
      * @return float
      */
-	public function getAmount()
-	{
-		return $this->amount;
-	}
+    public function getAmount()
+    {
+        return $this->amount;
+    }
     /**
      * @param float
      * @return self
@@ -144,62 +147,62 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         $this->amount = $this->sanitizeAmount($amount);
         return $this;
     }
-	/**
+    /**
      * PickUpStoreId refers to store name/number for ship-to-store/in-store-pick up like "StoreName StoreNumber".
      * Optional except during ship-to-store delivery method.
      *
      * @return string
      */
-	public function getPickUpStoreId()
-	{
-		return $this->pickUpStoreId;
-	}
-	/**
+    public function getPickUpStoreId()
+    {
+        return $this->pickUpStoreId;
+    }
+    /**
      * @param string
      * @return self
      */
-	public function setPickUpStoreId($id)
-	{
-		$this->pickUpStoreId = $id;
-		return $this;
-	}
-	/**
+    public function setPickUpStoreId($id)
+    {
+        $this->pickUpStoreId = $id;
+        return $this;
+    }
+    /**
      * The name of the person shipped to like "FirsName LastName".
      *
      * @return string
      */
-	public function getShipToName()
-	{
-		return $this->shipToName;
-	}
-	/**
+    public function getShipToName()
+    {
+        return $this->shipToName;
+    }
+    /**
      * @param string
      * @return self
      */
-	public function setShipToName($name)
-	{
-		$this->shipToName = $name;
-		return $this;
-	}
-	/**
+    public function setShipToName($name)
+    {
+        $this->shipToName = $name;
+        return $this;
+    }
+    /**
      * Whether the address was input on PayPal site or the merchant site, the final address
      * used should be passed at this time.
      *
      * @return IPhysicalAddress
      */
-	public function getShippingAddress()
-	{
-		return $this->shippingAddress;
-	}
-	/**
+    public function getShippingAddress()
+    {
+        return $this->shippingAddress;
+    }
+    /**
      * @param IPhysicalAddress
      * @return self
      */
-	public function setShippingAddress(IPhysicalAddress $address)
-	{
-		$this->shippingAddress = $address;
-		return $this;
-	}
+    public function setShippingAddress(IPhysicalAddress $address)
+    {
+        $this->shippingAddress = $address;
+        return $this;
+    }
     /**
      * Serialize the payload into XML
      *
@@ -235,7 +238,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     public function deserialize($serializedPayload)
     {
-        $this->schemaValidation($serializedPayload);
+        $this->schemaValidate($serializedPayload);
         $dom = new \DomDocument();
         $dom->loadXML($serializedPayload);
         $domXPath = new \DOMXPath($dom);
@@ -257,13 +260,13 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     protected function serializeContents()
     {
         return $this->serializeOrderId()
-            . $this->serializeToken() // TPayPalToken
-            . $this->serializePayerId()
-            . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
-            . $this->serializePickupStoreId()
-            . $this->serializeShipToName()
-            . $this->serializeShippingAddress() // TShippingAddress
-            . $this->serializeLineItems();
+        . $this->serializeToken() // TPayPalToken
+        . $this->serializePayerId()
+        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
+        . $this->serializePickupStoreId()
+        . $this->serializeShipToName()
+        . $this->serializeShippingAddress() // TShippingAddress
+        . $this->serializeLineItems();
     }
     /**
      * Serialization of line items
@@ -297,24 +300,24 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     {
         return "<ShipToName>{$this->getPickupStoreId()}</ShipToName>";
     }
-	/**
+    /**
      * Get an iterable of the line items for this container.
      *
      * @return ILineItemIterable
      */
-	public function getLineItems()
-	{
-		return $this->lineItems;
-	}
-	/**
+    public function getLineItems()
+    {
+        return $this->lineItems;
+    }
+    /**
      * @param ILineItemIterable
      * @return self
      */
-	public function setLineItems(ILineItemIterable $items)
-	{
-		$this->lineItems = $items;
-		return $this;
-	}
+    public function setLineItems(ILineItemIterable $items)
+    {
+        $this->lineItems = $items;
+        return $this;
+    }
     /**
      * Get Line1 through Line4 for an Address
      * Find all of the nodes in the address node that
@@ -333,5 +336,14 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
                 array_push($this->$property, $line->nodeValue);
             }
         }
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
     }
 }

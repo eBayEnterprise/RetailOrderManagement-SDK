@@ -40,9 +40,9 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
     protected $optionalExtractionPaths = [
         'errorMessage' => 'x:ErrorMessage',
     ];
-    /** @var IValidatorIterator */
+    /** @var Payload\IValidatorIterator */
     protected $validators;
-    /** @var ISchemaValidator */
+    /** @var Payload\ISchemaValidator */
     protected $schemaValidator;
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
     {
@@ -103,7 +103,7 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
     }
     /**
      * Serialize the data into a string of XML.
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @return string
      */
     public function serialize()
@@ -162,7 +162,7 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
-     * @return DOMXPath
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {
@@ -173,7 +173,7 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
     /**
      * Fill out this payload object with data from the supplied string.
      *
-     * @throws Exception\InvalidPayload
+     * @throws Payload\Exception\InvalidPayload
      * @param string $string
      * @return self
      */
@@ -199,5 +199,13 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
 
         return $this;
     }
-}
 
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
+    }
+}

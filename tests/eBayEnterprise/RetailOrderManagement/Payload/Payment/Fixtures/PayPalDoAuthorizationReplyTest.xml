@@ -5,6 +5,6 @@
     <AuthorizationInfo>
         <PaymentStatus>Pending</PaymentStatus>
         <PendingReason>authorization</PendingReason>
-        <ReasonCode></ReasonCode>
+        <ReasonCode/>
     </AuthorizationInfo>
 </PayPalDoAuthorizationReply>
