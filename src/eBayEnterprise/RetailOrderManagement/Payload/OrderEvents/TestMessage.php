@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DateTime;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
@@ -86,7 +87,7 @@ class TestMessage implements ITestMessage
     /**
      * Fill out this payload object with data from the supplied string.
      *
-     * @throws Exception\InvalidPayload
+     * @throws InvalidPayload
      * @param string $serializedPayload
      * @return $this
      */
