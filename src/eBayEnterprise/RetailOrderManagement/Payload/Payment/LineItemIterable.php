@@ -15,8 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use \eBayEnterprise\RetailOrderManagement\Payload;
-use \SPLObjectStorage;
+use eBayEnterprise\RetailOrderManagement\Payload;
+use SPLObjectStorage;
 
 class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
 {

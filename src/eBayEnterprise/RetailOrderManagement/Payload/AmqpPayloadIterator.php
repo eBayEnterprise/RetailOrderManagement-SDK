@@ -16,8 +16,8 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Api\IAmqpApi;
-use PhpAmqpLib\Message\AMQPMessage;
 use OutOfBoundsException;
+use PhpAmqpLib\Message\AMQPMessage;
 
 /**
  * Class AmqpPayloadIterator

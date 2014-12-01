@@ -15,8 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
 
 class OmnidirectionalMessageFactory implements IMessageFactory
 {
