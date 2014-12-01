@@ -226,173 +226,66 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
     /**
      * Provide test data to verify serializeShippingAddress
      */
-    public function provideShippingAddressData()
+    public function provideAddressData()
     {
-        $fullAddress = '<ShippingAddress>'
-            . '<Line1>Street 1</Line1>'
-            . '<Line2>Street 2</Line2>'
-            . '<Line3>Street 3</Line3>'
-            . '<Line4>Street 4</Line4>'
-            . '<City>King of Prussia</City>'
-            . '<MainDivision>PA</MainDivision>'
-            . '<CountryCode>US</CountryCode>'
-            . '<PostalCode>19406</PostalCode>'
-            . '</ShippingAddress>';
-        $sansMainDivision = '<ShippingAddress>'
-            . '<Line1>Street 1</Line1>'
-            . '<Line2>Street 2</Line2>'
-            . '<Line3>Street 3</Line3>'
-            . '<Line4>Street 4</Line4>'
-            . '<City>King of Prussia</City>'
-            . '<CountryCode>US</CountryCode>'
-            . '<PostalCode>19406</PostalCode>'
-            . '</ShippingAddress>';
-        $sansPostalCode = '<ShippingAddress>'
-            . '<Line1>Street 1</Line1>'
-            . '<Line2>Street 2</Line2>'
-            . '<Line3>Street 3</Line3>'
-            . '<Line4>Street 4</Line4>'
-            . '<City>King of Prussia</City>'
-            . '<MainDivision>PA</MainDivision>'
-            . '<CountryCode>US</CountryCode>'
-            . '</ShippingAddress>';
-        return [
-            [
-                // optional fields present
-                [
-                    'shipToLines' => [
-                        'Street 1',
-                        'Street 2',
-                        'Street 3',
-                        'Street 4'
-                    ],
-                    'shipToCity' => 'King of Prussia',
-                    'shipToMainDivision' => 'PA',
-                    'shipToCountryCode' => 'US',
-                    'shipToPostalCode' => '19406'
-                ],
-                // full section returned
-                $fullAddress
+        $addressData = [
+            'Lines' => [
+                'Street 1',
+                'Street 2',
+                'Street 3',
+                'Street 4'
             ],
-            [
-                // mainDivision missing
-                [
-                    'shipToLines' => [
-                        'Street 1',
-                        'Street 2',
-                        'Street 3',
-                        'Street 4'
-                    ],
-                    'shipToCity' => 'King of Prussia',
-                    'shipToCountryCode' => 'US',
-                    'shipToPostalCode' => '19406'
-                ],
-                // skip mainDivision node
-                $sansMainDivision
-            ],
-            [
-                // postalCode missing
-                [
-                    'shipToLines' => [
-                        'Street 1',
-                        'Street 2',
-                        'Street 3',
-                        'Street 4'
-                    ],
-                    'shipToCity' => 'King of Prussia',
-                    'shipToMainDivision' => 'PA',
-                    'shipToCountryCode' => 'US',
-                ],
-                // skip postalCode node
-                $sansPostalCode
-            ]
+            'City' => 'King of Prussia',
+            'MainDivision' => 'PA',
+            'CountryCode' => 'US',
+            'PostalCode' => '19406'
         ];
+        $data = [];
+        foreach (['', 'MainDivision', 'PostalCode'] as $skipField) {
+            $workingAddressData = $addressData;
+            $billingXml = '';
+            $shipToXml = '';
+            foreach ($addressData as $key => $value) {
+                if ($key !== $skipField) {
+                    $xml = '';
+                    if ($key === 'Lines') {
+                        $lineNumber = 0;
+                        foreach ($workingAddressData[$key] as $line) {
+                            $lineNumber += 1;
+                            $xml .= sprintf('<Line%d>%s</Line%1$d>', $lineNumber, $line);
+                        }
+                    } else {
+                        $xml .= sprintf('<%s>%s</%1$s>', $key, $value);
+                    }
+                    $billingXml .= $xml;
+                    $shipToXml .= $xml;
+                    foreach (['billing', 'shipTo'] as $addressType) {
+                        $workingAddressData[$addressType . $key] = $value;
+                    }
+                }
+                unset($workingAddressData[$key]);
+            }
+            $billingXml = '<BillingAddress>' . $billingXml . '</BillingAddress>';
+            $shipToXml = '<ShippingAddress>' . $shipToXml . '</ShippingAddress>';
+            $data[] = [$workingAddressData, $billingXml, $shipToXml];
+        }
+        return $data;
     }
 
     /**
-     * Provide test data to verify serializeBillingAddress
+     * @param array $properties
+     * @param string $billingExpected XML we expect to see
+     * @param string $shippingExpected XML we expect to see
+     * @dataProvider provideAddressData
      */
-    public function provideBillingAddressData()
+    public function testSerializeAddressHandlesMissingData(array $properties, $billingExpected, $shippingExpected)
     {
-        $fullAddress = '<BillingAddress>'
-            . '<Line1>Street 1</Line1>'
-            . '<Line2>Street 2</Line2>'
-            . '<Line3>Street 3</Line3>'
-            . '<Line4>Street 4</Line4>'
-            . '<City>King of Prussia</City>'
-            . '<MainDivision>PA</MainDivision>'
-            . '<CountryCode>US</CountryCode>'
-            . '<PostalCode>19406</PostalCode>'
-            . '</BillingAddress>';
-        $sansMainDivision = '<BillingAddress>'
-            . '<Line1>Street 1</Line1>'
-            . '<Line2>Street 2</Line2>'
-            . '<Line3>Street 3</Line3>'
-            . '<Line4>Street 4</Line4>'
-            . '<City>King of Prussia</City>'
-            . '<CountryCode>US</CountryCode>'
-            . '<PostalCode>19406</PostalCode>'
-            . '</BillingAddress>';
-        $sansPostalCode = '<BillingAddress>'
-            . '<Line1>Street 1</Line1>'
-            . '<Line2>Street 2</Line2>'
-            . '<Line3>Street 3</Line3>'
-            . '<Line4>Street 4</Line4>'
-            . '<City>King of Prussia</City>'
-            . '<MainDivision>PA</MainDivision>'
-            . '<CountryCode>US</CountryCode>'
-            . '</BillingAddress>';
-        return [
-            [
-                // optional fields present
-                [
-                    'billingLines' => [
-                        'Street 1',
-                        'Street 2',
-                        'Street 3',
-                        'Street 4'
-                    ],
-                    'billingCity' => 'King of Prussia',
-                    'billingMainDivision' => 'PA',
-                    'billingCountryCode' => 'US',
-                    'billingPostalCode' => '19406'
-                ],
-                // full section returned
-                $fullAddress
-            ],
-            [
-                // mainDivision missing
-                [
-                    'billingLines' => [
-                        'Street 1',
-                        'Street 2',
-                        'Street 3',
-                        'Street 4'
-                    ],
-                    'billingCity' => 'King of Prussia',
-                    'billingCountryCode' => 'US',
-                    'billingPostalCode' => '19406'
-                ],
-                // skip mainDivision node
-                $sansMainDivision
-            ],
-            [
-                // postalCode missing
-                [
-                    'billingLines' => [
-                        'Street 1',
-                        'Street 2',
-                        'Street 3',
-                        'Street 4'
-                    ],
-                    'billingCity' => 'King of Prussia',
-                    'billingMainDivision' => 'PA',
-                    'billingCountryCode' => 'US',
-                ],
-                // skip postalCode node
-                $sansPostalCode
-            ]
-        ];
+        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $this->setRestrictedPropertyValues($request, $properties);
+        $billingActual = $this->invokeRestrictedMethod($request, 'serializeBillingAddress');
+        $shippingActual = $this->invokeRestrictedMethod($request, 'serializeShippingAddress');
+        $this->assertSame($billingExpected, $billingActual);
+        $this->assertSame($shippingExpected, $shippingActual);
     }
 
     /**
@@ -599,32 +492,6 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
         $this->setRestrictedPropertyValues($request, $properties);
         $actual = $this->invokeRestrictedMethod($request, 'serializeSecureVerificationData');
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * @param array $properties
-     * @param $expected
-     * @dataProvider provideShippingAddressData
-     */
-    public function testSerializeShippingAddressHandlesMissingData($properties, $expected)
-    {
-        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $this->setRestrictedPropertyValues($request, $properties);
-        $actual = $this->invokeRestrictedMethod($request, 'serializeShippingAddress');
-        $this->assertSame($expected, $actual);
-    }
-
-    /**
-     * @param array $properties
-     * @param $expected
-     * @dataProvider provideBillingAddressData
-     */
-    public function testSerializeBillingAddressHandlesMissingData($properties, $expected)
-    {
-        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $this->setRestrictedPropertyValues($request, $properties);
-        $actual = $this->invokeRestrictedMethod($request, 'serializeBillingAddress');
         $this->assertSame($expected, $actual);
     }
 
