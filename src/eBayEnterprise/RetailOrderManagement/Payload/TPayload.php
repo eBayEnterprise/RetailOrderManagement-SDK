@@ -65,6 +65,8 @@ trait TPayload
             $this->$property = $this->convertStringToBoolean($value);
         }
 
+        $this->deserializeLineItems($serializedPayload);
+
         // payload is only valid if the unserialized data is also valid
         $this->validate();
         return $this;
@@ -135,6 +137,16 @@ trait TPayload
         }
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
+    }
+
+    /**
+     * convert line item substrings into line item objects
+     * @param  string $serializedPayload
+     * @return self
+     */
+    protected function deserializeLineItems($serializedPayload)
+    {
+        return $this;
     }
 
     /**

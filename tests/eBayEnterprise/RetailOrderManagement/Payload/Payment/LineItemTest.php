@@ -42,32 +42,6 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get a new LineItem payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return StoredValueBalanceReply
-     */
-    protected function createNewPayload()
-    {
-        return new LineItem($this->validatorIterator);
-    }
-
-    /**
-     * Create a payload with the provided data.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return StoredValueRedeemVoidRequest
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-
-        foreach ($properties as $setterMethod => $value) {
-            $payload->$setterMethod($value);
-        }
-        return $payload;
-    }
-
-    /**
      * Data provider for invalid payloads
      * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
      */
@@ -88,6 +62,7 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
             ]],
         ];
     }
+
     /**
      * Data provider for valid payloads
      * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
@@ -128,6 +103,32 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $payload->validate();
+    }
+
+    /**
+     * Create a payload with the provided data.
+     * @param  mixed[] $properties key/value pairs of property => value
+     * @return LineItem
+     */
+    protected function buildPayload($properties)
+    {
+        $payload = $this->createNewPayload();
+
+        foreach ($properties as $setterMethod => $value) {
+            $payload->$setterMethod($value);
+        }
+        return $payload;
+    }
+
+    /**
+     * Get a new LineItem payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return LineItem
+     */
+    protected function createNewPayload()
+    {
+        return new LineItem($this->validatorIterator);
     }
 
     /**
@@ -178,8 +179,21 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
         $serializedString = $domPayload->C14N();
         $domPayload->loadXML($this->xmlTestString($xml));
         $expectedString = $domPayload->C14N();
-
         $this->assertEquals($expectedString, $serializedString);
+    }
+
+    /**
+     * Read an XML file with valid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlTestString($xml)
+    {
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__."/Fixtures/$xml");
+        $string = $dom->C14N();
+
+        return $string;
     }
 
     /**
@@ -200,19 +214,5 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
             . substr($this->xmlTestString($xml), strlen('<LineItem>'));
         $payload->deserialize($serializedPayload);
         $this->assertEquals($expectedPayload, $payload);
-    }
-
-    /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlTestString($xml)
-    {
-        $dom = new \DOMDocument();
-        $dom->load(__DIR__."/Fixtures/$xml");
-        $string = $dom->C14N();
-
-        return $string;
     }
 }

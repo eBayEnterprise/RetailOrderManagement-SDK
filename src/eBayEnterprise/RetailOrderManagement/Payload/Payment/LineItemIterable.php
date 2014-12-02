@@ -20,7 +20,7 @@ use SPLObjectStorage;
 
 class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
 {
-    use TAmount;
+    use Payload\TPayload, TAmount;
 
     const LINE_ITEM_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem';
 
@@ -36,45 +36,71 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     protected $payloadMap;
     /** @var \eBayEnterprise\RetailOrderManagement\Payload\IPayloadFactory */
     protected $payloadFactory;
-    /** @var \eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var \eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator */
-    protected $schemaValidator;
-
-    protected $extractionPaths = [
-        'shippingTotal' => 'number(x:ShippingTotal)',
-        'taxTotal' => 'number(x:TaxTotal)',
-        // get the currency code from any of the fields that exist
-        'currencyCode' => 'string(x:TaxTotal/@currencyCode)',
-    ];
-
-    // optional elements including the type to cast the value to
-    protected $optionalExtractionPaths = [
-        'lineItemsTotal' => ['float', 'x:LineItemsTotal'],
-    ];
 
     public function __construct(
-        Payload\IValidatorIterator $iterator,
+        Payload\IValidatorIterator $validators,
         Payload\ISchemaValidator $schemaValidator,
         Payload\IPayloadMap $payloadMap
     ) {
-        $this->validatorIterator = $iterator;
+
+        $this->extractionPaths = [
+            'shippingTotal' => 'number(x:ShippingTotal)',
+            'taxTotal' => 'number(x:TaxTotal)',
+            // get the currency code from any of the fields that exist
+            'currencyCode' => 'string(x:TaxTotal/@currencyCode)',
+        ];
+        $this->optionalExtractionPaths = [
+            'lineItemsTotal' => 'x:LineItemsTotal',
+        ];
+        $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new Payload\PayloadFactory();
     }
 
     /**
-     * Template for the line item.
-     *
-     * @return ILineItem
+     * calculate and set the line items total.
+     * @return self
      */
-    public function getEmptyLineItem()
+    public function calculateLineItemsTotal()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::LINE_ITEM_INTERFACE),
-            $this->payloadMap
-        );
+        $total = 0.0;
+        foreach ($this as $item) {
+            $total += $item->getUnitAmount() * $item->getQuantity();
+        }
+        $this->setLineItemsTotal($total);
+        return $this;
+    }
+
+    /**
+     * Override the SPLObjectStorage's unserialize method
+     * @param  string $string
+     */
+    public function unserialize($string)
+    {
+        $this->deserialize($string);
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializeLineItemsTotal()
+            . $this->serializeShippingTotal()
+            . $this->serializeTaxTotal()
+        . $this->serializeLineItems();
+    }
+
+    /**
+     * serialize the data for the LineItemsTotal element
+     * @return string
+     */
+    protected function serializeLineItemsTotal()
+    {
+        return $this->serializeCurrencyAmount('LineItemsTotal', $this->getLineItemsTotal(), $this->getCurrencyCode());
     }
 
     /**
@@ -101,6 +127,33 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     }
 
     /**
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setCurrencyCode($code)
+    {
+        $this->currencyCode = $code;
+        return $this;
+    }
+
+    /**
+     * serialize the data for the ShippingTotal element
+     * @return string
+     */
+    protected function serializeShippingTotal()
+    {
+        return $this->serializeCurrencyAmount('ShippingTotal', $this->getShippingTotal(), $this->getCurrencyCode());
+    }
+
+    /**
      * Total shipping amount for all line items.
      *
      * @return float
@@ -118,6 +171,15 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     {
         $this->shippingTotal = $this->sanitizeAmount($amount);
         return $this;
+    }
+
+    /**
+     * serialize the data for the TaxTotal element
+     * @return string
+     */
+    protected function serializeTaxTotal()
+    {
+        return $this->serializeCurrencyAmount('TaxTotal', $this->getTaxTotal(), $this->getCurrencyCode());
     }
 
     /**
@@ -141,93 +203,16 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     }
 
     /**
+     * serialize the contained line item objects.
      * @return string
      */
-    public function getCurrencyCode()
+    protected function serializeLineItems()
     {
-        return $this->currencyCode;
-    }
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setCurrencyCode($code)
-    {
-        $this->currencyCode = $code;
-        return $this;
-    }
-
-    /**
-     * calculate and set the line items total.
-     * @return self
-     */
-    public function calculateLineItemsTotal()
-    {
-        $total = 0.0;
-        foreach ($this as $item) {
-            $total += $item->getUnitAmount() * $item->getQuantity();
+        $output = '';
+        foreach ($this as $lineItem) {
+            $output .= $lineItem->serialize();
         }
-        $this->setLineItemsTotal($total);
-        return $this;
-    }
-
-    /**
-     * convert the data into an xml string
-     * @return string
-     * @throws \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function serialize()
-    {
-        $this->validate();
-        return '<LineItems>'
-            . $this->serializeLineItemsTotal()
-            . $this->serializeShippingTotal()
-            . $this->serializeTaxTotal()
-            . $this->serializeLineItems()
-            . '</LineItems>';
-    }
-
-    /**
-     * convert an xml string to data elements.
-     * @param  string $serializedPayload
-     * @return self
-     */
-    public function deserialize($serializedPayload)
-    {
-        $xpath = $this->getPayloadAsXPath($serializedPayload);
-        foreach ($this->extractionPaths as $property => $path) {
-            $this->$property = $xpath->evaluate($path);
-        }
-        // When optional nodes are not included in the serialized data,
-        // they should not be set in the payload.
-        foreach ($this->optionalExtractionPaths as $property => $rule) {
-            list($type, $path) = $rule;
-            $foundNode = $xpath->query($path)->item(0);
-            if ($foundNode) {
-                $this->$property = $foundNode->nodeValue;
-                // enforce the proper type
-                settype($this->$property, $type);
-            }
-        }
-
-        $this->deserializeLineItems($serializedPayload);
-
-        // payload is only valid if the unserialized data is valid
-        $this->validate();
-        return $this;
-    }
-
-    /**
-     * validate the payload.
-     * @return self
-     */
-    public function validate()
-    {
-        foreach ($this->validatorIterator as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
+        return $output;
     }
 
     /**
@@ -252,75 +237,54 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     }
 
     /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
+     * Template for the line item.
+     *
+     * @return ILineItem
      */
-    protected function getPayloadAsDoc($xmlString)
+    public function getEmptyLineItem()
     {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
+        return $this->payloadFactory->buildPayload(
+            $this->payloadMap->getConcreteType(static::LINE_ITEM_INTERFACE),
+            $this->payloadMap
+        );
     }
 
     /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', static::XML_NS);
-        return $xpath;
-    }
-
-    /**
-     * serialize the data for the LineItemsTotal element
+     * Return the schema file path.
      * @return string
      */
-    protected function serializeLineItemsTotal()
+    protected function getSchemaFile()
     {
-        return $this->serializeCurrencyAmount('LineItemsTotal', $this->getLineItemsTotal(), $this->getCurrencyCode());
+        return '';
     }
 
     /**
-     * serialize the data for the ShippingTotal element
+     * Return the name of the xml root node.
+     *
      * @return string
      */
-    protected function serializeShippingTotal()
+    protected function getRootNodeName()
     {
-        return $this->serializeCurrencyAmount('ShippingTotal', $this->getShippingTotal(), $this->getCurrencyCode());
+        return static::ROOT_NODE;
     }
 
     /**
-     * serialize the data for the TaxTotal element
+     * The XML namespace for the payload.
+     *
      * @return string
      */
-    protected function serializeTaxTotal()
+    protected function getXmlNamespace()
     {
-        return $this->serializeCurrencyAmount('TaxTotal', $this->getTaxTotal(), $this->getCurrencyCode());
+        return static::XML_NS;
     }
 
     /**
-     * serialize the contained line item objects.
-     * @return string
+     * Name, value pairs of root attributes
+     *
+     * @return array
      */
-    protected function serializeLineItems()
+    protected function getRootAttributes()
     {
-        $output = '';
-        foreach ($this as $lineItem) {
-            $output .= $lineItem->serialize();
-        }
-        return $output;
-    }
-
-    /**
-     * Override the SPLObjectStorage's unserialize method
-     * @param  string $string
-     */
-    public function unserialize($string)
-    {
-        $this->deserialize($string);
+        return [];
     }
 }
