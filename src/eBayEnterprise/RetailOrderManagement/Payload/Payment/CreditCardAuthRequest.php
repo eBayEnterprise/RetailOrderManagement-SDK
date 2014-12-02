@@ -84,8 +84,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $eci;
     /** @var string */
     protected $payerAuthenticationResponse;
-    /** @var array[] */
-    protected $addressLinesMap;
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {
@@ -113,7 +111,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             'isRequestToCorrectCVVOrAVSError' => 'boolean(x:isRequestToCorrectCVVOrAVSError)',
             'isEncrypted' => 'boolean(x:PaymentContext/x:EncryptedPaymentAccountUniqueId)',
         ];
-        $this->addressLinesMap = [
+        $this->addressLinesExtractionMap = [
             [
                 'property' => 'billingLines',
                 'xPath' => "x:BillingAddress/*[starts-with(name(), 'Line')]"
@@ -143,15 +141,166 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         $this->schemaValidator = $schemaValidator;
     }
 
-    public function getRequestId()
+    public function setEmail($email)
     {
-        return $this->requestId;
+        $value = null;
+        $cleaned = $this->cleanString($email, 70);
+        if ($cleaned !== null) {
+            $match = filter_var($cleaned, FILTER_VALIDATE_EMAIL);
+            if ($match) {
+                $value = $cleaned;
+            }
+        }
+        $this->customerEmail = $value;
+
+        return $this;
     }
 
-    public function setRequestId($requestId)
+    public function setIp($ip)
     {
-        $this->requestId = $this->cleanString($requestId, 40);
+        $pattern = '/((25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)/';
+        $value = null;
+
+        $cleaned = $this->cleanString($ip, 70);
+        if ($cleaned !== null) {
+            $match = preg_match($pattern, $cleaned);
+
+            if ($match === 1) {
+                $value = $cleaned;
+            }
+        }
+        $this->customerIpAddress = $value;
+
         return $this;
+    }
+
+    public function getBillingLines()
+    {
+        return is_array($this->billingLines) ? implode("\n", $this->billingLines) : null;
+    }
+
+    public function setBillingLines($lines)
+    {
+        $this->billingLines = $this->cleanAddressLines($lines);
+        return $this;
+    }
+
+    /**
+     * Make sure we have max 4 address lines of 70 chars max
+     *
+     * If there are more than 4 lines concatenate all extra lines with the 4th line.
+     *
+     * Truncate any lines to 70 chars max.
+     *
+     * @param string $lines
+     * @return array or null
+     */
+    protected function cleanAddressLines($lines)
+    {
+        $finalLines = null;
+
+        if (is_string($lines)) {
+            $trimmed = trim($lines);
+            $addressLines = explode("\n", $trimmed);
+
+            $newLines = [];
+            foreach ($addressLines as $line) {
+                $newLines[] = $this->cleanString($line, 70);
+            }
+
+            if (count($newLines) > 4) {
+                // concat lines beyond the four allowed down into the last line
+                $newLines[3] = $this->cleanString(implode(' ', array_slice($newLines, 3)), 70);
+            }
+
+            $finalLines = array_slice($newLines, 0, 4);
+        }
+
+        return $finalLines;
+    }
+
+    public function getShipToLines()
+    {
+        return is_array($this->shipToLines) ? implode("\n", $this->shipToLines) : null;
+    }
+
+    public function setShipToLines($lines)
+    {
+        $this->shipToLines = $this->cleanAddressLines($lines);
+        return $this;
+    }
+
+    /**
+     * Take and XML string and configure this payload object
+     *
+     * @param string $string
+     * @return $this|\eBayEnterprise\RetailOrderManagement\Payload\IPayload
+     */
+    public function deserialize($string)
+    {
+        $this->schemaValidate($string);
+        $dom = new \DOMDocument();
+        $dom->loadXML($string);
+
+        $domXPath = new \DOMXPath($dom);
+        $domXPath->registerNamespace('x', self::XML_NS);
+
+        foreach ($this->extractionPaths as $property => $xPath) {
+            $this->$property = $domXPath->evaluate($xPath);
+        }
+
+        foreach ($this->optionalExtractionPaths as $property => $xPath) {
+            $node = $domXPath->query($xPath)->item(0);
+            if ($node) {
+                $this->$property = $node->nodeValue;
+            }
+        }
+
+        // address lines and boolean values have to be handled specially
+        $this->addressLinesFromXPath($domXPath);
+        foreach ($this->booleanExtractionPaths as $property => $xPath) {
+            $value = $domXPath->evaluate($xPath);
+            $this->$property = $this->convertStringToBoolean($value);
+        }
+
+        // validate self, throws Exception\InvalidPayload if we don't pass
+        $this->validate();
+
+        return $this;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializePaymentContext()
+        . $this->serializeCardInfo()
+        . $this->serializeBillingNamePhone()
+        . $this->serializeBillingAddress()
+        . $this->serializeCustomerInfo()
+        . $this->serializeShippingNamePhone()
+        . $this->serializeShippingAddress()
+        . $this->serializeIsCorrectError()
+        . $this->serializeSecureVerificationData();
+    }
+
+    /**
+     * Build the ExpirationDate, CardSecurityCode and Amount nodes
+     *
+     * @return string
+     */
+    protected function serializeCardInfo()
+    {
+        return sprintf(
+            '<ExpirationDate>%s</ExpirationDate>%s<Amount currencyCode="%s">%.2f</Amount>',
+            $this->getExpirationDate(),
+            $this->serializeCardSecurityCode(),
+            $this->getCurrencyCode(),
+            $this->getAmount()
+        );
     }
 
     public function getExpirationDate()
@@ -167,6 +316,21 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
+    /**
+     * Build the CardSecurityCode or, if the payload is using encrypted data,
+     * the EncryptedCardSecurityCode.
+     *
+     * @return string
+     */
+    protected function serializeCardSecurityCode()
+    {
+        return sprintf(
+            '<%1$s>%2$s</%1$s>',
+            $this->getIsEncrypted() ? self::ENCRYPTED_CVV_NODE : self::RAW_CVV_NODE,
+            $this->getCardSecurityCode()
+        );
+    }
+
     public function getCardSecurityCode()
     {
         return $this->cardSecurityCode;
@@ -179,21 +343,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         } else {
             $cleaned = $this->cleanString($cvv, 4);
             $this->cardSecurityCode = preg_match('#^\d{3,4}$#', $cleaned) ? $cleaned : null;
-        }
-        return $this;
-    }
-
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    public function setAmount($amount)
-    {
-        if (is_float($amount)) {
-            $this->amount = round($amount, 2, PHP_ROUND_HALF_UP);
-        } else {
-            $this->amount = null;
         }
         return $this;
     }
@@ -218,47 +367,37 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    public function getEmail()
+    public function getAmount()
     {
-        return $this->customerEmail;
+        return $this->amount;
     }
 
-    public function setEmail($email)
+    public function setAmount($amount)
     {
-        $value = null;
-        $cleaned = $this->cleanString($email, 70);
-        if ($cleaned !== null) {
-            $match = filter_var($cleaned, FILTER_VALIDATE_EMAIL);
-            if ($match) {
-                $value = $cleaned;
-            }
+        if (is_float($amount)) {
+            $this->amount = round($amount, 2, PHP_ROUND_HALF_UP);
+        } else {
+            $this->amount = null;
         }
-        $this->customerEmail = $value;
-
         return $this;
     }
 
-    public function getIp()
+    /**
+     * Build the BillingFirstName, BillingLastName and BillingPhoneNo nodes
+     *
+     * @return string
+     */
+    protected function serializeBillingNamePhone()
     {
-        return $this->customerIpAddress;
-    }
-
-    public function setIp($ip)
-    {
-        $pattern = '/((25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)/';
-        $value = null;
-
-        $cleaned = $this->cleanString($ip, 70);
-        if ($cleaned !== null) {
-            $match = preg_match($pattern, $cleaned);
-
-            if ($match === 1) {
-                $value = $cleaned;
-            }
-        }
-        $this->customerIpAddress = $value;
-
-        return $this;
+        $template = '<BillingFirstName>%s</BillingFirstName>'
+            . '<BillingLastName>%s</BillingLastName>'
+            . '<BillingPhoneNo>%s</BillingPhoneNo>';
+        return sprintf(
+            $template,
+            $this->getBillingFirstName(),
+            $this->getBillingLastName(),
+            $this->getBillingPhone()
+        );
     }
 
     public function getBillingFirstName()
@@ -321,15 +460,33 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    public function getBillingLines()
+    /**
+     * Aggregate the billing address lines into the BillingAddress node
+     *
+     * @return string
+     */
+    protected function serializeBillingAddress()
     {
-        return is_array($this->billingLines) ? implode("\n", $this->billingLines) : null;
-    }
+        $lines = [];
+        $billingLines = is_array($this->billingLines) ? $this->billingLines : [];
+        $idx = 0;
+        foreach ($billingLines as $line) {
+            $idx++;
+            $lines[] = sprintf(
+                '<Line%d>%s</Line%1$d>',
+                $idx,
+                $line
+            );
+        }
 
-    public function setBillingLines($lines)
-    {
-        $this->billingLines = $this->cleanAddressLines($lines);
-        return $this;
+        return sprintf(
+            '<BillingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</BillingAddress>',
+            implode('', $lines),
+            $this->getBillingCity(),
+            $this->nodeNullCoalesce('MainDivision', $this->getBillingMainDivision()),
+            $this->getBillingCountryCode(),
+            $this->nodeNullCoalesce('PostalCode', $this->getBillingPostalCode())
+        );
     }
 
     public function getBillingCity()
@@ -341,6 +498,20 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $this->billingCity = $this->cleanString($city, 35);
         return $this;
+    }
+
+    /**
+     * @param string $nodeName
+     * @param string $value
+     * @return string
+     */
+    protected function nodeNullCoalesce($nodeName, $value)
+    {
+        if (!$value) {
+            return '';
+        }
+
+        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
     }
 
     public function getBillingMainDivision()
@@ -375,6 +546,45 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $this->billingPostalCode = $this->cleanString($code, 15);
         return $this;
+    }
+
+    /**
+     * Build the CustomerEmail and CustomerIPAddress nodes
+     *
+     * @return string
+     */
+    protected function serializeCustomerInfo()
+    {
+        return sprintf(
+            '<CustomerEmail>%s</CustomerEmail><CustomerIPAddress>%s</CustomerIPAddress>',
+            $this->getEmail(),
+            $this->getIp()
+        );
+    }
+
+    public function getEmail()
+    {
+        return $this->customerEmail;
+    }
+
+    public function getIp()
+    {
+        return $this->customerIpAddress;
+    }
+
+    /**
+     * Build the ShippingFirstName, ShippingLastName and ShippinggPhoneNo nodes
+     *
+     * @return string
+     */
+    protected function serializeShippingNamePhone()
+    {
+        return sprintf(
+            '<ShipToFirstName>%s</ShipToFirstName><ShipToLastName>%s</ShipToLastName><ShipToPhoneNo>%s</ShipToPhoneNo>',
+            $this->getShipToFirstName(),
+            $this->getShipToLastName(),
+            $this->getShipToPhone()
+        );
     }
 
     public function getShipToFirstName()
@@ -437,15 +647,33 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    public function getShipToLines()
+    /**
+     * Aggregate the shipping address lines into the ShippingAddress node
+     *
+     * @return string
+     */
+    protected function serializeShippingAddress()
     {
-        return is_array($this->shipToLines) ? implode("\n", $this->shipToLines) : null;
-    }
+        $lines = [];
+        $shippingLines = is_array($this->shipToLines) ? $this->shipToLines : [];
+        $idx = 0;
+        foreach ($shippingLines as $line) {
+            $idx++;
+            $lines[] = sprintf(
+                '<Line%d>%s</Line%1$d>',
+                $idx,
+                $line
+            );
+        }
 
-    public function setShipToLines($lines)
-    {
-        $this->shipToLines = $this->cleanAddressLines($lines);
-        return $this;
+        return sprintf(
+            '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
+            implode('', $lines),
+            $this->getShipToCity(),
+            $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
+            $this->getShipToCountryCode(),
+            $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
+        );
     }
 
     public function getShipToCity()
@@ -493,6 +721,20 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
+    /**
+     * Build the isRequestToCorrectCVVOrAVSError node
+     *
+     * @return string
+     */
+    protected function serializeIsCorrectError()
+    {
+        $string = sprintf(
+            '<isRequestToCorrectCVVOrAVSError>%s</isRequestToCorrectCVVOrAVSError>',
+            $this->getIsRequestToCorrectCvvOrAvsError() ? 'true' : 'false'
+        );
+        return $string;
+    }
+
     public function getIsRequestToCorrectCvvOrAvsError()
     {
         return $this->isRequestToCorrectCVVOrAVSError;
@@ -502,6 +744,44 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         $this->isRequestToCorrectCVVOrAVSError = is_bool($flag) ? $flag : null;
         return $this;
+    }
+
+    /**
+     * Build the SecureVerificationData node
+     *
+     * @return string
+     */
+    protected function serializeSecureVerificationData()
+    {
+        // make sure we have all of the required fields for this node
+        // if we don't then don't serialize it at all
+        if (
+            $this->getAuthenticationAvailable() &&
+            $this->getAuthenticationStatus() &&
+            $this->getCavvUcaf() &&
+            $this->getTransactionId() &&
+            $this->getPayerAuthenticationResponse()
+        ) {
+            $template = '<SecureVerificationData>'
+                . '<AuthenticationAvailable>%s</AuthenticationAvailable>'
+                . '<AuthenticationStatus>%s</AuthenticationStatus>'
+                . '<CavvUcaf>%s</CavvUcaf>'
+                . '<TransactionId>%s</TransactionId>'
+                . '%s'
+                . '<PayerAuthenticationResponse>%s</PayerAuthenticationResponse>'
+                . '</SecureVerificationData>';
+            return sprintf(
+                $template,
+                $this->getAuthenticationAvailable(),
+                $this->getAuthenticationStatus(),
+                $this->getCavvUcaf(),
+                $this->getTransactionId(),
+                $this->nodeNullCoalesce('ECI', $this->getEci()),
+                $this->getPayerAuthenticationResponse()
+            );
+        } else {
+            return '';
+        }
     }
 
     public function getAuthenticationAvailable()
@@ -568,6 +848,17 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
+    public function getPayerAuthenticationResponse()
+    {
+        return $this->payerAuthenticationResponse;
+    }
+
+    public function setPayerAuthenticationResponse($response)
+    {
+        $this->payerAuthenticationResponse = $this->cleanString($response, 10000);
+        return $this;
+    }
+
     public function getEci()
     {
         return $this->eci;
@@ -588,290 +879,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    public function getPayerAuthenticationResponse()
-    {
-        return $this->payerAuthenticationResponse;
-    }
-
-    public function setPayerAuthenticationResponse($response)
-    {
-        $this->payerAuthenticationResponse = $this->cleanString($response, 10000);
-        return $this;
-    }
-
-    /**
-     * Serialize the various parts of the payload into XML strings and
-     * simply concatenate them together.
-     * @return string
-     */
-    protected function serializeContents()
-    {
-        return $this->serializePaymentContext()
-        . $this->serializeCardInfo()
-        . $this->serializeBillingNamePhone()
-        . $this->serializeBillingAddress()
-        . $this->serializeCustomerInfo()
-        . $this->serializeShippingNamePhone()
-        . $this->serializeShippingAddress()
-        . $this->serializeIsCorrectError()
-        . $this->serializeSecureVerificationData();
-    }
-
-    /**
-     * Build the ExpirationDate, CardSecurityCode and Amount nodes
-     *
-     * @return string
-     */
-    protected function serializeCardInfo()
-    {
-        return sprintf(
-            '<ExpirationDate>%s</ExpirationDate>%s<Amount currencyCode="%s">%.2f</Amount>',
-            $this->getExpirationDate(),
-            $this->serializeCardSecurityCode(),
-            $this->getCurrencyCode(),
-            $this->getAmount()
-        );
-    }
-
-    /**
-     * Build the CardSecurityCode or, if the payload is using encrypted data,
-     * the EncryptedCardSecurityCode.
-     *
-     * @return string
-     */
-    protected function serializeCardSecurityCode()
-    {
-        return sprintf(
-            '<%1$s>%2$s</%1$s>',
-            $this->getIsEncrypted() ? self::ENCRYPTED_CVV_NODE : self::RAW_CVV_NODE,
-            $this->getCardSecurityCode()
-        );
-    }
-    /**
-     * Build the BillingFirstName, BillingLastName and BillingPhoneNo nodes
-     *
-     * @return string
-     */
-    protected function serializeBillingNamePhone()
-    {
-        $template = '<BillingFirstName>%s</BillingFirstName>'
-            . '<BillingLastName>%s</BillingLastName>'
-            . '<BillingPhoneNo>%s</BillingPhoneNo>';
-        return sprintf(
-            $template,
-            $this->getBillingFirstName(),
-            $this->getBillingLastName(),
-            $this->getBillingPhone()
-        );
-    }
-
-    /**
-     * Aggregate the billing address lines into the BillingAddress node
-     *
-     * @return string
-     */
-    protected function serializeBillingAddress()
-    {
-        $lines = [];
-        $billingLines = is_array($this->billingLines) ? $this->billingLines : [];
-        $idx = 0;
-        foreach ($billingLines as $line) {
-            $idx++;
-            $lines[] = sprintf(
-                '<Line%d>%s</Line%1$d>',
-                $idx,
-                $line
-            );
-        }
-
-        return sprintf(
-            '<BillingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</BillingAddress>',
-            implode('', $lines),
-            $this->getBillingCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getBillingMainDivision()),
-            $this->getBillingCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getBillingPostalCode())
-        );
-    }
-
-    /**
-     * Build the CustomerEmail and CustomerIPAddress nodes
-     *
-     * @return string
-     */
-    protected function serializeCustomerInfo()
-    {
-        return sprintf(
-            '<CustomerEmail>%s</CustomerEmail><CustomerIPAddress>%s</CustomerIPAddress>',
-            $this->getEmail(),
-            $this->getIp()
-        );
-    }
-
-    /**
-     * Build the ShippingFirstName, ShippingLastName and ShippinggPhoneNo nodes
-     *
-     * @return string
-     */
-    protected function serializeShippingNamePhone()
-    {
-        return sprintf(
-            '<ShipToFirstName>%s</ShipToFirstName><ShipToLastName>%s</ShipToLastName><ShipToPhoneNo>%s</ShipToPhoneNo>',
-            $this->getShipToFirstName(),
-            $this->getShipToLastName(),
-            $this->getShipToPhone()
-        );
-    }
-
-    /**
-     * Aggregate the shipping address lines into the ShippingAddress node
-     *
-     * @return string
-     */
-    protected function serializeShippingAddress()
-    {
-        $lines = [];
-        $shippingLines = is_array($this->shipToLines) ? $this->shipToLines : [];
-        $idx = 0;
-        foreach ($shippingLines as $line) {
-            $idx++;
-            $lines[] = sprintf(
-                '<Line%d>%s</Line%1$d>',
-                $idx,
-                $line
-            );
-        }
-
-        return sprintf(
-            '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
-            implode('', $lines),
-            $this->getShipToCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
-            $this->getShipToCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
-        );
-    }
-
-    /**
-     * Build the isRequestToCorrectCVVOrAVSError node
-     *
-     * @return string
-     */
-    protected function serializeIsCorrectError()
-    {
-        $string = sprintf(
-            '<isRequestToCorrectCVVOrAVSError>%s</isRequestToCorrectCVVOrAVSError>',
-            $this->getIsRequestToCorrectCvvOrAvsError() ? 'true' : 'false'
-        );
-        return $string;
-    }
-
-    /**
-     * Build the SecureVerificationData node
-     *
-     * @return string
-     */
-    protected function serializeSecureVerificationData()
-    {
-        // make sure we have all of the required fields for this node
-        // if we don't then don't serialize it at all
-        if (
-            $this->getAuthenticationAvailable() &&
-            $this->getAuthenticationStatus() &&
-            $this->getCavvUcaf() &&
-            $this->getTransactionId() &&
-            $this->getPayerAuthenticationResponse()
-        ) {
-            $template = '<SecureVerificationData>'
-                . '<AuthenticationAvailable>%s</AuthenticationAvailable>'
-                . '<AuthenticationStatus>%s</AuthenticationStatus>'
-                . '<CavvUcaf>%s</CavvUcaf>'
-                . '<TransactionId>%s</TransactionId>'
-                . '%s'
-                . '<PayerAuthenticationResponse>%s</PayerAuthenticationResponse>'
-                . '</SecureVerificationData>';
-            return sprintf(
-                $template,
-                $this->getAuthenticationAvailable(),
-                $this->getAuthenticationStatus(),
-                $this->getCavvUcaf(),
-                $this->getTransactionId(),
-                $this->nodeNullCoalesce('ECI', $this->getEci()),
-                $this->getPayerAuthenticationResponse()
-            );
-        } else {
-            return '';
-        }
-    }
-
-    /**
-     * Make sure we have max 4 address lines of 70 chars max
-     *
-     * If there are more than 4 lines concatenate all extra lines with the 4th line.
-     *
-     * Truncate any lines to 70 chars max.
-     *
-     * @param string $lines
-     * @return array or null
-     */
-    protected function cleanAddressLines($lines)
-    {
-        $finalLines = null;
-
-        if (is_string($lines)) {
-            $trimmed = trim($lines);
-            $addressLines = explode("\n", $trimmed);
-
-            $newLines = [];
-            foreach ($addressLines as $line) {
-                $newLines[] = $this->cleanString($line, 70);
-            }
-
-            if (count($newLines) > 4) {
-                // concat lines beyond the four allowed down into the last line
-                $newLines[3] = $this->cleanString(implode(' ', array_slice($newLines, 3)), 70);
-            }
-
-            $finalLines = array_slice($newLines, 0, 4);
-        }
-
-        return $finalLines;
-    }
-
-    /**
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    protected function nodeNullCoalesce($nodeName, $value)
-    {
-        if (!$value) {
-            return '';
-        }
-
-        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
-    }
-
-    /**
-     * There can be many address lines although only one is required
-     * Find all of the nodes in the address node that
-     * start with 'Line' and add their value to the
-     * proper address lines array
-     *
-     * @param \DOMXPath $domXPath
-     */
-    protected function addressLinesFromXPath(\DOMXPath $domXPath)
-    {
-        foreach ($this->addressLinesMap as $address) {
-            $lines = $domXPath->query($address['xPath']);
-            $property = $address['property'];
-            $this->$property = [];
-            foreach ($lines as $line) {
-                array_push($this->$property, $line->nodeValue);
-            }
-        }
-    }
-
     /**
      * Name, value pairs of root attributes
      *
@@ -886,41 +893,23 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     }
 
     /**
-     * Take and XML string and configure this payload object
+     * The XML namespace for the payload.
      *
-     * @param string $string
-     * @return $this|\eBayEnterprise\RetailOrderManagement\Payload\IPayload
+     * @return string
      */
-    public function deserialize($string)
+    protected function getXmlNamespace()
     {
-        $this->schemaValidate($string);
-        $dom = new \DOMDocument();
-        $dom->loadXML($string);
+        return static::XML_NS;
+    }
 
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
 
-        foreach ($this->extractionPaths as $property => $xPath) {
-            $this->$property = $domXPath->evaluate($xPath);
-        }
-
-        foreach ($this->optionalExtractionPaths as $property => $xPath) {
-            $node = $domXPath->query($xPath)->item(0);
-            if ($node) {
-                $this->$property = $node->nodeValue;
-            }
-        }
-
-        // address lines and boolean values have to be handled specially
-        $this->addressLinesFromXPath($domXPath);
-        foreach ($this->booleanExtractionPaths as $property => $xPath) {
-            $value = $domXPath->evaluate($xPath);
-            $this->$property = $this->convertStringToBoolean($value);
-        }
-
-        // validate self, throws Exception\InvalidPayload if we don't pass
-        $this->validate();
-
+    public function setRequestId($requestId)
+    {
+        $this->requestId = $this->cleanString($requestId, 40);
         return $this;
     }
 
@@ -941,15 +930,5 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
-    }
-
-    /**
-     * The XML namespace for the payload.
-     *
-     * @return string
-     */
-    protected function getXmlNamespace()
-    {
-        return static::XML_NS;
     }
 }

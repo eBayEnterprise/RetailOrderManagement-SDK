@@ -37,6 +37,8 @@ trait TPayload
     protected $optionalExtractionPaths = [];
     /** @var array property/XPath pairs that take boolean values */
     protected $booleanExtractionPaths = [];
+    /** @var array pair address lines properties with xpaths for extraction */
+    protected $addressLinesExtractionMap = [];
 
     /**
      * Fill out this payload object with data from the supplied string.
@@ -68,6 +70,8 @@ trait TPayload
             $value = $xpath->evaluate($path);
             $this->$property = $this->convertStringToBoolean($value);
         }
+
+        $this->addressLinesFromXPath($xpath);
 
         $this->deserializeLineItems($serializedPayload);
 
@@ -126,6 +130,26 @@ trait TPayload
      * @return string
      */
     abstract protected function getXmlNamespace();
+
+    /**
+     * Get Line1 through Line4 for an Address
+     * Find all of the nodes in the address node that
+     * start with 'Line' and add their value to the
+     * proper address lines array
+     *
+     * @param \DOMXPath $domXPath
+     */
+    protected function addressLinesFromXPath(\DOMXPath $domXPath)
+    {
+        foreach ($this->addressLinesExtractionMap as $address) {
+            $lines = $domXPath->query($address['xPath']);
+            $property = $address['property'];
+            $this->$property = [];
+            foreach ($lines as $line) {
+                array_push($this->$property, $line->nodeValue);
+            }
+        }
+    }
 
     /**
      * convert line item substrings into line item objects
@@ -212,4 +236,5 @@ trait TPayload
      * @return string
      */
     abstract protected function serializeContents();
+
 }

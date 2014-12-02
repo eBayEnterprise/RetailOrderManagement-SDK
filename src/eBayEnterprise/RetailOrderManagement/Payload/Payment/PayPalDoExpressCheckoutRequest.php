@@ -20,16 +20,14 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
 {
-    use TAmount;
-    use TOrderId;
-    use TPayPalCurrencyCode;
-    use TPayPalToken;
-    use TPayPalValidators;
-    use TShippingAddress;
-    use TStrings;
+    use TPayload, TAmount, TOrderId, TPayPalCurrencyCode, TPayPalToken;
+    use TShippingAddress {
+        TPayload::addressLinesFromXPath insteadof TShippingAddress;
+    }
 
     /** @var string**/
     protected $requestId;
@@ -46,36 +44,28 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     /** @var ILineItemContainer **/
     protected $lineItems;
 
-    protected $nodesMap = [
-        'requestId' => 'string(@requestId)',
-        'orderId' => 'string(x:PaymentContext/x:OrderId)',
-        'amount' => 'number(x:Amount)',
-        'shipToName' => 'string(x:ShipToName)',
-        // see addressLinesFromXPath - Address lines Line1 through Line4 are specially handled with that function
-        'shipToCity' => 'string(x:ShippingAddress/x:City)',
-        'shipToMainDivision' => 'string(x:ShippingAddress/x:MainDivision)',
-        'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
-        'shipToPostalCode' => 'string(x:ShippingAddress/x:PostalCode)',
-    ];
-
-    /** @var array */
-    protected $addressLinesMap = [
-        [
-            'property' => 'shipToLines',
-            'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]",
-        ]
-    ];
-
-    /** @var IValidatorIterator */
-    protected $validators;
-    /** @var ISchemaValidator */
-    protected $schemaValidator;
-
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap
     ) {
+        $this->extractionPaths = [
+            'requestId' => 'string(@requestId)',
+            'orderId' => 'string(x:PaymentContext/x:OrderId)',
+            'amount' => 'number(x:Amount)',
+            'shipToName' => 'string(x:ShipToName)',
+            // see addressLinesFromXPath - Address lines Line1 through Line4 are specially handled with that function
+            'shipToCity' => 'string(x:ShippingAddress/x:City)',
+            'shipToMainDivision' => 'string(x:ShippingAddress/x:MainDivision)',
+            'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
+            'shipToPostalCode' => 'string(x:ShippingAddress/x:PostalCode)',
+        ];
+        $this->addressLinesExtractionMap = [
+            [
+                'property' => 'shipToLines',
+                'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]",
+            ]
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
@@ -105,33 +95,6 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     {
         $this->shippingAddress = $address;
         return $this;
-    }
-
-    /**
-     * Serialize the payload into XML
-     *
-     * @throws Exception\InvalidPayload
-     * @return string
-     */
-    public function serialize()
-    {
-        // make sure this payload is valid first
-        $this->validate();
-
-        $xmlString = sprintf(
-            '<%s xmlns="%s" requestId="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->getRequestId(),
-            $this->serializeContents()
-        );
-        // validate the xML we just created
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        $xml = $doc->C14N();
-
-        $this->schemaValidate($xml);
-        return $xml;
     }
 
     /**
@@ -314,55 +277,31 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     }
 
     /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws Exception\InvalidPayload
-     * @param string $serializedPayload
-     * @return self
-     */
-    public function deserialize($serializedPayload)
-    {
-        $this->schemaValidate($serializedPayload);
-        $dom = new \DomDocument();
-        $dom->loadXML($serializedPayload);
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
-
-        foreach ($this->nodesMap as $property => $xPath) {
-            $this->$property = $domXPath->evaluate($xPath);
-        }
-        $this->addressLinesFromXPath($domXPath);
-        $this->getLineItems()->deserialize($serializedPayload);
-        $this->validate();
-        return $this;
-    }
-
-    /**
-     * Get Line1 through Line4 for an Address
-     * Find all of the nodes in the address node that
-     * start with 'Line' and add their value to the
-     * proper address lines array
-     *
-     * @param \DOMXPath $domXPath
-     */
-    protected function addressLinesFromXPath(\DOMXPath $domXPath)
-    {
-        foreach ($this->addressLinesMap as $address) {
-            $lines = $domXPath->query($address['xPath']);
-            $property = $address['property'];
-            $this->$property = [];
-            foreach ($lines as $line) {
-                array_push($this->$property, $line->nodeValue);
-            }
-        }
-    }
-
-    /**
      * Return the schema file path.
      * @return string
      */
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . self::XSD;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
     }
 }
