@@ -19,7 +19,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  * Interface ICreditCardAuthRequest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface ICreditCardAuthRequest extends ICreditCardAuth, IShippingAddress
+interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShippingAddress
 {
     const ROOT_NODE = 'CreditCardAuthRequest';
 
@@ -152,70 +152,6 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IShippingAddress
      * @return self
      */
     public function setBillingPhone($phone);
-    /**
-     * The street address and/or suite and building
-     *
-     * Newline-delimited string, at most four lines
-     * xsd restriction: 1-70 characters per line
-     * @return string
-     */
-    public function getBillingLines();
-    /**
-     * @param string $lines
-     * @return self
-     */
-    public function setBillingLines($lines);
-    /**
-     * Name of the city
-     *
-     * xsd restriction: 1-35 characters
-     * @return string
-     */
-    public function getBillingCity();
-    /**
-     * @param string $city
-     * @return self
-     */
-    public function setBillingCity($city);
-    /**
-     * Typically a two- or three-digit postal abbreviation for the state or province.
-     * ISO 3166-2 code is recommended, but not required
-     *
-     * xsd restriction: 1-35 characters
-     * @return string
-     */
-    public function getBillingMainDivision();
-    /**
-     * @param string $div
-     * @return self
-     */
-    public function setBillingMainDivision($div);
-    /**
-     * Two character country code.
-     *
-     * xsd restriction: 2-40 characters
-     * @return string
-     */
-    public function getBillingCountryCode();
-    /**
-     * @param string $code
-     * @return self
-     */
-    public function setBillingCountryCode($code);
-    /**
-     * Typically, the string of letters and/or numbers that more closely
-     * specifies the delivery area than just the City component alone,
-     * for example, the Zip Code in the U.S.
-     *
-     * xsd restriction: 1-15 characters
-     * @return string
-     */
-    public function getBillingPostalCode();
-    /**
-     * @param string $code
-     * @return self
-     */
-    public function setBillingPostalCode($code);
     /**
      * First name of the person on the shipping address of the order
      *
