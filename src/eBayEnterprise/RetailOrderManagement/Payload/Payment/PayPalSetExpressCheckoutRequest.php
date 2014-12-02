@@ -30,8 +30,6 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     use TShippingAddress;
     use TStrings;
 
-    const ITERABLE_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable';
-
     /** @var string * */
     protected $returnUrl;
     /** @var string * */

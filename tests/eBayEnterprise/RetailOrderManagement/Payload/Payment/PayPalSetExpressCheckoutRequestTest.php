@@ -16,9 +16,12 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
 
 class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
+    use TPayloadTest;
+
     /** @var  Payload\IValidator */
     protected $validatorStub;
     /** @var Payload\IValidatorIterator */
@@ -26,26 +29,8 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     /** @var  Payload\ISchemaValidator */
     protected $schemaValidatorStub;
     /** @var Payload\IPayloadMap (stub) */
-    protected $stubPayloadMap;
+    protected $payloadMapStub;
 
-    protected function setUp()
-    {
-        $this->stubPayloadMap = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
-        $this->stubPayloadMap->expects($this->once())
-            ->method('getConcreteType')->will($this->returnValueMap([[
-                PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE,
-                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
-            ]]));
-        $this->stubPayloadMap->expects($this->any())
-            ->method('hasMappingForType')->will($this->returnValueMap([
-                [PayPalSetExpressCheckoutRequest::ITERABLE_INTERFACE, true]
-            ]));
-        $this->stubPayloadMap->expects($this->any())
-            ->method('getOverrideWithMapping')->will($this->returnSelf());
-        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
-    }
     /**
      * data provider of empty array of properties
      * Empty properties will generate an invalid IPayload object
@@ -60,6 +45,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             [$payloadData]
         ];
     }
+
     /**
      * Provide test data for the cleanAddressLines function.
      * @return array
@@ -85,6 +71,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             ]
         ];
     }
+
     /**
      * Provide test data to verify serializeShippingAddress
      */
@@ -117,37 +104,45 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Take an array of property values with property names as keys and return an IPayload object
-     *
-     * @param array $properties
-     * @return PayPalSetExpressCheckoutRequest
+     * @param $lines
+     * @param $expected
+     * @dataProvider provideCleanAddressLinesTests
      */
-    protected function buildPayload(array $properties)
+    public function testCleanAddressLines($lines, $expected)
     {
         $payload = new PayPalSetExpressCheckoutRequest(
             $this->validatorIterator,
             $this->schemaValidatorStub,
-            $this->stubPayloadMap
+            $this->payloadMapStub
         );
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-        return $payload;
+        $method = new \ReflectionMethod(
+            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest',
+            'cleanAddressLines'
+        );
+        $method->setAccessible(true);
+        $cleaned = $method->invokeArgs($payload, [$lines]);
+        $this->assertSame($expected, $cleaned);
     }
 
     /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
+     * @param array $properties
+     * @param $expected
+     * @dataProvider provideShippingAddressData
      */
-    protected function xmlTestString()
+    public function testSerializeShippingAddress($properties, $expected)
     {
-        $dom = new \DOMDocument();
-        $dom->load(__DIR__.'/Fixtures/PayPalSetExpressCheckoutRequest.xml');
-        $string = $dom->C14N();
-
-        return $string;
+        $payload = new PayPalSetExpressCheckoutRequest(
+            $this->validatorIterator,
+            $this->schemaValidatorStub,
+            $this->payloadMapStub
+        );
+        $this->injectProperties($payload, $properties);
+        $method = new \ReflectionMethod($payload, 'serializeShippingAddress');
+        $method->setAccessible(true);
+        $actual = $method->invoke($payload);
+        $this->assertSame($expected, $actual);
     }
+
     /**
      * Inject property values into $class
      *
@@ -164,44 +159,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             $requestProperty->setValue($class, $value);
         }
     }
-    /**
-     * @param $lines
-     * @param $expected
-     * @dataProvider provideCleanAddressLinesTests
-     */
-    public function testCleanAddressLines($lines, $expected)
-    {
-        $payload = new PayPalSetExpressCheckoutRequest(
-            $this->validatorIterator,
-            $this->schemaValidatorStub,
-            $this->stubPayloadMap
-        );
-        $method = new \ReflectionMethod(
-            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest',
-            'cleanAddressLines'
-        );
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, [$lines]);
-        $this->assertSame($expected, $cleaned);
-    }
-    /**
-     * @param array $properties
-     * @param $expected
-     * @dataProvider provideShippingAddressData
-     */
-    public function testSerializeShippingAddress($properties, $expected)
-    {
-        $payload = new PayPalSetExpressCheckoutRequest(
-            $this->validatorIterator,
-            $this->schemaValidatorStub,
-            $this->stubPayloadMap
-        );
-        $this->injectProperties($payload, $properties);
-        $method = new \ReflectionMethod($payload, 'serializeShippingAddress');
-        $method->setAccessible(true);
-        $actual = $method->invoke($payload);
-        $this->assertSame($expected, $actual);
-    }
+
     /**
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
@@ -215,6 +173,26 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $payload->validate();
     }
+
+    /**
+     * Take an array of property values with property names as keys and return an IPayload object
+     *
+     * @param array $properties
+     * @return PayPalSetExpressCheckoutRequest
+     */
+    protected function buildPayload(array $properties)
+    {
+        $payload = new PayPalSetExpressCheckoutRequest(
+            $this->validatorIterator,
+            $this->schemaValidatorStub,
+            $this->payloadMapStub
+        );
+        foreach ($properties as $property => $value) {
+            $payload->$property($value);
+        }
+        return $payload;
+    }
+
     /**
      * @param array $payloadData
      * @dataProvider provideInvalidPayload
@@ -227,5 +205,27 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload()));
         $payload->serialize();
+    }
+
+    protected function setUp()
+    {
+        $this->payloadMapStub = $this->stubPayloadMap();
+        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
+    }
+
+    /**
+     * Read an XML file with valid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlTestString()
+    {
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__.'/Fixtures/PayPalSetExpressCheckoutRequest.xml');
+        $string = $dom->C14N();
+
+        return $string;
     }
 }

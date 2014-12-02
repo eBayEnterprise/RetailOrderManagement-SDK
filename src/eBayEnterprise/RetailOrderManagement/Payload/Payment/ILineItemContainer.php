@@ -21,6 +21,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  */
 interface ILineItemContainer
 {
+    const ITERABLE_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable';
+
     /**
      * Get an iterable of the line items for this container.
      *
@@ -30,6 +32,7 @@ interface ILineItemContainer
 
     /**
      * @param ILineItemIterable
+     *
      * @return self
      */
     public function setLineItems(ILineItemIterable $items);

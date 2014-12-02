@@ -31,8 +31,6 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     use TShippingAddress;
     use TStrings;
 
-    const ITERABLE_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable';
-
     /** @var string**/
     protected $requestId;
     /** @var string **/
@@ -89,102 +87,6 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     }
 
     /**
-     * RequestId is used to globally identify a request message and is used
-     * for duplicate request protection.
-     *
-     * xsd restrictions: 1-40 characters
-     * @return string
-     */
-    public function getRequestId()
-    {
-        return $this->requestId;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setRequestId($requestId)
-    {
-        $this->requestId = $requestId;
-        return $this;
-    }
-    /**
-     * Unique identifier of the customer's PayPal account, can be retrieved from the PayPalGetExpressCheckoutReply
-     * or the URL the customer was redirected with from PayPal.
-     *
-     * @return string
-     */
-    public function getPayerId()
-    {
-        return $this->payerId;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerId($id)
-    {
-        $this->payerId = $id;
-        return $this;
-    }
-    /**
-     * The amount to authorize
-     *
-     * xsd note: minimum value 0
-     *           maximum precision 2 decimal places
-     * @return float
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-    /**
-     * @param float
-     * @return self
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $this->sanitizeAmount($amount);
-        return $this;
-    }
-    /**
-     * PickUpStoreId refers to store name/number for ship-to-store/in-store-pick up like "StoreName StoreNumber".
-     * Optional except during ship-to-store delivery method.
-     *
-     * @return string
-     */
-    public function getPickUpStoreId()
-    {
-        return $this->pickUpStoreId;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPickUpStoreId($id)
-    {
-        $this->pickUpStoreId = $id;
-        return $this;
-    }
-    /**
-     * The name of the person shipped to like "FirsName LastName".
-     *
-     * @return string
-     */
-    public function getShipToName()
-    {
-        return $this->shipToName;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setShipToName($name)
-    {
-        $this->shipToName = $name;
-        return $this;
-    }
-    /**
      * Whether the address was input on PayPal site or the merchant site, the final address
      * used should be passed at this time.
      *
@@ -194,6 +96,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     {
         return $this->shippingAddress;
     }
+
     /**
      * @param IPhysicalAddress
      * @return self
@@ -203,6 +106,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         $this->shippingAddress = $address;
         return $this;
     }
+
     /**
      * Serialize the payload into XML
      *
@@ -229,6 +133,186 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         $this->schemaValidate($xml);
         return $xml;
     }
+
+    /**
+     * RequestId is used to globally identify a request message and is used
+     * for duplicate request protection.
+     *
+     * xsd restrictions: 1-40 characters
+     * @return string
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setRequestId($requestId)
+    {
+        $this->requestId = $requestId;
+        return $this;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializeOrderId()
+        . $this->serializeToken() // TPayPalToken
+        . $this->serializePayerId()
+        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
+        . $this->serializePickupStoreId()
+        . $this->serializeShipToName()
+        . $this->serializeShippingAddress() // TShippingAddress
+        . $this->serializeLineItems();
+    }
+
+    /**
+     * Serialize the PayPalPayer Id
+     * @return string
+     */
+    protected function serializePayerId()
+    {
+        return "<ShipToName>{$this->getPayerId()}</ShipToName>";
+    }
+
+    /**
+     * Unique identifier of the customer's PayPal account, can be retrieved from the PayPalGetExpressCheckoutReply
+     * or the URL the customer was redirected with from PayPal.
+     *
+     * @return string
+     */
+    public function getPayerId()
+    {
+        return $this->payerId;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerId($id)
+    {
+        $this->payerId = $id;
+        return $this;
+    }
+
+    /**
+     * The amount to authorize
+     *
+     * xsd note: minimum value 0
+     *           maximum precision 2 decimal places
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param float
+     * @return self
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $this->sanitizeAmount($amount);
+        return $this;
+    }
+
+    /**
+     * Serialize the PickupStoreId
+     * @return string
+     */
+    protected function serializePickupStoreId()
+    {
+        return "<ShipToName>{$this->getPickupStoreId()}</ShipToName>";
+    }
+
+    /**
+     * PickUpStoreId refers to store name/number for ship-to-store/in-store-pick up like "StoreName StoreNumber".
+     * Optional except during ship-to-store delivery method.
+     *
+     * @return string
+     */
+    public function getPickUpStoreId()
+    {
+        return $this->pickUpStoreId;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPickUpStoreId($id)
+    {
+        $this->pickUpStoreId = $id;
+        return $this;
+    }
+
+    /**
+     * Serialize the Ship To Name
+     * @return string
+     */
+    protected function serializeShipToName()
+    {
+        return "<ShipToName>{$this->getShipToName()}</ShipToName>";
+    }
+
+    /**
+     * The name of the person shipped to like "FirsName LastName".
+     *
+     * @return string
+     */
+    public function getShipToName()
+    {
+        return $this->shipToName;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setShipToName($name)
+    {
+        $this->shipToName = $name;
+        return $this;
+    }
+
+    /**
+     * Serialization of line items
+     * @return string
+     */
+    protected function serializeLineItems()
+    {
+        return $this->getLineItems()->serialize();
+    }
+
+    /**
+     * Get an iterable of the line items for this container.
+     *
+     * @return ILineItemIterable
+     */
+    public function getLineItems()
+    {
+        return $this->lineItems;
+    }
+
+    /**
+     * @param ILineItemIterable
+     * @return self
+     */
+    public function setLineItems(ILineItemIterable $items)
+    {
+        $this->lineItems = $items;
+        return $this;
+    }
+
     /**
      * Fill out this payload object with data from the supplied string.
      *
@@ -252,72 +336,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         $this->validate();
         return $this;
     }
-    /**
-     * Serialize the various parts of the payload into XML strings and
-     * concatenate them together.
-     * @return string
-     */
-    protected function serializeContents()
-    {
-        return $this->serializeOrderId()
-        . $this->serializeToken() // TPayPalToken
-        . $this->serializePayerId()
-        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
-        . $this->serializePickupStoreId()
-        . $this->serializeShipToName()
-        . $this->serializeShippingAddress() // TShippingAddress
-        . $this->serializeLineItems();
-    }
-    /**
-     * Serialization of line items
-     * @return string
-     */
-    protected function serializeLineItems()
-    {
-        return $this->getLineItems()->serialize();
-    }
-    /**
-     * Serialize the PayPalPayer Id
-     * @return string
-     */
-    protected function serializePayerId()
-    {
-        return "<ShipToName>{$this->getPayerId()}</ShipToName>";
-    }
-    /**
-     * Serialize the Ship To Name
-     * @return string
-     */
-    protected function serializeShipToName()
-    {
-        return "<ShipToName>{$this->getShipToName()}</ShipToName>";
-    }
-    /**
-     * Serialize the PickupStoreId
-     * @return string
-     */
-    protected function serializePickupStoreId()
-    {
-        return "<ShipToName>{$this->getPickupStoreId()}</ShipToName>";
-    }
-    /**
-     * Get an iterable of the line items for this container.
-     *
-     * @return ILineItemIterable
-     */
-    public function getLineItems()
-    {
-        return $this->lineItems;
-    }
-    /**
-     * @param ILineItemIterable
-     * @return self
-     */
-    public function setLineItems(ILineItemIterable $items)
-    {
-        $this->lineItems = $items;
-        return $this;
-    }
+
     /**
      * Get Line1 through Line4 for an Address
      * Find all of the nodes in the address node that

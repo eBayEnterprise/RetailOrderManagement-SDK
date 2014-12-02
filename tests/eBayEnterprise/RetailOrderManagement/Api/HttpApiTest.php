@@ -78,21 +78,15 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
     public function provideSendRequestAction()
     {
         return [
-            ['post'],
-            ['get']
-        ];
-    }
-
-    public function provideSendRequestUnsupportedAction()
-    {
-        return [
-            ['options'],
-            ['head'],
-            ['put'],
-            ['delete'],
-            ['trace'],
-            ['connect'],
-            ['patch'],
+            [true, 'post'],
+            [true, 'get'],
+            [false, 'options'],
+            [false, 'head'],
+            [false, 'put'],
+            [false, 'delete'],
+            [false, 'trace'],
+            [false, 'connect'],
+            [false, 'patch'],
         ];
     }
 
@@ -153,10 +147,11 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param bool $supported if false, expect error
      * @param $action
      * @dataProvider provideSendRequestAction
      */
-    public function testSendRequestHandlesAction($action)
+    public function testSendRequestHandlesAction($supported, $action)
     {
         $this->setRestrictedPropertyValues($this->configStub, ['action' => $action]);
         $stub = $this->getMock(
@@ -169,29 +164,9 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
             ->method($action)
             ->will($this->returnValue(true));
 
-        $actual = $this->invokeRestrictedMethod($stub, 'sendRequest');
-
-        $this->assertTrue($actual);
-    }
-
-    /**
-     * @param $action
-     * @dataProvider provideSendRequestUnsupportedAction
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedHttpAction
-     */
-    public function testSendRequestHandlesUnsupportedAction($action)
-    {
-        $this->setRestrictedPropertyValues($this->configStub, ['action' => $action]);
-        $stub = $this->getMock(
-            'eBayEnterprise\RetailOrderManagement\Api\HttpApi',
-            ['post', 'get'],
-            [$this->configStub]
-        );
-
-        $stub->expects($this->any())
-            ->method($action)
-            ->will($this->returnValue(true));
-
+        if (!$supported) {
+            $this->setExpectedException('\eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedHttpAction');
+        }
         $actual = $this->invokeRestrictedMethod($stub, 'sendRequest');
 
         $this->assertTrue($actual);
