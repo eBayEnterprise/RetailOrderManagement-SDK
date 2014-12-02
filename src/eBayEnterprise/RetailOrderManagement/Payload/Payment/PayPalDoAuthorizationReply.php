@@ -16,14 +16,13 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
 {
     const SUCCESS = 'Success';
 
-    use TOrderId;
-    use TPayPalValidators;
-    use TStrings;
+    use Payload\TPayload, TOrderId;
 
     /** @var string **/
     protected $responseCode;
@@ -33,43 +32,24 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     protected $pendingReason;
     /** @var string **/
     protected $reasonCode;
-    /** @var array paths to our data */
-    protected $nodesMap = [
-        'responseCode' => 'string(x:ResponseCode)',
-        'orderId' => 'string(x:OrderId)',
-        'paymentStatus' => 'string(x:AuthorizationInfo/x:PaymentStatus)',
-        'pendingReason' => 'string(x:AuthorizationInfo/x:PendingReason)',
-        'reasonCode' => 'string(x:AuthorizationInfo/x:ReasonCode)',
-    ];
 
-    /** @var Payload\IValidatorIterator */
-    protected $validators;
-    /** @var Payload\ISchemaValidator */
-    protected $schemaValidator;
-
+    /**
+     * @param Payload\IValidatorIterator $validators
+     * @param Payload\ISchemaValidator $schemaValidator
+     */
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'responseCode' => 'string(x:ResponseCode)',
+            'orderId' => 'string(x:OrderId)',
+            'paymentStatus' => 'string(x:AuthorizationInfo/x:PaymentStatus)',
+            'pendingReason' => 'string(x:AuthorizationInfo/x:PendingReason)',
+            'reasonCode' => 'string(x:AuthorizationInfo/x:ReasonCode)',
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
-    /**
-     * Response code like Success, Failure etc
-     *
-     * @return string
-     */
-    public function getResponseCode()
-    {
-        return $this->responseCode;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setResponseCode($code)
-    {
-        $this->responseCode = $code;
-        return $this;
-    }
+
     /**
      * Should downstream systems consider this reply a success?
      *
@@ -79,6 +59,27 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     {
         return ($this->getResponseCode() === static::SUCCESS);
     }
+
+    /**
+     * Response code like Success, Failure etc
+     *
+     * @return string
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setResponseCode($code)
+    {
+        $this->responseCode = $code;
+        return $this;
+    }
+
     /**
      * Return the string form of the payload data for transmission.
      * Validation is implied.
@@ -86,54 +87,17 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
      * @throws Payload\Exception\InvalidPayload
      * @return string
      */
-    public function serialize()
+    protected function serializeContents()
     {
-        // make sure this payload is valid first
-        $this->validate();
-
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeOrderId() .
-            "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
-            . "<AuthorizationInfo>"
-            . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
-            . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
-            . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
-            . "</AuthorizationInfo>"
-        );
-        // validate the xML we just created
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        $xml = $doc->C14N();
-
-        $this->schemaValidate($xml);
-        return $xml;
+        return $this->serializeOrderId()
+        . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
+        . "<AuthorizationInfo>"
+        . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
+        . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
+        . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
+        . "</AuthorizationInfo>";
     }
-    /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @param string $string
-     * @return self
-     */
-    public function deserialize($string)
-    {
-        $this->schemaValidate($string);
-        $dom = new \DOMDocument();
-        $dom->loadXML($string);
 
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
-        foreach ($this->nodesMap as $property => $path) {
-            $this->$property = $domXPath->evaluate($path);
-        }
-        // payload is only valid if the unserialized data is also valid
-        $this->validate();
-
-        return $this;
-    }
     /**
      * This value is passed through from the Order Management System. It is returned from a PayPal Get.
      * (However, this field is in the XSD for more than just Get.)
@@ -144,6 +108,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     {
         return $this->paymentStatus;
     }
+
     /**
      * @param string
      * @return self
@@ -153,6 +118,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
         $this->paymentStatus = $status;
         return $this;
     }
+
     /**
      * This value is passed through from the Order Management System. It is returned from a PayPal Get.
      * (However, this field is in the XSD for more than just Get.)
@@ -163,6 +129,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     {
         return $this->pendingReason;
     }
+
     /**
      * @param string
      * @return self
@@ -172,6 +139,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
         $this->pendingReason = $reason;
         return $this;
     }
+
     /**
      * This value is passed through from the Order Management System. It is returned from a PayPal Get.
      * (However, this field is in the XSD for more than just Get.)
@@ -182,6 +150,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     {
         return $this->reasonCode;
     }
+
     /**
      * @param string
      * @return self
@@ -199,5 +168,26 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . self::XSD;
+    }
+
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

@@ -167,39 +167,6 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
      * @param array $payloadData
      * @dataProvider provideValidPayload
      */
-    public function testSerializeWillPass(array $payloadData, $xml)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $domPayload = new \DOMDocument();
-        $domPayload->preserveWhiteSpace = false;
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-        $domPayload->loadXML($this->xmlTestString($xml));
-        $expectedString = $domPayload->C14N();
-        $this->assertEquals($expectedString, $serializedString);
-    }
-
-    /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlTestString($xml)
-    {
-        $dom = new \DOMDocument();
-        $dom->load(__DIR__."/Fixtures/$xml");
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
     public function testDeserializeWillPass(array $payloadData, $xml)
     {
         $this->stubValidator->expects($this->any())
@@ -210,9 +177,23 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
 
         // inject the xml namespace into the string as the deserialize expects
         // the elements to be in a specific namespace.
-        $serializedPayload = '<'.self::ROOT_NODE.' xmlns="'.self::XML_NS.'">'
+        $serializedPayload = '<' . self::ROOT_NODE . ' xmlns="' . self::XML_NS . '">'
             . substr($this->xmlTestString($xml), strlen('<LineItem>'));
         $payload->deserialize($serializedPayload);
         $this->assertEquals($expectedPayload, $payload);
+    }
+
+    /**
+     * Read an XML file with valid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlTestString($xml)
+    {
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__ . "/Fixtures/$xml");
+        $string = $dom->C14N();
+
+        return $string;
     }
 }

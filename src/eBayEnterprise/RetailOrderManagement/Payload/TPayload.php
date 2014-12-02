@@ -15,6 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
+use eBayEnterprise\RetailOrderManagement\Payload\Payment\TStrings;
+
 /**
  * Generic implementation strategies for things payloads have to do.
  *
@@ -23,6 +25,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
  */
 trait TPayload
 {
+    use TStrings;
+
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var IValidatorIterator */
@@ -124,22 +128,6 @@ trait TPayload
     abstract protected function getXmlNamespace();
 
     /**
-     * Convert "true", "false", "1" or "0" to boolean
-     * Everything else returns null
-     *
-     * @param $string
-     * @return bool|null
-     */
-    protected function convertStringToBoolean($string)
-    {
-        if (!is_string($string)) {
-            return null;
-        }
-        $string = strtolower($string);
-        return (($string === 'true') || ($string === '1'));
-    }
-
-    /**
      * convert line item substrings into line item objects
      * @param  string $serializedPayload
      * @return self
@@ -218,26 +206,10 @@ trait TPayload
         ];
     }
 
-    abstract protected function serializeContents();
-
     /**
-     * Trim any white space and return the resulting string truncating to $maxLength.
+     * Serialize the various parts of the payload into XML strings and concatenate them together.
      *
-     * Return null if the result is an empty string or not a string
-     *
-     * @param string $string
-     * @param int $maxLength
-     * @return string or null
+     * @return string
      */
-    protected function cleanString($string, $maxLength)
-    {
-        $value = null;
-
-        if (is_string($string)) {
-            $trimmed = substr(trim($string), 0, $maxLength);
-            $value = empty($trimmed) ? null : $trimmed;
-        }
-
-        return $value;
-    }
+    abstract protected function serializeContents();
 }

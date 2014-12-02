@@ -16,12 +16,13 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
 {
-    use TOrderId;
-    use TPayPalValidators;
-    use TStrings;
+    use Payload\TPayload, TOrderId;
+
+    const SUCCESS = 'Success';
 
     /** @var string **/
     protected $responseCode;
@@ -35,26 +36,54 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     protected $pendingReason;
     /** @var string **/
     protected $reasonCode;
-    /** @var array */
-    protected $nodesMap = [
-        'responseCode' => 'string(x:ResponseCode)',
-        'transactionId' => 'string(x:TransactionID)',
-        'errorMessage' => 'string(x:ErrorMessage)',
-        'orderId' => 'string(x:OrderId)',
-        'paymentStatus' => 'string(x:PaymentInfo/x:PaymentStatus)',
-        'pendingReason' => 'string(x:PaymentInfo/x:PendingReason)',
-        'reasonCode' => 'string(x:PaymentInfo/x:ReasonCode)',
-    ];
 
-    /** @var Payload\IValidatorIterator */
-    protected $validators;
-    /** @var Payload\ISchemaValidator */
-    protected $schemaValidator;
-
+    /**
+     * @param Payload\IValidatorIterator $validators
+     * @param Payload\ISchemaValidator $schemaValidator
+     */
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'responseCode' => 'string(x:ResponseCode)',
+            'transactionId' => 'string(x:TransactionID)',
+            'errorMessage' => 'string(x:ErrorMessage)',
+            'orderId' => 'string(x:OrderId)',
+            'paymentStatus' => 'string(x:PaymentInfo/x:PaymentStatus)',
+            'pendingReason' => 'string(x:PaymentInfo/x:PendingReason)',
+            'reasonCode' => 'string(x:PaymentInfo/x:ReasonCode)',
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
+    }
+
+    /**
+     * The description of error like "10413:The totals of the cart item amounts do not match order amounts".
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setErrorMessage($message)
+    {
+        $this->errorMessage = $message;
+        return $this;
+    }
+
+    /**
+     * Should downstream systems consider this reply a success?
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return ($this->getResponseCode() === self::SUCCESS);
     }
 
     /**
@@ -66,6 +95,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     {
         return $this->responseCode;
     }
+
     /**
      * @param string
      * @return self
@@ -75,79 +105,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
         $this->responseCode = $code;
         return $this;
     }
-    /**
-     * A transaction identification number.
-     * Character length and limits: 19 single-byte characters maximum
-     *
-     * @return string
-     */
-    public function getTransactionId()
-    {
-        return $this->transactionId;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setTransactionId($id)
-    {
-        $this->transactionId = $id;
-        return $this;
-    }
-    /**
-     * The description of error like "10413:The totals of the cart item amounts do not match order amounts".
-     *
-     * @return string
-     */
-    public function getErrorMessage()
-    {
-        return $this->errorMessage;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setErrorMessage($message)
-    {
-        $this->errorMessage = $message;
-        return $this;
-    }
-    /**
-     * Should downstream systems consider this reply a success?
-     *
-     * @return bool
-     */
-    public function isSuccess()
-    {
-        //@TODO Finish body
-        return ($this->getResponseCode() === 'Success');
-    }
-    /**
-     * Return the string form of the payload data for transmission.
-     * Validation is implied.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @return string
-     */
-    public function serialize()
-    {
-        // validate the payload data
-        $this->validate();
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeContents()
-        );
 
-        // validate the xML we just created
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        $xml = $doc->C14N();
-
-        $this->schemaValidate($xml);
-        return $xml;
-    }
     /**
      * Returns the bulk of the XML required to make a reply
      * @return string
@@ -163,49 +121,28 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
             . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
             . "</PaymentInfo>";
     }
-    /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @param string $string
-     * @return self
-     */
-    public function deserialize($string)
-    {
-        $this->schemaValidate($string);
-        $dom = new \DOMDocument();
-        $dom->loadXML($string);
 
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
-        foreach ($this->nodesMap as $property => $path) {
-            $this->$property = $domXPath->evaluate($path);
-        }
-        // payload is only valid if the unserialized data is also valid
-        $this->validate();
-
-        return $this;
-    }
     /**
-     * A unique identifier for the order
-     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
+     * A transaction identification number.
+     * Character length and limits: 19 single-byte characters maximum
      *
-     * xsd restrictions: 1-20 characters
      * @return string
      */
-    public function getOrderId()
+    public function getTransactionId()
     {
-        return $this->orderId;
+        return $this->transactionId;
     }
+
     /**
-     * @param string $orderId
+     * @param string
      * @return self
      */
-    public function setOrderId($orderId)
+    public function setTransactionId($id)
     {
-        $this->orderId = $orderId;
+        $this->transactionId = $id;
         return $this;
     }
+
     /**
      * This value is passed through from the Order Management System. It is returned from a PayPal Get.
      * (However, this field is in the XSD for more than just Get.)
@@ -271,5 +208,25 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . self::XSD;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
     }
 }

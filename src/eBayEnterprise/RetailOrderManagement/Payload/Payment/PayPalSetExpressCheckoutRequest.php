@@ -92,6 +92,128 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     }
 
     /**
+     * Fill out this payload object with data from the supplied string.
+     *
+     * @throws Exception\InvalidPayload
+     * @param string $serializedPayload
+     * @return self
+     */
+    public function deserialize($serializedPayload)
+    {
+        $this->schemaValidate($serializedPayload);
+        $dom = new \DomDocument();
+        $dom->loadXML($serializedPayload);
+        $domXPath = new \DOMXPath($dom);
+        $domXPath->registerNamespace('x', self::XML_NS);
+
+        foreach ($this->requiredNodesMap as $property => $xPath) {
+            $this->$property = $domXPath->evaluate($xPath);
+        }
+        $this->addressLinesFromXPath($domXPath);
+        foreach ($this->booleanXPaths as $property => $xPath) {
+            $value = $domXPath->evaluate($xPath);
+            $this->$property = $this->convertStringToBoolean($value);
+        }
+        $this->getLineItems()->deserialize($serializedPayload);
+
+        $this->validate();
+        return $this;
+    }
+
+    /**
+     * Get Line1 through Line4 for an Address
+     * Find all of the nodes in the address node that
+     * start with 'Line' and add their value to the
+     * proper address lines array
+     *
+     * @param \DOMXPath $domXPath
+     */
+    protected function addressLinesFromXPath(\DOMXPath $domXPath)
+    {
+        foreach ($this->addressLinesMap as $address) {
+            $lines = $domXPath->query($address['xPath']);
+            $property = $address['property'];
+            $this->$property = [];
+            foreach ($lines as $line) {
+                array_push($this->$property, $line->nodeValue);
+            }
+        }
+    }
+
+    /**
+     * Get an iterable of the line items for this container.
+     *
+     * @return ILineItemIterable
+     */
+    public function getLineItems()
+    {
+        return $this->lineItems;
+    }
+
+    /**
+     * @param ILineItemIterable
+     * @return self
+     */
+    public function setLineItems(ILineItemIterable $items)
+    {
+        $this->lineItems = $items;
+        return $this;
+    }
+
+    /**
+     * Serialize the payload into XML
+     *
+     * @throws Exception\InvalidPayload
+     * @return string
+     */
+    public function serialize()
+    {
+        // make sure this payload is valid first
+        $this->validate();
+
+        $xmlString = sprintf(
+            '<%s xmlns="%s">%s</%1$s>',
+            self::ROOT_NODE,
+            self::XML_NS,
+            $this->serializeContents()
+        );
+
+        // validate the xML we just created
+        $doc = new \DOMDocument();
+        $doc->loadXML($xmlString);
+        $xml = $doc->C14N();
+
+        $this->schemaValidate($xml);
+        return $xml;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializeOrderId()
+        . $this->serializeUrls()
+        . $this->serializeLocaleCode()
+        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
+        . $this->serializeAddressOverride()
+        . $this->serializeShippingAddress()
+        . $this->serializeLineItems();
+    }
+
+    /**
+     * Serialize the URLs to which PayPal should redirect upon return and cancel, respectively
+     * @return string
+     */
+    protected function serializeUrls()
+    {
+        return "<ReturnUrl>{$this->getReturnUrl()}</ReturnUrl>"
+        . "<CancelUrl>{$this->getCancelUrl()}</CancelUrl>";
+    }
+
+    /**
      * URL to which the customer's browser is returned after choosing to pay with PayPal.
      * PayPal recommends that the value be the final review page on which the customer confirms the order and payment.
      *
@@ -131,6 +253,15 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         $this->cancelUrl = $url;
         return $this;
+    }
+
+    /**
+     * Serialize the Local Code
+     * @return string
+     */
+    protected function serializeLocaleCode()
+    {
+        return "<LocaleCode>{$this->getLocaleCode()}</LocaleCode>";
     }
 
     /**
@@ -175,6 +306,15 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     }
 
     /**
+     * Serialize the AddressOverride indicator, which is a boolean
+     * @return string
+     */
+    protected function serializeAddressOverride()
+    {
+        return '<AddressOverride>' . ($this->getAddressOverride() ? '1' : '0') . '</AddressOverride>';
+    }
+
+    /**
      * If true, PayPal will display the shipping address provided in the payload.
      * Otherwise PayPal will display whatever shipping address it has for the customer
      * and won't let the customer edit it.
@@ -199,152 +339,12 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     }
 
     /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws Exception\InvalidPayload
-     * @param string $serializedPayload
-     * @return self
-     */
-    public function deserialize($serializedPayload)
-    {
-        $this->schemaValidate($serializedPayload);
-        $dom = new \DomDocument();
-        $dom->loadXML($serializedPayload);
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
-
-        foreach ($this->requiredNodesMap as $property => $xPath) {
-            $this->$property = $domXPath->evaluate($xPath);
-        }
-        $this->addressLinesFromXPath($domXPath);
-        foreach ($this->booleanXPaths as $property => $xPath) {
-            $value = $domXPath->evaluate($xPath);
-            $this->$property = $this->booleanFromString($value);
-        }
-        $this->getLineItems()->deserialize($serializedPayload);
-
-        $this->validate();
-        return $this;
-    }
-
-    /**
-     * Get an iterable of the line items for this container.
-     *
-     * @return ILineItemIterable
-     */
-    public function getLineItems()
-    {
-        return $this->lineItems;
-    }
-
-    /**
-     * @param ILineItemIterable
-     * @return self
-     */
-    public function setLineItems(ILineItemIterable $items)
-    {
-        $this->lineItems = $items;
-        return $this;
-    }
-
-    /**
-     * Serialize the various parts of the payload into XML strings and
-     * concatenate them together.
-     * @return string
-     */
-    protected function serializeContents()
-    {
-        return $this->serializeOrderId()
-        . $this->serializeUrls()
-        . $this->serializeLocaleCode()
-        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
-        . $this->serializeAddressOverride()
-        . $this->serializeShippingAddress()
-        . $this->serializeLineItems();
-    }
-
-    /**
-     * Serialize the payload into XML
-     *
-     * @throws Exception\InvalidPayload
-     * @return string
-     */
-    public function serialize()
-    {
-        // make sure this payload is valid first
-        $this->validate();
-
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeContents()
-        );
-
-        // validate the xML we just created
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        $xml = $doc->C14N();
-
-        $this->schemaValidate($xml);
-        return $xml;
-    }
-
-    /**
-     * Serialize the URLs to which PayPal should redirect upon return and cancel, respectively
-     * @return string
-     */
-    protected function serializeUrls()
-    {
-        return "<ReturnUrl>{$this->getReturnUrl()}</ReturnUrl>"
-        . "<CancelUrl>{$this->getCancelUrl()}</CancelUrl>";
-    }
-
-    /**
-     * Serialize the Local Code
-     * @return string
-     */
-    protected function serializeLocaleCode()
-    {
-        return "<LocaleCode>{$this->getLocaleCode()}</LocaleCode>";
-    }
-
-    /**
-     * Serialize the AddressOverride indicator, which is a boolean
-     * @return string
-     */
-    protected function serializeAddressOverride()
-    {
-        return '<AddressOverride>' . ($this->getAddressOverride() ? '1' : '0') . '</AddressOverride>';
-    }
-
-    /**
      * Serialization of line items
      * @return string
      */
     protected function serializeLineItems()
     {
         return $this->getLineItems()->serialize();
-    }
-
-    /**
-     * Get Line1 through Line4 for an Address
-     * Find all of the nodes in the address node that
-     * start with 'Line' and add their value to the
-     * proper address lines array
-     *
-     * @param \DOMXPath $domXPath
-     */
-    protected function addressLinesFromXPath(\DOMXPath $domXPath)
-    {
-        foreach ($this->addressLinesMap as $address) {
-            $lines = $domXPath->query($address['xPath']);
-            $property = $address['property'];
-            $this->$property = [];
-            foreach ($lines as $line) {
-                array_push($this->$property, $line->nodeValue);
-            }
-        }
     }
 
     /**

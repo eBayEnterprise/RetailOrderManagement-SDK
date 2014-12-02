@@ -41,13 +41,6 @@ class StoredValueRedeemReplyTest extends \PHPUnit_Framework_TestCase
 </Root>
 XML;
 
-    protected function setUp()
-    {
-        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
-        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-    }
-
     /**
      * data provider to provide an empty array of properties
      * Empty properties will generate and invalid IPayload object
@@ -85,13 +78,16 @@ XML;
             [$properties]
         ];
     }
+
     /**
      * Data provider for was redeemed tests
      * @return array[]
      */
     public function provideResponseCodeConditions()
     {
-        return [[[
+        return [
+            [
+                [
             'setOrderId' => 'o3trodZDaS2zhZHirJnA',
             'setPanIsToken' => false,
             'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
@@ -99,26 +95,48 @@ XML;
             'setBalanceAmount' => 15.55,
             'setAmountRedeemedCurrencyCode' => 'GBP',
             'setBalanceAmountCurrencyCode' => 'GBP',
-            'setResponseCode' => 'Success',
-        ]], [[
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setPanIsToken' => false,
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setAmountRedeemed' => 0.00,
-            'setBalanceAmount' => 15.55,
-            'setAmountRedeemedCurrencyCode' => 'GBP',
-            'setBalanceAmountCurrencyCode' => 'GBP',
+                    'setResponseCode' => 'Success',
+                ]
+            ],
+            [
+                [
+                    'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                    'setPanIsToken' => false,
+                    'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                    'setAmountRedeemed' => 0.00,
+                    'setBalanceAmount' => 15.55,
+                    'setAmountRedeemedCurrencyCode' => 'GBP',
+                    'setBalanceAmountCurrencyCode' => 'GBP',
             'setResponseCode' => 'Fail',
-        ]], [[
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setPanIsToken' => false,
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setAmountRedeemed' => 0.00,
-            'setBalanceAmount' => 15.55,
-            'setAmountRedeemedCurrencyCode' => 'GBP',
-            'setBalanceAmountCurrencyCode' => 'GBP',
-            'setResponseCode' => 'Timeout',
-        ]]];
+                ]
+            ],
+            [
+                [
+                    'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                    'setPanIsToken' => false,
+                    'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                    'setAmountRedeemed' => 0.00,
+                    'setBalanceAmount' => 15.55,
+                    'setAmountRedeemedCurrencyCode' => 'GBP',
+                    'setBalanceAmountCurrencyCode' => 'GBP',
+                    'setResponseCode' => 'Timeout',
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @param array $payloadData
+     * @dataProvider provideInvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testValidateWillFail(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->validatorStub->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
+        $payload->validate();
     }
 
     /**
@@ -136,48 +154,6 @@ XML;
         }
 
         return $payload;
-    }
-
-    /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlTestString()
-    {
-        $dom = new \DOMDocument();
-        $dom->load(__DIR__.'/Fixtures/StoredValueRedeemReply.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * Read an XML file with invalid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlInvalidTestString()
-    {
-        $dom = new \DOMDocument();
-        $dom->load(__DIR__.'/Fixtures/InvalidStoredValueRedeemReply.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
     }
 
     /**
@@ -222,26 +198,6 @@ XML;
     }
 
     /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testSerializeWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $domPayload = new \DOMDocument();
-        $domPayload->preserveWhiteSpace = false;
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-        $domPayload->loadXML($this->xmlTestString());
-        $expectedString = $domPayload->C14N();
-
-        $this->assertEquals($expectedString, $serializedString);
-    }
-
-    /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFailSchemaValidation()
@@ -253,6 +209,20 @@ XML;
 
         $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub);
         $newPayload->deserialize($xml);
+    }
+
+    /**
+     * Read an XML file with invalid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlInvalidTestString()
+    {
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__ . '/Fixtures/InvalidStoredValueRedeemReply.xml');
+        $string = $dom->C14N();
+
+        return $string;
     }
 
     /**
@@ -283,6 +253,21 @@ XML;
 
         $this->assertEquals($payload, $newPayload);
     }
+
+    /**
+     * Read an XML file with valid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlTestString()
+    {
+        $dom = new \DOMDocument();
+        $dom->load(__DIR__ . '/Fixtures/StoredValueRedeemReply.xml');
+        $string = $dom->C14N();
+
+        return $string;
+    }
+
     /**
      * Test that a response code of "Success" is considered a successful redeem request/reply.
      * @dataProvider provideResponseCodeConditions
@@ -296,5 +281,12 @@ XML;
         } else {
             $this->assertFalse($wasRedeemed);
         }
+    }
+
+    protected function setUp()
+    {
+        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
+        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 }

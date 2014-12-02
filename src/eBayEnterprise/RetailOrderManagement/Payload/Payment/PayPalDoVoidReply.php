@@ -16,32 +16,35 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class PayPalDoVoidReply implements IPayPalDoVoidReply
 {
     const SUCCESS = 'Success';
 
-    use TOrderId;
-    use TPayPalValidators;
-    use TStrings;
+    use Payload\TPayload, TOrderId;
 
-    /** @var string **/
+    /** @var string */
     protected $responseCode;
-    /** @var array **/
-    protected $nodesMap = [
-        'responseCode' => 'string(x:ResponseCode)',
-        'orderId' => 'string(x:OrderId)',
-    ];
-
-    /** @var Payload\IValidatorIterator */
-    protected $validators;
-    /** @var Payload\ISchemaValidator */
-    protected $schemaValidator;
 
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
     {
+        $this->extractionPaths = [
+            'responseCode' => 'string(x:ResponseCode)',
+            'orderId' => 'string(x:OrderId)',
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
+    }
+
+    /**
+     * Should downstream systems consider this reply a success?
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return ($this->getResponseCode() === static::SUCCESS);
     }
 
     /**
@@ -53,6 +56,7 @@ class PayPalDoVoidReply implements IPayPalDoVoidReply
     {
         return $this->responseCode;
     }
+
     /**
      * @param string
      * @return self
@@ -60,67 +64,6 @@ class PayPalDoVoidReply implements IPayPalDoVoidReply
     public function setResponseCode($code)
     {
         $this->responseCode = $code;
-        return $this;
-    }
-    /**
-     * Should downstream systems consider this reply a success?
-     *
-     * @return bool
-     */
-    public function isSuccess()
-    {
-        return ($this->getResponseCode() === static::SUCCESS);
-    }
-    /**
-     * Return the string form of the payload data for transmission.
-     * Validation is implied.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @return string
-     */
-    public function serialize()
-    {
-        // validate payload
-        $this->validate();
-
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeOrderId() . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
-        );
-
-        // validate the XML we just created
-        $doc = new \DOMDocument();
-        $doc->loadXML($xmlString);
-        $xml = $doc->C14N();
-
-        $this->schemaValidate($xml);
-        return $xml;
-    }
-    /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @param string $string
-     * @return self
-     */
-    public function deserialize($string)
-    {
-        $this->schemaValidate($string);
-        $dom = new \DOMDocument();
-        $dom->loadXML($string);
-
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
-
-        foreach ($this->nodesMap as $property => $xPath) {
-            $this->$property = $domXPath->evaluate($xPath);
-        }
-
-        // validate ourself, throws Exception\InvalidPayload if we don't pass
-        $this->validate();
-
         return $this;
     }
 
@@ -131,5 +74,45 @@ class PayPalDoVoidReply implements IPayPalDoVoidReply
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . self::XSD;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and concatenate them together.
+     *
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializeOrderId() . $this->serializeResponseCode();
+    }
+
+    /**
+     * Get the response code as xml.
+     *
+     * @return string
+     */
+    protected function serializeResponseCode()
+    {
+        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
     }
 }

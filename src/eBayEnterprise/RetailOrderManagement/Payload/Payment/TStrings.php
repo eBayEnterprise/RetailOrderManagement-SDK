@@ -35,6 +35,7 @@ trait TStrings
         }
         return $value;
     }
+
     /**
      * Convert "true", "false", "1" or "0" to boolean
      * Everything else returns null
@@ -42,7 +43,7 @@ trait TStrings
      * @param $string
      * @return bool|null
      */
-    protected function booleanFromString($string)
+    protected function convertStringToBoolean($string)
     {
         if (!is_string($string)) {
             return null;
