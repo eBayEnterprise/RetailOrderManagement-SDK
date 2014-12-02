@@ -85,237 +85,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new Payload\PayloadFactory();
     }
-    /**
-     * Response code like Success, Failure etc
-     *
-     * @return string
-     */
-    public function getResponseCode()
-    {
-        return $this->responseCode;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setResponseCode($code)
-    {
-        $this->responseCode = $code;
-        return $this;
-    }
-    /**
-     * Email address of the payer. Character length and limitations: 127 single-byte characters
-     *
-     * @return string
-     */
-    public function getPayerEmail()
-    {
-        return $this->payerEmail;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerEmail($email)
-    {
-        $this->payerEmail = $email;
-        return $this;
-    }
-    /**
-     * Unique identifier of the customer's PayPal account. Character length and limitations: 17 single-byte characters
-     *
-     * @return string
-     */
-    public function getPayerId()
-    {
-        return $this->payerId;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerId($id)
-    {
-        $this->payerId = $id;
-        return $this;
-    }
-    /**
-     * Status of payer's email address.
-     * "verified" or "unverified"
-     *
-     * @return string
-     */
-    public function getPayerStatus()
-    {
-        return $this->payerStatus;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerStatus($payerStatus)
-    {
-        $this->payerStatus = $payerStatus;
-        return $this;
-    }
-    /**
-     * A title you can assign to the payer. Typically "Dr.", "Mr.", "Ms." etc.
-     *
-     * @return string
-     */
-    public function getPayerNameHonorific()
-    {
-        return $this->payerNameHonorific;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerNameHonorific($hon)
-    {
-        $this->payerNameHonorific = $hon;
-        return $this;
-    }
-    /**
-     * The surname of the payer.
-     *
-     * @return string
-     */
-    public function getPayerLastName()
-    {
-        return $this->payerLastName;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerLastName($name)
-    {
-        $this->payerLastName = $name;
-        return $this;
-    }
-    /**
-     * The payer's middle name.
-     *
-     * @return string
-     */
-    public function getPayerMiddleName()
-    {
-        return $this->payerMiddleName;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerMiddleName($name)
-    {
-        $this->payerMiddleName = $name;
-        return $this;
-    }
-    /**
-     * The payer's first name.
-     *
-     * @return string
-     */
-    public function getPayerFirstName()
-    {
-        return $this->payerFirstName;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerFirstName($name)
-    {
-        $this->payerFirstName = $name;
-        return $this;
-    }
-    /**
-    * Payment sender's country of residence using standard two-character ISO 3166 country codes.
-    * Character length and limitations: Two single-byte characters.
-    *
-    * @link http://countrycode.org/
-    * @return string
-    */
-    public function getPayerCountry()
-    {
-        return $this->payerCountry;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerCountry($country)
-    {
-        $this->payerCountry = $country;
-        return $this;
-    }
-    /**
-     * Payer's phone on file with PayPal.
-     *
-     * @return string
-     */
-    public function getPayerPhone()
-    {
-        return $this->payerPhone;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPayerPhone($phone)
-    {
-        $this->payerPhone = $phone;
-        return $this;
-    }
-    /**
-     * build an empty IPayPalAddress instance
-     * @return IPayPalAddress
-     */
-    public function getEmptyPayPalAddress()
-    {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::ADDRESS_INTERFACE),
-            $this->payloadMap
-        );
-    }
-    /**
-     * Payer's business address on file with PayPal
-     *
-     * @return IPayPalAddress
-     */
-    public function getBillingAddress()
-    {
-        return $this->billingAddress;
-    }
-    /**
-     *
-     * @param  IPayPalAddress
-     * @return self
-     */
-    public function setBillingAddress(IPayPalAddress $address)
-    {
-        $this->billingAddress = $address;
-        return $this;
-    }
-    /**
-     * Payer's shipping address on file with PayPal
-     *
-     * @return IPayPalAddress
-     */
-    public function getShippingAddress()
-    {
-        return $this->shippingAddress;
-    }
-    /**
-     * @param IPayPalAddress
-     * @return self
-     */
-    public function setShippingAddress(IPayPalAddress $address)
-    {
-        $this->shippingAddress = $address;
-        return $this;
-    }
+
     /**
      * Should downstream systems consider this reply a success?
      *
@@ -325,93 +95,27 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     {
         return $this->getResponseCode() === static::SUCCESS;
     }
+
     /**
-     * Serialize a ResponseCode
+     * Response code like Success, Failure etc
+     *
      * @return string
      */
-    protected function serializeResponseCode()
+    public function getResponseCode()
     {
-        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
+        return $this->responseCode;
     }
+
     /**
-     * Serialize a PayerEmail
-     * @return string
+     * @param string
+     * @return self
      */
-    protected function serializePayerEmail()
+    public function setResponseCode($code)
     {
-        return "<PayerEmail>{$this->getPayerEmail()}</PayerEmail>";
+        $this->responseCode = $code;
+        return $this;
     }
-    /**
-     * Serialize a PayerId
-     * @return string
-     */
-    protected function serializePayerId()
-    {
-        return "<PayerId>{$this->getPayerId()}</PayerId>";
-    }
-    /**
-     * Serialize a PayerStatus
-     * @return string
-     */
-    protected function serializePayerStatus()
-    {
-        return "<PayerStatus>{$this->getPayerStatus()}</PayerStatus>";
-    }
-    /**
-     * Serialize an Address
-     * @return string
-     */
-    protected function serializeAddress($rootNode, IPayPalAddress $address = null)
-    {
-        return $address ? "<$rootNode>". $address->serialize() . "</$rootNode>" : '';
-    }
-    /**
-     * Serialize Payer Name Details
-     * @return string
-     */
-    protected function serializePayerName()
-    {
-        return "<PayerName>"
-            . "<Honorific>{$this->getPayerNameHonorific()}</Honorific>"
-            . "<LastName>{$this->getPayerLastName()}</LastName>"
-            . "<MiddleName>{$this->getPayerMiddleName()}</MiddleName>"
-            . "<FirstName>{$this->getPayerFirstName()}</FirstName>"
-        . "</PayerName>";
-    }
-    /**
-     * Serialize Payer Phone
-     * @return string
-     */
-    protected function serializePayerPhone()
-    {
-        return "<PayerPhone>{$this->getPayerPhone()}</PayerPhone>";
-    }
-    /**
-     * Serialize Payer Country
-     * @return string
-     */
-    protected function serializePayerCountry()
-    {
-        return "<PayerCountry>{$this->getPayerCountry()}</PayerCountry>";
-    }
-    /**
-     * Serialize a complete reply
-     * @return string
-     */
-    public function serializeContents()
-    {
-        return
-            $this->serializeOrderId()
-            . $this->serializeResponseCode()
-            . $this->serializePayerEmail()
-            . $this->serializePayerId()
-            . $this->serializePayerStatus()
-            . $this->serializePayerName()
-            . $this->serializePayerCountry()
-            . $this->serializeAddress('BillingAddress', $this->getBillingAddress())
-            . $this->serializePayerPhone()
-            . $this->serializeAddress('ShippingAddress', $this->getShippingAddress());
-    }
+
     /**
      * Return the string form of the payload data for transmission.
      * Validation is implied.
@@ -433,6 +137,334 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         $this->schemaValidate($canonicalXml);
         return $canonicalXml;
     }
+
+    /**
+     * Serialize a complete reply
+     * @return string
+     */
+    public function serializeContents()
+    {
+        return
+            $this->serializeOrderId()
+            . $this->serializeResponseCode()
+            . $this->serializePayerEmail()
+            . $this->serializePayerId()
+            . $this->serializePayerStatus()
+            . $this->serializePayerName()
+            . $this->serializePayerCountry()
+            . $this->serializeAddress('BillingAddress', $this->getBillingAddress())
+            . $this->serializePayerPhone()
+            . $this->serializeAddress('ShippingAddress', $this->getShippingAddress());
+    }
+
+    /**
+     * Serialize a ResponseCode
+     * @return string
+     */
+    protected function serializeResponseCode()
+    {
+        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
+    }
+
+    /**
+     * Serialize a PayerEmail
+     * @return string
+     */
+    protected function serializePayerEmail()
+    {
+        return "<PayerEmail>{$this->getPayerEmail()}</PayerEmail>";
+    }
+
+    /**
+     * Email address of the payer. Character length and limitations: 127 single-byte characters
+     *
+     * @return string
+     */
+    public function getPayerEmail()
+    {
+        return $this->payerEmail;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerEmail($email)
+    {
+        $this->payerEmail = $email;
+        return $this;
+    }
+
+    /**
+     * Serialize a PayerId
+     * @return string
+     */
+    protected function serializePayerId()
+    {
+        return "<PayerId>{$this->getPayerId()}</PayerId>";
+    }
+
+    /**
+     * Unique identifier of the customer's PayPal account. Character length and limitations: 17 single-byte characters
+     *
+     * @return string
+     */
+    public function getPayerId()
+    {
+        return $this->payerId;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerId($id)
+    {
+        $this->payerId = $id;
+        return $this;
+    }
+
+    /**
+     * Serialize a PayerStatus
+     * @return string
+     */
+    protected function serializePayerStatus()
+    {
+        return "<PayerStatus>{$this->getPayerStatus()}</PayerStatus>";
+    }
+
+    /**
+     * Status of payer's email address.
+     * "verified" or "unverified"
+     *
+     * @return string
+     */
+    public function getPayerStatus()
+    {
+        return $this->payerStatus;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerStatus($payerStatus)
+    {
+        $this->payerStatus = $payerStatus;
+        return $this;
+    }
+
+    /**
+     * Serialize Payer Name Details
+     * @return string
+     */
+    protected function serializePayerName()
+    {
+        return "<PayerName>"
+            . "<Honorific>{$this->getPayerNameHonorific()}</Honorific>"
+            . "<LastName>{$this->getPayerLastName()}</LastName>"
+            . "<MiddleName>{$this->getPayerMiddleName()}</MiddleName>"
+            . "<FirstName>{$this->getPayerFirstName()}</FirstName>"
+        . "</PayerName>";
+    }
+
+    /**
+     * A title you can assign to the payer. Typically "Dr.", "Mr.", "Ms." etc.
+     *
+     * @return string
+     */
+    public function getPayerNameHonorific()
+    {
+        return $this->payerNameHonorific;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerNameHonorific($hon)
+    {
+        $this->payerNameHonorific = $hon;
+        return $this;
+    }
+
+    /**
+     * The surname of the payer.
+     *
+     * @return string
+     */
+    public function getPayerLastName()
+    {
+        return $this->payerLastName;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerLastName($name)
+    {
+        $this->payerLastName = $name;
+        return $this;
+    }
+
+    /**
+     * The payer's middle name.
+     *
+     * @return string
+     */
+    public function getPayerMiddleName()
+    {
+        return $this->payerMiddleName;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerMiddleName($name)
+    {
+        $this->payerMiddleName = $name;
+        return $this;
+    }
+
+    /**
+     * The payer's first name.
+     *
+     * @return string
+     */
+    public function getPayerFirstName()
+    {
+        return $this->payerFirstName;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerFirstName($name)
+    {
+        $this->payerFirstName = $name;
+        return $this;
+    }
+
+    /**
+     * Serialize Payer Country
+     * @return string
+     */
+    protected function serializePayerCountry()
+    {
+        return "<PayerCountry>{$this->getPayerCountry()}</PayerCountry>";
+    }
+
+    /**
+    * Payment sender's country of residence using standard two-character ISO 3166 country codes.
+    * Character length and limitations: Two single-byte characters.
+    *
+    * @link http://countrycode.org/
+    * @return string
+    */
+    public function getPayerCountry()
+    {
+        return $this->payerCountry;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerCountry($country)
+    {
+        $this->payerCountry = $country;
+        return $this;
+    }
+
+    /**
+     * Serialize an Address
+     * @return string
+     */
+    protected function serializeAddress($rootNode, IPayPalAddress $address = null)
+    {
+        return $address ? "<$rootNode>". $address->serialize() . "</$rootNode>" : '';
+    }
+
+    /**
+     * Payer's business address on file with PayPal
+     *
+     * @return IPayPalAddress
+     */
+    public function getBillingAddress()
+    {
+        return $this->billingAddress;
+    }
+
+    /**
+     *
+     * @param  IPayPalAddress
+     * @return self
+     */
+    public function setBillingAddress(IPayPalAddress $address)
+    {
+        $this->billingAddress = $address;
+        return $this;
+    }
+
+    /**
+     * Serialize Payer Phone
+     * @return string
+     */
+    protected function serializePayerPhone()
+    {
+        return "<PayerPhone>{$this->getPayerPhone()}</PayerPhone>";
+    }
+
+    /**
+     * Payer's phone on file with PayPal.
+     *
+     * @return string
+     */
+    public function getPayerPhone()
+    {
+        return $this->payerPhone;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPayerPhone($phone)
+    {
+        $this->payerPhone = $phone;
+        return $this;
+    }
+
+    /**
+     * Payer's shipping address on file with PayPal
+     *
+     * @return IPayPalAddress
+     */
+    public function getShippingAddress()
+    {
+        return $this->shippingAddress;
+    }
+
+    /**
+     * @param IPayPalAddress
+     * @return self
+     */
+    public function setShippingAddress(IPayPalAddress $address)
+    {
+        $this->shippingAddress = $address;
+        return $this;
+    }
+
+    protected function getPayloadAsDoc($xmlString)
+    {
+        $d = new \DOMDocument();
+        $d->loadXML($xmlString);
+        return $d;
+    }
+
     /**
      * Fill out this payload object with data from the supplied string.
      *
@@ -450,10 +482,23 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         }
         $this->setBillingAddress($this->deserializeAddress('BillingAddress', $string));
         $this->setShippingAddress($this->deserializeAddress('ShippingAddress', $string));
-        // payload is only valid of the unserialized data is also valid
+        // payload is only valid if the unserialized data is also valid
         $this->validate();
         return $this;
     }
+
+    /**
+     * Load the payload XML into a DOMXPath for querying.
+     * @param string $xmlString
+     * @return \DOMXPath
+     */
+    protected function getPayloadAsXPath($xmlString)
+    {
+        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
+        $xpath->registerNamespace('x', self::XML_NS);
+        return $xpath;
+    }
+
     /**
      * deserialize an address payload
      * @param  string $rootNode
@@ -468,22 +513,17 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         $payload->deserialize(substr($serializedMessage, $start, $end - $start));
         return $payload;
     }
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
+
     /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
+     * build an empty IPayPalAddress instance
+     * @return IPayPalAddress
      */
-    protected function getPayloadAsXPath($xmlString)
+    public function getEmptyPayPalAddress()
     {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
+        return $this->payloadFactory->buildPayload(
+            $this->payloadMap->getConcreteType(static::ADDRESS_INTERFACE),
+            $this->payloadMap
+        );
     }
 
     /**

@@ -19,7 +19,7 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 
 class LineItem implements ILineItem
 {
-    use TAmount;
+    use Payload\TPayload, TAmount;
 
     /** @var string */
     protected $name;
@@ -31,24 +31,32 @@ class LineItem implements ILineItem
     protected $unitAmount;
     /** @var float */
     protected $currencyCode;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
 
-    protected $extractionPaths = [
-        'name' => 'string(x:Name)',
-        'quantity' => 'number(x:Quantity)',
-    ];
-
-    // optional elements including the type to cast the value to
-    protected $optionalExtractionPaths = [
-        'unitAmount' => ['integer', 'x:UnitAmount'],
-        'currencyCode' => ['string', 'x:UnitAmount/@currencyCode'],
-        'sequenceNumber' => ['string', 'x:SequenceNumber'],
-    ];
-
-    public function __construct(Payload\IValidatorIterator $iterator)
+    public function __construct(Payload\IValidatorIterator $validators)
     {
-        $this->validatorIterator = $iterator;
+        $this->extractionPaths = [
+            'name' => 'string(x:Name)',
+            'quantity' => 'number(x:Quantity)',
+        ];
+        $this->optionalExtractionPaths = [
+            'unitAmount' => 'x:UnitAmount',
+            'currencyCode' => 'x:UnitAmount/@currencyCode',
+            'sequenceNumber' => 'x:SequenceNumber',
+        ];
+        $this->validators = $validators;
+    }
+
+    /**
+     * convert the data into an xml string
+     * @return string
+     * @throws \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    protected function serializeContents()
+    {
+        return "<Name>{$this->getName()}</Name>"
+        . $this->serializeSequenceNumber()
+        . "<Quantity>{$this->getQuantity()}</Quantity>"
+        . $this->serializeUnitAmount();
     }
 
     /**
@@ -69,6 +77,15 @@ class LineItem implements ILineItem
     {
         $this->name = $name;
         return $this;
+    }
+
+    /**
+     * serialize the sequence number as an xml string
+     * @return string
+     */
+    protected function serializeSequenceNumber()
+    {
+        return $this->getSequenceNumber() ? "<SequenceNumber>{$this->getSequenceNumber()}</SequenceNumber>" : '';
     }
 
     /**
@@ -112,6 +129,22 @@ class LineItem implements ILineItem
     }
 
     /**
+     * serialize the unit amount as an xml string
+     * @return string
+     */
+    protected function serializeUnitAmount()
+    {
+        if ($this->getUnitAmount()) {
+            return $this->serializeCurrencyAmount(
+                'UnitAmount',
+                $this->getUnitAmount(),
+                $this->getCurrencyCode()
+            );
+        }
+        return '';
+    }
+
+    /**
      * Unit price amount for a line item.
      *
      * @return float
@@ -152,107 +185,42 @@ class LineItem implements ILineItem
     }
 
     /**
-     * convert the data into an xml string
-     * @return string
-     * @throws \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function serialize()
-    {
-        $this->validate();
-        return '<'.self::ROOT_NODE.'>'
-            . "<Name>{$this->getName()}</Name>"
-            . $this->serializeSequenceNumber()
-            . "<Quantity>{$this->getQuantity()}</Quantity>"
-            . $this->serializeUnitAmount()
-            . '</'.self::ROOT_NODE.'>';
-    }
-
-    /**
-     * convert an xml string to data elements.
-     * @param  string $serializedPayload
-     * @return self
-     */
-    public function deserialize($serializedPayload)
-    {
-        $xpath = $this->getPayloadAsXPath($serializedPayload);
-        foreach ($this->extractionPaths as $property => $path) {
-            $this->$property = $xpath->evaluate($path);
-        }
-        // When optional nodes are not included in the serialized data,
-        // they should not be set in the payload.
-        foreach ($this->optionalExtractionPaths as $property => $rule) {
-            list($type, $path) = $rule;
-            $foundNode = $xpath->query($path)->item(0);
-            if ($foundNode) {
-                $this->$property = $foundNode->nodeValue;
-                // type enforcement is required for the quantity to be an int
-                // and the sequence number to be a string
-                settype($this->$property, $type);
-            }
-        }
-        // payload is only valid of the unserialized data is also valid
-        $this->validate();
-        return $this;
-    }
-
-    /**
-     * validate the payload.
-     * @return self
-     */
-    public function validate()
-    {
-        foreach ($this->validatorIterator as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
-    }
-
-    /**
-     * serialize the unit amount as an xml string
+     * Return the schema file path.
      * @return string
      */
-    protected function serializeUnitAmount()
+    protected function getSchemaFile()
     {
-        if ($this->getUnitAmount()) {
-            return $this->serializeCurrencyAmount(
-                'UnitAmount',
-                $this->getUnitAmount(),
-                $this->getCurrencyCode()
-            );
-        }
-        return '';
+        return null;
     }
 
     /**
-     * serialize the sequence number as an xml string
+     * The XML namespace for the payload.
+     *
      * @return string
      */
-    protected function serializeSequenceNumber()
+    protected function getXmlNamespace()
     {
-        return $this->getSequenceNumber() ? "<SequenceNumber>{$this->getSequenceNumber()}</SequenceNumber>" : '';
+        return static::XML_NS;
     }
 
     /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
+     * Return the name of the xml root node.
+     *
+     * @return string
      */
-    protected function getPayloadAsDoc($xmlString)
+    protected function getRootNodeName()
     {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
+        return static::ROOT_NODE;
     }
 
     /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
+     * Name, value pairs of root attributes
+     *
+     * @return array
      */
-    protected function getPayloadAsXPath($xmlString)
+    protected function getRootAttributes()
     {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
+        return [];
     }
+
 }

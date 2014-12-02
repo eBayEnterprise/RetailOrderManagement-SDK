@@ -77,7 +77,9 @@ trait TPayload
      */
     protected function schemaValidate($serializedData)
     {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+        if ($this->schemaValidator) {
+            $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+        }
         return $this;
     }
 

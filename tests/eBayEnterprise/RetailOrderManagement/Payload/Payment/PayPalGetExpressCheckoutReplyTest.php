@@ -262,30 +262,7 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeserializeWillFailPayloadInvalid()
     {
-        $this->stubBillingAddress->expects($this->any())
-            ->method('deserialize')->with($this->isType('string'));
-        $this->stubShippingAddress->expects($this->any())
-            ->method('deserialize')->with($this->isType('string'));
-
-        $this->stubPayloadMap->expects($this->atLeastOnce())
-            ->method('getConcreteType')->with(
-                $this->isType('string')
-            )
-            ->will($this->returnValue('the concrete type'));
-
-        // make the payload factory return the stubs.
-        $this->stubPayloadFactory->expects($this->at(0))
-            ->method('buildPayload')->with(
-                $this->isType('string'),
-                $this->isInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap')
-            )
-            ->will($this->returnValue($this->stubBillingAddress));
-        $this->stubPayloadFactory->expects($this->at(1))
-            ->method('buildPayload')->with(
-                $this->isType('string'),
-                $this->isInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap')
-            )
-            ->will($this->returnValue($this->stubBillingAddress));
+        $this->prepareDeserializeTest();
 
         $this->stubValidator->expects($this->any())
             ->method('validate')
@@ -300,6 +277,18 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
      * @dataProvider provideValidPayload
      */
     public function testDeserializePass(array $payloadData)
+    {
+        $this->prepareDeserializeTest();
+
+        $expectedPayload = $this->buildPayload($payloadData);
+
+        $xml = $this->loadXmlTestString();
+        $newPayload = $this->createNewPayload();
+        $newPayload->deserialize($xml);
+        $this->assertEquals($expectedPayload, $newPayload);
+    }
+
+    protected function prepareDeserializeTest()
     {
         $this->stubBillingAddress->expects($this->any())
             ->method('deserialize')->with($this->isType('string'));
@@ -325,12 +314,5 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
                 $this->isInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap')
             )
             ->will($this->returnValue($this->stubBillingAddress));
-
-        $expectedPayload = $this->buildPayload($payloadData);
-
-        $xml = $this->loadXmlTestString();
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-        $this->assertEquals($expectedPayload, $newPayload);
     }
 }
