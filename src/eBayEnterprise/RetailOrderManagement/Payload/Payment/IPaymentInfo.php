@@ -16,10 +16,10 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 /**
- * Interface IPayPalPaymentInfo
+ * Interface IPaymentInfo
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IPayPalPaymentInfo
+interface IPaymentInfo
 {
     /**
      * This value is passed through from the Order Management System. It is returned from a PayPal Get.

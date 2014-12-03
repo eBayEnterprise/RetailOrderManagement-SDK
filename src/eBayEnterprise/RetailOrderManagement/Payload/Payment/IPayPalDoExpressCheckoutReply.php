@@ -19,7 +19,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  * Interface IPayPalDoExpressCheckoutReply
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IPayPalDoExpressCheckoutReply extends IPayPalDoExpressCheckout, IPayPalPaymentInfo
+interface IPayPalDoExpressCheckoutReply extends IPayPalDoExpressCheckout, IPaymentInfo
 {
     const ROOT_NODE = 'PayPalDoExpressCheckoutReply';
 

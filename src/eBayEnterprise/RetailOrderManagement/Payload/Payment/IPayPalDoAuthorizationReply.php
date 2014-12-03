@@ -19,7 +19,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  * Interface IPayPalDoAuthorizationReply
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IPayPalDoAuthorizationReply extends IPayPalDoAuthorization, IPayPalPaymentInfo
+interface IPayPalDoAuthorizationReply extends IPayPalDoAuthorization, IPaymentInfo
 {
     const ROOT_NODE = 'PayPalDoAuthorizationReply';
 
