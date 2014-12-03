@@ -55,7 +55,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
         return [
             [  // good data
                 "Street 1\nStreet 2\nStreet 3\nStreet 4",
-                "Street 1\nStreet 2\nStreet 3\nStreet 4",
+                ['Street 1', 'Street 2', 'Street 3', 'Street 4'],
             ],
             [  // extra lines
                 "Street 1\n"
@@ -63,7 +63,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
                 . " Street 3\n"
                 . "Street 4\n\n\n\n\n"
                 . str_repeat('.', 100),
-                "Street 1\nStreet 2\nStreet 3\nStreet 4 " . str_repeat('.', 61),
+                ['Street 1', 'Street 2', 'Street 3', 'Street 4 ' . str_repeat('.', 61)],
             ],
             [ // not a string
                 100,
@@ -80,14 +80,11 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    'lines' => "Chester Cheetah\n"
-                        . "\n"
-                        . "630 Allendale Rd\n"
-                        . "2nd FL",
-                    'city' => 'King of Prussia',
-                    'mainDivision' => 'PA',
-                    'countryCode' => 'US',
-                    'postalCode' => '19406'
+                    'shipToLines' => ['Chester Cheetah', '630 Allendale Rd', '2nd FL'],
+                    'shipToCity' => 'King of Prussia',
+                    'shipToMainDivision' => 'PA',
+                    'shipToCountryCode' => 'US',
+                    'shipToPostalCode' => '19406'
                 ],
                 // full section returned
                 '<ShippingAddress>'

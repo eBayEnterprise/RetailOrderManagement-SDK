@@ -22,7 +22,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
-    use TPayload, TPaymentContext;
+    use TPayload, TPaymentContext, TBillingAddress, TShippingAddress;
 
     /** @var string */
     protected $requestId;
@@ -40,16 +40,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $billingLastName;
     /** @var string */
     protected $billingPhone;
-    /** @var array */
-    protected $billingLines;
-    /** @var string */
-    protected $billingCity;
-    /** @var string */
-    protected $billingMainDivision;
-    /** @var string */
-    protected $billingCountryCode;
-    /** @var string */
-    protected $billingPostalCode;
     /** @var string */
     protected $customerEmail;
     /** @var string */
@@ -60,16 +50,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     protected $shipToLastName;
     /** @var string */
     protected $shipToPhone;
-    /** @var array */
-    protected $shipToLines;
-    /** @var string */
-    protected $shipToCity;
-    /** @var string */
-    protected $shipToMainDivision;
-    /** @var string */
-    protected $shipToCountryCode;
-    /** @var string */
-    protected $shipToPostalCode;
     /** @var bool */
     protected $isRequestToCorrectCVVOrAVSError;
     /** @var string */
@@ -174,17 +154,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    public function getBillingLines()
-    {
-        return is_array($this->billingLines) ? implode("\n", $this->billingLines) : null;
-    }
-
-    public function setBillingLines($lines)
-    {
-        $this->billingLines = $this->cleanAddressLines($lines);
-        return $this;
-    }
-
     /**
      * Make sure we have max 4 address lines of 70 chars max
      *
@@ -217,56 +186,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
 
         return $finalLines;
-    }
-
-    public function getShipToLines()
-    {
-        return is_array($this->shipToLines) ? implode("\n", $this->shipToLines) : null;
-    }
-
-    public function setShipToLines($lines)
-    {
-        $this->shipToLines = $this->cleanAddressLines($lines);
-        return $this;
-    }
-
-    /**
-     * Take and XML string and configure this payload object
-     *
-     * @param string $string
-     * @return $this|\eBayEnterprise\RetailOrderManagement\Payload\IPayload
-     */
-    public function deserialize($string)
-    {
-        $this->schemaValidate($string);
-        $dom = new \DOMDocument();
-        $dom->loadXML($string);
-
-        $domXPath = new \DOMXPath($dom);
-        $domXPath->registerNamespace('x', self::XML_NS);
-
-        foreach ($this->extractionPaths as $property => $xPath) {
-            $this->$property = $domXPath->evaluate($xPath);
-        }
-
-        foreach ($this->optionalExtractionPaths as $property => $xPath) {
-            $node = $domXPath->query($xPath)->item(0);
-            if ($node) {
-                $this->$property = $node->nodeValue;
-            }
-        }
-
-        // address lines and boolean values have to be handled specially
-        $this->addressLinesFromXPath($domXPath);
-        foreach ($this->booleanExtractionPaths as $property => $xPath) {
-            $value = $domXPath->evaluate($xPath);
-            $this->$property = $this->convertStringToBoolean($value);
-        }
-
-        // validate self, throws Exception\InvalidPayload if we don't pass
-        $this->validate();
-
-        return $this;
     }
 
     /**
@@ -461,46 +380,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     }
 
     /**
-     * Aggregate the billing address lines into the BillingAddress node
-     *
-     * @return string
-     */
-    protected function serializeBillingAddress()
-    {
-        $lines = [];
-        $billingLines = is_array($this->billingLines) ? $this->billingLines : [];
-        $idx = 0;
-        foreach ($billingLines as $line) {
-            $idx++;
-            $lines[] = sprintf(
-                '<Line%d>%s</Line%1$d>',
-                $idx,
-                $line
-            );
-        }
-
-        return sprintf(
-            '<BillingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</BillingAddress>',
-            implode('', $lines),
-            $this->getBillingCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getBillingMainDivision()),
-            $this->getBillingCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getBillingPostalCode())
-        );
-    }
-
-    public function getBillingCity()
-    {
-        return $this->billingCity;
-    }
-
-    public function setBillingCity($city)
-    {
-        $this->billingCity = $this->cleanString($city, 35);
-        return $this;
-    }
-
-    /**
      * @param string $nodeName
      * @param string $value
      * @return string
@@ -512,40 +391,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
 
         return sprintf('<%s>%s</%1$s>', $nodeName, $value);
-    }
-
-    public function getBillingMainDivision()
-    {
-        return $this->billingMainDivision;
-    }
-
-    public function setBillingMainDivision($div)
-    {
-        $this->billingMainDivision = $this->cleanString($div, 35);
-        return $this;
-    }
-
-    public function getBillingCountryCode()
-    {
-        return $this->billingCountryCode;
-    }
-
-    public function setBillingCountryCode($code)
-    {
-        $cleaned = $this->cleanString($code, 40);
-        $this->billingCountryCode = strlen($cleaned) >= 2 ? $cleaned : null;
-        return $this;
-    }
-
-    public function getBillingPostalCode()
-    {
-        return $this->billingPostalCode;
-    }
-
-    public function setBillingPostalCode($code)
-    {
-        $this->billingPostalCode = $this->cleanString($code, 15);
-        return $this;
     }
 
     /**
@@ -644,80 +489,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         }
         $this->shipToPhone = $value;
 
-        return $this;
-    }
-
-    /**
-     * Aggregate the shipping address lines into the ShippingAddress node
-     *
-     * @return string
-     */
-    protected function serializeShippingAddress()
-    {
-        $lines = [];
-        $shippingLines = is_array($this->shipToLines) ? $this->shipToLines : [];
-        $idx = 0;
-        foreach ($shippingLines as $line) {
-            $idx++;
-            $lines[] = sprintf(
-                '<Line%d>%s</Line%1$d>',
-                $idx,
-                $line
-            );
-        }
-
-        return sprintf(
-            '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
-            implode('', $lines),
-            $this->getShipToCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
-            $this->getShipToCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
-        );
-    }
-
-    public function getShipToCity()
-    {
-        return $this->shipToCity;
-    }
-
-    public function setShipToCity($city)
-    {
-        $this->shipToCity = $this->cleanString($city, 35);
-        return $this;
-    }
-
-    public function getShipToMainDivision()
-    {
-        return $this->shipToMainDivision;
-    }
-
-    public function setShipToMainDivision($div)
-    {
-        $this->shipToMainDivision = $this->cleanString($div, 35);
-        return $this;
-    }
-
-    public function getShipToCountryCode()
-    {
-        return $this->shipToCountryCode;
-    }
-
-    public function setShipToCountryCode($code)
-    {
-        $cleaned = $this->cleanString($code, 40);
-        $this->shipToCountryCode = strlen($cleaned) >= 2 ? $cleaned : null;
-        return $this;
-    }
-
-    public function getShipToPostalCode()
-    {
-        return $this->shipToPostalCode;
-    }
-
-    public function setShipToPostalCode($code)
-    {
-        $this->shipToPostalCode = $this->cleanString($code, 15);
         return $this;
     }
 

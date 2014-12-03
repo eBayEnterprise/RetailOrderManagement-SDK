@@ -15,41 +15,41 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-trait TShippingAddress
+trait TBillingAddress
 {
     /** @var array */
-    protected $shipToLines;
+    protected $billingLines;
     /** @var string */
-    protected $shipToCity;
+    protected $billingCity;
     /** @var string */
-    protected $shipToMainDivision;
+    protected $billingMainDivision;
     /** @var string */
-    protected $shipToCountryCode;
+    protected $billingCountryCode;
     /** @var string */
-    protected $shipToPostalCode;
+    protected $billingPostalCode;
 
-    public function getShipToLines()
+    public function getBillingLines()
     {
-        return is_array($this->shipToLines) ? implode("\n", $this->shipToLines) : null;
+        return is_array($this->billingLines) ? implode("\n", $this->billingLines) : null;
     }
 
-    public function setShipToLines($lines)
+    public function setBillingLines($lines)
     {
-        $this->shipToLines = $this->cleanAddressLines($lines);
+        $this->billingLines = $this->cleanAddressLines($lines);
         return $this;
     }
 
     /**
-     * Aggregate the shipTo address lines into the ShippingAddress node
+     * Aggregate the billing address lines into the BillingAddress node
      *
      * @return string
      */
-    protected function serializeShippingAddress()
+    protected function serializeBillingAddress()
     {
         $lines = [];
-        $shipToLines = is_array($this->shipToLines) ? $this->shipToLines : [];
+        $billingLines = is_array($this->billingLines) ? $this->billingLines : [];
         $idx = 0;
-        foreach ($shipToLines as $line) {
+        foreach ($billingLines as $line) {
             $idx++;
             $lines[] = sprintf(
                 '<Line%d>%s</Line%1$d>',
@@ -59,57 +59,57 @@ trait TShippingAddress
         }
 
         return sprintf(
-            '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
+            '<BillingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</BillingAddress>',
             implode('', $lines),
-            $this->getShipToCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
-            $this->getShipToCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
+            $this->getBillingCity(),
+            $this->nodeNullCoalesce('MainDivision', $this->getBillingMainDivision()),
+            $this->getBillingCountryCode(),
+            $this->nodeNullCoalesce('PostalCode', $this->getBillingPostalCode())
         );
     }
 
-    public function getShipToCity()
+    public function getBillingCity()
     {
-        return $this->shipToCity;
+        return $this->billingCity;
     }
 
-    public function setShipToCity($city)
+    public function setBillingCity($city)
     {
-        $this->shipToCity = $this->cleanString($city, 35);
+        $this->billingCity = $this->cleanString($city, 35);
         return $this;
     }
 
-    public function getShipToMainDivision()
+    public function getBillingMainDivision()
     {
-        return $this->shipToMainDivision;
+        return $this->billingMainDivision;
     }
 
-    public function setShipToMainDivision($div)
+    public function setBillingMainDivision($div)
     {
-        $this->shipToMainDivision = $this->cleanString($div, 35);
+        $this->billingMainDivision = $this->cleanString($div, 35);
         return $this;
     }
 
-    public function getShipToCountryCode()
+    public function getBillingCountryCode()
     {
-        return $this->shipToCountryCode;
+        return $this->billingCountryCode;
     }
 
-    public function setShipToCountryCode($code)
+    public function setBillingCountryCode($code)
     {
         $cleaned = $this->cleanString($code, 40);
-        $this->shipToCountryCode = strlen($cleaned) >= 2 ? $cleaned : null;
+        $this->billingCountryCode = strlen($cleaned) >= 2 ? $cleaned : null;
         return $this;
     }
 
-    public function getShipToPostalCode()
+    public function getBillingPostalCode()
     {
-        return $this->shipToPostalCode;
+        return $this->billingPostalCode;
     }
 
-    public function setShipToPostalCode($code)
+    public function setBillingPostalCode($code)
     {
-        $this->shipToPostalCode = $this->cleanString($code, 15);
+        $this->billingPostalCode = $this->cleanString($code, 15);
         return $this;
     }
 

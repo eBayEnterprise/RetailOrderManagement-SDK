@@ -24,10 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutRequest
 {
-    use TPayload, TAmount, TOrderId, TPayPalCurrencyCode;
-    use TShippingAddress {
-        TPayload::addressLinesFromXPath insteadof TShippingAddress;
-    }
+    use TPayload, TAmount, TOrderId, TPayPalCurrencyCode, TShippingAddress;
 
     /** @var string * */
     protected $returnUrl;
@@ -285,5 +282,53 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
+    }
+
+    /**
+     * @param string $nodeName
+     * @param string $value
+     * @return string
+     */
+    protected function nodeNullCoalesce($nodeName, $value)
+    {
+        if (!$value) {
+            return '';
+        }
+
+        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
+    }
+
+    /**
+     * Make sure we have max 4 address lines of 70 chars max
+     *
+     * If there are more than 4 lines concatenate all extra lines with the 4th line.
+     *
+     * Truncate any lines to 70 chars max.
+     *
+     * @param string $lines
+     * @return array or null
+     */
+    protected function cleanAddressLines($lines)
+    {
+        $finalLines = null;
+
+        if (is_string($lines)) {
+            $trimmed = trim($lines);
+            $addressLines = preg_split("/\n/", $trimmed, null, PREG_SPLIT_NO_EMPTY);
+
+            $newLines = [];
+            foreach ($addressLines as $line) {
+                $newLines[] = $this->cleanString($line, 70);
+            }
+
+            if (count($newLines) > 4) {
+                // concat lines beyond the four allowed down into the last line
+                $newLines[3] = $this->cleanString(implode(' ', array_slice($newLines, 3)), 70);
+            }
+
+            $finalLines = array_slice($newLines, 0, 4);
+        }
+
+        return $finalLines;
     }
 }

@@ -35,7 +35,16 @@ trait TOrderId
         return $this;
     }
 
-    abstract protected function cleanString($str, $len);
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    abstract protected function cleanString($string, $maxLength);
 
     /**
      * A unique identifier for the order
