@@ -16,70 +16,78 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
 {
     const ADDRESS_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress';
     const SUCCESS = 'Success';
 
-    use TOrderId;
-    use TPayPalValidators;
-    use TPhysicalAddress;
-    use TStrings;
+    use Payload\TPayload, TOrderId, TBillingAddress, TShippingAddress;
 
-    /** @var string **/
+    /** @var string * */
     protected $responseCode;
-    /** @var string **/
+    /** @var string * */
     protected $payerEmail;
-    /** @var string **/
+    /** @var string * */
     protected $payerId;
-    /** @var string **/
+    /** @var string * */
     protected $payerStatus;
-    /** @var string **/
+    /** @var string * */
     protected $payerNameHonorific;
-    /** @var string **/
+    /** @var string * */
     protected $payerLastName;
-    /** @var string **/
+    /** @var string * */
     protected $payerMiddleName;
-    /** @var string **/
+    /** @var string * */
     protected $payerFirstName;
-    /** @var string **/
+    /** @var string * */
     protected $payerCountry;
-    /** @var string **/
+    /** @var string * */
     protected $payerPhone;
-    /** @var IPayPalAddress **/
-    protected $billingAddress;
-    /** @var IPayPalAddress **/
-    protected $shippingAddress;
     /** @var Payload\IPayloadFactory */
     protected $payloadFactory;
     /** @var Payload\IPayloadMap */
     protected $payloadMap;
-
-    /** @var array */
-    protected $extractionPaths = [
-        'orderId' => 'string(x:OrderId)',
-        'responseCode' => 'string(x:ResponseCode)',
-        'payerEmail' => 'string(x:PayerEmail)',
-        'payerId' => 'string(x:PayerId)',
-        'payerStatus' => 'string(x:PayerStatus)',
-        'payerNameHonorific' => 'string(x:PayerName/x:Honorific)',
-        'payerLastName' => 'string(x:PayerName/x:LastName)',
-        'payerMiddleName' => 'string(x:PayerName/x:MiddleName)',
-        'payerFirstName' => 'string(x:PayerName/x:FirstName)',
-        'payerCountry' => 'string(x:PayerCountry)',
-        'payerPhone' => 'string(x:PayerPhone)',
-    ];
-    /** @var Payload\IValidatorIterator */
-    protected $validators;
-    /** @var Payload\ISchemaValidator */
-    protected $schemaValidator;
 
     public function __construct(
         Payload\IValidatorIterator $validators,
         Payload\ISchemaValidator $schemaValidator,
         Payload\IPayloadMap $payloadMap
     ) {
+        $this->extractionPaths = [
+            'orderId' => 'string(x:OrderId)',
+            'responseCode' => 'string(x:ResponseCode)',
+            'payerEmail' => 'string(x:PayerEmail)',
+            'payerId' => 'string(x:PayerId)',
+            'payerStatus' => 'string(x:PayerStatus)',
+            'payerNameHonorific' => 'string(x:PayerName/x:Honorific)',
+            'payerLastName' => 'string(x:PayerName/x:LastName)',
+            'payerMiddleName' => 'string(x:PayerName/x:MiddleName)',
+            'payerFirstName' => 'string(x:PayerName/x:FirstName)',
+            'payerCountry' => 'string(x:PayerCountry)',
+            'payerPhone' => 'string(x:PayerPhone)',
+            'billingCity' => 'string(x:BillingAddress/x:City)',
+            'billingCountryCode' => 'string(x:BillingAddress/x:CountryCode)',
+            'shipToCity' => 'string(x:ShippingAddress/x:City)',
+            'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
+        ];
+        $this->optionalExtractionPaths = [
+            'billingMainDivision' => 'x:BillingAddress/x:MainDivision',
+            'billingPostalCode' => 'x:BillingAddress/x:PostalCode',
+            'shipToMainDivision' => 'x:ShippingAddress/x:MainDivision',
+            'shipToPostalCode' => 'x:ShippingAddress/x:PostalCode',
+        ];
+        $this->addressLinesExtractionMap = [
+            [
+                'property' => 'billingLines',
+                'xPath' => "x:BillingAddress/*[starts-with(name(), 'Line')]"
+            ],
+            [
+                'property' => 'shipToLines',
+                'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]"
+            ]
+        ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
@@ -117,44 +125,21 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     }
 
     /**
-     * Return the string form of the payload data for transmission.
-     * Validation is implied.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @return string
-     */
-    public function serialize()
-    {
-        // validate the payload data
-        $this->validate();
-        $xmlString = sprintf(
-            '<%s xmlns="%s">%s</%1$s>',
-            self::ROOT_NODE,
-            self::XML_NS,
-            $this->serializeContents()
-        );
-        $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
-        $this->schemaValidate($canonicalXml);
-        return $canonicalXml;
-    }
-
-    /**
      * Serialize a complete reply
      * @return string
      */
     public function serializeContents()
     {
-        return
-            $this->serializeOrderId()
-            . $this->serializeResponseCode()
-            . $this->serializePayerEmail()
-            . $this->serializePayerId()
-            . $this->serializePayerStatus()
-            . $this->serializePayerName()
-            . $this->serializePayerCountry()
-            . $this->serializeAddress('BillingAddress', $this->getBillingAddress())
-            . $this->serializePayerPhone()
-            . $this->serializeAddress('ShippingAddress', $this->getShippingAddress());
+        return $this->serializeOrderId()
+        . $this->serializeResponseCode()
+        . $this->serializePayerEmail()
+        . $this->serializePayerId()
+        . $this->serializePayerStatus()
+        . $this->serializePayerName()
+        . $this->serializePayerCountry()
+        . $this->serializeBillingAddress()
+        . $this->serializePayerPhone()
+        . $this->serializeShippingAddress();
     }
 
     /**
@@ -261,10 +246,10 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     protected function serializePayerName()
     {
         return "<PayerName>"
-            . "<Honorific>{$this->getPayerNameHonorific()}</Honorific>"
-            . "<LastName>{$this->getPayerLastName()}</LastName>"
-            . "<MiddleName>{$this->getPayerMiddleName()}</MiddleName>"
-            . "<FirstName>{$this->getPayerFirstName()}</FirstName>"
+        . "<Honorific>{$this->getPayerNameHonorific()}</Honorific>"
+        . "<LastName>{$this->getPayerLastName()}</LastName>"
+        . "<MiddleName>{$this->getPayerMiddleName()}</MiddleName>"
+        . "<FirstName>{$this->getPayerFirstName()}</FirstName>"
         . "</PayerName>";
     }
 
@@ -358,12 +343,12 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     }
 
     /**
-    * Payment sender's country of residence using standard two-character ISO 3166 country codes.
-    * Character length and limitations: Two single-byte characters.
-    *
-    * @link http://countrycode.org/
-    * @return string
-    */
+     * Payment sender's country of residence using standard two-character ISO 3166 country codes.
+     * Character length and limitations: Two single-byte characters.
+     *
+     * @link http://countrycode.org/
+     * @return string
+     */
     public function getPayerCountry()
     {
         return $this->payerCountry;
@@ -385,28 +370,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      */
     protected function serializeAddress($rootNode, IPayPalAddress $address = null)
     {
-        return $address ? "<$rootNode>". $address->serialize() . "</$rootNode>" : '';
-    }
-
-    /**
-     * Payer's business address on file with PayPal
-     *
-     * @return IPayPalAddress
-     */
-    public function getBillingAddress()
-    {
-        return $this->billingAddress;
-    }
-
-    /**
-     *
-     * @param  IPayPalAddress
-     * @return self
-     */
-    public function setBillingAddress(IPayPalAddress $address)
-    {
-        $this->billingAddress = $address;
-        return $this;
+        return $address ? "<$rootNode>" . $address->serialize() . "</$rootNode>" : '';
     }
 
     /**
@@ -439,99 +403,80 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     }
 
     /**
-     * Payer's shipping address on file with PayPal
-     *
-     * @return IPayPalAddress
-     */
-    public function getShippingAddress()
-    {
-        return $this->shippingAddress;
-    }
-
-    /**
-     * @param IPayPalAddress
-     * @return self
-     */
-    public function setShippingAddress(IPayPalAddress $address)
-    {
-        $this->shippingAddress = $address;
-        return $this;
-    }
-
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new \DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
-
-    /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws Payload\Exception\InvalidPayload
-     * @param string $string
-     * @return self
-     */
-    public function deserialize($string)
-    {
-        $this->schemaValidate($string);
-
-        $xpath = $this->getPayloadAsXPath($string);
-        foreach ($this->extractionPaths as $property => $path) {
-            $this->$property = $xpath->evaluate($path);
-        }
-        $this->setBillingAddress($this->deserializeAddress('BillingAddress', $string));
-        $this->setShippingAddress($this->deserializeAddress('ShippingAddress', $string));
-        // payload is only valid if the unserialized data is also valid
-        $this->validate();
-        return $this;
-    }
-
-    /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', self::XML_NS);
-        return $xpath;
-    }
-
-    /**
-     * deserialize an address payload
-     * @param  string $rootNode
-     * @param  string $serializedMessage
-     * @return IPayPalAddress
-     */
-    protected function deserializeAddress($rootNode, $serializedMessage)
-    {
-        $start = strpos($serializedMessage, "<$rootNode>");
-        $end = strpos($serializedMessage, "</$rootNode>") + strlen("</$rootNode>");
-        $payload = $this->getEmptyPayPalAddress();
-        $payload->deserialize(substr($serializedMessage, $start, $end - $start));
-        return $payload;
-    }
-
-    /**
-     * build an empty IPayPalAddress instance
-     * @return IPayPalAddress
-     */
-    public function getEmptyPayPalAddress()
-    {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::ADDRESS_INTERFACE),
-            $this->payloadMap
-        );
-    }
-
-    /**
      * Return the schema file path.
      * @return string
      */
     protected function getSchemaFile()
     {
         return __DIR__ . '/schema/' . self::XSD;
+    }
+
+    /**
+     * Return a serialized XML node if it has a value, empty string otherwise.
+     *
+     * @param string $nodeName
+     * @param string $value
+     * @return string
+     */
+    protected function nodeNullCoalesce($nodeName, $value)
+    {
+        if (!$value) {
+            return '';
+        }
+        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
+    }
+
+    /**
+     * Make sure we have max 4 address lines of 70 chars max
+     *
+     * If there are more than 4 lines concatenate all extra lines with the 4th line.
+     *
+     * Truncate any lines to 70 chars max.
+     *
+     * @param string $lines
+     * @return array or null
+     */
+    protected function cleanAddressLines($lines)
+    {
+        $finalLines = null;
+
+        if (is_string($lines)) {
+            $trimmed = trim($lines);
+            $addressLines = explode("\n", $trimmed);
+
+            $newLines = [];
+            foreach ($addressLines as $line) {
+                $newLines[] = $this->cleanString($line, 70);
+            }
+
+            if (count($newLines) > 4) {
+                // concat lines beyond the four allowed down into the last line
+                $newLines[3] = $this->cleanString(implode(' ', array_slice($newLines, 3)), 70);
+            }
+
+            $finalLines = array_slice($newLines, 0, 4);
+        }
+
+        return $finalLines;
+    }
+
+    /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
+    }
+
+    /**
+     * Return the name of the xml root node.
+     *
+     * @return string
+     */
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
     }
 }

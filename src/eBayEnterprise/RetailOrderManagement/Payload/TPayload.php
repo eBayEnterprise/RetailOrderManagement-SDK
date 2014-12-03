@@ -51,7 +51,6 @@ trait TPayload
     {
         // make sure we received a valid serialization of the payload.
         $this->schemaValidate($serializedPayload);
-
         $xpath = $this->getPayloadAsXPath($serializedPayload);
         foreach ($this->extractionPaths as $property => $path) {
             $this->$property = $xpath->evaluate($path);
@@ -70,11 +69,8 @@ trait TPayload
             $value = $xpath->evaluate($path);
             $this->$property = $this->convertStringToBoolean($value);
         }
-
         $this->addressLinesFromXPath($xpath);
-
         $this->deserializeLineItems($serializedPayload);
-
         // payload is only valid if the unserialized data is also valid
         $this->validate();
         return $this;
@@ -236,5 +232,4 @@ trait TPayload
      * @return string
      */
     abstract protected function serializeContents();
-
 }

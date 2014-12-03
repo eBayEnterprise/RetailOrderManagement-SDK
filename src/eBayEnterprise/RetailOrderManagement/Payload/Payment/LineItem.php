@@ -222,5 +222,4 @@ class LineItem implements ILineItem
     {
         return [];
     }
-
 }

@@ -25,10 +25,6 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     protected $validatorIterator;
     /** @var Payload\ISchemaValidator (stub) */
     protected $stubSchemaValidator;
-    /** @var Payload\Payment\IPayPalAddress (stub) */
-    protected $stubBillingAddress;
-    /** @var Payload\Payment\IPayPalAddress (stub) */
-    protected $stubShippingAddress;
     /** @var Payload\IPayloadMap (stub) */
     protected $stubPayloadMap;
     /** @var Payload\IPayloadFactory */
@@ -43,10 +39,6 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->stubBillingAddress =
-            $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress');
-        $this->stubShippingAddress =
-            $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress');
         $this->stubPayloadMap = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
         $this->stubPayloadFactory = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadFactory');
     }
@@ -87,23 +79,41 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideValidPayload()
     {
-        return [
-            [[
-                'setOrderId' => '0005400400154',
-                'setResponseCode' => 'Success',
-                'setPayerEmail' => 'tan_1329493113_per@trueaction.com',
-                'setPayerId' => 'P9PMKWC782MJ8',
-                'setPayerStatus' => 'verified',
-                'setPayerPhone' => '848-129-8433',
-                'setPayerCountry' => 'US',
-                'setPayerNameHonorific' => '',
-                'setPayerLastName' => 'Buyer',
-                'setPayerMiddleName' => '',
-                'setPayerFirstName' => 'TAN',
-                'setShippingAddress' => 'stubShippingAddress',
-                'setBillingAddress' => 'stubBillingAddress',
-            ]],
-        ];
+        return [[[
+            'setOrderId' => '0005400400154',
+            'setResponseCode' => 'Success',
+            'setPayerEmail' => 'tan_1329493113_per@trueaction.com',
+            'setPayerId' => 'P9PMKWC782MJ8',
+            'setPayerStatus' => 'verified',
+            'setPayerPhone' => '848-129-8433',
+            'setPayerCountry' => 'US',
+            'setPayerNameHonorific' => '',
+            'setPayerLastName' => 'Buyer',
+            'setPayerMiddleName' => '',
+            'setPayerFirstName' => 'TAN',
+            'setBillingLines' => "Street 1\nStreet 2\nStreet 3\nStreet 4",
+            'setBillingCity' => 'King of Prussia',
+            'setBillingMainDivision' => 'PA',
+            'setBillingCountryCode' => 'US',
+            'setBillingPostalCode' => '19406',
+            'setShipToLines' => "Street 1\nStreet 2\nStreet 3\nStreet 4",
+            'setShipToCity' => 'King of Prussia',
+            'setShipToMainDivision' => 'PA',
+            'setShipToCountryCode' => 'US',
+            'setShipToPostalCode' => '19406',
+        ]]];
+        /*
+         *  $this->serializeOrderId()
+        . $this->serializeResponseCode()
+        . $this->serializePayerEmail()
+        . $this->serializePayerId()
+        . $this->serializePayerStatus()
+        . $this->serializePayerName()
+        . $this->serializePayerCountry()
+        . $this->serializeBillingAddress()
+        . $this->serializePayerPhone()
+        . $this->serializeShippingAddress();
+         */
     }
 
     /**
@@ -114,13 +124,8 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     protected function buildPayload($properties)
     {
         $payload = $this->createNewPayload();
-
         foreach ($properties as $propertySetter => $value) {
-            if (in_array($propertySetter, ['setShippingAddress', 'setBillingAddress'])) {
-                $payload->$propertySetter($this->$value);
-            } else {
-                $payload->$propertySetter($value);
-            }
+            $payload->$propertySetter($value);
         }
         return $payload;
     }
@@ -227,11 +232,6 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializeWillPass(array $payloadData)
     {
-        $this->stubBillingAddress->expects($this->atLeastOnce())
-            ->method('serialize')->will($this->returnValue('billing address data'));
-        $this->stubShippingAddress->expects($this->atLeastOnce())
-            ->method('serialize')->will($this->returnValue('shipping address data'));
-
         $payload = $this->buildPayload($payloadData);
         $domPayload = new \DOMDocument();
         $domPayload->preserveWhiteSpace = false;
@@ -262,57 +262,25 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeserializeWillFailPayloadInvalid()
     {
-        $this->prepareDeserializeTest();
-
-        $this->stubValidator->expects($this->any())
+        $this->stubValidator
+            ->expects($this->any())
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $xml = $this->loadXmlInvalidTestString();
-
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
     }
+
     /**
      * verify the payload deserializes given xml properly.
      * @dataProvider provideValidPayload
      */
     public function testDeserializePass(array $payloadData)
     {
-        $this->prepareDeserializeTest();
-
         $expectedPayload = $this->buildPayload($payloadData);
-
         $xml = $this->loadXmlTestString();
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
         $this->assertEquals($expectedPayload, $newPayload);
-    }
-
-    protected function prepareDeserializeTest()
-    {
-        $this->stubBillingAddress->expects($this->any())
-            ->method('deserialize')->with($this->isType('string'));
-        $this->stubShippingAddress->expects($this->any())
-            ->method('deserialize')->with($this->isType('string'));
-
-        $this->stubPayloadMap->expects($this->atLeastOnce())
-            ->method('getConcreteType')->with(
-                $this->isType('string')
-            )
-            ->will($this->returnValue('the concrete type'));
-
-        // make the payload factory return the stubs.
-        $this->stubPayloadFactory->expects($this->at(0))
-            ->method('buildPayload')->with(
-                $this->isType('string'),
-                $this->isInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap')
-            )
-            ->will($this->returnValue($this->stubBillingAddress));
-        $this->stubPayloadFactory->expects($this->at(1))
-            ->method('buildPayload')->with(
-                $this->isType('string'),
-                $this->isInstanceOf('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap')
-            )
-            ->will($this->returnValue($this->stubBillingAddress));
     }
 }

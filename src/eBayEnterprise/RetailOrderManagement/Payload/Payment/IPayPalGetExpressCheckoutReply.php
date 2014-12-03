@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-interface IPayPalGetExpressCheckoutReply extends IPayPalGetExpressCheckout
+interface IPayPalGetExpressCheckoutReply extends IPayPalGetExpressCheckout, IBillingAddress, IShippingAddress
 {
     const ROOT_NODE = 'PayPalGetExpressCheckoutReply';
 
@@ -151,38 +151,6 @@ interface IPayPalGetExpressCheckoutReply extends IPayPalGetExpressCheckout
      * @return self
      */
     public function setPayerPhone($phone);
-
-    /**
-     * build an empty IPayPalAddress instance
-     * @return IPayPalAddress
-     */
-    public function getEmptyPayPalAddress();
-
-    /**
-     * Payer's business address on file with PayPal
-     *
-     * @return IPayPalAddress
-     */
-    public function getBillingAddress();
-
-    /**
-     * @param IPayPalAddress
-     * @return self
-     */
-    public function setBillingAddress(IPayPalAddress $address);
-
-    /**
-     * shipping address from paypal.
-     *
-     * @return IPayPalAddress
-     */
-    public function getShippingAddress();
-
-    /**
-     * @param IPayPalAddress
-     * @return self
-     */
-    public function setShippingAddress(IPayPalAddress $address);
 
     /**
      * Should downstream systems consider this reply a success?

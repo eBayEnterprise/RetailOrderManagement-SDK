@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PayPalGetExpressCheckoutReply xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
-  <OrderId>0005400400154</OrderId>
-  <ResponseCode>Success</ResponseCode>
-  <PayerEmail>tan_1329493113_per@trueaction.com</PayerEmail>
-  <PayerId>P9PMKWC782MJ8</PayerId>
-  <PayerStatus>verified</PayerStatus>
-  <PayerName>
-    <Honorific/>
-    <LastName>Buyer</LastName>
-    <MiddleName/>
-    <FirstName>TAN</FirstName>
-  </PayerName>
-  <PayerCountry>US</PayerCountry>
-  <BillingAddress>billing address data</BillingAddress>
-  <PayerPhone>848-129-8433</PayerPhone>
-  <ShippingAddress>shipping address data</ShippingAddress>
+    <OrderId>0005400400154</OrderId>
+    <ResponseCode>Success</ResponseCode>
+    <PayerEmail>tan_1329493113_per@trueaction.com</PayerEmail>
+    <PayerId>P9PMKWC782MJ8</PayerId>
+    <PayerStatus>verified</PayerStatus>
+    <PayerName>
+        <Honorific/>
+        <LastName>Buyer</LastName>
+        <MiddleName/>
+        <FirstName>TAN</FirstName>
+    </PayerName>
+    <PayerCountry>US</PayerCountry>
+    <BillingAddress>
+        <Line1>Street 1</Line1>
+        <Line2>Street 2</Line2>
+        <Line3>Street 3</Line3>
+        <Line4>Street 4</Line4>
+        <City>King of Prussia</City>
+        <MainDivision>PA</MainDivision>
+        <CountryCode>US</CountryCode>
+        <PostalCode>19406</PostalCode>
+    </BillingAddress>
+    <PayerPhone>848-129-8433</PayerPhone>
+    <ShippingAddress>
+        <Line1>Street 1</Line1>
+        <Line2>Street 2</Line2>
+        <Line3>Street 3</Line3>
+        <Line4>Street 4</Line4>
+        <City>King of Prussia</City>
+        <MainDivision>PA</MainDivision>
+        <CountryCode>US</CountryCode>
+        <PostalCode>19406</PostalCode>
+    </ShippingAddress>
 </PayPalGetExpressCheckoutReply>

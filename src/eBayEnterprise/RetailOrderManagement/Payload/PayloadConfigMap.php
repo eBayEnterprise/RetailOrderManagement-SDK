@@ -18,17 +18,26 @@
  * @return array mapping of config keys to payload configurations.
  */
 return call_user_func(function () {
+    $map = []; // This is what we eventually return
     $paymentAccountUniqueIdParams = ['getCardNumber', 'getPanIsToken'];
     $paymentContextParams = array_merge($paymentAccountUniqueIdParams, ['getOrderId']);
-    $map = [];
     $validatorIterator = '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator';
     $xsdSchemaValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator';
     $requiredFieldsValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields';
     $optionalGroupValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup';
     $payloadMap = '\eBayEnterprise\RetailOrderManagement\Payload\PayloadMap';
     $shippingAddressParams = ['getShipToLines', 'getShipToCity', 'getShipToCountryCode'];
-    $physicalAddressParams = ['getCity', 'getLines', 'getCountryCode'];
-    $physicalAddressOptionalParams = ['getMainDivision', 'getPostalCode'];
+    $noChildPayloads = [
+        'payloadMap' => $payloadMap,
+        'types' => [],
+    ];
+    $iLineItemIterableChildPayloads = [
+        'payloadMap' => $payloadMap,
+        'types' => [
+            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
+        ]
+    ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest'] = [
         'validators' => [
             [
@@ -70,10 +79,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply'] = [
         'validators' => [
@@ -94,10 +100,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceRequest'] = [
         'validators' => [
@@ -117,10 +120,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceReply'] = [
         'validators' => [
@@ -138,10 +138,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest'] = [
         'validators' => [
@@ -165,10 +162,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemReply'] = [
         'validators' => [
@@ -188,20 +182,14 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidRequest'] = [
         'validators' =>
             $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest']['validators'],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidReply'] = [
         'validators' => [
@@ -217,10 +205,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TestMessage'] = [
         'validators' => [
@@ -231,10 +216,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem'] = [
         'validators' => [
@@ -248,10 +230,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'] = [
         'validators' => [
@@ -287,10 +266,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest'] = [
         'validators' => [
@@ -312,13 +288,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
-            ]
-        ]
+        'childPayloads' => $iLineItemIterableChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalGetExpressCheckoutReply'] = [
         'validators' => [
@@ -339,11 +309,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => ['\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress' =>
-                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalAddress']
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalGetExpressCheckoutRequest'] = [
         'validators' => [
@@ -358,10 +324,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoExpressCheckoutRequest'] = [
         'validators' => [
@@ -383,13 +346,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
-            ]
-        ]
+        'childPayloads' => $iLineItemIterableChildPayloads
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoExpressCheckoutReply'] = [
         'validators' => [
@@ -407,10 +364,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoAuthorizationRequest'] = [
         'validators' => [
@@ -426,10 +380,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoAuthorizationReply'] = [
         'validators' => [
@@ -446,10 +397,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoVoidRequest'] = [
         'validators' => [
@@ -464,10 +412,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoVoidReply'] = [
         'validators' => [
@@ -481,33 +426,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
-    ];
-    $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalAddress'] = [
-        'validators' => [
-            [
-                'validator' => $requiredFieldsValidator,
-                'params' => $physicalAddressParams
-            ],
-            [
-                'validator' => $optionalGroupValidator,
-                'params' => array_merge(
-                    $physicalAddressOptionalParams,
-                    [
-                        'getAddressStatus',
-                    ]
-                )
-            ]
-        ],
-        'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => []
-        ]
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderRejected'] = [
         'validators' => [
