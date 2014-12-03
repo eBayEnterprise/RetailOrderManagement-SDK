@@ -89,8 +89,8 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     protected function serializeContents()
     {
         return $this->serializeLineItemsTotal()
-            . $this->serializeShippingTotal()
-            . $this->serializeTaxTotal()
+        . $this->serializeShippingTotal()
+        . $this->serializeTaxTotal()
         . $this->serializeLineItems();
     }
 
@@ -222,8 +222,8 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
      */
     protected function deserializeLineItems($serializedPayload)
     {
-        $startTag = '<'.ILineItem::ROOT_NODE .'>';
-        $endTag = '</'.ILineItem::ROOT_NODE .'>';
+        $startTag = '<' . ILineItem::ROOT_NODE . '>';
+        $endTag = '</' . ILineItem::ROOT_NODE . '>';
         $startTagPos = strpos($serializedPayload, $startTag);
         if ($startTagPos === false) {
             return $this;

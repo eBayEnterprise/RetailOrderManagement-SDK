@@ -14,11 +14,12 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
+
 use DOMDocument;
-use ReflectionClass;
-use ReflectionMethod;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
+use ReflectionClass;
+use ReflectionMethod;
 
 class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -222,7 +223,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     protected function xmlTestString()
     {
         $dom = new DOMDocument();
-        $dom->load(__DIR__.'/Fixtures/PayPalSetExpressCheckoutRequest.xml');
+        $dom->load(__DIR__ . '/Fixtures/PayPalSetExpressCheckoutRequest.xml');
         $string = $dom->C14N();
 
         return $string;

@@ -51,6 +51,7 @@ class BidirectionalMessageFactoryTest extends \PHPUnit_Framework_TestCase
         $this->messageFactory =
             new BidirectionalMessageFactory($this->config, $this->payloadFactory, $this->messageTypes);
     }
+
     /**
      * Provide message types - supported or unsupported
      * @return array
@@ -62,6 +63,7 @@ class BidirectionalMessageFactoryTest extends \PHPUnit_Framework_TestCase
             [self::UNSUPPORTED_MESSAGE_TYPE],
         ];
     }
+
     /**
      * Test getting a request payload
      * @param  string $messageType
@@ -77,6 +79,7 @@ class BidirectionalMessageFactoryTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertSame($this->payload, $this->messageFactory->requestPayload());
     }
+
     /**
      * Test getting a reply payload
      * @param  string $messageType

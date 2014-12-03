@@ -15,8 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
 use DOMDocument;
+use eBayEnterprise\RetailOrderManagement\Payload;
 
 class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,17 +39,6 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get a new StoredValueRedeemVoidReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return StoredValueRedeemVoidReply
-     */
-    protected function createNewPayload()
-    {
-        return new StoredValueRedeemVoidReply($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
      * Data provider for invalid payloads
      * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
      */
@@ -57,11 +46,13 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[]], // Empty payload should fail validation.
-            [[
-                'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-                'setPanIsToken' => false,
-                'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            ]],
+            [
+                [
+                    'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                    'setPanIsToken' => false,
+                    'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                ]
+            ],
         ];
     }
 
@@ -88,68 +79,32 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideResponseCodeConditions()
     {
-        return [[[
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setPanIsToken' => false,
-            'setResponseCode' => 'Success',
-        ]], [[
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setPanIsToken' => false,
-            'setResponseCode' => 'Fail',
-        ]], [[
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setPanIsToken' => false,
-            'setResponseCode' => 'Timeout',
-        ]]];
-    }
-    /**
-     * Create a payload with the provided data injected.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return StoredValueRedeemVoidReply
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-        return $payload;
-    }
-
-    /**
-     * load an xml file and return the canonicalized string of its contents
-     * @return string
-     */
-    protected function canonicalize($file)
-    {
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->load($file);
-        return $doc->C14N();
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @param  string $case
-     * @return string
-     */
-    protected function loadXmlTestString($case)
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/StoredValueRedeemVoidReply{$case}.xml");
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/InvalidStoredValueRedeemVoidReply.xml");
+        return [
+            [
+                [
+                    'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                    'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                    'setPanIsToken' => false,
+                    'setResponseCode' => 'Success',
+                ]
+            ],
+            [
+                [
+                    'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                    'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                    'setPanIsToken' => false,
+                    'setResponseCode' => 'Fail',
+                ]
+            ],
+            [
+                [
+                    'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                    'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                    'setPanIsToken' => false,
+                    'setResponseCode' => 'Timeout',
+                ]
+            ]
+        ];
     }
 
     /**
@@ -167,6 +122,31 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $payload->validate();
+    }
+
+    /**
+     * Create a payload with the provided data injected.
+     * @param  mixed[] $properties key/value pairs of property => value
+     * @return StoredValueRedeemVoidReply
+     */
+    protected function buildPayload($properties)
+    {
+        $payload = $this->createNewPayload();
+        foreach ($properties as $property => $value) {
+            $payload->$property($value);
+        }
+        return $payload;
+    }
+
+    /**
+     * Get a new StoredValueRedeemVoidReply payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return StoredValueRedeemVoidReply
+     */
+    protected function createNewPayload()
+    {
+        return new StoredValueRedeemVoidReply($this->validatorIterator, $this->stubSchemaValidator);
     }
 
     /**
@@ -216,8 +196,9 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $payload->serialize();
     }
+
     /**
-     * @param array  $payloadData
+     * @param array $payloadData
      * @param string $case
      * @dataProvider provideValidPayload
      */
@@ -229,6 +210,29 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
         $serializedString = $domPayload->C14N();
 
         $this->assertEquals($this->loadXmlTestString($case), $serializedString);
+    }
+
+    /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @param  string $case
+     * @return string
+     */
+    protected function loadXmlTestString($case)
+    {
+        return $this->canonicalize(__DIR__ . "/Fixtures/StoredValueRedeemVoidReply{$case}.xml");
+    }
+
+    /**
+     * load an xml file and return the canonicalized string of its contents
+     * @return string
+     */
+    protected function canonicalize($file)
+    {
+        $doc = new DOMDocument();
+        $doc->preserveWhiteSpace = false;
+        $doc->load($file);
+        return $doc->C14N();
     }
 
     /**
@@ -246,6 +250,16 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @return string
+     */
+    protected function loadXmlInvalidTestString()
+    {
+        return $this->canonicalize(__DIR__ . "/Fixtures/InvalidStoredValueRedeemVoidReply.xml");
+    }
+
+    /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFailPayloadInvalid()
@@ -260,7 +274,7 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array  $payloadData
+     * @param array $payloadData
      * @param string $case
      * @dataProvider provideValidPayload
      */
@@ -273,6 +287,7 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($payload, $newPayload);
     }
+
     /**
      * Test that a response code of "Success" is considered a successful redeem void request/reply.
      * @dataProvider provideResponseCodeConditions

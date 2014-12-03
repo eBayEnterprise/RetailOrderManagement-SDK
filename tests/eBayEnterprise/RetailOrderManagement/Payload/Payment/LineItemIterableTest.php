@@ -15,8 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
 use DOMDocument;
+use eBayEnterprise\RetailOrderManagement\Payload;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -58,12 +58,14 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
     public function provideInValidPayload()
     {
         return [
-            [[
-                'setLineItemsTotal' => '',
-                'setShippingTotal' => '',
-                'setCurrencyCode' => '',
-                'setTaxTotal' => '',
-            ]],
+            [
+                [
+                    'setLineItemsTotal' => '',
+                    'setShippingTotal' => '',
+                    'setCurrencyCode' => '',
+                    'setTaxTotal' => '',
+                ]
+            ],
         ];
     }
 
@@ -74,19 +76,25 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         return [
-            [[
-                'setLineItemsTotal' => 0.00,
-                'setShippingTotal' => 0.00,
-                'setTaxTotal' => 0.00,
-                'setCurrencyCode' => 'USD',
-            ], 'LineItemIterableEmpty.xml'],
-            [[
-                'setLineItemsTotal' => 2.00,
-                'setShippingTotal' => 0.50,
-                'setTaxTotal' => 0.25,
-                'setCurrencyCode' => 'USD',
-                'ADDITEM' => 1,
-            ], 'LineItemIterable.xml'],
+            [
+                [
+                    'setLineItemsTotal' => 0.00,
+                    'setShippingTotal' => 0.00,
+                    'setTaxTotal' => 0.00,
+                    'setCurrencyCode' => 'USD',
+                ],
+                'LineItemIterableEmpty.xml'
+            ],
+            [
+                [
+                    'setLineItemsTotal' => 2.00,
+                    'setShippingTotal' => 0.50,
+                    'setTaxTotal' => 0.25,
+                    'setCurrencyCode' => 'USD',
+                    'ADDITEM' => 1,
+                ],
+                'LineItemIterable.xml'
+            ],
         ];
     }
 
@@ -105,6 +113,36 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $payload->validate();
+    }
+
+    /**
+     * Create a payload with the provided data.
+     * @param  mixed[] $properties key/value pairs of property => value
+     * @return LineItemIterable
+     */
+    protected function buildPayload($properties)
+    {
+        $payload = $this->createNewPayload();
+
+        foreach ($properties as $setterMethod => $value) {
+            if ($setterMethod === 'ADDITEM') {
+                $payload->attach($this->stubLineItem);
+            } else {
+                $payload->$setterMethod($value);
+            }
+        }
+        return $payload;
+    }
+
+    /**
+     * Get a new LineItemIterable payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return LineItemIterable
+     */
+    protected function createNewPayload()
+    {
+        return new LineItemIterable($this->validatorIterator, $this->stubSchemaValidator, $this->stubPayloadMap);
     }
 
     /**
@@ -159,7 +197,21 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array  $payloadData mapping of setter name to value
+     * Read an XML file with valid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlTestString($xml)
+    {
+        $dom = new DOMDocument();
+        $dom->load(__DIR__ . "/Fixtures/$xml");
+        $string = $dom->C14N();
+
+        return $string;
+    }
+
+    /**
+     * @param array $payloadData mapping of setter name to value
      * @param string $xml name of fixture file to use
      * @dataProvider provideValidPayload
      */
@@ -178,8 +230,8 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
             ->method('getEmptyLineItem')->will($this->returnValue($this->stubLineItem));
         // inject the xml namespace into the string as the deserialize expects
         // the elements to be in a specific namespace.
-        $serializedPayload = '<'.ILineItemIterable::ROOT_NODE.' xmlns="'.ILineItemIterable::XML_NS.'">'
-            . substr($this->xmlTestString($xml), strlen('<'.ILineItemIterable::ROOT_NODE.'>'));
+        $serializedPayload = '<' . ILineItemIterable::ROOT_NODE . ' xmlns="' . ILineItemIterable::XML_NS . '">'
+            . substr($this->xmlTestString($xml), strlen('<' . ILineItemIterable::ROOT_NODE . '>'));
         $payload->deserialize($serializedPayload);
 
         $this->assertSame($expectedPayload->count(), $payload->count(), 'payloads differ in number of contained items');
@@ -204,7 +256,7 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
 
     /**
      * verify calculateLineItemsTotal sets the correct value.
-     * @param array  $payloadData mapping of setter name to value
+     * @param array $payloadData mapping of setter name to value
      * @dataProvider provideValidPayload
      */
     public function testCalcualteLineItemsTotal(array $payloadData)
@@ -221,49 +273,5 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
         // the method returns the payload.
         $this->assertSame($payload, $payload->calculateLineItemsTotal());
         $this->assertSame($expected, $payload->getLineItemsTotal());
-    }
-
-    /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlTestString($xml)
-    {
-        $dom = new DOMDocument();
-        $dom->load(__DIR__."/Fixtures/$xml");
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * Get a new LineItemIterable payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return LineItemIterable
-     */
-    protected function createNewPayload()
-    {
-        return new LineItemIterable($this->validatorIterator, $this->stubSchemaValidator, $this->stubPayloadMap);
-    }
-
-    /**
-     * Create a payload with the provided data.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return LineItemIterable
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-
-        foreach ($properties as $setterMethod => $value) {
-            if ($setterMethod === 'ADDITEM') {
-                $payload->attach($this->stubLineItem);
-            } else {
-                $payload->$setterMethod($value);
-            }
-        }
-        return $payload;
     }
 }

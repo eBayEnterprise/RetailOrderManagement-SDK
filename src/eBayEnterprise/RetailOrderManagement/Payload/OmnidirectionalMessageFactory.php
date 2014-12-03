@@ -24,6 +24,7 @@ class OmnidirectionalMessageFactory implements IMessageFactory
     protected $messageTypeMap;
     /** @var IPayloadFactory */
     protected $payloadFactory;
+
     /**
      * @param IConfig $config
      * @param IPayloadFactory $payloadFactory
@@ -34,6 +35,7 @@ class OmnidirectionalMessageFactory implements IMessageFactory
         $this->payloadFactory = $payloadFactory ?: new PayloadFactory();
         $this->messageTypeMap = $messageMapping ?: require('OmnidirectionalMessageConfigMap.php');
     }
+
     public function messagePayload($type)
     {
         if (isset($this->messageTypeMap[$type])) {

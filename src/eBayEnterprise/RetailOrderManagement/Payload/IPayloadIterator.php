@@ -25,7 +25,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
  * \OuterIterator, where the inner iterator yields each serialized payload.
  *
  * @see \Iterator
- * @method bool valid should not be used to validate the payload itself; only the iterator position.
+ * @method bool valid should not be used to validate the payload itself;
+only the iterator position.
  */
 interface IPayloadIterator extends \Iterator
 {

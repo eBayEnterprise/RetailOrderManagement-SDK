@@ -14,8 +14,8 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-use DOMDocument;
 
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
@@ -26,13 +26,6 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
     protected $validatorIterator;
     /** @var  Payload\ISchemaValidator */
     protected $schemaValidatorStub;
-
-    protected function setUp()
-    {
-        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
-        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-    }
 
     /**
      * data provider to provide an empty array of properties
@@ -76,6 +69,20 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param array $payloadData
+     * @dataProvider provideInvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testValidateWillFail(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->validatorStub->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
+        $payload->validate();
+    }
+
+    /**
      * Take an array of property values with property names as keys and return an IPayload object
      *
      * @param array $properties
@@ -90,50 +97,6 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
         }
 
         return $payload;
-    }
-
-    /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlTestString($case)
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__."/Fixtures/StoredValueBalanceRequest{$case}.xml");
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * Read an XML file with invalid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlInvalidTestString()
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__.'/Fixtures/InvalidStoredValueBalanceRequest.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
     }
 
     /**
@@ -165,7 +128,7 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array  $payloadData
+     * @param array $payloadData
      * @param string $case
      * @dataProvider provideValidPayload
      */
@@ -183,6 +146,21 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Read an XML file with valid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlTestString($case)
+    {
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->load(__DIR__ . "/Fixtures/StoredValueBalanceRequest{$case}.xml");
+        $string = $dom->C14N();
+
+        return $string;
+    }
+
+    /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFailSchemaValidation()
@@ -194,6 +172,21 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
 
         $newPayload = new StoredValueBalanceRequest($this->validatorIterator, $this->schemaValidatorStub);
         $newPayload->deserialize($xml);
+    }
+
+    /**
+     * Read an XML file with invalid payload data and return a canonicalized string
+     *
+     * @return string
+     */
+    protected function xmlInvalidTestString()
+    {
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->load(__DIR__ . '/Fixtures/InvalidStoredValueBalanceRequest.xml');
+        $string = $dom->C14N();
+
+        return $string;
     }
 
     /**
@@ -223,5 +216,12 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
+    }
+
+    protected function setUp()
+    {
+        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
+        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
+        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 }

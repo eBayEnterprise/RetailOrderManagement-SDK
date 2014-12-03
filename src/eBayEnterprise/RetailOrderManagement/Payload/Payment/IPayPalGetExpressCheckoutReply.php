@@ -124,13 +124,13 @@ interface IPayPalGetExpressCheckoutReply extends IPayPalGetExpressCheckout, IBil
      */
     public function setPayerFirstName($name);
 
-   /**
-    * Payment sender's country of residence using standard two-character ISO 3166 country codes.
-    * Character length and limitations: Two single-byte characters.
-    *
-    * @link http://countrycode.org/
-    * @return string
-    */
+    /**
+     * Payment sender's country of residence using standard two-character ISO 3166 country codes.
+     * Character length and limitations: Two single-byte characters.
+     *
+     * @link http://countrycode.org/
+     * @return string
+     */
     public function getPayerCountry();
 
     /**

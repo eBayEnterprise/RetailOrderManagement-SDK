@@ -52,6 +52,7 @@ class AmqpPayloadIteratorTest extends \PHPUnit_Framework_TestCase
         // create the iterator to test and inject it with the stubs
         $this->iterator = new AmqpPayloadIterator($this->api, $this->messageFactory, self::MAX_MESSAGES);
     }
+
     /**
      * Test iterating over the payloads, processing only as many messages as
      * allowed by the max messages to process.
@@ -69,6 +70,7 @@ class AmqpPayloadIteratorTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertSame(self::MAX_MESSAGES, $processed);
     }
+
     /**
      * Test getting messages until the queue runs out. When no messages left in the queue,
      * getNextMessage will return null, indicating no additional messages.

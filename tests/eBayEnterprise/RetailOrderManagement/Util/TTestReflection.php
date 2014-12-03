@@ -34,9 +34,24 @@ trait TTestReflection
 
         return $reflectedMethod->invokeArgs($object, $parameters);
     }
+
+    /**
+     * Set a list of properties. Properties provided as key/value pairs of property => value.
+     * @param mixed $object Must be instance of object as it will be used when setting the reflected property values
+     * @param array $properties Keys used as property names, values are what the property will be set to
+     * @return self
+     */
+    protected function setRestrictedPropertyValues($object, $properties)
+    {
+        foreach ($properties as $property => $value) {
+            $this->setRestrictedPropertyValue($object, $property, $value);
+        }
+        return $this;
+    }
+
     /**
      * Use reflection to set a protected property of some object.
-     * @param mixed $object  Must be instance of object as it will be used when setting the reflected property
+     * @param mixed $object Must be instance of object as it will be used when setting the reflected property
      * @param string $property Name of the property to set
      * @param mixed $value Value property will be set to
      * @return self
@@ -47,19 +62,6 @@ trait TTestReflection
         $requestProperty = $reflection->getProperty($property);
         $requestProperty->setAccessible(true);
         $requestProperty->setValue($object, $value);
-        return $this;
-    }
-    /**
-     * Set a list of properties. Properties provided as key/value pairs of property => value.
-     * @param mixed $object     Must be instance of object as it will be used when setting the reflected property values
-     * @param array $properties Keys used as property names, values are what the property will be set to
-     * @return self
-     */
-    protected function setRestrictedPropertyValues($object, $properties)
-    {
-        foreach ($properties as $property => $value) {
-            $this->setRestrictedPropertyValue($object, $property, $value);
-        }
         return $this;
     }
 }

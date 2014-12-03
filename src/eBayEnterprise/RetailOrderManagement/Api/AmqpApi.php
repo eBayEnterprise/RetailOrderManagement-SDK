@@ -41,10 +41,11 @@ class AmqpApi implements IAmqpApi
     protected $isQueueSetup = false;
     /** @var Payload\OmnidirectionalMessageFactory */
     protected $messageFactory;
+
     /**
      * Inject config and allow a connection and channel to be injected.
      * @param IAmqpConfig $config
-     * @param mixed[]     $args   May contain:
+     * @param mixed[] $args May contain:
      *                            - 'connection' => AbstractConnection
      *                            - 'channel' => AMQPChannel
      */
@@ -58,16 +59,18 @@ class AmqpApi implements IAmqpApi
         );
         $this->messageFactory = new Payload\OmnidirectionalMessageFactory();
     }
+
     /**
      * Check types of dependencies injected via the constructors $args array
      * @param AbstractConnection $connection
-     * @param AMQPChannel        $channel
+     * @param AMQPChannel $channel
      * @return mixed
      */
     protected function checkTypes(AbstractConnection $connection = null, AMQPChannel $channel = null)
     {
         return [$connection, $channel];
     }
+
     /**
      * Connect to the AMQP server and create/declare the channel, exchange and queue.
      * Returns a new payload iterator which will consume consume messages from the queue
@@ -79,38 +82,7 @@ class AmqpApi implements IAmqpApi
         $this->openConnection();
         return new AmqpPayloadIterator($this, $this->messageFactory, $this->config->getMaxMessagesToProcess());
     }
-    /**
-     * Get the next message from the queue.
-     * @return AMQPMessage
-     * @throws ConnectionError Thrown by self::openConnection if connection cannot be established
-     */
-    public function getNextMessage()
-    {
-        $this->openConnection();
-        $message = $this->channel->basic_get($this->config->getQueueName());
-        // Currently no reason to want to see any message more than once so
-        // ack every message received from the queue.
-        if ($message) {
-            // direct delivery_info array access recommended in PhpAmqpLib documentation
-            $this->channel->basic_ack($message->delivery_info['delivery_tag']);
-        }
-        return $message;
-    }
-    public function closeConnection()
-    {
-        if ($this->channel) {
-            $this->channel->close();
-        }
-        if ($this->connection) {
-            $this->connection->close();
-        }
-        $this->isQueueSetup = false;
-        return $this;
-    }
-    public function isConnected()
-    {
-        return $this->connection && $this->connection->isConnected();
-    }
+
     /**
      * Connect to the queue. Any method called should be idempotent so this method may be
      * called multiple times without creating additional connections, exchanges, queues, etc.
@@ -139,16 +111,34 @@ class AmqpApi implements IAmqpApi
         }
         return $this;
     }
+
     /**
-     * Get a reflection class instance for the type of connection to use,
-     * separated out to keep the dependency on ReflectionClass secluded.
-     * @param string $connectionClass
-     * @return \ReflectionClass
+     * Declare a queue on the channel. Declaring a queue that already exists will
+     * simply verify that the queue exists.
+     * @return self
      */
-    protected function getConnectionReflectionClass($connectionClass)
+    protected function declareQueue()
     {
-        return new ReflectionClass($connectionClass);
+        call_user_func_array(
+            [$this->channel, 'queue_declare'],
+            $this->config->getQueueConfiguration()
+        );
+        return $this;
     }
+
+    /**
+     * Create a channel from the connection if one does not already exist.
+     * Requires the connection to already have been created.
+     * @return self
+     */
+    protected function createChannel()
+    {
+        if ($this->channel === null) {
+            $this->channel = $this->connection->channel();
+        }
+        return $this;
+    }
+
     /**
      * Create the connection - uses a ReflectionClass to create the instance to
      * allow for more flexibility in the constructor args used - needs to be able
@@ -164,29 +154,50 @@ class AmqpApi implements IAmqpApi
         }
         return $this;
     }
+
     /**
-     * Create a channel from the connection if one does not already exist.
-     * Requires the connection to already have been created.
-     * @return self
+     * Get a reflection class instance for the type of connection to use,
+     * separated out to keep the dependency on ReflectionClass secluded.
+     * @param string $connectionClass
+     * @return \ReflectionClass
      */
-    protected function createChannel()
+    protected function getConnectionReflectionClass($connectionClass)
     {
-        if ($this->channel === null) {
-            $this->channel = $this->connection->channel();
-        }
-        return $this;
+        return new ReflectionClass($connectionClass);
     }
-    /**
-     * Declare a queue on the channel. Declaring a queue that already exists will
-     * simply verify that the queue exists.
-     * @return self
-     */
-    protected function declareQueue()
+
+    public function isConnected()
     {
-        call_user_func_array(
-            [$this->channel, 'queue_declare'],
-            $this->config->getQueueConfiguration()
-        );
+        return $this->connection && $this->connection->isConnected();
+    }
+
+    /**
+     * Get the next message from the queue.
+     * @return AMQPMessage
+     * @throws ConnectionError Thrown by self::openConnection if connection cannot be established
+     */
+    public function getNextMessage()
+    {
+        $this->openConnection();
+        $message = $this->channel->basic_get($this->config->getQueueName());
+        // Currently no reason to want to see any message more than once so
+        // ack every message received from the queue.
+        if ($message) {
+            // direct delivery_info array access recommended in PhpAmqpLib documentation
+            $this->channel->basic_ack($message->delivery_info['delivery_tag']);
+        }
+        return $message;
+    }
+
+    public function closeConnection()
+    {
+        if ($this->channel) {
+            $this->channel->close();
+        }
+        if ($this->connection) {
+            $this->connection->close();
+        }
+        $this->isQueueSetup = false;
         return $this;
     }
 }

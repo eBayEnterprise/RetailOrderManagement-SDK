@@ -30,16 +30,19 @@ interface IAmqpConfig
      * @return string
      */
     public function getConnectionType();
+
     /**
      * get connection max messages to process configuration
      * @return int
      */
     public function getMaxMessagesToProcess();
+
     /**
      * get connection queue name configuration
      * @return string
      */
     public function getQueueName();
+
     /**
      * get an array of arguments to be given when creating the AMQP connection
      * array must be in order matching the constructor arguments to be given
@@ -47,6 +50,7 @@ interface IAmqpConfig
      * @return array
      */
     public function getConnectionConfiguration();
+
     /**
      * get an array of arguments to be given when creating the AMQP queue
      * array must be in order matching the method params when creating

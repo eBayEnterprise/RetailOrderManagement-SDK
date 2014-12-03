@@ -21,6 +21,7 @@ interface ILineItem extends IPayload
 {
     const ROOT_NODE = 'LineItem';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+
     /**
      * Line item name like product title.
      *

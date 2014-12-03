@@ -26,6 +26,27 @@ trait TOrderId
     protected $orderId;
 
     /**
+     * Create an XML string representing the OrderId nodes
+     * @return string
+     */
+    protected function serializeOrderId()
+    {
+        return "<OrderId>{$this->getOrderId()}</OrderId>";
+    }
+
+    /**
+     * A unique identifier for the order
+     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
+     *
+     * xsd restrictions: 1-20 characters
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
+
+    /**
      * @param string $orderId
      * @return self
      */
@@ -45,25 +66,4 @@ trait TOrderId
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
-
-    /**
-     * A unique identifier for the order
-     * The client is responsible for ensuring uniqueness across all transactions the client initiates with this service.
-     *
-     * xsd restrictions: 1-20 characters
-     * @return string
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * Create an XML string representing the OrderId nodes
-     * @return string
-     */
-    protected function serializeOrderId()
-    {
-        return "<OrderId>{$this->getOrderId()}</OrderId>";
-    }
 }

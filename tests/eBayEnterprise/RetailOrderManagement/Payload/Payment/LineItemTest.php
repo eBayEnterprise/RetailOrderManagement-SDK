@@ -14,6 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
+
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
@@ -49,17 +50,21 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[]], // Empty payload should fail validation.
-            [[
-                // name and quantity are required
-                'setSequenceNumber' => '1',
-            ]],
-            [[
-                'setName' => 'line item',
-                'setQuantity' => 1,
-                'setUnitAmount' => 2.0,
-                // 'setCurrencyCode' => 'USD', // currency code is require if amount is specified
-                'setSequenceNumber' => '1',
-            ]],
+            [
+                [
+                    // name and quantity are required
+                    'setSequenceNumber' => '1',
+                ]
+            ],
+            [
+                [
+                    'setName' => 'line item',
+                    'setQuantity' => 1,
+                    'setUnitAmount' => 2.0,
+                    // 'setCurrencyCode' => 'USD', // currency code is require if amount is specified
+                    'setSequenceNumber' => '1',
+                ]
+            ],
         ];
     }
 
@@ -70,21 +75,27 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         return [
-            [[
-                'setName' => 'line item',
-                'setQuantity' => 1,
-                'setUnitAmount' => 2.0,
-                'setCurrencyCode' => 'USD',
-                'setSequenceNumber' => '1',
-            ], 'LineItem.xml'],
-            [[
-                'setName' => 'line item',
-                'setQuantity' => 1,
-                // the below fields are optional
-                // 'setUnitAmount' => 2.0,
-                // 'setCurrencyCode' => 'USD',
-                // 'setSequenceNumber' => '1',
-            ], 'LineItemNoOptionalFields.xml'],
+            [
+                [
+                    'setName' => 'line item',
+                    'setQuantity' => 1,
+                    'setUnitAmount' => 2.0,
+                    'setCurrencyCode' => 'USD',
+                    'setSequenceNumber' => '1',
+                ],
+                'LineItem.xml'
+            ],
+            [
+                [
+                    'setName' => 'line item',
+                    'setQuantity' => 1,
+                    // the below fields are optional
+                    // 'setUnitAmount' => 2.0,
+                    // 'setCurrencyCode' => 'USD',
+                    // 'setSequenceNumber' => '1',
+                ],
+                'LineItemNoOptionalFields.xml'
+            ],
         ];
     }
 

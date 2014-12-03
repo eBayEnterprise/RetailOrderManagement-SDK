@@ -29,11 +29,13 @@ interface IShippingAddress
      * @return string
      */
     public function getShipToLines();
+
     /**
      * @param string $lines
      * @return self
      */
     public function setShipToLines($lines);
+
     /**
      * Name of the city
      *
@@ -41,11 +43,13 @@ interface IShippingAddress
      * @return string
      */
     public function getShipToCity();
+
     /**
      * @param string $city
      * @return self
      */
     public function setShipToCity($city);
+
     /**
      * Typically a two- or three-digit postal abbreviation for the state or province.
      * ISO 3166-2 code is recommended, but not required
@@ -54,11 +58,13 @@ interface IShippingAddress
      * @return string
      */
     public function getShipToMainDivision();
+
     /**
      * @param string $div
      * @return self
      */
     public function setShipToMainDivision($div);
+
     /**
      * Two character country code.
      *
@@ -66,11 +72,13 @@ interface IShippingAddress
      * @return string
      */
     public function getShipToCountryCode();
+
     /**
      * @param string $code
      * @return self
      */
     public function setShipToCountryCode($code);
+
     /**
      * Typically, the string of letters and/or numbers that more closely
      * specifies the delivery area than just the City component alone,
@@ -80,6 +88,7 @@ interface IShippingAddress
      * @return string
      */
     public function getShipToPostalCode();
+
     /**
      * @param string $code
      * @return self

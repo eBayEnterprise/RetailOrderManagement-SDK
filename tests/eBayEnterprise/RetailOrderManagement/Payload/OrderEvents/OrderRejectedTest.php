@@ -15,9 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use DateTime;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
-use DateTime;
 
 class OrderRejectedTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,6 +28,7 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
     protected $validatorIterator;
     /** @var Payload\ISchemaValidator (stub) */
     protected $stubSchemaValidator;
+
     /**
      * Setup a stub validator and validator iterator for each payload to use
      */
@@ -38,16 +39,7 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
         $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
-    /**
-     * Get a new OrderRejected payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return OrderRejected
-     */
-    protected function createNewPayload()
-    {
-        return new OrderRejected($this->validatorIterator, $this->stubSchemaValidator);
-    }
+
     /**
      * Data provider to build `OrderRejected` payload data
      * @return array[]
@@ -63,15 +55,16 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
             . '</OrderRejected>';
         return [
             [
-               '10000001',
-               'GTA24',
-               '2014-07-06T06:09:05-04:00',
-               'Testing invalid payment reason message',
-               'Invalid Payment',
+                '10000001',
+                'GTA24',
+                '2014-07-06T06:09:05-04:00',
+                'Testing invalid payment reason message',
+                'Invalid Payment',
                 $orderRejectedXml
             ],
         ];
     }
+
     /**
      * Data provider to build `OrderRejected` payload using serialize xml
      * @return array[]
@@ -88,14 +81,15 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 $orderRejectedXml,
-               '10000001',
-               'GTA24',
-               '2014-07-06T06:09:05-04:00',
-               'Testing invalid shipment reason message',
-               'Invalid Shipment',
+                '10000001',
+                'GTA24',
+                '2014-07-06T06:09:05-04:00',
+                'Testing invalid shipment reason message',
+                'Invalid Shipment',
             ],
         ];
     }
+
     /**
      * Test the `OrderRejected` serialized as expected.
      * @param string $customerOrderId
@@ -122,6 +116,18 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
             ->setCode($code);
         $this->assertSame($result, $payload->serialize());
     }
+
+    /**
+     * Get a new OrderRejected payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return OrderRejected
+     */
+    protected function createNewPayload()
+    {
+        return new OrderRejected($this->validatorIterator, $this->stubSchemaValidator);
+    }
+
     /**
      * Test the `OrderRejected` unserialized as expected.
      * @param string $xml the serialize string to deserialized in the payload

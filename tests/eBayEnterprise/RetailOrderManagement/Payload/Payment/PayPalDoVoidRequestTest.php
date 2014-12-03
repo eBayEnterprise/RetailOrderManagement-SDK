@@ -14,6 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
+
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
@@ -38,17 +39,6 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get a new PayPalDoVoidRequest payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return PayPalDoVoidRequest
-     */
-    protected function createNewPayload()
-    {
-        return new PayPalDoVoidRequest($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
      * Data provider for invalid payloads
      * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
      */
@@ -66,12 +56,31 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
     public function provideValidPayload()
     {
         return [
-            [[
-                'setRequestId' => '1234567890',
-                'setOrderId' => '1234567',
-                'setCurrencyCode' => 'USD',
-            ]],
+            [
+                [
+                    'setRequestId' => '1234567890',
+                    'setOrderId' => '1234567',
+                    'setCurrencyCode' => 'USD',
+                ]
+            ],
         ];
+    }
+
+    /**
+     * Simply ensure that when one validator fails validation, the exception
+     * is thrown - is not validating the actual payload data.
+     * @param array $payloadData
+     * @dataProvider provideInvalidPayload
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testValidateWillFail(array $payloadData)
+    {
+        $payload = $this->buildPayload($payloadData);
+        // script the validator to fail validation
+        $this->stubValidator->expects($this->any())
+            ->method('validate')
+            ->will($this->throwException(new Payload\Exception\InvalidPayload));
+        $payload->validate();
     }
 
     /**
@@ -90,52 +99,14 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * load an xml file and return the canonicalized string of its contents
-     * @return string
+     * Get a new PayPalDoVoidRequest payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return PayPalDoVoidRequest
      */
-    protected function canonicalize($file)
+    protected function createNewPayload()
     {
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->load($file);
-        return $doc->C14N();
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlTestString()
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/PayPalDoVoidRequestTest.xml");
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/InvalidPayPalDoVoidRequestTest.xml");
-    }
-
-    /**
-     * Simply ensure that when one validator fails validation, the exception
-     * is thrown - is not validating the actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to fail validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
+        return new PayPalDoVoidRequest($this->validatorIterator, $this->stubSchemaValidator);
     }
 
     /**
@@ -185,8 +156,9 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $payload->serialize();
     }
+
     /**
-     * @param array  $payloadData
+     * @param array $payloadData
      * @dataProvider provideValidPayload
      */
     public function testSerializeWillPass(array $payloadData)
@@ -197,6 +169,28 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
         $serializedString = $domPayload->C14N();
 
         $this->assertEquals($this->loadXmlTestString(), $serializedString);
+    }
+
+    /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @return string
+     */
+    protected function loadXmlTestString()
+    {
+        return $this->canonicalize(__DIR__ . "/Fixtures/PayPalDoVoidRequestTest.xml");
+    }
+
+    /**
+     * load an xml file and return the canonicalized string of its contents
+     * @return string
+     */
+    protected function canonicalize($file)
+    {
+        $doc = new DOMDocument();
+        $doc->preserveWhiteSpace = false;
+        $doc->load($file);
+        return $doc->C14N();
     }
 
     /**
@@ -214,6 +208,16 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @return string
+     */
+    protected function loadXmlInvalidTestString()
+    {
+        return $this->canonicalize(__DIR__ . "/Fixtures/InvalidPayPalDoVoidRequestTest.xml");
+    }
+
+    /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFailPayloadInvalid()
@@ -228,7 +232,7 @@ class PayPalDoVoidRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array  $payloadData
+     * @param array $payloadData
      * @dataProvider provideValidPayload
      */
     public function testDeserializeWillPass(array $payloadData)

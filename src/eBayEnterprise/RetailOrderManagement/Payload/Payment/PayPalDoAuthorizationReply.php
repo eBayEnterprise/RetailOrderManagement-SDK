@@ -24,13 +24,13 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
 
     use Payload\TPayload, TOrderId;
 
-    /** @var string **/
+    /** @var string * */
     protected $responseCode;
-    /** @var string **/
+    /** @var string * */
     protected $paymentStatus;
-    /** @var string **/
+    /** @var string * */
     protected $pendingReason;
-    /** @var string **/
+    /** @var string * */
     protected $reasonCode;
 
     /**

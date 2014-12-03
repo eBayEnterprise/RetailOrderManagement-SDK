@@ -83,69 +83,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         $this->schemaValidator = $schemaValidator;
     }
 
-    public function getAuthorizationResponseCode()
-    {
-        return $this->authorizationResponseCode;
-    }
-
-    public function getBankAuthorizationCode()
-    {
-        return $this->bankAuthorizationCode;
-    }
-
-    public function getCVV2ResponseCode()
-    {
-        return $this->cvv2ResponseCode;
-    }
-
-    public function getAVSResponseCode()
-    {
-        return $this->avsResponseCode;
-    }
-
-    public function getPhoneResponseCode()
-    {
-        return $this->phoneResponseCode;
-    }
-
-    public function getNameResponseCode()
-    {
-        return $this->nameResponseCode;
-    }
-
-    public function getEmailResponseCode()
-    {
-        return $this->emailResponseCode;
-    }
-
-    public function getAmountAuthorized()
-    {
-        return $this->amountAuthorized;
-    }
-
-    public function getCurrencyCode()
-    {
-        return $this->currencyCode;
-    }
-
-    public function getIsAVSSuccessful()
-    {
-        return !in_array($this->getAVSResponseCode(), $this->invalidAvsCodes);
-    }
-
     public function getIsAVSCorrectionRequired()
     {
         return $this->getIsAuthApproved() && !$this->getIsAVSSuccessful();
-    }
-
-    public function getIsCVV2Successful($value = '')
-    {
-        return !in_array($this->getCVV2ResponseCode(), $this->invalidCvvCodes);
-    }
-
-    public function getIsCVV2CorrectionRequired()
-    {
-        return $this->getIsAuthApproved() && !$this->getIsCVV2Successful();
     }
 
     public function getIsAuthApproved()
@@ -153,17 +93,47 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         return $this->getAuthorizationResponseCode() === self::AUTHORIZATION_APPROVED;
     }
 
-    public function getIsAuthTimeout()
+    public function getAuthorizationResponseCode()
     {
-        $responseCode = $this->getAuthorizationResponseCode();
-        return $responseCode === self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER
-            || $responseCode === self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR;
+        return $this->authorizationResponseCode;
+    }
+
+    public function getIsAVSSuccessful()
+    {
+        return !in_array($this->getAVSResponseCode(), $this->invalidAvsCodes);
+    }
+
+    public function getAVSResponseCode()
+    {
+        return $this->avsResponseCode;
+    }
+
+    public function getIsCVV2CorrectionRequired()
+    {
+        return $this->getIsAuthApproved() && !$this->getIsCVV2Successful();
+    }
+
+    public function getIsCVV2Successful($value = '')
+    {
+        return !in_array($this->getCVV2ResponseCode(), $this->invalidCvvCodes);
+    }
+
+    public function getCVV2ResponseCode()
+    {
+        return $this->cvv2ResponseCode;
     }
 
     public function getIsAuthSuccessful()
     {
         return ($this->getIsAuthApproved() && $this->getIsAVSSuccessful() && $this->getIsCVV2Successful())
-            || ($this->getIsAuthTimeout());
+        || ($this->getIsAuthTimeout());
+    }
+
+    public function getIsAuthTimeout()
+    {
+        $responseCode = $this->getAuthorizationResponseCode();
+        return $responseCode === self::AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER
+        || $responseCode === self::AUTHORIZATION_TIMEOUT_CARD_PROCESSOR;
     }
 
     public function getIsAuthAcceptable()
@@ -187,9 +157,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     protected function serializeContents()
     {
         return $this->serializePaymentContext()
-            . $this->serializeResponseCodes()
-            . $this->serializeAdditionalResponseCodes()
-            . $this->serializeAmount();
+        . $this->serializeResponseCodes()
+        . $this->serializeAdditionalResponseCodes()
+        . $this->serializeAmount();
     }
 
     /**
@@ -212,6 +182,11 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         );
     }
 
+    public function getBankAuthorizationCode()
+    {
+        return $this->bankAuthorizationCode;
+    }
+
     /**
      * Create an XML string representing any of the optional response codes,
      * e.g. EmailResponseCode, PhoneResponseCode, etc.
@@ -223,8 +198,23 @@ class CreditCardAuthReply implements ICreditCardAuthReply
         $nameResponseCode = $this->getNameResponseCode();
         $emailResponseCode = $this->getEmailResponseCode();
         return ($phoneResponseCode ? "<PhoneResponseCode>{$phoneResponseCode}</PhoneResponseCode>" : '')
-            . ($nameResponseCode ? "<NameResponseCode>{$nameResponseCode}</NameResponseCode>" : '')
-            . ($emailResponseCode ? "<EmailResponseCode>{$emailResponseCode}</EmailResponseCode>" : '');
+        . ($nameResponseCode ? "<NameResponseCode>{$nameResponseCode}</NameResponseCode>" : '')
+        . ($emailResponseCode ? "<EmailResponseCode>{$emailResponseCode}</EmailResponseCode>" : '');
+    }
+
+    public function getPhoneResponseCode()
+    {
+        return $this->phoneResponseCode;
+    }
+
+    public function getNameResponseCode()
+    {
+        return $this->nameResponseCode;
+    }
+
+    public function getEmailResponseCode()
+    {
+        return $this->emailResponseCode;
     }
 
     /**
@@ -238,6 +228,16 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             $this->getCurrencyCode(),
             $this->getAmountAuthorized()
         );
+    }
+
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
+    }
+
+    public function getAmountAuthorized()
+    {
+        return $this->amountAuthorized;
     }
 
     /**

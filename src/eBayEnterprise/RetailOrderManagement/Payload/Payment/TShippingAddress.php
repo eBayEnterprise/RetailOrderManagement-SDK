@@ -40,6 +40,40 @@ trait TShippingAddress
     }
 
     /**
+     * Make sure we have max 4 address lines of 70 chars max
+     *
+     * If there are more than 4 lines concatenate all extra lines with the 4th line.
+     *
+     * Truncate any lines to 70 chars max.
+     *
+     * @param string $lines
+     * @return array or null
+     */
+    protected function cleanAddressLines($lines)
+    {
+        $finalLines = null;
+
+        if (is_string($lines)) {
+            $trimmed = trim($lines);
+            $addressLines = preg_split("/\n/", $trimmed, null, PREG_SPLIT_NO_EMPTY);
+
+            $newLines = [];
+            foreach ($addressLines as $line) {
+                $newLines[] = $this->cleanString($line, 70);
+            }
+
+            if (count($newLines) > 4) {
+                // concat lines beyond the four allowed down into the last line
+                $newLines[3] = $this->cleanString(implode(' ', array_slice($newLines, 3)), 70);
+            }
+
+            $finalLines = array_slice($newLines, 0, 4);
+        }
+
+        return $finalLines;
+    }
+
+    /**
      * Aggregate the shipTo address lines into the ShippingAddress node
      *
      * @return string
@@ -79,6 +113,15 @@ trait TShippingAddress
         return $this;
     }
 
+    /**
+     * Return a serialized XML node if it has a value, empty string otherwise.
+     *
+     * @param string $nodeName
+     * @param string $value
+     * @return string
+     */
+    abstract protected function nodeNullCoalesce($nodeName, $value);
+
     public function getShipToMainDivision()
     {
         return $this->shipToMainDivision;
@@ -114,15 +157,6 @@ trait TShippingAddress
     }
 
     /**
-     * Return a serialized XML node if it has a value, empty string otherwise.
-     *
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    abstract protected function nodeNullCoalesce($nodeName, $value);
-
-    /**
      * Trim any white space and return the resulting string truncating to $maxLength.
      *
      * Return null if the result is an empty string or not a string
@@ -132,16 +166,4 @@ trait TShippingAddress
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
-
-    /**
-     * Make sure we have max 4 address lines of 70 chars max
-     *
-     * If there are more than 4 lines concatenate all extra lines with the 4th line.
-     *
-     * Truncate any lines to 70 chars max.
-     *
-     * @param string $lines
-     * @return array or null
-     */
-    abstract protected function cleanAddressLines($lines);
 }

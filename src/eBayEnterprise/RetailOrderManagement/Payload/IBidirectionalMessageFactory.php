@@ -20,12 +20,14 @@ use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 interface IBidirectionalMessageFactory extends IMessageFactory
 {
     public function __construct(IConfig $config, IPayloadFactory $payloadFactory = null, array $messageMapping = []);
+
     /**
      * Returns a request payload object based on the configuration information passed in the constructor
      *
      * @return IPayload
      */
     public function requestPayload();
+
     /**
      * Returns a reply payload object based on the configuration information passed in the constructor
      *

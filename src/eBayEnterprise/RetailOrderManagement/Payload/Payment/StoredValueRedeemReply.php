@@ -61,17 +61,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
         $this->schemaValidator = $schemaValidator;
     }
 
-    public function getPin()
-    {
-        return $this->pin;
-    }
-
-    public function setPin($pin)
-    {
-        $this->pin = $this->cleanString($pin, 8);
-        return $this;
-    }
-
     public function getAmountRedeemed()
     {
         return $this->amountRedeemed;
@@ -143,76 +132,6 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     }
 
     /**
-     * Serialize the various parts of the payload into XML strings and
-     * simply concatenate them together.
-     * @return string
-     */
-    protected function serializeContents()
-    {
-        return $this->serializePaymentContext()
-        . $this->serializeResponseCode()
-        . $this->serializeAmounts('AmountRedeemed')
-        . $this->serializeAmounts('BalanceAmount');
-    }
-
-    /**
-     * Build the response code node
-     * @return string
-     */
-    protected function serializeResponseCode()
-    {
-        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
-    }
-
-    /**
-     * Build the Pin node
-     *
-     * @return string
-     */
-    protected function serializePin()
-    {
-        return "<Pin>{$this->getPin()}</Pin>";
-    }
-
-    /**
-     * Build the Amount node
-     * @param string $amountType either 'AmountRedeemed' or 'BalanceAmount'
-     * @return string
-     */
-    protected function serializeAmounts($amountType)
-    {
-        $getVal = "get{$amountType}";
-        $getCurCode = "{$getVal}CurrencyCode";
-        return sprintf(
-            '<%s currencyCode="%s">%1.02F</%1$s>',
-            $amountType,
-            $this->{$getCurCode}(),
-            $this->{$getVal}()
-        );
-    }
-
-    /**
-     * The result of the request transaction.
-     *
-     * xsd note: possible values: Fail, Success, Timeout
-     * @return string
-     */
-    public function getResponseCode()
-    {
-        return $this->responseCode;
-    }
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setResponseCode($code)
-    {
-        $this->responseCode = $code;
-        return $this;
-    }
-
-    /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
      *
@@ -255,6 +174,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
         $this->balanceAmountCurrencyCode = $code;
         return $this;
     }
+
     /**
      * Whether the gift card was successfully redeemed.
      * @return bool
@@ -262,6 +182,87 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     public function wasRedeemed()
     {
         return in_array($this->getResponseCode(), $this->successResponseCodes, true);
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializePaymentContext()
+        . $this->serializeResponseCode()
+        . $this->serializeAmounts('AmountRedeemed')
+        . $this->serializeAmounts('BalanceAmount');
+    }
+
+    /**
+     * Build the response code node
+     * @return string
+     */
+    protected function serializeResponseCode()
+    {
+        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
+    }
+
+    /**
+     * The result of the request transaction.
+     *
+     * xsd note: possible values: Fail, Success, Timeout
+     * @return string
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setResponseCode($code)
+    {
+        $this->responseCode = $code;
+        return $this;
+    }
+
+    /**
+     * Build the Amount node
+     * @param string $amountType either 'AmountRedeemed' or 'BalanceAmount'
+     * @return string
+     */
+    protected function serializeAmounts($amountType)
+    {
+        $getVal = "get{$amountType}";
+        $getCurCode = "{$getVal}CurrencyCode";
+        return sprintf(
+            '<%s currencyCode="%s">%1.02F</%1$s>',
+            $amountType,
+            $this->{$getCurCode}(),
+            $this->{$getVal}()
+        );
+    }
+
+    /**
+     * Build the Pin node
+     *
+     * @return string
+     */
+    protected function serializePin()
+    {
+        return "<Pin>{$this->getPin()}</Pin>";
+    }
+
+    public function getPin()
+    {
+        return $this->pin;
+    }
+
+    public function setPin($pin)
+    {
+        $this->pin = $this->cleanString($pin, 8);
+        return $this;
     }
 
     /**

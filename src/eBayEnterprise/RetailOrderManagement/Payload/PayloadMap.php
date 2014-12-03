@@ -29,6 +29,7 @@ class PayloadMap implements IPayloadMap
         $this->classMap = $classMap;
         $this->overrides = new SplStack;
     }
+
     public function getConcreteType($abstractType)
     {
         $override = $this->getOverrideWithMapping($abstractType);
@@ -40,14 +41,7 @@ class PayloadMap implements IPayloadMap
         }
         throw new UnsupportedPayload("No concrete type known for '$abstractType'");
     }
-    public function merge(IPayloadMap $payloadMap)
-    {
-        $this->overrides->push($payloadMap);
-    }
-    public function hasMappingForType($abstractType)
-    {
-        return $this->getOverrideWithMapping($abstractType) || isset($this->classMap[$abstractType]);
-    }
+
     /**
      * Get the first override payload map that has a mapping for the given
      * abstract type. If none of the overrides have a mapping, returns null.
@@ -62,5 +56,15 @@ class PayloadMap implements IPayloadMap
             }
         }
         return null;
+    }
+
+    public function merge(IPayloadMap $payloadMap)
+    {
+        $this->overrides->push($payloadMap);
+    }
+
+    public function hasMappingForType($abstractType)
+    {
+        return $this->getOverrideWithMapping($abstractType) || isset($this->classMap[$abstractType]);
     }
 }

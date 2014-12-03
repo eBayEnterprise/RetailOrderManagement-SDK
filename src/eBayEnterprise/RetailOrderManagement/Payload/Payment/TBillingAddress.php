@@ -40,6 +40,18 @@ trait TBillingAddress
     }
 
     /**
+     * Make sure we have max 4 address lines of 70 chars max
+     *
+     * If there are more than 4 lines concatenate all extra lines with the 4th line.
+     *
+     * Truncate any lines to 70 chars max.
+     *
+     * @param string $lines
+     * @return array or null
+     */
+    abstract protected function cleanAddressLines($lines);
+
+    /**
      * Aggregate the billing address lines into the BillingAddress node
      *
      * @return string
@@ -79,6 +91,15 @@ trait TBillingAddress
         return $this;
     }
 
+    /**
+     * Return a serialized XML node if it has a value, empty string otherwise.
+     *
+     * @param string $nodeName
+     * @param string $value
+     * @return string
+     */
+    abstract protected function nodeNullCoalesce($nodeName, $value);
+
     public function getBillingMainDivision()
     {
         return $this->billingMainDivision;
@@ -114,15 +135,6 @@ trait TBillingAddress
     }
 
     /**
-     * Return a serialized XML node if it has a value, empty string otherwise.
-     *
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    abstract protected function nodeNullCoalesce($nodeName, $value);
-
-    /**
      * Trim any white space and return the resulting string truncating to $maxLength.
      *
      * Return null if the result is an empty string or not a string
@@ -132,16 +144,4 @@ trait TBillingAddress
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
-
-    /**
-     * Make sure we have max 4 address lines of 70 chars max
-     *
-     * If there are more than 4 lines concatenate all extra lines with the 4th line.
-     *
-     * Truncate any lines to 70 chars max.
-     *
-     * @param string $lines
-     * @return array or null
-     */
-    abstract protected function cleanAddressLines($lines);
 }

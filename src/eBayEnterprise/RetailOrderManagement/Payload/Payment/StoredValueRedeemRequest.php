@@ -57,88 +57,6 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
         $this->schemaValidator = $schemaValidator;
     }
 
-    public function getPin()
-    {
-        return $this->pin;
-    }
-
-    public function setPin($pin)
-    {
-        $this->pin = $this->cleanString($pin, 8);
-        return $this;
-    }
-
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    public function setAmount($amount)
-    {
-        if (is_float($amount)) {
-            $this->amount = round($amount, 2, PHP_ROUND_HALF_UP);
-        } else {
-            $this->amount = null;
-        }
-        return $this;
-    }
-
-    public function getCurrencyCode()
-    {
-        return $this->currencyCode;
-    }
-
-    public function setCurrencyCode($code)
-    {
-        $value = null;
-
-        $cleaned = $this->cleanString($code, 3);
-        if ($cleaned !== null) {
-            if (!strlen($cleaned) < 3) {
-                $value = $cleaned;
-            }
-        }
-        $this->currencyCode = $value;
-
-        return $this;
-    }
-
-    /**
-     * Serialize the various parts of the payload into XML strings and
-     * simply concatenate them together.
-     * @return string
-     */
-    protected function serializeContents()
-    {
-        return $this->serializePaymentContext()
-            . $this->serializePin()
-            . $this->serializeAmounts('');
-    }
-
-    /**
-     * Build the Pin node
-     *
-     * @return string
-     */
-    protected function serializePin()
-    {
-        $pin = $this->getPin();
-        if ($pin === '') {
-            return '';
-        }
-        return "<Pin>{$this->getPin()}</Pin>";
-    }
-
-    /**
-     * Build the Amount node
-     * @param string $amountType either 'AmountRedeemed' or 'BalanceAmount'
-     * @return string
-     */
-    protected function serializeAmounts($amountType)
-    {
-        return sprintf('<Amount currencyCode="%s">%1.02F</Amount>', $this->getCurrencyCode(), $this->getAmount());
-    }
-
     /**
      * The result of the request transaction.
      *
@@ -161,6 +79,98 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     }
 
     /**
+     * @param string
+     * @return self
+     */
+    public function setCurrencyCodeRedeemed($code)
+    {
+        $this->currencyCode = $code;
+        return $this;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializePaymentContext()
+        . $this->serializePin()
+        . $this->serializeAmounts('');
+    }
+
+    /**
+     * Build the Pin node
+     *
+     * @return string
+     */
+    protected function serializePin()
+    {
+        $pin = $this->getPin();
+        if ($pin === '') {
+            return '';
+        }
+        return "<Pin>{$this->getPin()}</Pin>";
+    }
+
+    public function getPin()
+    {
+        return $this->pin;
+    }
+
+    public function setPin($pin)
+    {
+        $this->pin = $this->cleanString($pin, 8);
+        return $this;
+    }
+
+    /**
+     * Build the Amount node
+     * @param string $amountType either 'AmountRedeemed' or 'BalanceAmount'
+     * @return string
+     */
+    protected function serializeAmounts($amountType)
+    {
+        return sprintf('<Amount currencyCode="%s">%1.02F</Amount>', $this->getCurrencyCode(), $this->getAmount());
+    }
+
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
+    }
+
+    public function setCurrencyCode($code)
+    {
+        $value = null;
+
+        $cleaned = $this->cleanString($code, 3);
+        if ($cleaned !== null) {
+            if (!strlen($cleaned) < 3) {
+                $value = $cleaned;
+            }
+        }
+        $this->currencyCode = $value;
+
+        return $this;
+    }
+
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    public function setAmount($amount)
+    {
+        if (is_float($amount)) {
+            $this->amount = round($amount, 2, PHP_ROUND_HALF_UP);
+        } else {
+            $this->amount = null;
+        }
+        return $this;
+    }
+
+    /**
      * Name, value pairs of root attributes
      *
      * @return array
@@ -174,36 +184,13 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     }
 
     /**
-     * Serialize Root Attributes
-     */
-    protected function serializeRootAttrs()
-    {
-        return sprintf(
-            '%s="%s" %s="%s"',
-            'xmlns',
-            static::XML_NS,
-            'requestId',
-            $this->getRequestId()
-        );
-    }
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setCurrencyCodeRedeemed($code)
-    {
-        $this->currencyCode = $code;
-        return $this;
-    }
-
-    /**
-     * Return the schema file path.
+     * The XML namespace for the payload.
+     *
      * @return string
      */
-    protected function getSchemaFile()
+    protected function getXmlNamespace()
     {
-        return __DIR__ . '/schema/' . static::XSD;
+        return static::XML_NS;
     }
 
     /**
@@ -225,6 +212,29 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     }
 
     /**
+     * Serialize Root Attributes
+     */
+    protected function serializeRootAttrs()
+    {
+        return sprintf(
+            '%s="%s" %s="%s"',
+            'xmlns',
+            static::XML_NS,
+            'requestId',
+            $this->getRequestId()
+        );
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . static::XSD;
+    }
+
+    /**
      * Return the name of the xml root node.
      *
      * @return string
@@ -232,15 +242,5 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
-    }
-
-    /**
-     * The XML namespace for the payload.
-     *
-     * @return string
-     */
-    protected function getXmlNamespace()
-    {
-        return static::XML_NS;
     }
 }

@@ -18,6 +18,17 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 trait TAmount
 {
     /**
+     * serialize an amount as xml without the currency code
+     * @param  string $elementName name of element containing the amount
+     * @param  mixed $amount amount to serialize
+     * @return string
+     */
+    protected function serializeAmount($elementName, $amount)
+    {
+        return sprintf('<%1$>%2$01.2F</%1$s>', $elementName, $this->sanitizeAmount($amount));
+    }
+
+    /**
      * ensure the amount is rounded to two decimal places.
      * @param  mixed $amount any numeric value
      * @return float $amount rounded to 2 places.
@@ -34,18 +45,7 @@ trait TAmount
     /**
      * serialize an amount as xml without the currency code
      * @param  string $elementName name of element containing the amount
-     * @param  mixed  $amount      amount to serialize
-     * @return string
-     */
-    protected function serializeAmount($elementName, $amount)
-    {
-        return sprintf('<%1$>%2$01.2F</%1$s>', $elementName, $this->sanitizeAmount($amount));
-    }
-
-    /**
-     * serialize an amount as xml without the currency code
-     * @param  string $elementName  name of element containing the amount
-     * @param  mixed  $amount       amount to serialize
+     * @param  mixed $amount amount to serialize
      * @param  string $currencyCode currency code for the amount
      * @return string
      */

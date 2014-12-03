@@ -32,6 +32,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     protected $responseCode;
     /** @var array response codes that are considered a success */
     protected $successResponseCodes = ['Success'];
+
     /**
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator
@@ -49,25 +50,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
-    /**
-     * The amount to void.
-     *
-     * xsd note: enumeration, pattern (Fail|Success|Timeout)
-     * return string
-     */
-    public function getResponseCode()
-    {
-        return $this->responseCode;
-    }
-    /**
-     * @param string
-     * @return self
-     */
-    public function setResponseCode($code)
-    {
-        $this->responseCode = $code;
-        return $this;
-    }
+
     /**
      * Whether the gift card redeem was successfully voided.
      * @return bool
@@ -78,6 +61,27 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     }
 
     /**
+     * The amount to void.
+     *
+     * xsd note: enumeration, pattern (Fail|Success|Timeout)
+     * return string
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setResponseCode($code)
+    {
+        $this->responseCode = $code;
+        return $this;
+    }
+
+    /**
      * Serialize the various parts of the payload into XML strings and
      * simply concatenate them together.
      * @return string
@@ -85,7 +89,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     protected function serializeContents()
     {
         return $this->serializePaymentContext()
-            . $this->serializeResponseCode();
+        . $this->serializeResponseCode();
     }
 
     /**

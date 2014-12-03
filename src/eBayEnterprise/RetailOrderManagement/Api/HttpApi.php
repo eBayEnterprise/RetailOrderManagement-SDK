@@ -23,15 +23,15 @@ use eBayEnterprise\RetailOrderManagement\Payload;
  */
 class HttpApi implements IBidirectionalApi
 {
-    /** @var IConfig  */
+    /** @var IConfig */
     protected $config;
-    /** @var Payload\IPayload  */
+    /** @var Payload\IPayload */
     protected $requestPayload;
     /** @var  Payload\IPayload */
     protected $replyPayload;
     /** @var  Payload\IBidirectionalMessageFactory */
     protected $messageFactory;
-    /** @var  \Requests_Response Response object from the last call to Requests*/
+    /** @var  \Requests_Response Response object from the last call to Requests */
     protected $lastRequestsResponse;
 
     /**
@@ -50,81 +50,10 @@ class HttpApi implements IBidirectionalApi
         $this->messageFactory = new Payload\BidirectionalMessageFactory($this->config);
     }
 
-    public function getRequestBody()
-    {
-        if ($this->requestPayload !== null) {
-            return $this->requestPayload;
-        }
-        // If a payload doesn't exist for the request, the operation cannot
-        // be supported.
-        try {
-            $this->requestPayload = $this->messageFactory->requestPayload();
-        } catch (Payload\Exception\UnsupportedPayload $e) {
-            throw new UnsupportedOperation();
-        }
-        return $this->requestPayload;
-    }
-
     public function setRequestBody(Payload\IPayload $payload)
     {
         $this->requestPayload = $payload;
         return $this;
-    }
-
-    protected function buildHeader()
-    {
-        return [
-            'apikey' => $this->config->getApiKey(),
-            'Content-type' => $this->config->getContentType()
-        ];
-    }
-
-    /**
-     * @return \Requests_Response
-     * @throws \Requests_Exception
-     */
-    protected function post()
-    {
-        $this->lastRequestsResponse = \Requests::post(
-            $this->config->getEndpoint(),
-            $this->buildHeader(),
-            $this->getRequestBody()->serialize()
-        );
-        return $this->lastRequestsResponse->success;
-    }
-
-    /**
-     * @return \Requests_Response
-     * @throws \Requests_Exception
-     */
-    protected function get()
-    {
-        $this->lastRequestsResponse = \Requests::post(
-            $this->config->getEndpoint(),
-            $this->buildHeader()
-        );
-        return $this->lastRequestsResponse->success;
-    }
-
-    /**
-     * @return boolean
-     * @throws Exception\UnsupportedHttpAction
-     */
-    protected function sendRequest()
-    {
-        // clear the old response
-        $this->lastRequestsResponse = null;
-        $httpMethod = strtolower($this->config->getHttpMethod());
-        if (!method_exists($this, $httpMethod)) {
-            throw new Exception\UnsupportedHttpAction(
-                sprintf(
-                    'HTTP action %s not supported.',
-                    strtoupper($httpMethod)
-                )
-            );
-        }
-
-        return $this->$httpMethod();
     }
 
     public function send()
@@ -156,6 +85,27 @@ class HttpApi implements IBidirectionalApi
         return $this;
     }
 
+    /**
+     * @return boolean
+     * @throws Exception\UnsupportedHttpAction
+     */
+    protected function sendRequest()
+    {
+        // clear the old response
+        $this->lastRequestsResponse = null;
+        $httpMethod = strtolower($this->config->getHttpMethod());
+        if (!method_exists($this, $httpMethod)) {
+            throw new Exception\UnsupportedHttpAction(
+                sprintf(
+                    'HTTP action %s not supported.',
+                    strtoupper($httpMethod)
+                )
+            );
+        }
+
+        return $this->$httpMethod();
+    }
+
     public function getResponseBody()
     {
         if ($this->replyPayload !== null) {
@@ -170,5 +120,55 @@ class HttpApi implements IBidirectionalApi
             throw new UnsupportedOperation();
         }
         return $this->replyPayload;
+    }
+
+    /**
+     * @return \Requests_Response
+     * @throws \Requests_Exception
+     */
+    protected function post()
+    {
+        $this->lastRequestsResponse = \Requests::post(
+            $this->config->getEndpoint(),
+            $this->buildHeader(),
+            $this->getRequestBody()->serialize()
+        );
+        return $this->lastRequestsResponse->success;
+    }
+
+    protected function buildHeader()
+    {
+        return [
+            'apikey' => $this->config->getApiKey(),
+            'Content-type' => $this->config->getContentType()
+        ];
+    }
+
+    public function getRequestBody()
+    {
+        if ($this->requestPayload !== null) {
+            return $this->requestPayload;
+        }
+        // If a payload doesn't exist for the request, the operation cannot
+        // be supported.
+        try {
+            $this->requestPayload = $this->messageFactory->requestPayload();
+        } catch (Payload\Exception\UnsupportedPayload $e) {
+            throw new UnsupportedOperation();
+        }
+        return $this->requestPayload;
+    }
+
+    /**
+     * @return \Requests_Response
+     * @throws \Requests_Exception
+     */
+    protected function get()
+    {
+        $this->lastRequestsResponse = \Requests::post(
+            $this->config->getEndpoint(),
+            $this->buildHeader()
+        );
+        return $this->lastRequestsResponse->success;
     }
 }

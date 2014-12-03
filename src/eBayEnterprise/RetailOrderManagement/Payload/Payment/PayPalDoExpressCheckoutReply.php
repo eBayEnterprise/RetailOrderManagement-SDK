@@ -24,17 +24,17 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
 
     const SUCCESS = 'Success';
 
-    /** @var string **/
+    /** @var string * */
     protected $responseCode;
-    /** @var string **/
+    /** @var string * */
     protected $transactionId;
-    /** @var string **/
+    /** @var string * */
     protected $errorMessage;
-    /** @var string **/
+    /** @var string * */
     protected $paymentStatus;
-    /** @var string **/
+    /** @var string * */
     protected $pendingReason;
-    /** @var string **/
+    /** @var string * */
     protected $reasonCode;
 
     /**
@@ -113,13 +113,13 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     protected function serializeContents()
     {
         return $this->serializeOrderId()
-            . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
-            . "<TransactionID>{$this->getTransactionId()}</TransactionID>"
-            . "<PaymentInfo>"
-            . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
-            . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
-            . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
-            . "</PaymentInfo>";
+        . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
+        . "<TransactionID>{$this->getTransactionId()}</TransactionID>"
+        . "<PaymentInfo>"
+        . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
+        . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
+        . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
+        . "</PaymentInfo>";
     }
 
     /**
@@ -153,6 +153,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     {
         return $this->paymentStatus;
     }
+
     /**
      * @param string
      * @return self
@@ -162,6 +163,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
         $this->paymentStatus = $status;
         return $this;
     }
+
     /**
      * This value is passed through from the Order Management System. It is returned from a PayPal Get.
      * (However, this field is in the XSD for more than just Get.)
@@ -172,6 +174,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     {
         return $this->pendingReason;
     }
+
     /**
      * @param string
      * @return self
@@ -181,6 +184,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
         $this->pendingReason = $reason;
         return $this;
     }
+
     /**
      * This value is passed through from the Order Management System. It is returned from a PayPal Get.
      * (However, this field is in the XSD for more than just Get.)
@@ -191,6 +195,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     {
         return $this->reasonCode;
     }
+
     /**
      * @param string
      * @return self

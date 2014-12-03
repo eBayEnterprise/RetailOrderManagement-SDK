@@ -31,11 +31,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getRequestId();
+
     /**
      * @param string $requestId
      * @return self
      */
     public function setRequestId($requestId);
+
     /**
      * Expiration date of the credit card.
      *
@@ -44,11 +46,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return \DateTime
      */
     public function getExpirationDate();
+
     /**
      * @param \DateTime $date
      * @return self
      */
     public function setExpirationDate(\DateTime $date);
+
     /**
      * The card security code is the number on the back of the credit card
      * that is normally required for authorizations.
@@ -58,11 +62,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * return string
      */
     public function getCardSecurityCode();
+
     /**
      * @param string $cvv
      * @return self
      */
     public function setCardSecurityCode($cvv);
+
     /**
      * The amount to authorize
      *
@@ -71,11 +77,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return float
      */
     public function getAmount();
+
     /**
      * @param float $amount
      * @return self
      */
     public function setAmount($amount);
+
     /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
@@ -84,11 +92,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getCurrencyCode();
+
     /**
      * @param string $code
      * @return self
      */
     public function setCurrencyCode($code);
+
     /**
      * E-mail address of the customer making the purchase.
      *
@@ -100,11 +110,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getEmail();
+
     /**
      * @param string $email
      * @return self
      */
     public function setEmail($email);
+
     /**
      * IP Address of the customer making the purchase.
      *
@@ -114,77 +126,91 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getIp();
+
     /**
      * @param string $ip
      * @return self
      */
     public function setIp($ip);
+
     /**
      * First name of the person on the billing address of the credit card
      *
      * @return string
      */
     public function getBillingFirstName();
+
     /**
      * @param string $name
      * @return self
      */
     public function setBillingFirstName($name);
+
     /**
      * Last name of the person on the billing address of the credit card
      *
      * @return string
      */
     public function getBillingLastName();
+
     /**
      * @param string $name
      * @return self
      */
     public function setBillingLastName($name);
+
     /**
      * Billing phone number of the person
      *
      * @return string
      */
     public function getBillingPhone();
+
     /**
      * @param string $phone
      * @return self
      */
     public function setBillingPhone($phone);
+
     /**
      * First name of the person on the shipping address of the order
      *
      * @return string
      */
     public function getShipToFirstName();
+
     /**
      * @param string $name
      * @return self
      */
     public function setShipToFirstName($name);
+
     /**
      * Last name of the person on the shipping address of the order
      *
      * @return string
      */
     public function getShipToLastName();
+
     /**
      * @param string $name
      * @return self
      */
     public function setShipToLastName($name);
+
     /**
      * ShipTo phone number of the person
      *
      * @return string
      */
     public function getShipToPhone();
+
     /**
      * @param string $phone
      * @return self
      */
     public function setShipToPhone($phone);
+
     /**
      * Indicates that this is an authorization re-submission to correct AVS or CVV2 error.
      * If set to true, this will process the transaction specifically as an AVS/CVV check.
@@ -195,11 +221,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return bool
      */
     public function getIsRequestToCorrectCvvOrAvsError();
+
     /**
      * @param bool $flag
      * @return self
      */
     public function setIsRequestToCorrectCvvOrAvsError($flag);
+
     /**
      * Verified by VISA (VPAS) e-commerce transactions only.
      * Verify Enrollment Response from the VERes message,
@@ -213,11 +241,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getAuthenticationAvailable();
+
     /**
      * @param string $token
      * @return self
      */
     public function setAuthenticationAvailable($token);
+
     /**
      * Verified by VISA (VPAS) / MasterCard Secure Code (UCAF)
      * Transaction Status: For e-commerce VISA and MasterCard transactions only.
@@ -231,11 +261,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getAuthenticationStatus();
+
     /**
      * @param string $token
      * @return self
      */
     public function setAuthenticationStatus($token);
+
     /**
      * E-commerce Verified by VISA and MasterCard SecureCode transactions only.
      * Data returned in authentication request.
@@ -248,11 +280,13 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getCavvUcaf();
+
     /**
      * @param string $data
      * @return self
      */
     public function setCavvUcaf($data);
+
     /**
      * E-commerce Verified by VISA transactions only.
      * XID data returned from authentication request
@@ -263,20 +297,24 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getTransactionId();
+
     /**
      * @param string $id
      * @return self
      */
     public function setTransactionId($id);
+
     /**
      * @return string
      */
     public function getEci();
+
     /**
      * @param string $eci
      * @return self
      */
     public function setEci($eci);
+
     /**
      * The Issuer Bank ACS (Access Control Server) authenticates the cardholder.
      * The authentication result is represented by the Payer Authentication Response (PARes)
@@ -287,6 +325,7 @@ interface ICreditCardAuthRequest extends ICreditCardAuth, IBillingAddress, IShip
      * @return string
      */
     public function getPayerAuthenticationResponse();
+
     /**
      * @param string $response
      * @return self

@@ -17,8 +17,17 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 trait TCurrencyCode
 {
-    /** @var string **/
+    /** @var string * */
     protected $currencyCode;
+
+    /**
+     * return Serialized Currency Code
+     * @return string
+     */
+    protected function serializeCurrencyCode()
+    {
+        return "<CurrencyCode>{$this->getCurrencyCode()}</CurrencyCode>";
+    }
 
     /**
      * The 3-character ISO 4217 code that represents
@@ -32,6 +41,7 @@ trait TCurrencyCode
         // As from eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalGetExpressCheckoutRequest
         return $this->currencyCode;
     }
+
     /**
      * @param string
      * @return self
@@ -40,15 +50,7 @@ trait TCurrencyCode
     {
         // As from eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalGetExpressCheckoutRequest
         $cleaned = substr(trim($code), 0, 3);
-        $this->currencyCode = (strlen($cleaned)<3) ? null : $cleaned;
+        $this->currencyCode = (strlen($cleaned) < 3) ? null : $cleaned;
         return $this;
-    }
-    /**
-     * return Serialized Currency Code
-     * @return string
-     */
-    protected function serializeCurrencyCode()
-    {
-        return "<CurrencyCode>{$this->getCurrencyCode()}</CurrencyCode>";
     }
 }

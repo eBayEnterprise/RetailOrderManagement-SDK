@@ -192,14 +192,17 @@ class AmqpConfig implements IAmqpConfig
         $this->queueAutoDelete = $queueAutoDelete;
         $this->queueNowait = $queueNowait;
     }
+
     public function getConnectionType()
     {
         return $this->connectionType;
     }
+
     public function getConnectionConfiguration()
     {
         return $this->connectionConfig->getConnectionParams();
     }
+
     public function getQueueConfiguration()
     {
         // keys unused but included for context
@@ -212,10 +215,12 @@ class AmqpConfig implements IAmqpConfig
             'nowait' => $this->queueNowait,
         ];
     }
+
     public function getQueueName()
     {
         return $this->queueName;
     }
+
     public function getMaxMessagesToProcess()
     {
         return $this->maxMessagesToProcess;

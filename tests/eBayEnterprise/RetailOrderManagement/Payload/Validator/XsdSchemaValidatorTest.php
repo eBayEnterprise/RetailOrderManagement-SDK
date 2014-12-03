@@ -35,6 +35,7 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
         $xmlString = file_get_contents(__DIR__ . '/Fixtures/InvalidXml.xml');
         $validator->validate($xmlString, __DIR__ . '/Fixtures/TestSchema.xsd');
     }
+
     /**
      * XML matching the schema should simply return self.
      */
@@ -47,6 +48,7 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
             $validator->validate($xmlString, __DIR__ . '/Fixtures/TestSchema.xsd')
         );
     }
+
     /**
      * Test building the error message from the libxml errors. Should return a
      * string with each libXMLError formatted.

@@ -33,6 +33,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     protected $pin;
     protected $currencyCode;
     protected $requestId;
+
     /**
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator
@@ -57,25 +58,92 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     }
 
     /**
-     * The amount to void.
+     * Name, value pairs of root attributes
      *
-     * xsd note: 1-8 characters, exclude if empty
-     *           pattern (\d{1,8})?
-     * return string
+     * @return array
      */
-    public function getAmount()
+    protected function getRootAttributes()
     {
-        return $this->amount;
+        return [
+            'xmlns' => $this->getXmlNamespace(),
+            'requestId' => $this->getRequestId(),
+        ];
     }
 
     /**
-     * @param string $amount
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
+    }
+
+    /**
+     * Identifier for this request.
+     * On serialization, a request id will be generated if not already set.
+     *
+     * xsd notes: required, 1-40 characters
+     * @return string
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * @param string $requestId
      * @return self
      */
-    public function setAmount($amount)
+    public function setRequestId($requestId)
     {
-        $this->amount = $amount;
+        $this->requestId = $requestId;
         return $this;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializePaymentContext()
+        . $this->serializePin()
+        . sprintf(
+            '<Amount currencyCode="%s">%s</Amount>',
+            $this->getCurrencyCode(),
+            $this->getAmount()
+        );
+    }
+
+    /**
+     * Create an XML string representing the PaymentContext nodes
+     * @return string
+     */
+    protected function serializePaymentContext()
+    {
+        $template = '<PaymentContext>'
+            . '<OrderId>%s</OrderId>'
+            . '<PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId>'
+            . '</PaymentContext>';
+        return sprintf(
+            $template,
+            $this->getOrderId(),
+            $this->getPanIsToken() ? 'true' : 'false',
+            $this->getCardNumber()
+        );
+    }
+
+    /**
+     * Return the XML representation of the PIN if it exists;
+     * otherwise, return the empty string.
+     * @return string
+     */
+    protected function serializePin()
+    {
+        return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
     }
 
     /**
@@ -124,82 +192,25 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     }
 
     /**
-     * Identifier for this request.
-     * On serialization, a request id will be generated if not already set.
+     * The amount to void.
      *
-     * xsd notes: required, 1-40 characters
-     * @return string
+     * xsd note: 1-8 characters, exclude if empty
+     *           pattern (\d{1,8})?
+     * return string
      */
-    public function getRequestId()
+    public function getAmount()
     {
-        return $this->requestId;
+        return $this->amount;
     }
 
     /**
-     * @param string $requestId
+     * @param string $amount
      * @return self
      */
-    public function setRequestId($requestId)
+    public function setAmount($amount)
     {
-        $this->requestId = $requestId;
+        $this->amount = $amount;
         return $this;
-    }
-
-    /**
-     * Name, value pairs of root attributes
-     *
-     * @return array
-     */
-    protected function getRootAttributes()
-    {
-        return [
-            'xmlns' => $this->getXmlNamespace(),
-            'requestId' => $this->getRequestId(),
-        ];
-    }
-
-    /**
-     * Serialize the various parts of the payload into XML strings and
-     * simply concatenate them together.
-     * @return string
-     */
-    protected function serializeContents()
-    {
-        return $this->serializePaymentContext()
-            . $this->serializePin()
-            . sprintf(
-                '<Amount currencyCode="%s">%s</Amount>',
-                $this->getCurrencyCode(),
-                $this->getAmount()
-            );
-    }
-
-    /**
-     * Return the XML representation of the PIN if it exists;
-     * otherwise, return the empty string.
-     * @return string
-     */
-    protected function serializePin()
-    {
-        return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
-    }
-
-    /**
-     * Create an XML string representing the PaymentContext nodes
-     * @return string
-     */
-    protected function serializePaymentContext()
-    {
-        $template = '<PaymentContext>'
-            . '<OrderId>%s</OrderId>'
-            . '<PaymentAccountUniqueId isToken="%s">%s</PaymentAccountUniqueId>'
-            . '</PaymentContext>';
-        return sprintf(
-            $template,
-            $this->getOrderId(),
-            $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
-        );
     }
 
     /**
@@ -219,15 +230,5 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
-    }
-
-    /**
-     * The XML namespace for the payload.
-     *
-     * @return string
-     */
-    protected function getXmlNamespace()
-    {
-        return static::XML_NS;
     }
 }

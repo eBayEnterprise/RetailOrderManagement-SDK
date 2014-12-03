@@ -14,10 +14,11 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
+
 use DOMDocument;
-use ReflectionClass;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
+use ReflectionClass;
 
 class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,33 +53,31 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function provideShippingAddressData()
     {
-        return [
+        return [[
             [
-                [
-                    'shipToLines' => [
-                        'Chester Cheetah',
-                        '',
-                        '630 Allendale Rd',
-                        '2nd FL',
-                    ],
-                    'shipToCity' => 'King of Prussia',
-                    'shipToMainDivision' => 'PA',
-                    'shipToCountryCode' => 'US',
-                    'shipToPostalCode' => '19406'
+                'shipToLines' => [
+                    'Chester Cheetah',
+                    '',
+                    '630 Allendale Rd',
+                    '2nd FL',
                 ],
-                // full section returned
-                '<ShippingAddress>'
-                . '<Line1>Chester Cheetah</Line1>'
-                . '<Line2></Line2>'
-                . '<Line3>630 Allendale Rd</Line3>'
-                . '<Line4>2nd FL</Line4>'
-                . '<City>King of Prussia</City>'
-                . '<MainDivision>PA</MainDivision>'
-                . '<CountryCode>US</CountryCode>'
-                . '<PostalCode>19406</PostalCode>'
-                . '</ShippingAddress>'
-            ]
-        ];
+                'shipToCity' => 'King of Prussia',
+                'shipToMainDivision' => 'PA',
+                'shipToCountryCode' => 'US',
+                'shipToPostalCode' => '19406'
+            ],
+            // full section returned
+            '<ShippingAddress>'
+            . '<Line1>Chester Cheetah</Line1>'
+            . '<Line2></Line2>'
+            . '<Line3>630 Allendale Rd</Line3>'
+            . '<Line4>2nd FL</Line4>'
+            . '<City>King of Prussia</City>'
+            . '<MainDivision>PA</MainDivision>'
+            . '<CountryCode>US</CountryCode>'
+            . '<PostalCode>19406</PostalCode>'
+            . '</ShippingAddress>'
+        ]];
     }
 
     /**
@@ -144,7 +143,7 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     protected function xmlTestString()
     {
         $dom = new DOMDocument();
-        $dom->load(__DIR__.'/Fixtures/PayPalDoExpressCheckoutRequest.xml');
+        $dom->load(__DIR__ . '/Fixtures/PayPalDoExpressCheckoutRequest.xml');
         $string = $dom->C14N();
 
         return $string;

@@ -27,17 +27,20 @@ interface IAmqpApi extends IOmnidirectionalApi
      * @throws Exception\ConnectionError If connection to queue cannot be established
      */
     public function getNextMessage();
+
     /**
      * Test for the AMQP client to be connected to the server.
      * @return boolean
      */
     public function isConnected();
+
     /**
      * Connect to the AMQP server and queue
      * @return self
      * @throws Exception\ConnectionError If the connection cannot be established
      */
     public function openConnection();
+
     /**
      * Close an open connection to the AMQP server and queue. This is done
      * automatically when the API is GC'd but can be called manually as well.

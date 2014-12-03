@@ -22,6 +22,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 interface IStoredValueBalanceReply extends IStoredValueBalance
 {
     const ROOT_NODE = 'StoredValueBalanceReply';
+
     /**
      * The result of the request transaction.
      * In the case of a StoredValue, you would never accept an order unless the redeem was successful.
@@ -30,22 +31,26 @@ interface IStoredValueBalanceReply extends IStoredValueBalance
      * @return string
      */
     public function getResponseCode();
+
     /**
      * @param string
      * @return self
      */
     public function setResponseCode($code);
+
     /**
      * The balance amount available on the card.
      *
      * @return float
      */
     public function getBalanceAmount();
+
     /**
      * @param float
      * @return self
      */
     public function setBalanceAmount($amount);
+
     /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
@@ -54,11 +59,13 @@ interface IStoredValueBalanceReply extends IStoredValueBalance
      * @return string
      */
     public function getCurrencyCode();
+
     /**
      * @param string
      * @return self
      */
     public function setCurrencyCode($code);
+
     /**
      * Whether the response should be used.
      * @return bool

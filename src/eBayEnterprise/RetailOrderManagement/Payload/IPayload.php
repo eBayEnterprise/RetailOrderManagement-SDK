@@ -32,6 +32,7 @@ interface IPayload
      * @return self
      */
     public function validate();
+
     /**
      * Return the string form of the payload data for transmission.
      * Validation is implied.
@@ -40,6 +41,7 @@ interface IPayload
      * @return string
      */
     public function serialize();
+
     /**
      * Fill out this payload object with data from the supplied string.
      *

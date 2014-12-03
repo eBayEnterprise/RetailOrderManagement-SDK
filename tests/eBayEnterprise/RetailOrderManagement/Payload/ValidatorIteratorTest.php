@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
 {
     protected static $validator;
+
     /**
      * Create a new ValidatorIterator with a single Validator
      * @return ValidatorIterator
@@ -32,6 +33,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($iterator->valid());
         return $iterator;
     }
+
     /**
      * Current of new iterator should return the first validator
      * @param  ValidatorIterator $iterator [description]
@@ -43,6 +45,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::$validator, $iterator->current());
         return $iterator;
     }
+
     /**
      * Next should update the offset to the next item
      * @param  ValidatorIterator $iterator
@@ -55,6 +58,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, $iterator->key());
         return $iterator;
     }
+
     /**
      * Once the offset no longer points at an item, the iterator is no longer valid
      * @param ValidatorIterator $iterator
@@ -66,6 +70,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($iterator->valid());
         return $iterator;
     }
+
     /**
      * Rewinding the iterator should set the offset back to the beginning
      * @param  ValidatorIterator $iterator
@@ -78,6 +83,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $iterator->key());
         return $iterator;
     }
+
     /**
      * Trying to construct a ValidatorIterator with items that are not IValidators should be an error/exception
      *
@@ -87,6 +93,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
     {
         new ValidatorIterator(['not an IValidator']);
     }
+
     /**
      * The ValidatorIterator should be ignore the original keys of the given items,
      * may be keyed by ints, strings, w/e. Basically testing that just using the

@@ -23,11 +23,13 @@ interface ITestMessage extends IPayload, IOrderEvent
     const ROOT_NODE = 'test';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     const XSD = 'test-message.xsd';
+
     /**
      * get the test message timestamp
      * @return \DateTime
      */
     public function getTimestamp();
+
     /**
      * set the test message timestamp
      * @param \DateTime

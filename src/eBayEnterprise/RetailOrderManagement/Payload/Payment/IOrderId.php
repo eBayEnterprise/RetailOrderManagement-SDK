@@ -30,6 +30,7 @@ interface IOrderId
      * @return string
      */
     public function getOrderId();
+
     /**
      * @param string $orderId
      * @return self

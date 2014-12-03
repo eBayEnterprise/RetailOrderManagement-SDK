@@ -41,6 +41,7 @@ class PayloadMapTest extends \PHPUnit_Framework_TestCase
             ]));
         $this->payloadMap = new PayloadMap([self::KNOWN_TYPE => self::CONCRETE_TYPE]);
     }
+
     public function provideTypeName()
     {
         return [
@@ -48,6 +49,7 @@ class PayloadMapTest extends \PHPUnit_Framework_TestCase
             [self::UNKNOWN_TYPE],
         ];
     }
+
     /**
      * Test getting a concrete type for an abstract type
      * @param  string $abstractType
@@ -63,6 +65,7 @@ class PayloadMapTest extends \PHPUnit_Framework_TestCase
             $this->payloadMap->getConcreteType($abstractType)
         );
     }
+
     /**
      * Test checking for a payload map to know about an abstract type
      * @param  string $abstractType
@@ -75,6 +78,7 @@ class PayloadMapTest extends \PHPUnit_Framework_TestCase
             $this->payloadMap->hasMappingForType($abstractType)
         );
     }
+
     /**
      * Test that when another payload map is merged, it will be used to lookup
      * types.

@@ -8,13 +8,14 @@
 
     <xsd:simpleType name="ISOCurrencyCodeType">
         <xsd:annotation>
-            <xsd:documentation>The code that represents the type of currency being used for a transaction.Currency codes are defined by ISO 4217:2008  See: http://en.wikipedia.org/wiki/ISO_4217
-Allowable Values: IS-4217 three-letter code.
-Required: Only when a transaction amount is specified..
-Length: 3
-Default Value: blank
-Restrictions: NMTOKEN
-Aliases: N/A</xsd:documentation>
+            <xsd:documentation>The code that represents the type of currency being used for a transaction.Currency codes are defined by ISO 4217:2008 See: http://en.wikipedia.org/wiki/ISO_4217
+                Allowable Values: IS-4217 three-letter code.
+                Required: Only when a transaction amount is specified..
+                Length: 3
+                Default Value: blank
+                Restrictions: NMTOKEN
+                Aliases: N/A
+            </xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="xsd:NMTOKEN">
             <xsd:enumeration value="AED">

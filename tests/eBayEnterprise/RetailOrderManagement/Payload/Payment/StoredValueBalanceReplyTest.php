@@ -15,9 +15,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
-use DOMDocument;
+
 class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
 {
     use TTestReflection;
@@ -41,17 +42,6 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get a new StoredValueBalanceReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return StoredValueBalanceReply
-     */
-    protected function createNewPayload()
-    {
-        return new StoredValueBalanceReply($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
      * Data provider for invalid payloads
      * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
      */
@@ -59,12 +49,14 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[]], // Empty payload should fail validation.
-            [[
-                'cardNumber' => 'RvS1kwB3eCxzk5lI',
-                'panIsToken' => false,
-                'responseCode' => 'glom', // Invalid response code
-                'currencyCode' => 'USD',
-            ]],
+            [
+                [
+                    'cardNumber' => 'RvS1kwB3eCxzk5lI',
+                    'panIsToken' => false,
+                    'responseCode' => 'glom', // Invalid response code
+                    'currencyCode' => 'USD',
+                ]
+            ],
         ];
     }
 
@@ -74,13 +66,17 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideValidPayload()
     {
-        return [[[
-            'cardNumber' => 'KDVXYXCeFCG8GfH6',
-            'panIsToken' => true,
-            'balanceAmount' => 87.44,
-            'currencyCode' => 'USD',
-            'responseCode' => 'Success',
-        ]]];
+        return [
+            [
+                [
+                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
+                    'panIsToken' => true,
+                    'balanceAmount' => 87.44,
+                    'currencyCode' => 'USD',
+                    'responseCode' => 'Success',
+                ]
+            ]
+        ];
     }
 
     /**
@@ -89,57 +85,35 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function provideResponseCodeConditions()
     {
-        return [[[
-            'cardNumber' => 'KDVXYXCeFCG8GfH6',
-            'panIsToken' => true,
-            'balanceAmount' => 87.44,
-            'currencyCode' => 'USD',
-            'responseCode' => 'Success',
-        ]], [[
-            'cardNumber' => 'KDVXYXCeFCG8GfH6',
-            'panIsToken' => true,
-            'balanceAmount' => 87.44,
-            'currencyCode' => 'USD',
-            'responseCode' => 'Failure',
-        ]], [[
-            'cardNumber' => 'KDVXYXCeFCG8GfH6',
-            'panIsToken' => true,
-            'balanceAmount' => 87.44,
-            'currencyCode' => 'USD',
-            'responseCode' => 'Timeout',
-        ]]];
-    }
-
-    /**
-     * Create a payload with the provided data injected.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return StoredValueBalanceReply
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-        $this->setRestrictedPropertyValues($payload, $properties);
-        return $payload;
-    }
-
-    /**
-     * Load the XML from a fixture file and canonicalize it. Returns the
-     * canonical XML string.
-     * @return string
-     */
-    protected function loadXmlTestString()
-    {
-        return file_get_contents(__DIR__ . '/Fixtures/StoredValueBalanceReply.xml');
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        return file_get_contents(__DIR__ . '/Fixtures/InvalidStoredValueBalanceReply.xml');
+        return [
+            [
+                [
+                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
+                    'panIsToken' => true,
+                    'balanceAmount' => 87.44,
+                    'currencyCode' => 'USD',
+                    'responseCode' => 'Success',
+                ]
+            ],
+            [
+                [
+                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
+                    'panIsToken' => true,
+                    'balanceAmount' => 87.44,
+                    'currencyCode' => 'USD',
+                    'responseCode' => 'Failure',
+                ]
+            ],
+            [
+                [
+                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
+                    'panIsToken' => true,
+                    'balanceAmount' => 87.44,
+                    'currencyCode' => 'USD',
+                    'responseCode' => 'Timeout',
+                ]
+            ]
+        ];
     }
 
     /**
@@ -157,6 +131,29 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $payload->validate();
+    }
+
+    /**
+     * Create a payload with the provided data injected.
+     * @param  mixed[] $properties key/value pairs of property => value
+     * @return StoredValueBalanceReply
+     */
+    protected function buildPayload($properties)
+    {
+        $payload = $this->createNewPayload();
+        $this->setRestrictedPropertyValues($payload, $properties);
+        return $payload;
+    }
+
+    /**
+     * Get a new StoredValueBalanceReply payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return StoredValueBalanceReply
+     */
+    protected function createNewPayload()
+    {
+        return new StoredValueBalanceReply($this->validatorIterator, $this->stubSchemaValidator);
     }
 
     /**
@@ -206,6 +203,7 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $payload->serialize();
     }
+
     /**
      * @param array $payloadData
      * @dataProvider provideValidPayload
@@ -224,6 +222,16 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Load the XML from a fixture file and canonicalize it. Returns the
+     * canonical XML string.
+     * @return string
+     */
+    protected function loadXmlTestString()
+    {
+        return file_get_contents(__DIR__ . '/Fixtures/StoredValueBalanceReply.xml');
+    }
+
+    /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFailSchemaInvalid()
@@ -235,6 +243,16 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
 
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
+    }
+
+    /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @return string
+     */
+    protected function loadXmlInvalidTestString()
+    {
+        return file_get_contents(__DIR__ . '/Fixtures/InvalidStoredValueBalanceReply.xml');
     }
 
     /**

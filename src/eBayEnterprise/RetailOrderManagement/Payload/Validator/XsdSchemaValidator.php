@@ -67,6 +67,15 @@ class XsdSchemaValidator implements Payload\ISchemaValidator
     }
 
     /**
+     * Retrieve errors encountered while validating the XML against the schema.
+     * @return array
+     */
+    protected function retrieveErrors()
+    {
+        return libxml_get_errors();
+    }
+
+    /**
      * Reset libxml error handling.
      * @param  bool $oldUseErrors Value to reset
      * @return self
@@ -75,15 +84,6 @@ class XsdSchemaValidator implements Payload\ISchemaValidator
     {
         libxml_use_internal_errors($oldUseErrors);
         return $this;
-    }
-
-    /**
-     * Retrieve errors encountered while validating the XML against the schema.
-     * @return array
-     */
-    protected function retrieveErrors()
-    {
-        return libxml_get_errors();
     }
 
     /**

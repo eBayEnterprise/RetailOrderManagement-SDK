@@ -34,50 +34,59 @@ interface IOrderRejected extends IPayload, IOrderEvent
      * @return String
      */
     public function getCustomerOrderId();
+
     /**
      * set the customer order id.
      * @param String $customerOrderId
      * @return self
      */
     public function setCustomerOrderId($customerOrderId);
+
     /**
      * get the OMS store id.
      * @return String
      */
     public function getStoreId();
+
     /**
      * set the OMS store id.
      * @param String $storeId
      * @return self
      */
     public function setStoreId($storeId);
+
     /**
      * get the order create timestamp
      * @return \DateTime
      */
     public function getOrderCreateTimestamp();
+
     /**
      * set the order create timestamp
      * @param \DateTime $timestamp
      * @return self
      */
     public function setOrderCreateTimestamp(\DateTime $timestamp);
+
     /**
      * get the order rejected reason.
      * @return String
      */
     public function getReason();
+
     /**
      * set the order rejected reason.
      * @param String $reason
      * @return self
      */
     public function setReason($reason);
+
     /**
      * get the order rejected reason attribute code.
      * @return String
      */
     public function getCode();
+
     /**
      * set the order rejected reason attribute code.
      * @param String $code

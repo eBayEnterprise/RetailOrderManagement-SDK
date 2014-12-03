@@ -45,6 +45,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     /** @var bool $panIsToken Indicates if the card number is the actual number, or a representation of the number. */
     protected $pin;
     protected $currencyCode;
+
     /**
      * @param IValidatorIterator $validators Payload object validators
      * @param ISchemaValidator $schemaValidator Serialized object schema validator
@@ -76,6 +77,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     {
         return $this->requestId;
     }
+
     /**
      * @param string $requestId
      * @return self
@@ -84,6 +86,31 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     {
         $this->requestId = $requestId;
         return $this;
+    }
+
+    /**
+     * Serialize the various parts of the payload into XML strings and
+     * simply concatenate them together.
+     * @return string
+     */
+    protected function serializeContents()
+    {
+        return $this->serializePaymentAccountUniqueId()
+        . $this->serializePin()
+        . sprintf(
+            '<CurrencyCode>%s</CurrencyCode>',
+            $this->getCurrencyCode()
+        );
+    }
+
+    /**
+     * Return the XML representation of the PIN if it exists;
+     * otherwise, return the empty string.
+     * @return string
+     */
+    protected function serializePin()
+    {
+        return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
     }
 
     /**
@@ -129,31 +156,6 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     {
         $this->currencyCode = $code;
         return $this;
-    }
-
-    /**
-     * Serialize the various parts of the payload into XML strings and
-     * simply concatenate them together.
-     * @return string
-     */
-    protected function serializeContents()
-    {
-        return $this->serializePaymentAccountUniqueId()
-            . $this->serializePin()
-            . sprintf(
-                '<CurrencyCode>%s</CurrencyCode>',
-                $this->getCurrencyCode()
-            );
-    }
-
-    /**
-     * Return the XML representation of the PIN if it exists;
-     * otherwise, return the empty string.
-     * @return string
-     */
-    protected function serializePin()
-    {
-        return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
     }
 
     // all methods below should be refactored as they are literal copies

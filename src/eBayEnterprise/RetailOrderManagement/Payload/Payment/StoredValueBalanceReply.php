@@ -44,7 +44,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
             'currencyCode' => 'string(x:BalanceAmount/@currencyCode)',
             'responseCode' => 'string(x:ResponseCode)',
         ];
-        /** @var array property/XPath pairs that take boolean values*/
+        /** @var array property/XPath pairs that take boolean values */
         $this->booleanExtractionPaths = [
             'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
         ];
@@ -52,44 +52,13 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         $this->schemaValidator = $schemaValidator;
     }
 
-    public function getBalanceAmount()
-    {
-        return $this->balanceAmount;
-    }
-
-    public function getCurrencyCode()
-    {
-        return $this->currencyCode;
-    }
-
-    public function getResponseCode()
-    {
-        return $this->responseCode;
-    }
-    public function setResponseCode($code)
-    {
-        $this->responseCode = $code;
-        return $this;
-    }
-
     /**
-     * @param float
-     * @return self
+     * Whether the response should be used.
+     * @return bool
      */
-    public function setBalanceAmount($amount)
+    public function isSuccessful()
     {
-        $this->balanceAmount = $amount;
-        return $this;
-    }
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setCurrencyCode($code)
-    {
-        $this->currencyCode = $code;
-        return $this;
+        return in_array($this->getResponseCode(), $this->successResponseCodes, true);
     }
 
     protected function getSchemaFile()
@@ -118,6 +87,17 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
     }
 
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
+
+    public function setResponseCode($code)
+    {
+        $this->responseCode = $code;
+        return $this;
+    }
+
     /**
      * Create an XML string representing the amount authorized.
      * @return string
@@ -131,13 +111,34 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         );
     }
 
-    /**
-     * Whether the response should be used.
-     * @return bool
-     */
-    public function isSuccessful()
+    public function getCurrencyCode()
     {
-        return in_array($this->getResponseCode(), $this->successResponseCodes, true);
+        return $this->currencyCode;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setCurrencyCode($code)
+    {
+        $this->currencyCode = $code;
+        return $this;
+    }
+
+    public function getBalanceAmount()
+    {
+        return $this->balanceAmount;
+    }
+
+    /**
+     * @param float
+     * @return self
+     */
+    public function setBalanceAmount($amount)
+    {
+        $this->balanceAmount = $amount;
+        return $this;
     }
 
     /**

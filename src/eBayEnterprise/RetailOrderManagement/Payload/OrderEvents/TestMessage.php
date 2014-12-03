@@ -40,15 +40,20 @@ class TestMessage implements ITestMessage
         return self::ROOT_NODE;
     }
 
-    public function getTimestamp()
+    /**
+     * Fill out this payload object with data from the supplied string.
+     *
+     * @throws InvalidPayload
+     * @param string $serializedPayload
+     * @return $this
+     */
+    public function deserialize($serializedPayload)
     {
-        return $this->timestamp;
-    }
-
-    public function setTimestamp(DateTime $timestamp)
-    {
-        $this->timestamp = $timestamp;
-        return $this;
+        $this->schemaValidate($serializedPayload);
+        $ele = new SimpleXMLElement($serializedPayload);
+        return $this
+            ->setTimestamp(new DateTime($ele['timestamp']))
+            ->validate();
     }
 
     /**
@@ -75,6 +80,16 @@ class TestMessage implements ITestMessage
     }
 
     /**
+     * The XML namespace for the payload.
+     *
+     * @return string
+     */
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
+    }
+
+    /**
      * Format the timestamp the way the XSD wants it.
      *
      * @return string
@@ -84,21 +99,15 @@ class TestMessage implements ITestMessage
         return $this->getTimestamp()->format('c');
     }
 
-
-    /**
-     * Fill out this payload object with data from the supplied string.
-     *
-     * @throws InvalidPayload
-     * @param string $serializedPayload
-     * @return $this
-     */
-    public function deserialize($serializedPayload)
+    public function getTimestamp()
     {
-        $this->schemaValidate($serializedPayload);
-        $ele = new SimpleXMLElement($serializedPayload);
-        return $this
-            ->setTimestamp(new DateTime($ele['timestamp']))
-            ->validate();
+        return $this->timestamp;
+    }
+
+    public function setTimestamp(DateTime $timestamp)
+    {
+        $this->timestamp = $timestamp;
+        return $this;
     }
 
     /**
@@ -118,15 +127,5 @@ class TestMessage implements ITestMessage
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
-    }
-
-    /**
-     * The XML namespace for the payload.
-     *
-     * @return string
-     */
-    protected function getXmlNamespace()
-    {
-        return static::XML_NS;
     }
 }

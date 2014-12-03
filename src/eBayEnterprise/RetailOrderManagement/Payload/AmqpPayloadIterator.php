@@ -49,6 +49,7 @@ class AmqpPayloadIterator implements IPayloadIterator
         $this->messageFactory = $messageFactory;
         $this->maxMessages = $maxMessages;
     }
+
     /**
      * get the current payload in the iterable
      * @return IPayload|null Returns null when attempting to get the current item from an invalid iterator.
@@ -67,33 +68,7 @@ class AmqpPayloadIterator implements IPayloadIterator
         }
         return $this->payloads[$this->currentKey];
     }
-    /**
-     * get the key for the current payload in the iterable
-     * @return int|float|string|bool
-     */
-    public function key()
-    {
-        return $this->currentKey;
-    }
-    /**
-     * Advance the current index of the iterable.
-     * Gets the next payload from the queue and process it - deserialize
-     * into a payload.
-     * @return void
-     */
-    public function next()
-    {
-        $this->currentKey++;
-    }
-    /**
-     * Set the current index back to 0, should replay received messages
-     * after being rewound.
-     * @return void
-     */
-    public function rewind()
-    {
-        $this->currentKey = 0;
-    }
+
     /**
      * Test if there is a payload at the current index. Called after self::rewing
      * and self::next wile iterating over the messages.
@@ -137,5 +112,35 @@ class AmqpPayloadIterator implements IPayloadIterator
         $payload = $this->messageFactory->messagePayload($type);
         $payload->deserialize($message->body);
         return $payload;
+    }
+
+    /**
+     * get the key for the current payload in the iterable
+     * @return int|float|string|bool
+     */
+    public function key()
+    {
+        return $this->currentKey;
+    }
+
+    /**
+     * Advance the current index of the iterable.
+     * Gets the next payload from the queue and process it - deserialize
+     * into a payload.
+     * @return void
+     */
+    public function next()
+    {
+        $this->currentKey++;
+    }
+
+    /**
+     * Set the current index back to 0, should replay received messages
+     * after being rewound.
+     * @return void
+     */
+    public function rewind()
+    {
+        $this->currentKey = 0;
     }
 }

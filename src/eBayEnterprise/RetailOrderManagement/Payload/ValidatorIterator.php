@@ -25,6 +25,7 @@ class ValidatorIterator implements IValidatorIterator
     protected $validators = [];
     /** @var int */
     protected $offset = 0;
+
     /**
      * Supply the list of validators
      * @param IValidator[] $validators
@@ -39,6 +40,7 @@ class ValidatorIterator implements IValidatorIterator
         }
         $this->offset = 0;
     }
+
     /**
      * Add an IValidator to the list of validators - only done via the constructor
      * @param IValidator $validator
@@ -49,6 +51,7 @@ class ValidatorIterator implements IValidatorIterator
         $this->validators[] = $validator;
         return $this;
     }
+
     /**
      * Get the validator at the current offset
      * @return IValidator
@@ -57,6 +60,7 @@ class ValidatorIterator implements IValidatorIterator
     {
         return $this->validators[$this->offset];
     }
+
     /**
      * Get the current index/offset
      * @return int
@@ -65,6 +69,7 @@ class ValidatorIterator implements IValidatorIterator
     {
         return $this->offset;
     }
+
     /**
      * Increment the offset to the next value
      */
@@ -72,6 +77,7 @@ class ValidatorIterator implements IValidatorIterator
     {
         $this->offset++;
     }
+
     /**
      * Reset the offset to the beginning
      */
@@ -79,6 +85,7 @@ class ValidatorIterator implements IValidatorIterator
     {
         $this->offset = 0;
     }
+
     /**
      * Check if the current offset is valid
      * @return bool

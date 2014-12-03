@@ -15,9 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
-use DOMDocument;
 
 class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,17 +42,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get a new CreditCardAuthReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return CreditCardAuthReply
-     */
-    protected function createNewPayload()
-    {
-        return new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
      * Data provider for invalid payloads
      * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
      */
@@ -60,20 +49,22 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[]],
-            [[
-                // order id should fail XSD validation
-                'orderId' => '1234567890123456789012345',
-                'cardNumber' => '4111ABC123ZYX987',
-                'panIsToken' => true,
-                'authorizationResponseCode' => 'AP01',
-                'bankAuthorizationCode' => 'OK',
-                'cvv2ResponseCode' => 'M',
-                'avsResponseCode' => 'M',
-                'amountAuthorized' => 55.99,
-                'currencyCode' => 'USD',
-                'phoneResponseCode' => 'PHONE_OK',
-                'nameResponseCode' => 'NAME_OK',
-            ]],
+            [
+                [
+                    // order id should fail XSD validation
+                    'orderId' => '1234567890123456789012345',
+                    'cardNumber' => '4111ABC123ZYX987',
+                    'panIsToken' => true,
+                    'authorizationResponseCode' => 'AP01',
+                    'bankAuthorizationCode' => 'OK',
+                    'cvv2ResponseCode' => 'M',
+                    'avsResponseCode' => 'M',
+                    'amountAuthorized' => 55.99,
+                    'currencyCode' => 'USD',
+                    'phoneResponseCode' => 'PHONE_OK',
+                    'nameResponseCode' => 'NAME_OK',
+                ]
+            ],
         ];
     }
 
@@ -118,26 +109,34 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         return [
             // any authorization response code other than AP01, TO01 or NR01 is
             // unsuccessful, regardless of any other responses
-            [[
-                'authorizationResponseCode' => 'ND01',
-            ]],
+            [
+                [
+                    'authorizationResponseCode' => 'ND01',
+                ]
+            ],
             // when auth response code is successful, AVS and CVV response
             // codes must be successful as well, when they are not, reply is unsuccessful
-            [[
-                'authorizationResponseCode' => 'AP01',
-                'cvv2ResponseCode' => 'M',
-                'avsResponseCode' => 'N',
-            ]],
-            [[
-                'authorizationResponseCode' => 'AP01',
-                'cvv2ResponseCode' => 'M',
-                'avsResponseCode' => 'AW',
-            ]],
-            [[
-                'authorizationResponseCode' => 'AP01',
-                'cvv2ResponseCode' => 'N',
-                'avsResponseCode' => 'P',
-            ]],
+            [
+                [
+                    'authorizationResponseCode' => 'AP01',
+                    'cvv2ResponseCode' => 'M',
+                    'avsResponseCode' => 'N',
+                ]
+            ],
+            [
+                [
+                    'authorizationResponseCode' => 'AP01',
+                    'cvv2ResponseCode' => 'M',
+                    'avsResponseCode' => 'AW',
+                ]
+            ],
+            [
+                [
+                    'authorizationResponseCode' => 'AP01',
+                    'cvv2ResponseCode' => 'N',
+                    'avsResponseCode' => 'P',
+                ]
+            ],
         ];
     }
 
@@ -148,11 +147,13 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     public function provideSuccessfulPayload()
     {
         return [
-            [[
-                'authorizationResponseCode' => 'AP01',
-                'cvv2ResponseCode' => 'M',
-                'avsResponseCode' => 'P'
-            ]],
+            [
+                [
+                    'authorizationResponseCode' => 'AP01',
+                    'cvv2ResponseCode' => 'M',
+                    'avsResponseCode' => 'P'
+                ]
+            ],
         ];
     }
 
@@ -207,6 +208,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
+
     /**
      * Provide payload data that will require AVS correction
      * @return array
@@ -217,6 +219,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             [['authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'N']],
         ];
     }
+
     /**
      * Provide payload data that will not require AVS correction
      * @return array
@@ -228,6 +231,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             [['authorizationResponseCode' => 'AP01', 'avsResponseCode' => 'M']],
         ];
     }
+
     /**
      * Provide payload data that will require CVV2 correction
      * @return array
@@ -238,6 +242,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             [['authorizationResponseCode' => 'AP01', 'cvv2ResponseCode' => 'N']],
         ];
     }
+
     /**
      * Provide payload data that will not require CVV2 correction
      * @return array
@@ -249,6 +254,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             [['authorizationResponseCode' => 'ND01', 'cvv2ResponseCode' => 'N']],
         ];
     }
+
     public function provideAuthTimeoutPayload()
     {
         return [
@@ -256,6 +262,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             [['authorizationResponseCode' => 'NR01']]
         ];
     }
+
     /**
      * @return array
      */
@@ -271,49 +278,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             [1, null],
             ["test", null]
         ];
-    }
-
-    /**
-     * Create a payload with the provided data injected.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return CreditCardAuthReply
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-        $this->setRestrictedPropertyValues($payload, $properties);
-        return $payload;
-    }
-
-    /**
-     * Load the XML from a fixture file and canonicalize it. Returns the
-     * canonical XML string.
-     * @param string $testCase Specifies a test case file to load - default to decrypted data
-     * @return string
-     */
-    protected function loadXmlTestString($testCase = 'UnencryptedCardData')
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__.'/Fixtures/'.$testCase.'/CreditCardAuthReply.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__ . '/Fixtures/InvalidCreditCardAuthReply.xml');
-        $string = $dom->C14N();
-
-        return $string;
     }
 
     /**
@@ -341,6 +305,29 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $payload->validate();
+    }
+
+    /**
+     * Create a payload with the provided data injected.
+     * @param  mixed[] $properties key/value pairs of property => value
+     * @return CreditCardAuthReply
+     */
+    protected function buildPayload($properties)
+    {
+        $payload = $this->createNewPayload();
+        $this->setRestrictedPropertyValues($payload, $properties);
+        return $payload;
+    }
+
+    /**
+     * Get a new CreditCardAuthReply payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return CreditCardAuthReply
+     */
+    protected function createNewPayload()
+    {
+        return new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
     }
 
     /**
@@ -390,6 +377,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $payload->serialize();
     }
+
     /**
      * @param array $payloadData
      * @dataProvider provideValidPayload
@@ -408,6 +396,22 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Load the XML from a fixture file and canonicalize it. Returns the
+     * canonical XML string.
+     * @param string $testCase Specifies a test case file to load - default to decrypted data
+     * @return string
+     */
+    protected function loadXmlTestString($testCase = 'UnencryptedCardData')
+    {
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->load(__DIR__ . '/Fixtures/' . $testCase . '/CreditCardAuthReply.xml');
+        $string = $dom->C14N();
+
+        return $string;
+    }
+
+    /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFailSchemaInvalid()
@@ -419,6 +423,21 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
+    }
+
+    /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @return string
+     */
+    protected function loadXmlInvalidTestString()
+    {
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->load(__DIR__ . '/Fixtures/InvalidCreditCardAuthReply.xml');
+        $string = $dom->C14N();
+
+        return $string;
     }
 
     /**
@@ -448,10 +467,11 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($payload, $newPayload);
     }
+
     /**
      * Check for the authorization success to be false when errors were
      * returned in the reply.
-     * @param  array  $payloadData
+     * @param  array $payloadData
      * @dataProvider provideUnsuccessfulPayload
      */
     public function testGetIsAuthSuccessfulPayloadWithErrors(array $payloadData)
@@ -459,10 +479,11 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertFalse($payload->getIsAuthSuccessful());
     }
+
     /**
      * Check for the authorization successful to be true when there were no
      * errors returned in the reply.
-     * @param  array  $payloadData
+     * @param  array $payloadData
      * @dataProvider provideSuccessfulPayload
      */
     public function testGetIsAuthSuccessfulPayloadNoErrors(array $payloadData)
@@ -470,10 +491,11 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertTrue($payload->getIsAuthSuccessful());
     }
+
     /**
      * Check for the authorization to be unacceptable if the reply contains
      * any error.
-     * @param  array  $payloadData
+     * @param  array $payloadData
      * @dataProvider provideUnacceptableAuthPayload
      */
     public function testGetIsAuthAcceptableUnacceptablePayload(array $payloadData)
@@ -481,10 +503,11 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertFalse($payload->getIsAuthAcceptable());
     }
+
     /**
      * Check for the authorization to be acceptable if the reply is successful
      * or reports a timeout.
-     * @param  array  $payloadData
+     * @param  array $payloadData
      * @dataProvider provideAcceptableAuthPayload
      */
     public function testGetIsAuthAcceptableAcceptablePayload(array $payloadData)
@@ -492,12 +515,13 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertTrue($payload->getIsAuthAcceptable());
     }
+
     /**
      * Check for the payload response code to match the expected response
      * code. Response code should be 'APPROVED' for acceptable authorizations,
      * 'TIMEOUT' for requests that indicate a timeout or null when the authorization
      * reply should not be accepted.
-     * @param  array  $payloadData
+     * @param  array $payloadData
      * @param  string|null $responseCode
      * @dataProvider provideResponseCodePayloadAndCode
      */
@@ -506,6 +530,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertSame($responseCode, $payload->getResponseCode());
     }
+
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
@@ -516,6 +541,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertTrue($payload->getIsAVSCorrectionRequired());
     }
+
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
@@ -526,6 +552,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertFalse($payload->getIsAVSCorrectionRequired());
     }
+
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
@@ -536,6 +563,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertTrue($payload->getIsCVV2CorrectionRequired());
     }
+
     /**
      * Test checking for if AVS corrections are needed.
      * @param array $payloadData
@@ -546,9 +574,10 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $this->assertFalse($payload->getIsCVV2CorrectionRequired());
     }
+
     /**
      * Test checking for auth timeout responses.
-     * @param  array  $payloadData
+     * @param  array $payloadData
      * @dataProvider provideAuthTimeoutPayload
      */
     public function testIsAuthTimeout(array $payloadData)

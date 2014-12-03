@@ -29,11 +29,13 @@ interface IBillingAddress
      * @return string
      */
     public function getBillingLines();
+
     /**
      * @param string $lines
      * @return self
      */
     public function setBillingLines($lines);
+
     /**
      * Name of the city
      *
@@ -41,11 +43,13 @@ interface IBillingAddress
      * @return string
      */
     public function getBillingCity();
+
     /**
      * @param string $city
      * @return self
      */
     public function setBillingCity($city);
+
     /**
      * Typically a two- or three-digit postal abbreviation for the state or province.
      * ISO 3166-2 code is recommended, but not required
@@ -54,11 +58,13 @@ interface IBillingAddress
      * @return string
      */
     public function getBillingMainDivision();
+
     /**
      * @param string $div
      * @return self
      */
     public function setBillingMainDivision($div);
+
     /**
      * Two character country code.
      *
@@ -66,11 +72,13 @@ interface IBillingAddress
      * @return string
      */
     public function getBillingCountryCode();
+
     /**
      * @param string $code
      * @return self
      */
     public function setBillingCountryCode($code);
+
     /**
      * Typically, the string of letters and/or numbers that more closely
      * specifies the delivery area than just the City component alone,
@@ -80,6 +88,7 @@ interface IBillingAddress
      * @return string
      */
     public function getBillingPostalCode();
+
     /**
      * @param string $code
      * @return self

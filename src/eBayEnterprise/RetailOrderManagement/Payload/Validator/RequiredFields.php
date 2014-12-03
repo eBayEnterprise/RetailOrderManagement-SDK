@@ -25,6 +25,7 @@ class RequiredFields implements Payload\IValidator
 {
     /** @var string[] */
     protected $requiredDataAccessors;
+
     /**
      * Each accessor method provided, when called on a payload, must
      * return a non-null value.
@@ -34,6 +35,7 @@ class RequiredFields implements Payload\IValidator
     {
         $this->requiredDataAccessors = $requiredDataAccessors;
     }
+
     /**
      * Validate that each required data accessor method returns an non-null
      * value.

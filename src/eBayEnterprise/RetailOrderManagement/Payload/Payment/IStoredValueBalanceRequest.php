@@ -22,6 +22,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 interface IStoredValueBalanceRequest extends IStoredValueBalance
 {
     const ROOT_NODE = 'StoredValueBalanceRequest';
+
     /**
      * RequestId is used to globally identify a request message and is used
      * for duplicate request protection.
@@ -30,11 +31,13 @@ interface IStoredValueBalanceRequest extends IStoredValueBalance
      * @return string
      */
     public function getRequestId();
+
     /**
      * @param string $requestId
      * @return self
      */
     public function setRequestId($requestId);
+
     /**
      * The personal identification number or code associated with a gift card or gift certificate.
      *
@@ -42,11 +45,13 @@ interface IStoredValueBalanceRequest extends IStoredValueBalance
      * @return string
      */
     public function getPin();
+
     /**
      * @param string
      * @return self
      */
     public function setPin($pin);
+
     /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
@@ -55,6 +60,7 @@ interface IStoredValueBalanceRequest extends IStoredValueBalance
      * @return string
      */
     public function getCurrencyCode();
+
     /**
      * @param string $code
      * @return self

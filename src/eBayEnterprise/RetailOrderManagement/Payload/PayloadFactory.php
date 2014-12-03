@@ -28,23 +28,6 @@ class PayloadFactory implements IPayloadFactory
     }
 
     /**
-     * Instantiate each validator and store it in an array
-     * to be passed to IValidatorIterator
-     *
-     * @param $validators
-     * @return array
-     */
-    protected function buildValidators($validators)
-    {
-        return array_map(
-            function ($validatorConfig) {
-                return new $validatorConfig['validator']($validatorConfig['params']);
-            },
-            $validators
-        );
-    }
-
-    /**
      * Build a payload using the payload config mappings.
      * @param string $type Concrete payload type
      * @return IPayload
@@ -72,5 +55,22 @@ class PayloadFactory implements IPayloadFactory
             return new $type($validatorIterator, $schemaValidator, $payloadMap);
         }
         throw new UnsupportedPayload("No configuration found for '$type'");
+    }
+
+    /**
+     * Instantiate each validator and store it in an array
+     * to be passed to IValidatorIterator
+     *
+     * @param $validators
+     * @return array
+     */
+    protected function buildValidators($validators)
+    {
+        return array_map(
+            function ($validatorConfig) {
+                return new $validatorConfig['validator']($validatorConfig['params']);
+            },
+            $validators
+        );
     }
 }

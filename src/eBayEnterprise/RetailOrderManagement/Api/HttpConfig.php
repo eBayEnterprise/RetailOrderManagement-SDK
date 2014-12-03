@@ -33,6 +33,37 @@ class HttpConfig implements IHttpConfig
     protected $action = 'post';
     protected $contentType = 'text/xml';
 
+    /**
+     * @param string $apiKey
+     * @param string $host
+     * @param string $majorVersion
+     * @param string $minorVersion
+     * @param string $storeId
+     * @param string $service
+     * @param string $operation
+     * @param array $endpointParams If additional params are provided, they will be joined on '/' and appended
+     *                               with a '/' to the operation at the end of the endpoint URI.
+     */
+    public function __construct(
+        $apiKey,
+        $host,
+        $majorVersion,
+        $minorVersion,
+        $storeId,
+        $service,
+        $operation,
+        array $endpointParams = []
+    ) {
+        $this->apiKey = $apiKey;
+        $this->host = $host;
+        $this->majorVersion = $majorVersion;
+        $this->minorVersion = $minorVersion;
+        $this->storeId = $storeId;
+        $this->service = $service;
+        $this->operation = $operation;
+        $this->endpointParams = $endpointParams;
+    }
+
     public function getApiKey()
     {
         return $this->apiKey;
@@ -65,36 +96,5 @@ class HttpConfig implements IHttpConfig
     public function getContentType()
     {
         return $this->contentType;
-    }
-
-    /**
-     * @param string $apiKey
-     * @param string $host
-     * @param string $majorVersion
-     * @param string $minorVersion
-     * @param string $storeId
-     * @param string $service
-     * @param string $operation
-     * @param array  $endpointParams If additional params are provided, they will be joined on '/' and appended
-     *                               with a '/' to the operation at the end of the endpoint URI.
-     */
-    public function __construct(
-        $apiKey,
-        $host,
-        $majorVersion,
-        $minorVersion,
-        $storeId,
-        $service,
-        $operation,
-        array $endpointParams = []
-    ) {
-        $this->apiKey = $apiKey;
-        $this->host = $host;
-        $this->majorVersion = $majorVersion;
-        $this->minorVersion = $minorVersion;
-        $this->storeId = $storeId;
-        $this->service = $service;
-        $this->operation = $operation;
-        $this->endpointParams = $endpointParams;
     }
 }

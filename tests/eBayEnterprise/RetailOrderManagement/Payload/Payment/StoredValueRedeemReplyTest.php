@@ -15,8 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
 use DOMDocument;
+use eBayEnterprise\RetailOrderManagement\Payload;
+
 /**
  * Class StoredValueRedeemReplyTest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
@@ -88,13 +89,13 @@ XML;
         return [
             [
                 [
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setPanIsToken' => false,
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setAmountRedeemed' => 0.00,
-            'setBalanceAmount' => 15.55,
-            'setAmountRedeemedCurrencyCode' => 'GBP',
-            'setBalanceAmountCurrencyCode' => 'GBP',
+                    'setOrderId' => 'o3trodZDaS2zhZHirJnA',
+                    'setPanIsToken' => false,
+                    'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
+                    'setAmountRedeemed' => 0.00,
+                    'setBalanceAmount' => 15.55,
+                    'setAmountRedeemedCurrencyCode' => 'GBP',
+                    'setBalanceAmountCurrencyCode' => 'GBP',
                     'setResponseCode' => 'Success',
                 ]
             ],
@@ -107,7 +108,7 @@ XML;
                     'setBalanceAmount' => 15.55,
                     'setAmountRedeemedCurrencyCode' => 'GBP',
                     'setBalanceAmountCurrencyCode' => 'GBP',
-            'setResponseCode' => 'Fail',
+                    'setResponseCode' => 'Fail',
                 ]
             ],
             [

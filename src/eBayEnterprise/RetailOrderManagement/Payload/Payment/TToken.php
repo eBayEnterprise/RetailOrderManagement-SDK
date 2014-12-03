@@ -17,8 +17,17 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 trait TToken
 {
-    /** @var string **/
+    /** @var string * */
     protected $token;
+
+    /**
+     * Serialize the Token
+     * return string
+     */
+    protected function serializeToken()
+    {
+        return "<Token>{$this->getToken()}</Token>";
+    }
 
     /**
      * The timestamped token value that was returned by PayPalSetExpressCheckoutReply and
@@ -32,6 +41,7 @@ trait TToken
         // As from eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalGetExpressCheckoutRequest
         return $this->token;
     }
+
     /**
      * According to the XSD comments, the token is 20 characaters
      * @param string
@@ -42,14 +52,6 @@ trait TToken
         // As from eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalGetExpressCheckoutRequest
         $this->token = $this->cleanString($token, 20);
         return $this;
-    }
-    /**
-     * Serialize the Token
-     * return string
-     */
-    protected function serializeToken()
-    {
-        return "<Token>{$this->getToken()}</Token>";
     }
 
     /**

@@ -24,6 +24,7 @@ interface IPayloadMap
      * @throws Exception\UnsupportedPayload If a concrete type cannot be found for the abstract type
      */
     public function getConcreteType($abstractType);
+
     /**
      * Merge a payload mapping with this one. Merged mappings override/come before
      * this mapping.
@@ -31,6 +32,7 @@ interface IPayloadMap
      * @return self
      */
     public function merge(IPayloadMap $payloadMap);
+
     /**
      * Check if the payload mapping knows about an abstract type.
      * @param string $abstractType

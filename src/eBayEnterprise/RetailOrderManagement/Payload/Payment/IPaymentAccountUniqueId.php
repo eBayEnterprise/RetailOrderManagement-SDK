@@ -34,22 +34,26 @@ interface IPaymentAccountUniqueId
      * @return bool
      */
     public function getIsEncrypted();
+
     /**
      * @param bool $isEncrypted
      * @return self
      */
     public function setIsEncrypted($isEncrypted);
+
     /**
      * Indicates if the Payment Account Number (PAN) is the actual number, or a representation of the number.
      *
      * @return bool true if the PAN is a token, false if it's the actual number
      */
     public function getPanIsToken();
+
     /**
      * @param bool $isToken
      * @return self
      */
     public function setPanIsToken($isToken);
+
     /**
      * Either a tokenized or plain credit card number.
      *
@@ -58,6 +62,7 @@ interface IPaymentAccountUniqueId
      * @return string
      */
     public function getCardNumber();
+
     /**
      * @param string $ccNum
      * @return self

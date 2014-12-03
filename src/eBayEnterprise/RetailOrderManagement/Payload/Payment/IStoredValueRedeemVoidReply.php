@@ -22,6 +22,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 interface IStoredValueRedeemVoidReply extends IStoredValueRedeemVoid
 {
     const ROOT_NODE = 'StoredValueRedeemVoidReply';
+
     /**
      * The result of the request transaction.
      * In the case of a StoredValue, you would never accept an order unless the redeem was successful.
@@ -30,11 +31,13 @@ interface IStoredValueRedeemVoidReply extends IStoredValueRedeemVoid
      * @return string
      */
     public function getResponseCode();
+
     /**
      * @param string
      * @return self
      */
     public function setResponseCode($code);
+
     /**
      * Whether the gift card redeem was successfully voided.
      * @return bool

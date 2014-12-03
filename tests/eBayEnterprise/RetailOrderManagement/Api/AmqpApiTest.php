@@ -39,20 +39,7 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
 
         $this->amqpApi = new AmqpApi($this->config, ['connection' => $this->connection, 'channel' => $this->channel]);
     }
-    /**
-     * Mock out a set of configuration get methods
-     * @param array $configMethods Key/value pairs of config get method and scripted return value
-     * @return self
-     */
-    protected function setStubConfigData($configMethods = [])
-    {
-        foreach ($configMethods as $method => $configValue) {
-            $this->config->expects($this->any())
-                ->method($method)
-                ->will($this->returnValue($configValue));
-        }
-        return $this;
-    }
+
     /**
      * Test creating the AMQP connection
      */
@@ -90,6 +77,22 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
 
         $this->invokeRestrictedMethod($amqpApi, 'connect');
     }
+
+    /**
+     * Mock out a set of configuration get methods
+     * @param array $configMethods Key/value pairs of config get method and scripted return value
+     * @return self
+     */
+    protected function setStubConfigData($configMethods = [])
+    {
+        foreach ($configMethods as $method => $configValue) {
+            $this->config->expects($this->any())
+                ->method($method)
+                ->will($this->returnValue($configValue));
+        }
+        return $this;
+    }
+
     /**
      * Test closing the connection - should close the connection as well as the
      * channel
@@ -105,6 +108,7 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
 
         $this->amqpApi->closeConnection();
     }
+
     /**
      * Test declaring a queue on the channel using the configured queue name
      */
@@ -127,20 +131,7 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
             ->with($this->identicalTo($qName));
         $this->invokeRestrictedMethod($this->amqpApi, 'declareQueue');
     }
-    /**
-     * Script the config stub to return data needed for testing queue binding
-     * @param  string $queueName
-     * @param  string $exchangeName
-     * @param  array $routes
-     * @return self
-     */
-    protected function stubConfigForQueueBinding($queueName, $exchangeName, $routes)
-    {
-        $this->setStubConfigData([
-            'getQueueName' => $queueName, 'getConnectionRouteKeys' => $routes, 'getExchangeName' => $exchangeName
-        ]);
-        return $this;
-    }
+
     public function testOpenConnection()
     {
         /** @var \eBayEnterprise\RetailOrderManagement\Api\AmqpApi $amqpApi */
@@ -169,6 +160,7 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
         // any of the methods to create connections, queues, exchanges, etc.
         $this->assertSame($amqpApi, $amqpApi->openConnection());
     }
+
     public function testOpenConnectionFailure()
     {
         /** @var \eBayEnterprise\RetailOrderManagement\Api\AmqpApi $amqpApi */
@@ -205,5 +197,22 @@ class AmqpApiTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\eBayEnterprise\RetailOrderManagement\Api\Exception\ConnectionError');
 
         $amqpApi->openConnection();
+    }
+
+    /**
+     * Script the config stub to return data needed for testing queue binding
+     * @param  string $queueName
+     * @param  string $exchangeName
+     * @param  array $routes
+     * @return self
+     */
+    protected function stubConfigForQueueBinding($queueName, $exchangeName, $routes)
+    {
+        $this->setStubConfigData([
+            'getQueueName' => $queueName,
+            'getConnectionRouteKeys' => $routes,
+            'getExchangeName' => $exchangeName
+        ]);
+        return $this;
     }
 }

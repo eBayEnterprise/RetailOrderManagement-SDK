@@ -34,6 +34,11 @@ class BidirectionalMessageFactory implements IBidirectionalMessageFactory
         $this->payloadFactory = $payloadFactory ?: new PayloadFactory();
     }
 
+    public function requestPayload()
+    {
+        return $this->messagePayload('request');
+    }
+
     /**
      * Use the IConfig's getConfigKey to get a pair of request/reply payloads.
      * Type will specify if the request or reply payload should be retrieved.
@@ -48,11 +53,6 @@ class BidirectionalMessageFactory implements IBidirectionalMessageFactory
             return $this->payloadFactory->buildPayload($this->messageTypeMap[$key][$type]);
         }
         throw new UnsupportedPayload("No payload found for '$key'");
-    }
-
-    public function requestPayload()
-    {
-        return $this->messagePayload('request');
     }
 
     public function replyPayload()

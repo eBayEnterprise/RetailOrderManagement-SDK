@@ -31,6 +31,7 @@ class RequiredFieldsTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
     }
+
     /**
      * Test that payloads missing required data causes an InvalidPayload exception.
      *
@@ -41,6 +42,7 @@ class RequiredFieldsTest extends \PHPUnit_Framework_TestCase
         $validator = new RequiredFields($this->requiredFields);
         $validator->validate($this->payload);
     }
+
     /**
      * Test that validating a valid payload simply returns self.
      */

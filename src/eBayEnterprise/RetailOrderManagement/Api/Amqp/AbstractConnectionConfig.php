@@ -43,6 +43,7 @@ abstract class AbstractConnectionConfig implements IConnectionConfig
     protected $connectionTimeout;
     /** @var string */
     protected $connectionReadWriteTimeout;
+
     /**
      * @param string $connectionHostname
      * @param string $connectionPort
@@ -82,5 +83,6 @@ abstract class AbstractConnectionConfig implements IConnectionConfig
         $this->connectionTimeout = $connectionTimeout;
         $this->connectionReadWriteTimeout = $connectionReadWriteTimeout;
     }
+
     abstract public function getConnectionParams();
 }

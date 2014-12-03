@@ -24,10 +24,11 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
 
     const SUCCESS_MESSAGE = 'Success';
 
-    /** @var string **/
+    /** @var string * */
     protected $responseCode;
-    /** @var string **/
+    /** @var string * */
     protected $errorMessage;
+
     public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
     {
         $this->extractionPaths = [
@@ -82,9 +83,9 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
     protected function serializeContents()
     {
         return $this->serializeOrderId()
-            . $this->serializeResponseCode()
-            . ($this->getToken() ? $this->serializeToken() : '')
-            . $this->serializeErrorMessage();
+        . $this->serializeResponseCode()
+        . ($this->getToken() ? $this->serializeToken() : '')
+        . $this->serializeErrorMessage();
     }
 
     /**
@@ -93,7 +94,7 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
      */
     protected function serializeResponseCode()
     {
-        return '<ResponseCode>'.$this->getResponseCode().'</ResponseCode>';
+        return '<ResponseCode>' . $this->getResponseCode() . '</ResponseCode>';
     }
 
     /**
@@ -102,7 +103,7 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
      */
     protected function serializeErrorMessage()
     {
-        return $this->getErrorMessage() ? '<ErrorMessage>'.$this->getErrorMessage().'</ErrorMessage>' : '';
+        return $this->getErrorMessage() ? '<ErrorMessage>' . $this->getErrorMessage() . '</ErrorMessage>' : '';
     }
 
     /**

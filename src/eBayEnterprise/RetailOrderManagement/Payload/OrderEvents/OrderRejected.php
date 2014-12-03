@@ -47,62 +47,12 @@ class OrderRejected implements IOrderRejected
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
     }
+
     public function getEventType()
     {
         return self::ROOT_NODE;
     }
-    public function getCustomerOrderId()
-    {
-        return $this->customerOrderId;
-    }
-    public function setCustomerOrderId($customerOrderId)
-    {
-        $this->customerOrderId = $customerOrderId;
-        return $this;
-    }
-    public function getStoreId()
-    {
-        return $this->storeId;
-    }
-    public function setStoreId($storeId)
-    {
-        $this->storeId = $storeId;
-        return $this;
-    }
-    public function getOrderCreateTimestamp()
-    {
-        return $this->orderCreateTimestamp;
-    }
-    public function setOrderCreateTimestamp(DateTime $timestamp)
-    {
-        $this->orderCreateTimestamp = $timestamp;
-        return $this;
-    }
-    public function getReason()
-    {
-        return $this->reason;
-    }
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-        return $this;
-    }
-    public function getCode()
-    {
-        return $this->code;
-    }
-    public function setCode($code)
-    {
-        $this->code = $code;
-        return $this;
-    }
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
-    }
+
     public function serialize()
     {
         $this->validate();
@@ -118,34 +68,48 @@ class OrderRejected implements IOrderRejected
         $this->schemaValidate($xml);
         return $xml;
     }
-    public function deserialize($string)
+
+    public function validate()
     {
-        $this->schemaValidate($string);
-        $xpath = $this->getPayloadAsXPath($string);
-        foreach ($this->extractionPaths as $property => $path) {
-            $value = $xpath->evaluate($path);
-            $this->$property = ($property === self::PROPERTY_ORDER_CREATE_TIMESTAMP) ? new DateTime($value) : $value;
+        foreach ($this->validators as $validator) {
+            $validator->validate($this);
         }
         return $this;
     }
-    /**
-     * Validate the serialized data via the schema validator.
-     * @param  string $serializedData
-     * @return self
-     */
-    protected function schemaValidate($serializedData)
+
+    public function getCustomerOrderId()
     {
-        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+        return $this->customerOrderId;
+    }
+
+    public function setCustomerOrderId($customerOrderId)
+    {
+        $this->customerOrderId = $customerOrderId;
         return $this;
     }
-    /**
-     * Return the schema file path.
-     * @return string
-     */
-    protected function getSchemaFile()
+
+    public function getStoreId()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->storeId;
     }
+
+    public function setStoreId($storeId)
+    {
+        $this->storeId = $storeId;
+        return $this;
+    }
+
+    public function getOrderCreateTimestamp()
+    {
+        return $this->orderCreateTimestamp;
+    }
+
+    public function setOrderCreateTimestamp(DateTime $timestamp)
+    {
+        $this->orderCreateTimestamp = $timestamp;
+        return $this;
+    }
+
     /**
      * Create an XML string representing the Reason nodes
      * @return string|null
@@ -158,17 +122,60 @@ class OrderRejected implements IOrderRejected
             ? sprintf(self::REASON_XML_TEMPLATE, self::REASON_XML_ROOT, $code, $reason)
             : null;
     }
-    /**
-     * Load the payload XML into a DOMDocument
-     * @param  string $xmlString
-     * @return \DOMDocument
-     */
-    protected function getPayloadAsDoc($xmlString)
+
+    public function getReason()
     {
-        $d = new DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
+        return $this->reason;
     }
+
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+        return $this;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * Validate the serialized data via the schema validator.
+     * @param  string $serializedData
+     * @return self
+     */
+    protected function schemaValidate($serializedData)
+    {
+        $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+        return $this;
+    }
+
+    /**
+     * Return the schema file path.
+     * @return string
+     */
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
+    }
+
+    public function deserialize($string)
+    {
+        $this->schemaValidate($string);
+        $xpath = $this->getPayloadAsXPath($string);
+        foreach ($this->extractionPaths as $property => $path) {
+            $value = $xpath->evaluate($path);
+            $this->$property = ($property === self::PROPERTY_ORDER_CREATE_TIMESTAMP) ? new DateTime($value) : $value;
+        }
+        return $this;
+    }
+
     /**
      * Load the payload XML into a DOMXPath for querying.
      * @param string $xmlString
@@ -179,5 +186,17 @@ class OrderRejected implements IOrderRejected
         $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
         $xpath->registerNamespace('x', self::XML_NS);
         return $xpath;
+    }
+
+    /**
+     * Load the payload XML into a DOMDocument
+     * @param  string $xmlString
+     * @return \DOMDocument
+     */
+    protected function getPayloadAsDoc($xmlString)
+    {
+        $d = new DOMDocument();
+        $d->loadXML($xmlString);
+        return $d;
     }
 }

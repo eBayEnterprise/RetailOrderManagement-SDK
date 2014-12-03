@@ -14,9 +14,10 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-use ReflectionProperty;
+
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
+use ReflectionProperty;
 
 class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,25 +43,6 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
         $this->stubPayloadMap = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
         $this->stubPayloadFactory = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadFactory');
-    }
-
-    /**
-     * Get a new PayPalGetExpressCheckoutReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return PayPalGetExpressCheckoutReply
-     */
-    protected function createNewPayload()
-    {
-        $payload = new PayPalGetExpressCheckoutReply(
-            $this->validatorIterator,
-            $this->stubSchemaValidator,
-            $this->stubPayloadMap
-        );
-        $reflection = new ReflectionProperty($payload, 'payloadFactory');
-        $reflection->setAccessible(true);
-        $reflection->setValue($payload, $this->stubPayloadFactory);
-        return $payload;
     }
 
     /**
@@ -103,64 +85,6 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
             'setShipToCountryCode' => 'US',
             'setShipToPostalCode' => '19406',
         ]]];
-        /*
-         *  $this->serializeOrderId()
-        . $this->serializeResponseCode()
-        . $this->serializePayerEmail()
-        . $this->serializePayerId()
-        . $this->serializePayerStatus()
-        . $this->serializePayerName()
-        . $this->serializePayerCountry()
-        . $this->serializeBillingAddress()
-        . $this->serializePayerPhone()
-        . $this->serializeShippingAddress();
-         */
-    }
-
-    /**
-     * Create a payload with the provided data.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return PayPalGetExpressCheckoutReply
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-        foreach ($properties as $propertySetter => $value) {
-            $payload->$propertySetter($value);
-        }
-        return $payload;
-    }
-
-    /**
-     * load an xml file and return the canonicalized string of its contents
-     * @return string
-     */
-    protected function canonicalize($file)
-    {
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->load($file);
-        return $doc->C14N();
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlTestString()
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/PayPalGetExpressCheckoutReplyTest.xml");
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/InvalidPayPalGetExpressCheckoutReplyTest.xml");
     }
 
     /**
@@ -178,6 +102,39 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $payload->validate();
+    }
+
+    /**
+     * Create a payload with the provided data.
+     * @param  mixed[] $properties key/value pairs of property => value
+     * @return PayPalGetExpressCheckoutReply
+     */
+    protected function buildPayload($properties)
+    {
+        $payload = $this->createNewPayload();
+        foreach ($properties as $propertySetter => $value) {
+            $payload->$propertySetter($value);
+        }
+        return $payload;
+    }
+
+    /**
+     * Get a new PayPalGetExpressCheckoutReply payload. Each payload will contain a
+     * ValidatorIterator (self::validatorIterator) containing a single mocked
+     * validator (self::$stubValidator).
+     * @return PayPalGetExpressCheckoutReply
+     */
+    protected function createNewPayload()
+    {
+        $payload = new PayPalGetExpressCheckoutReply(
+            $this->validatorIterator,
+            $this->stubSchemaValidator,
+            $this->stubPayloadMap
+        );
+        $reflection = new ReflectionProperty($payload, 'payloadFactory');
+        $reflection->setAccessible(true);
+        $reflection->setValue($payload, $this->stubPayloadFactory);
+        return $payload;
     }
 
     /**
@@ -227,8 +184,9 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
         $payload = $this->buildPayload($payloadData);
         $payload->serialize();
     }
+
     /**
-     * @param array  $payloadData
+     * @param array $payloadData
      * @dataProvider provideValidPayload
      */
     public function testSerializeWillPass(array $payloadData)
@@ -245,6 +203,28 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @return string
+     */
+    protected function loadXmlTestString()
+    {
+        return $this->canonicalize(__DIR__ . "/Fixtures/PayPalGetExpressCheckoutReplyTest.xml");
+    }
+
+    /**
+     * load an xml file and return the canonicalized string of its contents
+     * @return string
+     */
+    protected function canonicalize($file)
+    {
+        $doc = new DOMDocument();
+        $doc->preserveWhiteSpace = false;
+        $doc->load($file);
+        return $doc->C14N();
+    }
+
+    /**
      * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
      */
     public function testDeserializeWillFailSchemaInvalid()
@@ -256,6 +236,16 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
 
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
+    }
+
+    /**
+     * Load some invalid XML from a fixture file and canonicalize it. Returns
+     * the canonical XML string.
+     * @return string
+     */
+    protected function loadXmlInvalidTestString()
+    {
+        return $this->canonicalize(__DIR__ . "/Fixtures/InvalidPayPalGetExpressCheckoutReplyTest.xml");
     }
 
     /**

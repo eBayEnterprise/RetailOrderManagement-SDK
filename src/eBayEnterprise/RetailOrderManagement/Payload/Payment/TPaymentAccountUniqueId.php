@@ -29,48 +29,6 @@ trait TPaymentAccountUniqueId
     /** @var string */
     protected $cardNumber;
 
-    public function getIsEncrypted()
-    {
-        return $this->isEncrypted;
-    }
-    public function setIsEncrypted($isEncrypted)
-    {
-        $this->isEncrypted = (bool) $isEncrypted;
-        return $this;
-    }
-    public function getPanIsToken()
-    {
-        return $this->panIsToken;
-    }
-
-    public function setPanIsToken($isToken)
-    {
-        $this->panIsToken = is_bool($isToken) ? $isToken : null;
-        return $this;
-    }
-
-    public function getCardNumber()
-    {
-        return $this->cardNumber;
-    }
-
-    public function setCardNumber($ccNum)
-    {
-        $this->cardNumber = $this->getIsEncrypted() ? $this->cleanString($ccNum, 1000) : $this->cleanString($ccNum, 22);
-        return $this;
-    }
-
-    /**
-     * Trim any white space and return the resulting string truncating to $maxLength.
-     *
-     * Return null if the result is an empty string or not a string
-     *
-     * @param string $string
-     * @param int $maxLength
-     * @return string or null
-     */
-    abstract protected function cleanString($string, $maxLength);
-
     /**
      * XML serialized PaymentAccountUniqueId node
      * @return string
@@ -96,4 +54,48 @@ trait TPaymentAccountUniqueId
     {
         return $this->getIsEncrypted() ? '' : sprintf('isToken="%s"', ($this->getPanIsToken() ? 'true' : 'false'));
     }
+
+    public function getPanIsToken()
+    {
+        return $this->panIsToken;
+    }
+
+    public function setPanIsToken($isToken)
+    {
+        $this->panIsToken = is_bool($isToken) ? $isToken : null;
+        return $this;
+    }
+
+    public function getCardNumber()
+    {
+        return $this->cardNumber;
+    }
+
+    public function setCardNumber($ccNum)
+    {
+        $this->cardNumber = $this->getIsEncrypted() ? $this->cleanString($ccNum, 1000) : $this->cleanString($ccNum, 22);
+        return $this;
+    }
+
+    public function getIsEncrypted()
+    {
+        return $this->isEncrypted;
+    }
+
+    public function setIsEncrypted($isEncrypted)
+    {
+        $this->isEncrypted = (bool)$isEncrypted;
+        return $this;
+    }
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    abstract protected function cleanString($string, $maxLength);
 }

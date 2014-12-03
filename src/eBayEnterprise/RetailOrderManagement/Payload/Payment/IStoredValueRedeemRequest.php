@@ -22,6 +22,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 interface IStoredValueRedeemRequest extends IStoredValueRedeem
 {
     const ROOT_NODE = 'StoredValueRedeemRequest';
+
     /**
      * RequestId is used to globally identify a request message and is used
      * for duplicate request protection.
@@ -30,11 +31,13 @@ interface IStoredValueRedeemRequest extends IStoredValueRedeem
      * @return string
      */
     public function getRequestId();
+
     /**
      * @param string $requestId
      * @return self
      */
     public function setRequestId($requestId);
+
     /**
      * The personal identification number or code associated with a gift card or gift certificate.
      *
@@ -42,11 +45,13 @@ interface IStoredValueRedeemRequest extends IStoredValueRedeem
      * @return string
      */
     public function getPin();
+
     /**
      * @param string
      * @return self
      */
     public function setPin($pin);
+
     /**
      * The amount to redeem
      *
@@ -55,11 +60,13 @@ interface IStoredValueRedeemRequest extends IStoredValueRedeem
      * @return float
      */
     public function getAmount();
+
     /**
      * @param float $amount
      * @return self
      */
     public function setAmount($amount);
+
     /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.
@@ -68,6 +75,7 @@ interface IStoredValueRedeemRequest extends IStoredValueRedeem
      * @return string
      */
     public function getCurrencyCode();
+
     /**
      * @param string $code
      * @return self
