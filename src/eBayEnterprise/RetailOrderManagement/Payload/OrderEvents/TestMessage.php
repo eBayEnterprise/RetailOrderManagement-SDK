@@ -20,6 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use SimpleXMLElement;
 
 class TestMessage implements ITestMessage
 {
@@ -94,7 +95,7 @@ class TestMessage implements ITestMessage
     public function deserialize($serializedPayload)
     {
         $this->schemaValidate($serializedPayload);
-        $ele = new \SimpleXMLElement($serializedPayload);
+        $ele = new SimpleXMLElement($serializedPayload);
         return $this
             ->setTimestamp(new DateTime($ele['timestamp']))
             ->validate();

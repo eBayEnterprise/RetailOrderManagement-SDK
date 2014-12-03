@@ -16,13 +16,11 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 /**
- * Interface IPayPalGetExpressCheckoutRequest
+ * Interface IToken
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IPayPalGetExpressCheckoutRequest extends IPayPalGetExpressCheckout, ICurrencyCode, IToken
+interface IToken
 {
-    const ROOT_NODE = 'PayPalGetExpressCheckoutRequest';
-
     /**
      * The timestamped token value that was returned by PayPalSetExpressCheckoutReply and
      * passed on PayPalGetExpressCheckoutRequest.
@@ -37,19 +35,4 @@ interface IPayPalGetExpressCheckoutRequest extends IPayPalGetExpressCheckout, IC
      * @return self
      */
     public function setToken($token);
-
-    /**
-     * The 3-character ISO 4217 code that represents
-     * the type of currency being used for a transaction.
-     *
-     * @link http://www.iso.org/iso/home/standards/currency_codes.htm
-     * @return string
-     */
-    public function getCurrencyCode();
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setCurrencyCode($code);
 }

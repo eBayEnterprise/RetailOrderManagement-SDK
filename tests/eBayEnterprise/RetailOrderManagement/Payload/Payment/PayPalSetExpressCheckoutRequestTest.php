@@ -14,7 +14,9 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-
+use DOMDocument;
+use ReflectionClass;
+use ReflectionMethod;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
 
@@ -112,7 +114,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             $this->schemaValidatorStub,
             $this->payloadMapStub
         );
-        $method = new \ReflectionMethod(
+        $method = new ReflectionMethod(
             '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest',
             'cleanAddressLines'
         );
@@ -134,7 +136,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             $this->payloadMapStub
         );
         $this->injectProperties($payload, $properties);
-        $method = new \ReflectionMethod($payload, 'serializeShippingAddress');
+        $method = new ReflectionMethod($payload, 'serializeShippingAddress');
         $method->setAccessible(true);
         $actual = $method->invoke($payload);
         $this->assertSame($expected, $actual);
@@ -149,7 +151,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     protected function injectProperties($class, $properties)
     {
         // use reflection to inject properties/values into the $class object
-        $reflection = new \ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
         foreach ($properties as $property => $value) {
             $requestProperty = $reflection->getProperty($property);
             $requestProperty->setAccessible(true);
@@ -219,7 +221,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__.'/Fixtures/PayPalSetExpressCheckoutRequest.xml');
         $string = $dom->C14N();
 

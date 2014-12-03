@@ -14,6 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
+use DOMDocument;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 
@@ -98,7 +99,7 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString($case)
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->load(__DIR__."/Fixtures/StoredValueBalanceRequest{$case}.xml");
         $string = $dom->C14N();
@@ -113,7 +114,7 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlInvalidTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->load(__DIR__.'/Fixtures/InvalidStoredValueBalanceRequest.xml');
         $string = $dom->C14N();
@@ -174,7 +175,7 @@ class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
         $this->schemaValidatorStub->expects($this->any())
             ->method('validate')
             ->will($this->returnSelf());
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
 

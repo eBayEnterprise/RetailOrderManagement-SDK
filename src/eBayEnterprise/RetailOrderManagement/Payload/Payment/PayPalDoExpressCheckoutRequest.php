@@ -24,10 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
 {
-    use TPayload, TAmount, TOrderId, TPayPalCurrencyCode, TPayPalToken;
-    use TShippingAddress {
-        TPayload::addressLinesFromXPath insteadof TShippingAddress;
-    }
+    use TPayload, TAmount, TOrderId, TCurrencyCode, TToken, TShippingAddress;
 
     /** @var string**/
     protected $requestId;
@@ -77,27 +74,6 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     }
 
     /**
-     * Whether the address was input on PayPal site or the merchant site, the final address
-     * used should be passed at this time.
-     *
-     * @return IPhysicalAddress
-     */
-    public function getShippingAddress()
-    {
-        return $this->shippingAddress;
-    }
-
-    /**
-     * @param IPhysicalAddress
-     * @return self
-     */
-    public function setShippingAddress(IPhysicalAddress $address)
-    {
-        $this->shippingAddress = $address;
-        return $this;
-    }
-
-    /**
      * RequestId is used to globally identify a request message and is used
      * for duplicate request protection.
      *
@@ -127,7 +103,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     protected function serializeContents()
     {
         return $this->serializeOrderId()
-        . $this->serializeToken() // TPayPalToken
+        . $this->serializeToken() // TToken
         . $this->serializePayerId()
         . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
         . $this->serializePickupStoreId()

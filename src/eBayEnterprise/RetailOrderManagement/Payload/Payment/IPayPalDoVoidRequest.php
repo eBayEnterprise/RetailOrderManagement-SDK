@@ -19,7 +19,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  * Interface IPayPalDoVoidRequest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IPayPalDoVoidRequest extends IPayPalDoVoid
+interface IPayPalDoVoidRequest extends IPayPalDoVoid, ICurrencyCode
 {
     const ROOT_NODE = 'PayPalDoVoidRequest';
 

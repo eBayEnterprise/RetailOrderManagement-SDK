@@ -14,9 +14,10 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
+use DateTimeZone;
 
 class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,7 +68,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
             'setCardNumber' => '4111111111111111',
             'setCardSecurityCode' => '123',
             'setPanIsToken' => false,
-            'setExpirationDate' => date_create('2015-12', new \DateTimeZone('UTC')),
+            'setExpirationDate' => date_create('2015-12', new DateTimeZone('UTC')),
             'setAmount' => 43.45,
             'setCurrencyCode' => 'USD',
             'setEmail' => 'test@example.com',
@@ -335,7 +336,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString($testCase)
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->load(__DIR__.'/Fixtures/'.$testCase.'/CreditCardAuthRequest.xml');
         $string = $dom->C14N();
@@ -350,7 +351,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlInvalidTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__.'/Fixtures/InvalidCreditCardAuthRequest.xml');
         $string = $dom->C14N();
 
@@ -475,7 +476,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $this->schemaValidatorStub->expects($this->any())
             ->method('validate')
             ->will($this->returnSelf());
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
 

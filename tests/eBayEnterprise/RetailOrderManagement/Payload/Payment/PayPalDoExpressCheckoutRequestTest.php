@@ -14,7 +14,8 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-
+use DOMDocument;
+use ReflectionClass;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
 
@@ -142,7 +143,7 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__.'/Fixtures/PayPalDoExpressCheckoutRequest.xml');
         $string = $dom->C14N();
 
@@ -158,7 +159,7 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     protected function injectProperties($class, $properties)
     {
         // use reflection to inject properties/values into the $class object
-        $reflection = new \ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
         foreach ($properties as $property => $value) {
             $requestProperty = $reflection->getProperty($property);
             $requestProperty->setAccessible(true);

@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-trait TPayPalToken
+trait TToken
 {
     /** @var string **/
     protected $token;
@@ -40,7 +40,7 @@ trait TPayPalToken
     public function setToken($token)
     {
         // As from eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalGetExpressCheckoutRequest
-        $this->token = substr(trim($token), 0, 20);
+        $this->token = $this->cleanString($token, 20);
         return $this;
     }
     /**
@@ -51,4 +51,15 @@ trait TPayPalToken
     {
         return "<Token>{$this->getToken()}</Token>";
     }
+
+    /**
+     * Trim any white space and return the resulting string truncating to $maxLength.
+     *
+     * Return null if the result is an empty string or not a string
+     *
+     * @param string $string
+     * @param int $maxLength
+     * @return string or null
+     */
+    abstract protected function cleanString($string, $maxLength);
 }

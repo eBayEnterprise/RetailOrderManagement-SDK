@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
-
+use DOMDocument;
 class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
 {
     use TTestReflection;
@@ -213,7 +213,7 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
     public function testSerializeWillPass(array $payloadData)
     {
         $payload = $this->buildPayload($payloadData);
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();

@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
+use libXMLError;
 
 class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,19 +53,19 @@ class XsdSchemaValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildErrorMessage()
     {
-        $warnError = new \libXMLError();
+        $warnError = new libXMLError();
         $warnError->level = LIBXML_ERR_WARNING;
         $warnError->message = "Warning message\n";
         $warnError->file = 'some/file/path.xml';
         $warnError->line = 22;
 
-        $errError = new \libXMLError();
+        $errError = new libXMLError();
         $errError->level = LIBXML_ERR_ERROR;
         $errError->message = "Error message\n";
         $errError->file = 'some/file/path.xml';
         $errError->line = 23;
 
-        $fatalError = new \libXMLError();
+        $fatalError = new libXMLError();
         $fatalError->level = LIBXML_ERR_FATAL;
         $fatalError->message = "Fatal message\n";
         $fatalError->file = 'some/file/path.xml';

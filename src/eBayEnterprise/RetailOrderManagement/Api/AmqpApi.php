@@ -22,6 +22,7 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Exception\AMQPExceptionInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use ReflectionClass;
 
 /**
  * Class AmqpApi
@@ -146,7 +147,7 @@ class AmqpApi implements IAmqpApi
      */
     protected function getConnectionReflectionClass($connectionClass)
     {
-        return new \ReflectionClass($connectionClass);
+        return new ReflectionClass($connectionClass);
     }
     /**
      * Create the connection - uses a ReflectionClass to create the instance to

@@ -24,7 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutRequest
 {
-    use TPayload, TAmount, TOrderId, TPayPalCurrencyCode, TShippingAddress;
+    use TPayload, TAmount, TOrderId, TCurrencyCode, TShippingAddress;
 
     /** @var string * */
     protected $returnUrl;

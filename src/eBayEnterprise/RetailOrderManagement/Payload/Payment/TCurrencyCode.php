@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-trait TPayPalCurrencyCode
+trait TCurrencyCode
 {
     /** @var string **/
     protected $currencyCode;

@@ -14,7 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 class PayPalDoAuthorizationRequestTest extends \PHPUnit_Framework_TestCase
@@ -96,7 +96,7 @@ class PayPalDoAuthorizationRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function canonicalize($file)
     {
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->preserveWhiteSpace = false;
         $doc->load($file);
         return $doc->C14N();
@@ -193,7 +193,7 @@ class PayPalDoAuthorizationRequestTest extends \PHPUnit_Framework_TestCase
     public function testSerializeWillPass(array $payloadData)
     {
         $payload = $this->buildPayload($payloadData);
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
 

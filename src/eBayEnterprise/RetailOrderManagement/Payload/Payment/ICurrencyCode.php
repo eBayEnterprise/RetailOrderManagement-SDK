@@ -15,29 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-/**
- * Interface IPayPalGetExpressCheckoutRequest
- * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- */
-interface IPayPalGetExpressCheckoutRequest extends IPayPalGetExpressCheckout, ICurrencyCode, IToken
+interface ICurrencyCode
 {
-    const ROOT_NODE = 'PayPalGetExpressCheckoutRequest';
-
-    /**
-     * The timestamped token value that was returned by PayPalSetExpressCheckoutReply and
-     * passed on PayPalGetExpressCheckoutRequest.
-     * Character length and limitations: 20 single-byte characters
-     *
-     * @return string
-     */
-    public function getToken();
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setToken($token);
-
     /**
      * The 3-character ISO 4217 code that represents
      * the type of currency being used for a transaction.

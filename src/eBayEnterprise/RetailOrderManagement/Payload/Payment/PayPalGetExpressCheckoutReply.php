@@ -365,15 +365,6 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     }
 
     /**
-     * Serialize an Address
-     * @return string
-     */
-    protected function serializeAddress($rootNode, IPayPalAddress $address = null)
-    {
-        return $address ? "<$rootNode>" . $address->serialize() . "</$rootNode>" : '';
-    }
-
-    /**
      * Serialize Payer Phone
      * @return string
      */

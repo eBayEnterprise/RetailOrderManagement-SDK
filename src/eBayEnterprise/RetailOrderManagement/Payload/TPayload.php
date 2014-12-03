@@ -15,6 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
+use DOMDocument;
+use DOMXPath;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TStrings;
 
 /**
@@ -103,7 +105,7 @@ trait TPayload
      */
     protected function getPayloadAsXPath($xmlString)
     {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
+        $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
         $xpath->registerNamespace('x', $this->getXmlNamespace());
         return $xpath;
     }
@@ -115,7 +117,7 @@ trait TPayload
      */
     protected function getPayloadAsDoc($xmlString)
     {
-        $d = new \DOMDocument();
+        $d = new DOMDocument();
         $d->loadXML($xmlString);
         return $d;
     }

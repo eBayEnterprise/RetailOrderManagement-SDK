@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
+use DOMDocument;
 
 class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -292,7 +293,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     protected function loadXmlTestString($testCase = 'UnencryptedCardData')
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->load(__DIR__.'/Fixtures/'.$testCase.'/CreditCardAuthReply.xml');
         $string = $dom->C14N();
@@ -307,7 +308,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     protected function loadXmlInvalidTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->load(__DIR__ . '/Fixtures/InvalidCreditCardAuthReply.xml');
         $string = $dom->C14N();
@@ -396,7 +397,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     public function testSerializeWillPass(array $payloadData, $testCase)
     {
         $payload = $this->buildPayload($payloadData);
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();

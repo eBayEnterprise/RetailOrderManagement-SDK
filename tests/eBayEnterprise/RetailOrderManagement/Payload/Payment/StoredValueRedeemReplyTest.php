@@ -16,7 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
-
+use DOMDocument;
 /**
  * Class StoredValueRedeemReplyTest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
@@ -218,7 +218,7 @@ XML;
      */
     protected function xmlInvalidTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__ . '/Fixtures/InvalidStoredValueRedeemReply.xml');
         $string = $dom->C14N();
 
@@ -261,7 +261,7 @@ XML;
      */
     protected function xmlTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__ . '/Fixtures/StoredValueRedeemReply.xml');
         $string = $dom->C14N();
 

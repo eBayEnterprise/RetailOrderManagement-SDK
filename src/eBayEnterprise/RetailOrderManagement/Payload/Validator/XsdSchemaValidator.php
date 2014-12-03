@@ -15,6 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 /**
@@ -50,7 +51,7 @@ class XsdSchemaValidator implements Payload\ISchemaValidator
      */
     protected function loadXmlDoc($xmlString)
     {
-        $d = new \DOMDocument();
+        $d = new DOMDocument();
         $d->loadXML($xmlString);
         return $d;
     }

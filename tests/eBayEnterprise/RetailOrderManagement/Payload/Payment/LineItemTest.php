@@ -14,7 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 /**
@@ -190,7 +190,7 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString($xml)
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__ . "/Fixtures/$xml");
         $string = $dom->C14N();
 

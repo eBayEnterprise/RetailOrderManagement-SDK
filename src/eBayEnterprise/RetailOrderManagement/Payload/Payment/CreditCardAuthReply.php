@@ -27,6 +27,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 class CreditCardAuthReply implements ICreditCardAuthReply
 {
     use TPayload, TPaymentContext;
+
     /** @var string */
     protected $authorizationResponseCode;
     /** @var string */

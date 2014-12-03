@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use DOMDocument;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -148,7 +149,7 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
         $this->stubValidator->expects($this->any())
             ->method('validate')
             ->will($this->returnSelf());
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();
@@ -229,7 +230,7 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString($xml)
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__."/Fixtures/$xml");
         $string = $dom->C14N();
 

@@ -54,6 +54,13 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
      */
     public function providerSerialize()
     {
+        $orderRejectedXml = '<OrderRejected '
+            . 'xmlns="http://api.gsicommerce.com/schema/checkout/1.0" '
+            . 'customerOrderId="10000001" '
+            . 'storeId="GTA24" '
+            . 'orderCreateTimestamp="2014-07-06T06:09:05-04:00">'
+            . '<Reason code="Invalid Payment">Testing invalid payment reason message</Reason>'
+            . '</OrderRejected>';
         return [
             [
                '10000001',
@@ -61,8 +68,7 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
                '2014-07-06T06:09:05-04:00',
                'Testing invalid payment reason message',
                'Invalid Payment',
-               '<OrderRejected xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="10000001" storeId="GTA24" orderCreateTimestamp="2014-07-06T06:09:05-04:00"><Reason code="Invalid Payment">Testing invalid payment reason message</Reason></OrderRejected>'
-
+                $orderRejectedXml
             ],
         ];
     }
@@ -72,9 +78,16 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
      */
     public function providerDeserialize()
     {
+        $orderRejectedXml = '<OrderRejected '
+            . 'xmlns="http://api.gsicommerce.com/schema/checkout/1.0" '
+            . 'customerOrderId="10000001" '
+            . 'storeId="GTA24" '
+            . 'orderCreateTimestamp="2014-07-06T06:09:05-04:00">'
+            . '<Reason code="Invalid Shipment">Testing invalid shipment reason message</Reason>'
+            . '</OrderRejected>';
         return [
             [
-               '<OrderRejected xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="10000001" storeId="GTA24" orderCreateTimestamp="2014-07-06T06:09:05-04:00"><Reason code="Invalid Shipment">Testing invalid shipment reason message</Reason></OrderRejected>',
+                $orderRejectedXml,
                '10000001',
                'GTA24',
                '2014-07-06T06:09:05-04:00',
@@ -93,8 +106,14 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
      * @param string $result the expected serialized xml string
      * @dataProvider providerSerialize
      */
-    public function testOrderRejectedSerialize($customerOrderId, $storeId, $orderCreateTimestamp, $reason, $code, $result)
-    {
+    public function testOrderRejectedSerialize(
+        $customerOrderId,
+        $storeId,
+        $orderCreateTimestamp,
+        $reason,
+        $code,
+        $result
+    ) {
         $payload = $this->createNewPayload();
         $payload->setCustomerOrderId($customerOrderId)
             ->setStoreId($storeId)
@@ -112,8 +131,14 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
      * @param array $reason
      * @dataProvider providerDeserialize
      */
-    public function testOrderRejectedDeserialize($xml, $customerOrderId, $storeId, $orderCreateTimestamp, $reason, $code)
-    {
+    public function testOrderRejectedDeserialize(
+        $xml,
+        $customerOrderId,
+        $storeId,
+        $orderCreateTimestamp,
+        $reason,
+        $code
+    ) {
         $payload = $this->createNewPayload();
         $payload->deserialize($xml);
         $this->assertSame($customerOrderId, $payload->getCustomerOrderId());

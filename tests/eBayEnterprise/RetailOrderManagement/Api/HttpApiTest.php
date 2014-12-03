@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
+use Requests_Exception_HTTP;
 
 class HttpApiTest extends \PHPUnit_Framework_TestCase
 {
@@ -142,7 +143,7 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
     {
         $this->apiStub->expects($this->any())
             ->method('sendRequest')
-            ->will($this->throwException(new \Requests_Exception_HTTP));
+            ->will($this->throwException(new Requests_Exception_HTTP));
         $this->apiStub->send();
     }
 

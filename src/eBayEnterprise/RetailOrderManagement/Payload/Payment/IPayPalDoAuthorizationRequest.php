@@ -19,7 +19,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  * Interface IPayPalDoAuthorizationRequest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IPayPalDoAuthorizationRequest extends IPayPalDoAuthorization
+interface IPayPalDoAuthorizationRequest extends IPayPalDoAuthorization, ICurrencyCode
 {
     const ROOT_NODE = 'PayPalDoAuthorizationRequest';
 

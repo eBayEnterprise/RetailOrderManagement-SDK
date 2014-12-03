@@ -14,7 +14,8 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-
+use ReflectionProperty;
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
@@ -56,7 +57,7 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
             $this->stubSchemaValidator,
             $this->stubPayloadMap
         );
-        $reflection = new \ReflectionProperty($payload, 'payloadFactory');
+        $reflection = new ReflectionProperty($payload, 'payloadFactory');
         $reflection->setAccessible(true);
         $reflection->setValue($payload, $this->stubPayloadFactory);
         return $payload;
@@ -136,7 +137,7 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
      */
     protected function canonicalize($file)
     {
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->preserveWhiteSpace = false;
         $doc->load($file);
         return $doc->C14N();
@@ -233,11 +234,11 @@ class PayPalGetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     public function testSerializeWillPass(array $payloadData)
     {
         $payload = $this->buildPayload($payloadData);
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
 
-        $expectedDoc = new \DOMDocument();
+        $expectedDoc = new DOMDocument();
         $expectedDoc->preserveWhiteSpace = false;
         $expectedDoc->loadXML($this->loadXmlTestString());
         $this->assertEquals($expectedDoc->C14N(), $domPayload->C14N());

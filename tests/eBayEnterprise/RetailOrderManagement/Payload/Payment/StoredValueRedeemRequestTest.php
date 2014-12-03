@@ -14,7 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
-
+use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
 
 /**
@@ -103,7 +103,7 @@ class StoredValueRedeemRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__.'/Fixtures/StoredValueRedeemRequest.xml');
         $string = $dom->C14N();
 
@@ -117,7 +117,7 @@ class StoredValueRedeemRequestTest extends \PHPUnit_Framework_TestCase
      */
     protected function xmlInvalidTestString()
     {
-        $dom = new \DOMDocument();
+        $dom = new DOMDocument();
         $dom->load(__DIR__.'/Fixtures/InvalidStoredValueRedeemRequest.xml');
         $string = $dom->C14N();
 
@@ -189,7 +189,7 @@ class StoredValueRedeemRequestTest extends \PHPUnit_Framework_TestCase
         $this->schemaValidatorStub->expects($this->any())
             ->method('validate')
             ->will($this->returnSelf());
-        $domPayload = new \DOMDocument();
+        $domPayload = new DOMDocument();
         $domPayload->preserveWhiteSpace = false;
         $domPayload->loadXML($payload->serialize());
         $serializedString = $domPayload->C14N();

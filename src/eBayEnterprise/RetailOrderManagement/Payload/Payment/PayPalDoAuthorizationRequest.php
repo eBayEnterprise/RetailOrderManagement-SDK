@@ -22,7 +22,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class PayPalDoAuthorizationRequest implements IPayPalDoAuthorizationRequest
 {
-    use TPayload, TAmount, TOrderId, TPayPalCurrencyCode;
+    use TPayload, TAmount, TOrderId, TCurrencyCode;
 
     /** @var string * */
     protected $requestId;

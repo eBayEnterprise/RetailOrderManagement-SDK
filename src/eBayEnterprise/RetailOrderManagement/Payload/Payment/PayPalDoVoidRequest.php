@@ -22,7 +22,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class PayPalDoVoidRequest implements IPayPalDoVoidRequest
 {
-    use TPayload, TOrderId, TPayPalCurrencyCode;
+    use TPayload, TOrderId, TCurrencyCode;
 
     /** @var string * */
     protected $requestId;

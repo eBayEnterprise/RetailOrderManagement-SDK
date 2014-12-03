@@ -16,6 +16,8 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DateTime;
+use DOMDocument;
+use DOMXPath;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 
@@ -163,7 +165,7 @@ class OrderRejected implements IOrderRejected
      */
     protected function getPayloadAsDoc($xmlString)
     {
-        $d = new \DOMDocument();
+        $d = new DOMDocument();
         $d->loadXML($xmlString);
         return $d;
     }
@@ -174,7 +176,7 @@ class OrderRejected implements IOrderRejected
      */
     protected function getPayloadAsXPath($xmlString)
     {
-        $xpath = new \DOMXPath($this->getPayloadAsDoc($xmlString));
+        $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
         $xpath->registerNamespace('x', self::XML_NS);
         return $xpath;
     }

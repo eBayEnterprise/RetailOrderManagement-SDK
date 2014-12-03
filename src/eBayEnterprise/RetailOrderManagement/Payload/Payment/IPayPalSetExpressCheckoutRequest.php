@@ -15,7 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-interface IPayPalSetExpressCheckoutRequest extends IPayPalSetExpressCheckout, IShippingAddress, ILineItemContainer
+interface IPayPalSetExpressCheckoutRequest extends
+    ICurrencyCode,
+    ILineItemContainer,
+    IPayPalSetExpressCheckout,
+    IShippingAddress
 {
     const ROOT_NODE = 'PayPalSetExpressCheckoutRequest';
 

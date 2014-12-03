@@ -19,7 +19,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
  * Interface IPayPalDoExpressCheckoutRequest
  * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
  */
-interface IPayPalDoExpressCheckoutRequest extends IPayPalDoExpressCheckout, ILineItemContainer
+interface IPayPalDoExpressCheckoutRequest extends
+    ICurrencyCode,
+    ILineItemContainer,
+    IPayPalDoExpressCheckout,
+    IShippingAddress
 {
     const ROOT_NODE = 'PayPalDoExpressCheckoutRequest';
 
@@ -107,20 +111,6 @@ interface IPayPalDoExpressCheckoutRequest extends IPayPalDoExpressCheckout, ILin
      * @return self
      */
     public function setShipToName($name);
-
-    /**
-     * Whether the address was input on PayPal site or the merchant site, the final address
-     * used should be passed at this time.
-     *
-     * @return IPhysicalAddress
-     */
-    public function getShippingAddress();
-
-    /**
-     * @param IPhysicalAddress
-     * @return self
-     */
-    public function setShippingAddress(IPhysicalAddress $address);
 
     /**
      * The 3-character ISO 4217 code that represents
