@@ -118,7 +118,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     protected function serializePayerId()
     {
-        return "<ShipToName>{$this->getPayerId()}</ShipToName>";
+        return "<PayerId>{$this->getPayerId()}</PayerId>";
     }
 
     /**
@@ -170,7 +170,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     protected function serializePickupStoreId()
     {
-        return "<ShipToName>{$this->getPickupStoreId()}</ShipToName>";
+        return $this->nodeNullCoalesce("ShipToName", $this->getPickupStoreId());
     }
 
     /**
@@ -200,7 +200,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     protected function serializeShipToName()
     {
-        return "<ShipToName>{$this->getShipToName()}</ShipToName>";
+        return $this->nodeNullCoalesce("ShipToName", $this->getShipToName());
     }
 
     /**
