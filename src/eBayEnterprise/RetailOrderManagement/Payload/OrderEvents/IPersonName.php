@@ -15,38 +15,46 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+interface IPersonName
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
+     * xsd restrictions: max length 64 characters
      * @return string
      */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
-     *
-     * @return string
-     */
-    public function getStoreId();
+    public function getFirstName();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setFirstName($firstName);
     /**
-     * Unique test string identifying the order.
-     *
-     * xsd restriction: 1-24 characters
+     * xsd restrictions: max length 64 characters
      * @return string
      */
-    public function getCustomerOrderId();
+    public function getLastName();
     /**
      * @param string
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setLastName($lastName);
+    /**
+     * xsd restrictions: max length 40 characters
+     * @return string
+     */
+    public function getMiddleName();
+    /**
+     * @param string
+     * @return self
+     */
+    public function setMiddleName($middleName);
+    /**
+     * xsd restrictions: max length 10 characters
+     * @return string
+     */
+    public function getHonorificName();
+    /**
+     * @param string
+     * @return self
+     */
+    public function setHonorificName($honorificName);
 }

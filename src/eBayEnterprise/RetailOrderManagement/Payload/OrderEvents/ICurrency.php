@@ -15,38 +15,29 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+interface ICurrency
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
-     * @return string
-     */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
+     * ISO 4217 code that represents the currency.
      *
+     * xsd restriction: 3 character ISO 4217 currency code
      * @return string
      */
-    public function getStoreId();
+    public function getCurrencyCode();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setCurrencyCode($currencyCode);
     /**
-     * Unique test string identifying the order.
+     * Symbol to display with with the currency code.
      *
-     * xsd restriction: 1-24 characters
      * @return string
      */
-    public function getCustomerOrderId();
+    public function getCurrencySymbol();
     /**
      * @param string
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setCurrencySymbol($currencySymbol);
 }

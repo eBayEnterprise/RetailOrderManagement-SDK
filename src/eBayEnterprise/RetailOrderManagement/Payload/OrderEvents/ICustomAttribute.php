@@ -13,40 +13,31 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
+namespace eBayEnterprise\RetailOrderManagement\Payload;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+interface ICustomAttribute extends IPayload
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
+     * Unique key for the attribute
      * @return string
      */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
-     *
-     * @return string
-     */
-    public function getStoreId();
+    public function getKey();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setKey($key);
     /**
-     * Unique test string identifying the order.
+     * Value of the attribute. Value will have all whitespaces normalized
+     * to a single whitespace character.
      *
-     * xsd restriction: 1-24 characters
+     * xsd restrictions: whitespace normalized string
      * @return string
      */
-    public function getCustomerOrderId();
+    public function getValue();
     /**
      * @param string
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setValue($value);
 }

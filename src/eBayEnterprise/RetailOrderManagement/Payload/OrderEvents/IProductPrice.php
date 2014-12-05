@@ -15,38 +15,42 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+interface IProductPrice
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
-     * @return string
-     */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
+     * Line item total amount.
      *
-     * @return string
+     * xsd restriction: 2 decimal, non-negative
+     * @return float
      */
-    public function getStoreId();
+    public function getAmount();
     /**
-     * @param string
+     * @param float
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setAmount($amount);
     /**
-     * Unique test string identifying the order.
+     * Any remainder's in line item calculations due to rounding errors.
      *
-     * xsd restriction: 1-24 characters
-     * @return string
+     * xsd restriction: 2 decimal, non-negative
+     * @return float
      */
-    public function getCustomerOrderId();
+    public function getRemainder();
     /**
-     * @param string
+     * @param float
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setRemainder($remainder);
+    /**
+     * Price for a single unit of the item.
+     *
+     * xsd restriction: 2 decimal, non-negative
+     * @return float
+     */
+    public function getUnitPrice();
+    /**
+     * @param float
+     * @return self
+     */
+    public function setUnitPrice($unitPrice);
 }

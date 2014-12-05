@@ -15,38 +15,30 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
+interface ITrackingNumber extends IPayload
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
-     * @return string
-     */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
+     * Tracking number for the shipment.
      *
      * @return string
      */
-    public function getStoreId();
+    public function getTrackingNumber();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setTrackingNumber($number);
     /**
-     * Unique test string identifying the order.
+     * URL to provide additional tracking information
      *
-     * xsd restriction: 1-24 characters
      * @return string
      */
-    public function getCustomerOrderId();
+    public function getUrl();
     /**
      * @param string
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setUrl($url);
 }

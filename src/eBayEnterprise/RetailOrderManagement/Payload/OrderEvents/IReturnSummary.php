@@ -15,38 +15,39 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+interface IReturnSummary
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
-     * @return string
-     */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
+     * Return reference number
      *
      * @return string
      */
-    public function getStoreId();
+    public function getReferenceNumber();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setReferenceNumber($referenceNumber);
     /**
-     * Unique test string identifying the order.
+     * Total amount credited for the return
      *
-     * xsd restriction: 1-24 characters
+     * @return float
+     */
+    public function getTotalCredit();
+    /**
+     * @param float
+     * @return self
+     */
+    public function setTotalCredit($totalCredit);
+    /**
+     * @TODO: The usage of this element is unclear and needs better definition.
+     *
      * @return string
      */
-    public function getCustomerOrderId();
+    public function getReturnOrCredit();
     /**
      * @param string
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setReturnOrCredit($returnOrCredit);
 }

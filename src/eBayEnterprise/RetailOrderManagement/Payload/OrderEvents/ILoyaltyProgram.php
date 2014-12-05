@@ -15,38 +15,28 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
+interface ILoyaltyProgram extends IPayload, ICustomAttributeContainer
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
+     * The customer account with which the loyalty program is linked.
      * @return string
      */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
-     *
-     * @return string
-     */
-    public function getStoreId();
+    public function getAccount();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setAccount($account);
     /**
-     * Unique test string identifying the order.
-     *
-     * xsd restriction: 1-24 characters
+     * The name of the loyalty program, for example "Smart Shopper" or "Buyer's Club"
      * @return string
      */
-    public function getCustomerOrderId();
+    public function getProgram();
     /**
      * @param string
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setProgram($program);
 }

@@ -15,38 +15,30 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
+interface ITaxDescription extends IPayload
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
-     * @return string
-     */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
+     * Description of the tax, duty or fee.
      *
      * @return string
      */
-    public function getStoreId();
+    public function getDescription();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setDescription($description);
     /**
-     * Unique test string identifying the order.
+     * Amount charged for the tax, duty or fee.
      *
-     * xsd restriction: 1-24 characters
-     * @return string
+     * @return float
      */
-    public function getCustomerOrderId();
+    public function getAmount();
     /**
-     * @param string
+     * @param float
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setAmount($amount);
 }

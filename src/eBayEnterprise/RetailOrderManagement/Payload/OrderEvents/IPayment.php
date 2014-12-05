@@ -15,38 +15,52 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-/**
- * Interface for order event messages received over AMQP.
- */
-interface IOrderEvent
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
+interface IPayment extends IPayload
 {
     /**
-     * Return the type of order event being processed. This will likely be
-     * the serialized payload's root XML node name but may not always be.
-     * @return string
-     */
-    public function getEventType();
-    /**
-     * Identifier of the store in which the order was placed.
+     * Description of the payment method.
      *
      * @return string
      */
-    public function getStoreId();
+    public function getDescription();
     /**
      * @param string
      * @return self
      */
-    public function setStoreId($storeId);
+    public function setDescription($description);
     /**
-     * Unique test string identifying the order.
+     * Tender type of the payment method.
      *
-     * xsd restriction: 1-24 characters
      * @return string
      */
-    public function getCustomerOrderId();
+    public function getTenderType();
     /**
      * @param string
      * @return self
      */
-    public function setCustomerOrderId($orderId);
+    public function setTenderType($tenderType);
+    /**
+     * Payment account, masked to remove sensitive data.
+     *
+     * @return string
+     */
+    public function getMaskedAccount();
+    /**
+     * @param string
+     * @return self
+     */
+    public function setMaskedAccount($maskedAccount);
+    /**
+     * Amount applied to the payment method.
+     *
+     * @return float
+     */
+    public function getAmount();
+    /**
+     * @param float
+     * @return self
+     */
+    public function setAmount($amount);
 }
