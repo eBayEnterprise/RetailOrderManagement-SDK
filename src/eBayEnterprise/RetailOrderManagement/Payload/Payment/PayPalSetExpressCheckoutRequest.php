@@ -20,11 +20,11 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutRequest
 {
-    use TPayload, TAmount, TOrderId, TCurrencyCode, TShippingAddress;
+    use TTopLevelPayload, TAmount, TOrderId, TCurrencyCode, TShippingAddress;
 
     /** @var string * */
     protected $returnUrl;

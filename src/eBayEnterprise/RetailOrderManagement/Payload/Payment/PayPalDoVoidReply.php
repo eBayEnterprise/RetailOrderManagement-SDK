@@ -22,7 +22,7 @@ class PayPalDoVoidReply implements IPayPalDoVoidReply
 {
     const SUCCESS = 'Success';
 
-    use Payload\TPayload, TOrderId;
+    use Payload\TTopLevelPayload, TOrderId;
 
     /** @var string */
     protected $responseCode;

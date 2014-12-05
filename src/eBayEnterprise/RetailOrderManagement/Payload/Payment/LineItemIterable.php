@@ -20,7 +20,7 @@ use SPLObjectStorage;
 
 class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
 {
-    use Payload\TPayload, TAmount;
+    use Payload\TTopLevelPayload, TAmount;
 
     const LINE_ITEM_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem';
 

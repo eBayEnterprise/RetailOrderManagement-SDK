@@ -19,6 +19,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface ITaxDescription extends IPayload
 {
+    const ROOT_NODE = 'TaxesDutiesFeesInformation';
+
     /**
      * Description of the tax, duty or fee.
      *

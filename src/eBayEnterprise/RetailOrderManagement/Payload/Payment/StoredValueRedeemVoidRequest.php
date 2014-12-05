@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 /**
  * StoredValueBalanceRequest
@@ -27,7 +27,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
  */
 class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
 {
-    use TPayload, TPaymentContext;
+    use TTopLevelPayload, TPaymentContext;
 
     protected $amount;
     protected $pin;

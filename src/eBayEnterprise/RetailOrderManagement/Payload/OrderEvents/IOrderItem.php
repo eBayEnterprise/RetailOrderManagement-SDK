@@ -15,8 +15,15 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
 interface IOrderItem extends IPayload, IOrderItemDescription
 {
+    const ROOT_NODE = 'OrderItem';
+    const LINE_NUMBER_MIN = 0;
+    const LINE_NUMBER_MAX = 999;
+    const ITEM_ID_MAX_LENGTH = 20;
+
     /**
      * Line number of the item in the cart when the order was placed.
      *

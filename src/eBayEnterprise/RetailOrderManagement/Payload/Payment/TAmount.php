@@ -19,20 +19,21 @@ trait TAmount
 {
     /**
      * serialize an amount as xml without the currency code
-     * @param  string $elementName name of element containing the amount
-     * @param  mixed $amount amount to serialize
+     *
+     * @param  string name of element containing the amount
+     * @param  mixed amount to serialize
      * @return string
      */
     protected function serializeAmount($elementName, $amount)
     {
-        return sprintf('<%1$>%2$01.2F</%1$s>', $elementName, $this->sanitizeAmount($amount));
+        return sprintf('<%1$s>%2$01.2F</%1$s>', $elementName, $this->sanitizeAmount($amount));
     }
 
     /**
      * ensure the amount is rounded to two decimal places.
-     * @param  mixed $amount any numeric value
-     * @return float $amount rounded to 2 places.
-     * @return null  if $amount is not numeric
+     *
+     * @param  mixed any numeric value
+     * @return float|null rounded to 2 places, null if amount is not numeric
      */
     protected function sanitizeAmount($amount)
     {
@@ -44,6 +45,7 @@ trait TAmount
 
     /**
      * serialize an amount as xml without the currency code
+     *
      * @param  string $elementName name of element containing the amount
      * @param  mixed $amount amount to serialize
      * @param  string $currencyCode currency code for the amount

@@ -23,7 +23,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     const ADDRESS_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress';
     const SUCCESS = 'Success';
 
-    use Payload\TPayload, TOrderId, TBillingAddress, TShippingAddress;
+    use Payload\TTopLevelPayload, TOrderId, TBillingAddress, TShippingAddress;
 
     /** @var string * */
     protected $responseCode;

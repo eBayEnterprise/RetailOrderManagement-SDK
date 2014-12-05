@@ -21,6 +21,8 @@ interface ITrackingNumberIterable extends \Countable, \Iterator, \ArrayAccess, I
 {
     const TRACKING_NUMBER_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ITrackingNumber';
+    const ROOT_NODE = 'TrackingNumberList';
+    const SUBPAYLOAD_XPATH = 'TrackingInfo';
     /**
      * Get a new, empty tracking info object.
      * @return ITrackingNumber

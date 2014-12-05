@@ -17,6 +17,12 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 interface IStoreFrontDetails extends IDestination, IPhysicalAddress
 {
+    const ROOT_NODE = 'StoreFrontAddress';
+    const PHYSICAL_ADDRESS_ROOT_NODE = 'Address';
+    const STORE_CODE_MAX_LENGTH = 40;
+    const STORE_NAME_MAX_LENGTH = 100;
+    const EMAIL_ADDRESS_MAX_LENGTH = 70;
+
     /**
      * The unique string that identifies a specific store.
      *
@@ -84,4 +90,18 @@ interface IStoreFrontDetails extends IDestination, IPhysicalAddress
      * @return self
      */
     public function setPhoneNumber($phoneNumber);
+    /**
+     * Uniquely identify a destination within the serialized data.
+     *
+     * xsd restrictions: xsd:id first character must be letter or '_', may
+     *                   only contain alphanumeric, '_', '-', and '.' characters,
+     *                   must be unique to the serialized XML document
+     * @return string
+     */
+    public function getLocationId();
+    /**
+     * @param string
+     * @return self
+     */
+    public function setLocationId($locationId);
 }

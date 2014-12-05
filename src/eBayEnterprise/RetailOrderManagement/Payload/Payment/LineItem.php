@@ -19,7 +19,7 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 
 class LineItem implements ILineItem
 {
-    use Payload\TPayload, TAmount;
+    use Payload\TTopLevelPayload, TAmount;
 
     /** @var string */
     protected $name;

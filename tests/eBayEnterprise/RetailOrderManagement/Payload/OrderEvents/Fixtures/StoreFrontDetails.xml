@@ -1,0 +1,17 @@
+<StoreFrontAddress>
+    <StoreFrontLocation id="_loc1">
+        <StoreCode>1234</StoreCode>
+        <StoreName>Some Store 1234</StoreName>
+        <StoreEmail>test-store@example.com</StoreEmail>
+        <Address>
+            <Line1>123 Main St</Line1>
+            <City>King of Prussia</City>
+            <MainDivision>PA</MainDivision>
+            <CountryCode>US</CountryCode>
+            <PostalCode>19406</PostalCode>
+        </Address>
+    </StoreFrontLocation>
+    <StoreDirections>directions</StoreDirections>
+    <StoreHours>9:00 AM - 8:00 PM</StoreHours>
+    <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>
+</StoreFrontAddress>

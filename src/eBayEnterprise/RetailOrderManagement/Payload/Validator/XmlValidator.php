@@ -39,4 +39,3 @@ class XmlValidator implements ISchemaValidator
         return $this;
     }
 }
-

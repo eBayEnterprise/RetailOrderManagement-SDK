@@ -19,6 +19,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface ILoyaltyProgram extends IPayload, ICustomAttributeContainer
 {
+    const ROOT_NODE = 'LoyaltyProgram';
     /**
      * The customer account with which the loyalty program is linked.
      * @return string

@@ -18,11 +18,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalGetExpressCheckoutRequest implements IPayPalGetExpressCheckoutRequest
 {
-    use TPayload, TOrderId, TCurrencyCode, TToken;
+    use TTopLevelPayload, TOrderId, TCurrencyCode, TToken;
 
     public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
     {

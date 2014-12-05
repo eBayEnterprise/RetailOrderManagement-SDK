@@ -19,12 +19,12 @@ use DateTime;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 use SimpleXMLElement;
 
 class TestMessage implements ITestMessage
 {
-    use TPayload;
+    use TTopLevelPayload;
 
     /** @var DateTime */
     protected $timestamp;

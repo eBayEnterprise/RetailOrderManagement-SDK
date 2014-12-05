@@ -19,6 +19,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface IPayment extends IPayload
 {
+    const ROOT_NODE = 'Payment';
+
     /**
      * Description of the payment method.
      *

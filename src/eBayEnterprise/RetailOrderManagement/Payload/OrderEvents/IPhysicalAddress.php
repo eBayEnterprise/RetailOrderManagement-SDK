@@ -13,14 +13,10 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
+namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-/**
- * Interface IPhysicalAddress
- * @package eBayEnterprise\RetailOrderManagement\Payload\Payment
- */
 interface IPhysicalAddress extends IPayload
 {
     /**

@@ -13,12 +13,17 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload;
+namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
+
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface ICustomAttributeIterable extends \Countable, \Iterator, \ArrayAccess, IPayload
 {
     const CUSTOM_ATTRIBUTE_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\CustomAttribute';
+        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttribute';
+    const ROOT_NODE = 'CustomAttributes';
+    const SUBPAYLOAD_XPATH = 'Attribute';
+
     /**
      * Get a new, emtpy custom attribute object.
      * @return ICustomAttribute

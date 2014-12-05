@@ -17,4 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 interface IMailingAddress extends IDestination, IPhysicalAddress, IPersonName
 {
+    const ROOT_NODE = 'ShippedAddress';
+    const PHYSICAL_ADDRESS_ROOT_NODE = 'Address';
+    const PERSON_NAME_ROOT_NODE = 'PersonName';
 }

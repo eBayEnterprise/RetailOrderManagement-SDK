@@ -21,6 +21,7 @@ interface IOrderItemIterable extends \Countable, \Iterator, \ArrayAccess, IPaylo
 {
     const ORDER_ITEM_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItem';
+    const SUBPAYLOAD_XPATH = 'OrderItem';
     /**
      * Get a new, empty shipped item object.
      * @return IOrderItem

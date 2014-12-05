@@ -13,10 +13,13 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload;
+namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
+
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface ICustomAttribute extends IPayload
 {
+    const ROOT_NODE = 'Attribute';
     /**
      * Unique key for the attribute
      * @return string

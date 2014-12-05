@@ -21,6 +21,8 @@ interface IPaymentIterable extends \Countable, \Iterator, \ArrayAccess, IPayload
 {
     const PAYMENT_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IPayment';
+    const ROOT_NODE = 'Payments';
+    const SUBPAYLOAD_XPATH = 'Payment';
     /**
      * Get a new, empty payment object.
      * @return IPayment

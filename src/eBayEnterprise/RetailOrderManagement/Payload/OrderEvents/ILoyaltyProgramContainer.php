@@ -19,6 +19,8 @@ interface ILoyaltyProgramContainer
 {
     const LOYALTY_PROGRAM_ITERABLE_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable';
+    const ROOT_NODE = 'LoyaltyPrograms';
+    const SUBPAYLOAD_XPATH = 'LoyaltyProgram';
     /**
      * Any loyalty programs within the container
      *

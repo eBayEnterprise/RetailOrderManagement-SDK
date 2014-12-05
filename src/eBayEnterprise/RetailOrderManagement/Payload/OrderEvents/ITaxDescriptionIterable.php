@@ -21,6 +21,8 @@ interface ITaxDescriptionIterable extends \Countable, \Iterator, \ArrayAccess, I
 {
     const TAX_DESCRIPTION_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ITaxDescription';
+    const ROOT_NODE = 'OrderTaxesDutiesFeesInformations';
+    const SUBPAYLOAD_XPATH = 'TaxesDutiesFeesInformation';
     /**
      * Get a new, empty tax description object.
      * @return ITaxDescription

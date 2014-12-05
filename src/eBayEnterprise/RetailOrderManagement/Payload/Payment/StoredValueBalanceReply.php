@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 /**
  * Class StoredValueBalanceReply
@@ -26,7 +26,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
  */
 class StoredValueBalanceReply implements IStoredValueBalanceReply
 {
-    use TPayload, TPaymentAccountUniqueId;
+    use TTopLevelPayload, TPaymentAccountUniqueId;
     /** @var float */
     protected $balanceAmount;
     /** @var string */

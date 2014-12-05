@@ -51,4 +51,29 @@ trait TStrings
         $string = strtolower($string);
         return (($string === 'true') || ($string === '1'));
     }
+
+    /**
+     * Normalize any whitespace characters, tab, new line, etc., with a single
+     * space character. Does not collapse whitespace.
+     *
+     * @param string
+     * @return string
+     */
+    protected function normalizeWhitespace($string)
+    {
+        return preg_replace('#\s#', ' ', $string);
+    }
+
+    /**
+     * Check for the value to be a valid string for use as an id. Does not
+     * validated that the string is unique. Returns null if the string is not
+     * valid.
+     *
+     * @param string
+     * @return string|null
+     */
+    protected function cleanId($string)
+    {
+        return preg_match('#^[a-z_][\w.-]*$#i', $string) ? $string : null;
+    }
 }

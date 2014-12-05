@@ -20,7 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
 {
-    use TOrderId, TToken, Payload\TPayload;
+    use TOrderId, TToken, Payload\TTopLevelPayload;
 
     const SUCCESS_MESSAGE = 'Success';
 

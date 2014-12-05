@@ -22,7 +22,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
 {
     const SUCCESS = 'Success';
 
-    use Payload\TPayload, TOrderId;
+    use Payload\TTopLevelPayload, TOrderId;
 
     /** @var string * */
     protected $responseCode;

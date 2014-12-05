@@ -19,6 +19,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface ITrackingNumber extends IPayload
 {
+    const ROOT_NODE = 'TrackingInfo';
     /**
      * Tracking number for the shipment.
      *

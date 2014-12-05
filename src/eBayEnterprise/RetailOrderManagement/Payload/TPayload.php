@@ -41,6 +41,11 @@ trait TPayload
     protected $booleanExtractionPaths = [];
     /** @var array pair address lines properties with xpaths for extraction */
     protected $addressLinesExtractionMap = [];
+    /**
+     * @var array property/XPath pairs. if property is a payload, first node matched
+     *            will be deserialized by that payload
+     */
+    protected $subpayloadExtractionPaths = [];
 
     /**
      * Fill out this payload object with data from the supplied string.
@@ -73,6 +78,12 @@ trait TPayload
         }
         $this->addressLinesFromXPath($xpath);
         $this->deserializeLineItems($serializedPayload);
+        foreach ($this->subpayloadExtractionPaths as $property => $path) {
+            $foundNode = $xpath->query($path)->item(0);
+            if ($foundNode && $this->$property instanceof IPayload) {
+                $this->$property->deserialize($foundNode->C14N());
+            }
+        }
         // payload is only valid if the unserialized data is also valid
         $this->validate();
         return $this;
@@ -86,17 +97,10 @@ trait TPayload
     protected function schemaValidate($serializedData)
     {
         if ($this->schemaValidator) {
-            $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+            $this->schemaValidator->validate($serializedData);
         }
         return $this;
     }
-
-    /**
-     * Return the schema file path.
-     *
-     * @return string
-     */
-    abstract protected function getSchemaFile();
 
     /**
      * Load the payload XML into a DOMXPath for querying.
@@ -106,7 +110,6 @@ trait TPayload
     protected function getPayloadAsXPath($xmlString)
     {
         $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', $this->getXmlNamespace());
         return $xpath;
     }
 
@@ -121,13 +124,6 @@ trait TPayload
         $d->loadXML($xmlString);
         return $d;
     }
-
-    /**
-     * The XML namespace for the payload.
-     *
-     * @return string
-     */
-    abstract protected function getXmlNamespace();
 
     /**
      * Get Line1 through Line4 for an Address
@@ -223,9 +219,7 @@ trait TPayload
      */
     protected function getRootAttributes()
     {
-        return [
-            'xmlns' => $this->getXmlNamespace(),
-        ];
+        return [];
     }
 
     /**
