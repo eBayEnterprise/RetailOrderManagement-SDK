@@ -30,7 +30,7 @@ trait TShippingAddress
 
     public function getShipToLines()
     {
-        return empty($this->shipToLines) ? null : implode("\n", $this->shipToLines);
+        return is_array($this->shipToLines) ? implode("\n", $this->shipToLines) : null;
     }
 
     public function setShipToLines($lines)
@@ -70,7 +70,7 @@ trait TShippingAddress
             $finalLines = array_slice($newLines, 0, 4);
         }
 
-        return $finalLines;
+        return empty($finalLines) ? null : $finalLines;
     }
 
     /**
@@ -81,8 +81,8 @@ trait TShippingAddress
     protected function serializeShippingAddress()
     {
         $lines = [];
-        $shipToLines = is_array($this->shipToLines) ? $this->shipToLines : [];
         $idx = 0;
+        $shipToLines = is_array($this->shipToLines) ? $this->shipToLines : [];
         foreach ($shipToLines as $line) {
             $idx++;
             $lines[] = sprintf(
@@ -91,14 +91,25 @@ trait TShippingAddress
                 $line
             );
         }
-        return ($idx) ? sprintf(
+        // If we don't have any address lines, we treat as having no address at all.
+        return ($idx) ? $this->buildShippingAddressNode($lines) : '';
+    }
+
+    /**
+     * Build the Shipping Address Node
+     * @param array addressLines
+     * @return type
+     */
+    protected function buildShippingAddressNode(array $addressLines)
+    {
+        return sprintf(
             '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
-            implode('', $lines),
+            implode('', $addressLines),
             $this->getShipToCity(),
             $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
             $this->getShipToCountryCode(),
             $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
-        ) : ''; // If we don't have any address lines, we treat as having no address at all.
+        );
     }
 
     public function getShipToCity()

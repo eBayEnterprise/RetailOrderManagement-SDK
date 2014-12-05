@@ -30,7 +30,7 @@ trait TBillingAddress
 
     public function getBillingLines()
     {
-        return empty($this->billingLines) ? null : implode("\n", $this->billingLines);
+        return is_array($this->billingLines) ? implode("\n", $this->billingLines) : null;
     }
 
     public function setBillingLines($lines)
