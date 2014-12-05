@@ -22,6 +22,7 @@ return call_user_func(function () {
     $paymentAccountUniqueIdParams = ['getCardNumber', 'getPanIsToken'];
     $paymentContextParams = array_merge($paymentAccountUniqueIdParams, ['getOrderId']);
     $validatorIterator = '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator';
+    $xmlValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XmlValidator';
     $xsdSchemaValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator';
     $requiredFieldsValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields';
     $optionalGroupValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup';
@@ -229,7 +230,7 @@ return call_user_func(function () {
             ],
         ],
         'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xsdSchemaValidator,
+        'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'] = [
@@ -245,7 +246,7 @@ return call_user_func(function () {
             ],
         ],
         'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xsdSchemaValidator,
+        'schemaValidator' => $xmlValidator,
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [

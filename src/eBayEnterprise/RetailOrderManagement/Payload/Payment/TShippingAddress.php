@@ -30,7 +30,7 @@ trait TShippingAddress
 
     public function getShipToLines()
     {
-        return is_array($this->shipToLines) ? implode("\n", $this->shipToLines) : null;
+        return empty($this->shipToLines) ? null : implode("\n", $this->shipToLines);
     }
 
     public function setShipToLines($lines)
@@ -74,7 +74,7 @@ trait TShippingAddress
     }
 
     /**
-     * Aggregate the shipTo address lines into the ShippingAddress node
+     * Aggregate the shipTo address lines into the ShippingAddress node. This is an optional node.
      *
      * @return string
      */
@@ -91,15 +91,14 @@ trait TShippingAddress
                 $line
             );
         }
-
-        return sprintf(
+        return ($idx) ? sprintf(
             '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
             implode('', $lines),
             $this->getShipToCity(),
             $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
             $this->getShipToCountryCode(),
             $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
-        );
+        ) : ''; // If we don't have any address lines, we treat as having no address at all.
     }
 
     public function getShipToCity()
