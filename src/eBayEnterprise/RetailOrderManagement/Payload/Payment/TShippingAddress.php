@@ -97,14 +97,14 @@ trait TShippingAddress
 
     /**
      * Build the Shipping Address Node
-     * @param array addressLines
+     * @param array lines Street Address
      * @return type
      */
-    protected function buildShippingAddressNode(array $addressLines)
+    protected function buildShippingAddressNode(array $lines)
     {
         return sprintf(
             '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
-            implode('', $addressLines),
+            implode('', $lines),
             $this->getShipToCity(),
             $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
             $this->getShipToCountryCode(),

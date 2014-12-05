@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use DOMDocument;
 
 class XmlValidator implements ISchemaValidator
 {
@@ -23,13 +24,13 @@ class XmlValidator implements ISchemaValidator
      * Simple ensure the serialized data is well formed XML.
      * @param string
      * @param string|null Not used.
-     * @return bool
+     * @return self
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate($serializedData, $schema = null)
     {
         libxml_use_internal_errors(true);
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->loadXML($serializedData);
         $errors = libxml_get_errors();
         if ($errors) {

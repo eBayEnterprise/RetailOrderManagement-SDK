@@ -294,4 +294,16 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
 
         return sprintf('<%s>%s</%1$s>', $nodeName, $value);
     }
+    /**
+     * Name, value pairs of root attributes
+     *
+     * @return array
+     */
+    protected function getRootAttributes()
+    {
+        return [
+            'xmlns' => $this->getXmlNamespace(),
+            'requestId' => $this->getRequestId(),
+        ];
+    }
 }
