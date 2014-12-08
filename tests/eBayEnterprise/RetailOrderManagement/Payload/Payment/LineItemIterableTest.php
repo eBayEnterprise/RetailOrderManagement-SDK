@@ -42,9 +42,11 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
         $this->stubPayloadMap = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
         $this->stubLineItem = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem');
         $this->stubLineItem->expects($this->any())
-            ->method('serialize')->will($this->returnValue('<LineItem></LineItem>'));
+            ->method('serialize')
+            ->will($this->returnValue('<LineItem></LineItem>'));
         $this->stubLineItem->expects($this->any())
-            ->method('deserialize')->will($this->returnSelf());
+            ->method('deserialize')
+            ->will($this->returnSelf());
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
@@ -227,7 +229,8 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['getEmptyLineItem'])
             ->getMock();
         $payload->expects($this->any())
-            ->method('getEmptyLineItem')->will($this->returnValue($this->stubLineItem));
+            ->method('getEmptyLineItem')
+            ->will($this->returnValue($this->stubLineItem));
         // inject the xml namespace into the string as the deserialize expects
         // the elements to be in a specific namespace.
         $serializedPayload = '<' . ILineItemIterable::ROOT_NODE . ' xmlns="' . ILineItemIterable::XML_NS . '">'
@@ -262,9 +265,11 @@ class LineItemIterableTest extends \PHPUnit_Framework_TestCase
     public function testCalcualteLineItemsTotal(array $payloadData)
     {
         $this->stubLineItem->expects($this->any())
-            ->method('getQuantity')->will($this->returnValue(1));
+            ->method('getQuantity')
+            ->will($this->returnValue(1));
         $this->stubLineItem->expects($this->any())
-            ->method('getUnitAmount')->will($this->returnValue(2.0));
+            ->method('getUnitAmount')
+            ->will($this->returnValue(2.0));
 
         $expected = $payloadData['setLineItemsTotal'];
         unset($payloadData['setLineItemsTotal']);

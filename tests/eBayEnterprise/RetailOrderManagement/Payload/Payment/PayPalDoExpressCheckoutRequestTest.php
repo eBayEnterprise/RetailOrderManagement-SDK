@@ -32,6 +32,12 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     protected $schemaValidatorStub;
     /** @var Payload\IPayloadMap (stub) */
     protected $payloadMapStub;
+    /** @var Payload\Payment\ILineItem (stub) */
+    protected $stubLineItemA;
+    /** @var Payload\Payment\ILineItem (stub) */
+    protected $stubLineItemB;
+    /** @var Payload\Payment\ILineItemIterable */
+    protected $lineItemIterable;
 
     /**
      * data provider of empty array of properties
@@ -55,28 +61,20 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     {
         return [[
             [
-                'shipToLines' => [
-                    'Chester Cheetah',
-                    '',
-                    '630 Allendale Rd',
-                    '2nd FL',
-                ],
-                'shipToCity' => 'King of Prussia',
-                'shipToMainDivision' => 'PA',
-                'shipToCountryCode' => 'US',
-                'shipToPostalCode' => '19406'
-            ],
-            // full section returned
-            '<ShippingAddress>'
-            . '<Line1>Chester Cheetah</Line1>'
-            . '<Line2></Line2>'
-            . '<Line3>630 Allendale Rd</Line3>'
-            . '<Line4>2nd FL</Line4>'
-            . '<City>King of Prussia</City>'
-            . '<MainDivision>PA</MainDivision>'
-            . '<CountryCode>US</CountryCode>'
-            . '<PostalCode>19406</PostalCode>'
-            . '</ShippingAddress>'
+                'setOrderId' => '1234567',
+                'setRequestId' => '1234567890',
+                'setToken' => 'EC-5YE59312K56892714',
+                'setPayerId' => 'PayerId0',
+                'setAmount' => 50.00,
+                'setPickUpStoreId' => '', // should not be serialized
+                'setShipToName' => 'John Smith',
+                'setCurrencyCode' => 'USD',
+                'setShipToLines' => "this is line1\n\n630 Allendale Rd\n2nd FL",
+                'setShipToCity' => 'Anytown',
+                'setShipToMainDivision' => 'ST',
+                'setShipToCountryCode' => 'US',
+                'setShipToPostalCode' => '11199'
+            ], 'PayPalDoExpressCheckoutRequest.xml'
         ]];
     }
 
@@ -127,12 +125,74 @@ class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
         $payload->serialize();
     }
 
+    /**
+     * setup necessary methods on an mock ILineItem
+     * @param  ILineItem $item
+     * @param  string    $name
+     * @param  int       $qty
+     * @param  float     $unitAmount
+     */
+    protected function setupLineItemStub(ILineItem $item, $name, $qty, $unitAmount)
+    {
+        $productXml = "<LineItem><Name>$name</Name></LineItem>";
+        $item->expects($this->any())
+            ->method('serialize')
+            ->will($this->returnValue($productXml));
+        $item->expects($this->any())
+            ->method('getQuantity')
+            ->will($this->returnValue($qty));
+        $item->expects($this->any())
+            ->method('getUnitAmount')
+            ->will($this->returnValue($unitAmount));
+    }
+
+    /**
+     * verify a set of known data will serialize as expected
+     * @param  array  $payloadData
+     * @param  string $xml
+     * @dataProvider provideShippingAddressData
+     */
+    public function testSerializeWillPass(array $payloadData, $xml)
+    {
+        $this->setupLineItemStub($this->stubLineItemA, 'Product A', 1, 50.0);
+        $this->setupLineItemStub($this->stubLineItemB, 'Product B', 1, 50.0);
+
+        $this->lineItemIterable->setShippingTotal(10);
+        $this->lineItemIterable->setTaxTotal(5);
+        $this->lineItemIterable->setCurrencyCode('USD');
+        $this->lineItemIterable->calculateLineItemsTotal();
+
+        $payload = $this->buildPayload($payloadData);
+        $payload->setLineItems($this->lineItemIterable);
+
+        $domPayload = new DOMDocument();
+        $domPayload->preserveWhiteSpace = false;
+        $domPayload->loadXML($payload->serialize());
+        $serializedString = $domPayload->C14N();
+        $domPayload->loadXML($this->xmlTestString($xml));
+        $expectedString = $domPayload->C14N();
+        $this->assertEquals($expectedString, $serializedString);
+    }
+
     protected function setUp()
     {
         $this->payloadMapStub = $this->stubPayloadMap();
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->stubLineItemA = $this->getMock(
+            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem'
+        );
+        $this->stubLineItemB = $this->getMock(
+            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem'
+        );
+        $this->lineItemIterable = new LineItemIterable(
+            $this->validatorIterator,
+            $this->schemaValidatorStub,
+            $this->payloadMapStub
+        );
+        $this->lineItemIterable[$this->stubLineItemA] = null;
+        $this->lineItemIterable[$this->stubLineItemB] = null;
     }
 
     /**

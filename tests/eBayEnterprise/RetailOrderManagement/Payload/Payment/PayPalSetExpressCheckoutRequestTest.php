@@ -33,6 +33,8 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     protected $schemaValidatorStub;
     /** @var Payload\IPayloadMap (stub) */
     protected $payloadMapStub;
+    /** @var Payload\Payment\ILineItemIterable (stub) */
+    protected $stubLineItemIterable;
 
     /**
      * data provider of empty array of properties
@@ -100,6 +102,28 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
                 . '<PostalCode>19406</PostalCode>'
                 . '</ShippingAddress>'
             ]
+        ];
+    }
+
+    /**
+     * Provide test data to verify serialize
+     */
+    public function provideValidPayload()
+    {
+        return [
+            [[
+                'setOrderId' => '1234567',
+                'setReturnUrl' => 'http://mysite.com/checkout/return.html',
+                'setCancelUrl' => 'http://mysite.com/checkout/cancel.html',
+                'setLocaleCode' => 'en_US',
+                'setAmount' => 50.00,
+                'setCurrencyCode' => 'USD',
+                'setShipToLines' => "123 Main St\n",
+                'setShipToCity' => 'Philadelphia',
+                'setShipToMainDivision' => 'PA',
+                'setShipToCountryCode' => 'US',
+                'setShipToPostalCode' => '19019'
+            ], 'PayPalSetExpressCheckoutRequest.xml']
         ];
     }
 
@@ -207,12 +231,38 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
         $payload->serialize();
     }
 
+    /**
+     * verify a set of known data will serialize as expected
+     * @param  array  $payloadData
+     * @param  string $xml
+     * @dataProvider provideValidPayload
+     */
+    public function testSerializeWillPass(array $payloadData, $xml)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $payload->setLineItems($this->stubLineItemIterable);
+
+        $domPayload = new DOMDocument();
+        $domPayload->preserveWhiteSpace = false;
+        $domPayload->loadXML($payload->serialize());
+        $serializedString = $domPayload->C14N();
+        $domPayload->loadXML($this->xmlTestString($xml));
+        $expectedString = $domPayload->C14N();
+        $this->assertEquals($expectedString, $serializedString);
+    }
+
     protected function setUp()
     {
         $this->payloadMapStub = $this->stubPayloadMap();
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
+        $this->stubLineItemIterable = $this->getMock(
+            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable'
+        );
+        $this->stubLineItemIterable->expects($this->any())
+            ->method('serialize')
+            ->will($this->returnValue('<LineItems></LineItems>'));
     }
 
     /**

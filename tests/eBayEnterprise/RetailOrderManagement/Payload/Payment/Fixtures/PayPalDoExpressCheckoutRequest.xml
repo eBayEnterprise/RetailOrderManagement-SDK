@@ -6,14 +6,12 @@
     <PayerId>PayerId0</PayerId>
     <!-- returned from getExpress call -->
     <Amount currencyCode="USD">50.00</Amount>
-    <PickUpStoreId/>
     <!-- Optional, Only use for in-store-pickup orders -->
     <ShipToName>John Smith</ShipToName>
     <ShippingAddress>
-        <Line1>123 Main St.</Line1>
-        <Line2/>
-        <Line3/>
-        <Line4/>
+        <Line1>this is line1</Line1>
+        <Line2>630 Allendale Rd</Line2>
+        <Line3>2nd FL</Line3>
         <City>Anytown</City>
         <MainDivision>ST</MainDivision>
         <CountryCode>US</CountryCode>
@@ -25,15 +23,9 @@
         <TaxTotal currencyCode="USD">5.00</TaxTotal>
         <LineItem>
             <Name>Product A</Name>
-            <SequenceNumber>1</SequenceNumber>
-            <Quantity>1</Quantity>
-            <UnitAmount currencyCode="USD">50.00</UnitAmount>
         </LineItem>
         <LineItem>
             <Name>Product B</Name>
-            <SequenceNumber>2</SequenceNumber>
-            <Quantity>1</Quantity>
-            <UnitAmount currencyCode="USD">50.00</UnitAmount>
         </LineItem>
     </LineItems>
 </PayPalDoExpressCheckoutRequest>

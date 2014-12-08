@@ -195,6 +195,27 @@ class LineItemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * verify a set of known data will serialize as expected
+     * @param  array  $payloadData
+     * @param  string $xml
+     * @dataProvider provideValidPayload
+     */
+    public function testSerializeWillPass(array $payloadData, $xml)
+    {
+        $payload = $this->buildPayload($payloadData);
+        $this->stubValidator->expects($this->any())
+            ->method('validate')
+            ->will($this->returnSelf());
+        $domPayload = new DOMDocument();
+        $domPayload->preserveWhiteSpace = false;
+        $domPayload->loadXML($payload->serialize());
+        $serializedString = $domPayload->C14N();
+        $domPayload->loadXML($this->xmlTestString($xml));
+        $expectedString = $domPayload->C14N();
+        $this->assertEquals($expectedString, $serializedString);
+    }
+
+    /**
      * Read an XML file with valid payload data and return a canonicalized string
      *
      * @return string
