@@ -17,6 +17,9 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 trait TShopRunnerMessage
 {
+    /** @var string */
+    protected $shopRunnerMessage;
+
     public function getShopRunnerMessage()
     {
         return $this->shopRunnerMessage;

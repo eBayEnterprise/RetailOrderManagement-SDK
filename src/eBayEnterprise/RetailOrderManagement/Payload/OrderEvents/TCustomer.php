@@ -19,6 +19,19 @@ trait TCustomer
 {
     use TLoyaltyProgramContainer;
 
+    /** @var string */
+    protected $customerId;
+    /** @var string */
+    protected $customerFirstName;
+    /** @var string */
+    protected $customerLastName;
+    /** @var string */
+    protected $customerMiddleName;
+    /** @var string */
+    protected $customerHonorificName;
+    /** @var string */
+    protected $customerEmailAddress;
+
     public function getCustomerId()
     {
         return $this->customerId;
