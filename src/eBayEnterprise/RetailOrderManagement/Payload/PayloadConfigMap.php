@@ -30,6 +30,10 @@ return call_user_func(function () {
     $iterableValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\IterablePayload';
     $payloadMap = '\eBayEnterprise\RetailOrderManagement\Payload\PayloadMap';
     $shippingAddressParams = ['getShipToLines', 'getShipToCity', 'getShipToCountryCode'];
+    $physicalAddressParams = ['getLines', 'getCity', 'getCountryCode'];
+    $personNameParams = ['getLastName', 'getFirstName'];
+    $orderItemParams = ['getLineNumber', 'getItemId', 'getQuantity', 'getTitle', 'getDescription'];
+    $shippedItemParams = ['getShippedQuantity'];
     $noChildPayloads = [
         'payloadMap' => $payloadMap,
         'types' => [],
@@ -221,47 +225,6 @@ return call_user_func(function () {
         'schemaValidator' => $xsdSchemaValidator,
         'childPayloads' => $noChildPayloads,
     ];
-    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderShipped'] = [
-        'validators' => [
-            [
-                'validator' => $requiredFieldsValidator,
-                'params' => [
-                    'getCustomerFistName',
-                    'getCustomerLastName',
-                    'getShippingDestination',
-               ],
-            ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                    'getLoyaltyPrograms',
-                    'getItems',
-                    'getShippingDestination',
-                    'getPayments',
-                    'getTaxes'
-                ],
-            ]
-        ],
-        'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IShippedItemIterable' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShippedItemIterable',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IPaymentIterable' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\PaymentIterable',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ITaxDescriptionIterable' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TaxDescriptionIterable',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IMailingAddress' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\MailingAddress',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails' =>
-                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\StoreFrontDetails',
-            ],
-        ],
-    ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable'] = [
         'validators' => [
             [
@@ -291,7 +254,7 @@ return call_user_func(function () {
             [
                 'validator' => $subpayloadValidator,
                 'params' => [
-                    'getCustomAttribute',
+                    'getCustomAttributes',
                 ],
             ]
         ],
@@ -334,22 +297,13 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TrackingNumberIterable'] = [
         'validators' => [
             [
-                'validator' => $requiredFieldsValidator,
-                'params' => [
-               ],
-            ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
+                'validator' => $iterableValidator,
+                'params' => [],
             ]
         ],
         'validatorIterator' => $validatorIterator,
@@ -367,72 +321,42 @@ return call_user_func(function () {
             [
                 'validator' => $requiredFieldsValidator,
                 'params' => [
+                    'getTrackingNumber',
+                    'getUrl',
                ],
             ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
-            ]
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\MailingAddress'] = [
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => [
-               ],
+                'params' => array_merge($physicalAddressParams, $personNameParams),
             ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
-            ]
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\StoreFrontDetails'] = [
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => [
-               ],
+                'params' => array_merge($physicalAddressParams, ['getLocationId']),
             ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
-            ]
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\PaymentIterable'] = [
         'validators' => [
             [
-                'validator' => $requiredFieldsValidator,
-                'params' => [
-               ],
-            ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
+                'validator' => $iterableValidator,
+                'params' => [],
             ]
         ],
         'validatorIterator' => $validatorIterator,
@@ -450,32 +374,22 @@ return call_user_func(function () {
             [
                 'validator' => $requiredFieldsValidator,
                 'params' => [
+                    'getDescription',
+                    'getTenderType',
+                    'getMaskedAccount',
+                    'getAmount',
                ],
             ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
-            ]
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TaxDescriptionIterable'] = [
         'validators' => [
             [
-                'validator' => $requiredFieldsValidator,
-                'params' => [
-               ],
-            ],
-            [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
+                'validator' => $iterableValidator,
+                'params' => [],
             ]
         ],
         'validatorIterator' => $validatorIterator,
@@ -493,20 +407,42 @@ return call_user_func(function () {
             [
                 'validator' => $requiredFieldsValidator,
                 'params' => [
-               ],
+                    'getDescription',
+                    'getAmount',
+              ],
             ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItemIterable'] = [
+        'validators' => [
             [
-                'validator' => $subpayloadValidator,
-                'params' => [
-                ],
+                'validator' => $iterableValidator,
+                'params' => [],
             ]
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
         'childPayloads' => [
             'payloadMap' => $payloadMap,
-            'types' => [],
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItem',
+            ],
         ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $orderItemParams,
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem'] = [
         'validators' => [
@@ -727,10 +663,7 @@ return call_user_func(function () {
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xsdSchemaValidator,
-        'childPayloads' => [
-            'payloadMap' => $payloadMap,
-            'types' => [],
-        ],
+        'childPayloads' => $noChildPayloads,
     ];
     return $map;
 });
