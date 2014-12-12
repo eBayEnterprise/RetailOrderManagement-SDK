@@ -49,8 +49,6 @@ class OrderShipped implements IOrderShipped
             $this->buildPayloadForInterface(static::TAX_DESCRIPTION_ITERABLE_INTERFACE);
         $this->orderItems =
             $this->buildPayloadForInterface(static::ORDER_ITEM_ITERABLE_INTERFACE);
-        $this->destination =
-            $this->buildPayloadForInterface(static::MAILING_ADDRESS_INTERFACE);
 
         $this->extractionPaths = [
             'currencyCode' => 'string(x:OrderSummary/@currency)',
