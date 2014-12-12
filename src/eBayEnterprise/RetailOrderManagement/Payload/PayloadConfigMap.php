@@ -533,7 +533,7 @@ return call_user_func(function () {
             ],
         ],
         'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xsdSchemaValidator,
+        'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'] = [
@@ -549,7 +549,7 @@ return call_user_func(function () {
             ],
         ],
         'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xsdSchemaValidator,
+        'schemaValidator' => $xmlValidator,
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
@@ -642,8 +642,6 @@ return call_user_func(function () {
                         'getOrderId',
                         'getPayerId',
                         'getAmount',
-                        'getPickUpStoreId',
-                        'getShipToName'
                     ]
                 )
             ]
