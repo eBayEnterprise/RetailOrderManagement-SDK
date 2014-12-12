@@ -92,13 +92,27 @@ trait TOrderItemDescription
      */
     protected function serializeOrderItemDescription()
     {
-        return sprintf(
-            '<Description>%s<Title>%s</Title>%s%s</Description>',
-            $this->serializeProductDescription(),
-            $this->getTitle(),
-            $this->serializeColor(),
-            $this->serializeSize()
-        );
+        //
+        return $this->hasItemDescription()
+            ? sprintf(
+                '<Description>%s<Title>%s</Title>%s%s</Description>',
+                $this->serializeProductDescription(),
+                $this->getTitle(),
+                $this->serializeColor(),
+                $this->serializeSize()
+            )
+            : '';
+    }
+
+    /**
+     * Is there sufficient data to include an order item description. Must
+     * have at least a title and description.
+     *
+     * @return bool
+     */
+    protected function hasItemDescription()
+    {
+        return $this->getTitle() && $this->getDescription();
     }
 
     /**

@@ -40,6 +40,8 @@ class OrderItemIterable extends SPLObjectStorage implements IOrderItemIterable
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
+
+        $this->includeIfEmpty = true;
     }
 
     public function getEmptyOrderItem()

@@ -40,6 +40,8 @@ class TrackingNumberIterable extends SPLObjectStorage implements ITrackingNumber
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
+
+        $this->includeIfEmpty = true;
     }
 
     public function getEmptyTrackingNumber()

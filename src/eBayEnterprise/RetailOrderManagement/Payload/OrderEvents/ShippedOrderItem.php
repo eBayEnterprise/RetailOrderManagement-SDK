@@ -23,7 +23,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
 class ShippedOrderItem extends OrderItem implements IShippedOrderItem
 {
-    use TAmount, TShippedItem, TProductPrice, TShopRunnerMessage, TTrackingNumberContainer;
+    use TShippedItem, TProductPrice, TShopRunnerMessage, TTrackingNumberContainer, TAmount {
+        TAmount::serializeAmount insteadof TProductPrice;
+        TAmount::sanitizeAmount insteadof TProductPrice;
+    }
 
     public function __construct(
         IValidatorIterator $validators,
@@ -47,13 +50,13 @@ class ShippedOrderItem extends OrderItem implements IShippedOrderItem
             [
                 'shippedQuantity' => 'number(@shippedQuantity)',
                 'shopRunnerMessage' => 'string(x:ShopRunnerMessage)',
-                'amount' => 'number(x:Pricing/x:Amount)',
-                'unitPrice' => 'number(x:Pricing/x:UnitPrice)',
             ]
         );
         $this->optionalExtractionPaths = array_merge(
             $this->optionalExtractionPaths,
             [
+                'amount' => 'x:Pricing/x:Amount',
+                'unitPrice' => 'x:Pricing/x:UnitPrice',
                 'remainder' => 'x:Pricing/x:Amount/@remainder',
             ]
         );

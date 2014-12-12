@@ -69,7 +69,7 @@ trait TProductPrice
     {
         $amount = $this->getAmount();
         $remainder = $this->getRemainder();
-        $remainderAttr = $this->getRemainder() ? 'remainder="' . $this->formatAmount($this->getRemainder()) . '"' : '';
+        $remainderAttr = $remainder ? 'remainder="' . $this->formatAmount($remainder) . '"' : '';
         return $amount
             ? sprintf('<Amount %s>%s</Amount>', $remainderAttr, $this->formatAmount($amount))
             : '';
