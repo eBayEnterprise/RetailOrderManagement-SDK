@@ -22,7 +22,8 @@ interface IPaymentIterable extends \Countable, \Iterator, \ArrayAccess, IPayload
     const PAYMENT_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IPayment';
     const ROOT_NODE = 'Payments';
-    const SUBPAYLOAD_XPATH = 'Payment';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+    const SUBPAYLOAD_XPATH = 'x:Payment';
     /**
      * Get a new, empty payment object.
      * @return IPayment

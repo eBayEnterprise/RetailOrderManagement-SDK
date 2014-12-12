@@ -147,9 +147,9 @@ trait TSummaryAmounts
 
     /**
      * ensure the amount is rounded to two decimal places.
-     * @param  mixed $amount any numeric value
-     * @return float $amount rounded to 2 places.
-     * @return null  if $amount is not numeric
+     *
+     * @param  mixed any numeric value
+     * @return float|null rounded to 2 places, null if amount is not numeric
      */
     abstract protected function sanitizeAmount($amount);
 }

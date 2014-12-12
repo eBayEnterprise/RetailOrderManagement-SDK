@@ -64,4 +64,9 @@ class PaymentIterable extends SPLObjectStorage implements IPaymentIterable
     {
         return static::ROOT_NODE;
     }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
+    }
 }

@@ -83,4 +83,9 @@ class TrackingNumber implements ITrackingNumber
     {
         return '';
     }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
+    }
 }

@@ -31,6 +31,14 @@ trait TShopRunnerMessage
         return $this;
     }
 
+    protected function serializeShopRunnerMessage()
+    {
+        $message = $this->getShopRunnerMessage();
+        return $message
+            ? "<ShopRunnerMessage>$message</ShopRunnerMessage>"
+            : '';
+    }
+
     /**
      * Normalize any whitespace characters, tab, new line, etc., with a single
      * space caracter. Does not collapse whitespace.

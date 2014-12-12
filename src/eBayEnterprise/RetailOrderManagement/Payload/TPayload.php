@@ -84,6 +84,7 @@ trait TPayload
                 $this->$property->deserialize($foundNode->C14N());
             }
         }
+        $this->deserializeExtra($serializedPayload);
         // payload is only valid if the unserialized data is also valid
         $this->validate();
         return $this;
@@ -110,6 +111,7 @@ trait TPayload
     protected function getPayloadAsXPath($xmlString)
     {
         $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
+        $xpath->registerNamespace('x', $this->getXmlNamespace());
         return $xpath;
     }
 
@@ -143,6 +145,21 @@ trait TPayload
                 array_push($this->$property, $line->nodeValue);
             }
         }
+    }
+
+    /**
+     * Additional deserialization of the payload data. May contain any
+     * special case deserialization that cannot be expressed by the supported
+     * deserialization paths. Default implementation is a no-op. Expected to
+     * be overridden by payloads that need it.
+     *
+     * @param string
+     * @return self
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function deserializeExtra($serializedPayload)
+    {
+        return $this;
     }
 
     /**
@@ -211,6 +228,13 @@ trait TPayload
         $qualifiedAttributes = array_map($qualifyAttributes, array_keys($rootAttributes));
         return implode(' ', $qualifiedAttributes);
     }
+
+    /**
+     * XML Namespace of the document.
+     *
+     * @return string
+     */
+    abstract protected function getXmlNamespace();
 
     /**
      * Name, value pairs of root attributes

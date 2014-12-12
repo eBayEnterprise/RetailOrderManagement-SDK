@@ -19,4 +19,5 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 interface IDestination extends IPayload
 {
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
 }

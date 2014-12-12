@@ -15,19 +15,27 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-
-interface ICustomAttributeIterable extends \Countable, \Iterator, \ArrayAccess, IPayload
+trait TShippedAmounts
 {
-    const CUSTOM_ATTRIBUTE_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttribute';
-    const ROOT_NODE = 'CustomAttributes';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const SUBPAYLOAD_XPATH = 'x:Attribute';
+    /** @var float */
+    protected $shippedAmount;
+
+    public function getShippedAmount()
+    {
+        return $this->shippedAmount;
+    }
+
+    public function setShippedAmount($amount)
+    {
+        $this->shippedAmount = $this->sanitizeAmount($amount);
+        return $this;
+    }
 
     /**
-     * Get a new, emtpy custom attribute object.
-     * @return ICustomAttribute
+     * ensure the amount is rounded to two decimal places.
+     *
+     * @param  mixed any numeric value
+     * @return float|null rounded to 2 places, null if amount is not numeric
      */
-    public function getEmptyCustomAttribute();
+    abstract protected function sanitizeAmount($amount);
 }

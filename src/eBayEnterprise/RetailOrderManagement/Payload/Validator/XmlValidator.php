@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use DOMDocument;
 
 class XmlValidator implements ISchemaValidator

@@ -20,6 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 interface IPayment extends IPayload
 {
     const ROOT_NODE = 'Payment';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
 
     /**
      * Description of the payment method.

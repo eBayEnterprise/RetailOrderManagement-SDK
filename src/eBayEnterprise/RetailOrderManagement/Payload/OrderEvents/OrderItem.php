@@ -28,17 +28,17 @@ class OrderItem implements IOrderItem
     public function __construct(IValidatorIterator $validators)
     {
         $this->extractionPaths = [
-            'description' => 'string(Description/Description)',
-            'title' => 'string(Description/Title)',
+            'description' => 'string(x:Description/x:Description)',
+            'title' => 'string(x:Description/x:Title)',
             'lineNumber' => 'number(@webLineId)',
             'itemId' => 'string(@itemId)',
             'quantity' => 'number(@quantity)',
         ];
         $this->optionalExtractionPaths = [
-            'color' => 'Description/Color',
-            'colorId' => 'Description/Color/@id',
-            'size' => 'Description/Size',
-            'sizeId' => 'Description/Size/@id',
+            'color' => 'x:Description/x:Color',
+            'colorId' => 'x:Description/x:Color/@id',
+            'size' => 'x:Description/x:Size',
+            'sizeId' => 'x:Description/x:Size/@id',
         ];
         $this->validators = $validators;
     }
@@ -96,5 +96,10 @@ class OrderItem implements IOrderItem
     protected function serializeContents()
     {
         return $this->serializeOrderItemDescription();
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

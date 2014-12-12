@@ -38,15 +38,23 @@ class PhysicalAddressTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Return a C14N, whitespace removed, XML string.
+     * Return a C14N, whitespace removed, XML string. If $removeNs is true, any
+     * xmlns values will be removed from the XML - allows same file to be used
+     * for serialize expectation (no xmlns) and serialize provider (needs xmlns).
+     *
+     * @param string Path to xml file
+     * @param bool
      */
-    protected function loadXmlTestString($fixtureFile)
+    protected function loadXmlTestString($fixtureFile, $removeNs = false)
     {
         $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
-        $dom->load($fixtureFile);
+        $xmlString = file_get_contents($fixtureFile);
+        if ($removeNs) {
+            $xmlString = preg_replace('#xmlns="[^"]*"#', '', $xmlString);
+        }
+        $dom->loadXML($xmlString);
         $string = $dom->C14N();
-
         return $string;
     }
 
@@ -98,7 +106,7 @@ class PhysicalAddressTest extends \PHPUnit_Framework_TestCase
             ->setPostalCode($postCode);
 
         $this->assertSame(
-            $this->loadXmlTestString(__DIR__ . "/Fixtures/$fixtureFile"),
+            $this->loadXmlTestString(__DIR__ . "/Fixtures/$fixtureFile", true),
             $this->invokeRestrictedMethod($this->testTrait, 'serializePhysicalAddress')
         );
     }

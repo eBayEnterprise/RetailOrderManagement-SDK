@@ -1,1 +1,1 @@
-<TrackingInfo trackingNumber="trackingNumber123" trackingURL="http://example.com/track"/>
+<TrackingInfo xmlns="http://api.gsicommerce.com/schema/checkout/1.0" trackingNumber="trackingNumber123" trackingURL="http://example.com/track"/>

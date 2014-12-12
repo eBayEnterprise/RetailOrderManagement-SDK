@@ -18,7 +18,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 interface ITrackingNumberContainer
 {
     const TRACKING_NUMBER_ITERABLE_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ITrackingNUmberIterable';
+        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ITrackingNumberIterable';
+
     /**
      * Get tracking numbers
      * @return ITrackingNumberIterable

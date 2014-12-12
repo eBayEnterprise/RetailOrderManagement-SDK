@@ -21,6 +21,9 @@ interface ILoyaltyProgramIterable extends \Countable, \Iterator, \ArrayAccess, I
 {
     const LOYALTY_PROGRAM_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgram';
+    const ROOT_NODE = 'LoyaltyPrograms';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+    const SUBPAYLOAD_XPATH = 'x:LoyaltyProgram';
     /**
      * Get a new, empty loyalty program object.
      * @return ILoyaltyProgram

@@ -20,6 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 interface ILoyaltyProgram extends IPayload, ICustomAttributeContainer
 {
     const ROOT_NODE = 'LoyaltyProgram';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     /**
      * The customer account with which the loyalty program is linked.
      * @return string

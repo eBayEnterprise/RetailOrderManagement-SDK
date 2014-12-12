@@ -61,16 +61,18 @@ trait TProductPrice
     {
         return '<Pricing>'
             . $this->serializePriceAmount()
-            . $this->serializeAmount('UnitPrice', $this->getUnitPrice())
+            . ($this->getUnitPrice() ? $this->serializeAmount('UnitPrice', $this->getUnitPrice()) : '')
             . '</Pricing>';
     }
 
     protected function serializePriceAmount()
     {
+        $amount = $this->getAmount();
         $remainder = $this->getRemainder();
-        return '<Amount' . ($remainder ? " remainder='$remainder'" : '') . '>'
-            . $this->getAmount()
-            . '</Amount>';
+        $remainderAttr = $this->getRemainder() ? 'remainder="' . $this->formatAmount($this->getRemainder()) . '"' : '';
+        return $amount
+            ? sprintf('<Amount %s>%s</Amount>', $remainderAttr, $this->formatAmount($amount))
+            : '';
     }
 
     /**

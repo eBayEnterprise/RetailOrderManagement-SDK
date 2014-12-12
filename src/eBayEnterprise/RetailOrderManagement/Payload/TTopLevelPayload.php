@@ -35,18 +35,6 @@ trait TTopLevelPayload
     }
 
     /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', $this->getXmlNamespace());
-        return $xpath;
-    }
-
-    /**
      * Name, value pairs of root attributes
      *
      * @return array

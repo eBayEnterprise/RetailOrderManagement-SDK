@@ -43,24 +43,24 @@ class StoreFrontDetails implements IStoreFrontDetails
     public function __construct(IValidatorIterator $validators)
     {
         $this->extractionPaths = [
-            'city' => 'string(StoreFrontLocation/Address/City)',
-            'countryCode' => 'string(StoreFrontLocation/Address/CountryCode)',
-            'locationId' => 'string(StoreFrontLocation/@id)'
+            'city' => 'string(x:StoreFrontLocation/x:Address/x:City)',
+            'countryCode' => 'string(x:StoreFrontLocation/x:Address/x:CountryCode)',
+            'locationId' => 'string(x:StoreFrontLocation/@id)'
         ];
         $this->optionalExtractionPaths = [
-            'mainDivision' => 'StoreFrontLocation/Address/MainDivision',
-            'postalCode' => 'StoreFrontLocation/Address/PostalCode',
-            'storeCode' => 'StoreFrontLocation/StoreCode',
-            'storeName' => 'StoreFrontLocation/StoreName',
-            'emailAddress' => 'StoreFrontLocation/StoreEmail',
-            'directions' => 'StoreDirections',
-            'hours' => 'StoreHours',
-            'phoneNumber' => 'StoreFrontPhoneNumber',
+            'mainDivision' => 'x:StoreFrontLocation/x:Address/x:MainDivision',
+            'postalCode' => 'x:StoreFrontLocation/x:Address/x:PostalCode',
+            'storeCode' => 'x:StoreFrontLocation/x:StoreCode',
+            'storeName' => 'x:StoreFrontLocation/x:StoreName',
+            'emailAddress' => 'x:StoreFrontLocation/x:StoreEmail',
+            'directions' => 'x:StoreDirections',
+            'hours' => 'x:StoreHours',
+            'phoneNumber' => 'x:StoreFrontPhoneNumber',
         ];
         $this->addressLinesExtractionMap = [
             [
                 'property' => 'lines',
-                'xPath' => 'StoreFrontLocation/Address/*[starts-with(name(), "Line")]'
+                'xPath' => 'x:StoreFrontLocation/x:Address/*[starts-with(name(), "Line")]'
             ],
         ];
         $this->validators = $validators;
@@ -173,5 +173,10 @@ class StoreFrontDetails implements IStoreFrontDetails
     protected function getPhysicalAddressRootNodeName()
     {
         return static::PHYSICAL_ADDRESS_ROOT_NODE;
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

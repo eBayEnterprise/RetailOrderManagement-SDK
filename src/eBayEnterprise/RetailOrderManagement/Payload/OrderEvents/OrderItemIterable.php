@@ -25,9 +25,6 @@ use SPLObjectStorage;
 class OrderItemIterable extends SPLObjectStorage implements IOrderItemIterable
 {
     use TIterablePayload;
-    // This most likely needs to be re-defined by more specific types used by
-    // the various types of order items.
-    const ROOT_NODE = 'OrderItems';
 
     /**
      * @param IValidatorIterator
@@ -66,5 +63,10 @@ class OrderItemIterable extends SPLObjectStorage implements IOrderItemIterable
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

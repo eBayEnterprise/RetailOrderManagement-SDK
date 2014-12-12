@@ -38,10 +38,10 @@ class Payment implements IPayment
     public function __construct(IValidatorIterator $validators)
     {
         $this->extractionPaths = [
-            'description' => 'string(PaymentDescription)',
-            'tenderType' => 'string(PaymentTenderType)',
-            'maskedAccount' => 'string(PaymentMaskedAccount)',
-            'amount' => 'number(PaymentAmount)',
+            'description' => 'string(x:PaymentDescription)',
+            'tenderType' => 'string(x:PaymentTenderType)',
+            'maskedAccount' => 'string(x:PaymentMaskedAccount)',
+            'amount' => 'number(x:PaymentAmount)',
         ];
 
         $this->validators = $validators;
@@ -106,5 +106,10 @@ class Payment implements IPayment
             $this->getMaskedAccount(),
             $this->serializeAmount('PaymentAmount', $this->getAmount())
         );
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

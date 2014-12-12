@@ -54,13 +54,22 @@ trait TPayloadTest
     abstract protected function getCompleteFixtureFile();
 
     /**
-     * Return a C14N, whitespace removed, XML string.
+     * Return a C14N, whitespace removed, XML string. If $removeNs is true, any
+     * xmlns values will be removed from the XML - allows same file to be used
+     * for serialize expectation (no xmlns) and serialize provider (needs xmlns).
+     *
+     * @param string Path to xml file
+     * @param bool
      */
-    protected function loadXmlTestString($fixtureFile)
+    protected function loadXmlTestString($fixtureFile, $removeNs = false)
     {
         $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
-        $dom->load($fixtureFile);
+        $xmlString = file_get_contents($fixtureFile);
+        if ($removeNs) {
+            $xmlString = preg_replace('#xmlns="[^"]*"#', '', $xmlString);
+        }
+        $dom->loadXML($xmlString);
         $string = $dom->C14N();
 
         return $string;
@@ -69,7 +78,7 @@ trait TPayloadTest
     public function testSerialize()
     {
         $this->assertSame(
-            $this->loadXmlTestString($this->getCompleteFixtureFile()),
+            $this->loadXmlTestString($this->getCompleteFixtureFile(), true),
             $this->fullPayload->serialize()
         );
     }

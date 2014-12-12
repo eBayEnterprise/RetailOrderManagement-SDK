@@ -26,7 +26,11 @@ trait TAmount
      */
     protected function serializeAmount($elementName, $amount)
     {
-        return sprintf('<%1$s>%2$01.2F</%1$s>', $elementName, $this->sanitizeAmount($amount));
+        return sprintf(
+            '<%1$s>%2$s</%1$s>',
+            $elementName,
+            $this->formatAmount($this->sanitizeAmount($amount))
+        );
     }
 
     /**
@@ -54,10 +58,21 @@ trait TAmount
     protected function serializeCurrencyAmount($elementName, $amount, $currencyCode)
     {
         return sprintf(
-            '<%1$s currencyCode="%3$s">%2$01.2F</%1$s>',
+            '<%1$s currencyCode="%3$s">%2$s</%1$s>',
             $elementName,
-            $this->sanitizeAmount($amount),
+            $this->formatAmount($this->sanitizeAmount($amount)),
             $currencyCode
         );
+    }
+
+    /**
+     * Consistent formatting of amounts.
+     *
+     * @param float
+     * @return string
+     */
+    protected function formatAmount($amount)
+    {
+        return sprintf('%01.2F', $amount);
     }
 }

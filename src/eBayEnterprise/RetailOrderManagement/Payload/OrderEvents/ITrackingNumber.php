@@ -20,6 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 interface ITrackingNumber extends IPayload
 {
     const ROOT_NODE = 'TrackingInfo';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     /**
      * Tracking number for the shipment.
      *

@@ -1,4 +1,4 @@
-<LoyaltyProgram>
+<LoyaltyProgram xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
     <Account>loyalty acct</Account>
     <Program>loyalty program</Program>
     <CustomAttributes>

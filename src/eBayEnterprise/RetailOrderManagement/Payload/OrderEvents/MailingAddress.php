@@ -28,21 +28,21 @@ class MailingAddress implements IMailingAddress
     public function __construct(IValidatorIterator $validators)
     {
         $this->extractionPaths = [
-            'firstName' => 'string(PersonName/FirstName)',
-            'lastName' => 'string(PersonName/LastName)',
-            'middleName' => 'string(PersonName/MiddleName)',
-            'honorificName' => 'string(PersonName/Honorific)',
-            'city' => 'string(Address/City)',
-            'countryCode' => 'string(Address/CountryCode)',
+            'firstName' => 'string(x:PersonName/x:FirstName)',
+            'lastName' => 'string(x:PersonName/x:LastName)',
+            'city' => 'string(x:Address/x:City)',
+            'countryCode' => 'string(x:Address/x:CountryCode)',
         ];
         $this->optionalExtractionPaths = [
-            'mainDivision' => 'Address/MainDivision',
-            'postalCode' => 'Address/PostalCode',
+            'middleName' => 'x:PersonName/x:MiddleName',
+            'honorificName' => 'x:PersonName/x:Honorific',
+            'mainDivision' => 'x:Address/x:MainDivision',
+            'postalCode' => 'x:Address/x:PostalCode',
         ];
         $this->addressLinesExtractionMap = [
             [
                 'property' => 'lines',
-                'xPath' => 'Address/*[starts-with(name(), "Line")]'
+                'xPath' => 'x:Address/*[starts-with(name(), "Line")]'
             ],
         ];
         $this->validators = $validators;
@@ -65,5 +65,10 @@ class MailingAddress implements IMailingAddress
     protected function getPhysicalAddressRootNodeName()
     {
         return static::PHYSICAL_ADDRESS_ROOT_NODE;
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

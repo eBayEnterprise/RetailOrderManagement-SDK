@@ -108,4 +108,25 @@ trait TCustomer
             $this->getLoyaltyPrograms()->serialize()
         );
     }
+
+    protected function serializeCustomerName()
+    {
+        $honorific = $this->getCustomerHonorificName();
+        $middleName = $this->getCustomerMiddleName();
+        return sprintf(
+            '<Name>%s<LastName>%s</LastName>%s<FirstName>%s</FirstName></Name>',
+            ($honorific ? "<Honorific>$honorific</Honorific>" : ''),
+            $this->getCustomerLastName(),
+            ($middleName ? "<MiddleName>$middleName</MiddleName>" : ''),
+            $this->getCustomerFirstName()
+        );
+    }
+
+    protected function serializeCustomerEmail()
+    {
+        $email = $this->getCustomerEmailAddress();
+        return $email
+            ? "<EmailAddress>{$this->getCustomerEmailAddress()}</EmailAddress>"
+            : '';
+    }
 }

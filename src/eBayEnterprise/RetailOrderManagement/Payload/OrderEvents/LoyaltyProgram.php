@@ -34,8 +34,6 @@ class LoyaltyProgram implements ILoyaltyProgram
     protected $account;
     /** @var string */
     protected $program;
-    /** @var ICustomAttributeIterable */
-    protected $customAttributes;
 
     /**
      * @param IValidatorIterator
@@ -48,11 +46,11 @@ class LoyaltyProgram implements ILoyaltyProgram
         IPayloadMap $payloadMap
     ) {
         $this->extractionPaths = [
-            'account' => 'string(Account)',
-            'program' => 'string(Program)',
+            'account' => 'string(x:Account)',
+            'program' => 'string(x:Program)',
         ];
         $this->subpayloadExtractionPaths = [
-            'customAttributes' => 'CustomAttributes',
+            'customAttributes' => 'x:CustomAttributes',
         ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
@@ -99,5 +97,10 @@ class LoyaltyProgram implements ILoyaltyProgram
             $this->getProgram(),
             $this->getCustomAttributes()->serialize()
         );
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

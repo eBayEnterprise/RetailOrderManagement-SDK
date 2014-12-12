@@ -20,6 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 interface ICustomAttribute extends IPayload
 {
     const ROOT_NODE = 'Attribute';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     /**
      * Unique key for the attribute
      * @return string

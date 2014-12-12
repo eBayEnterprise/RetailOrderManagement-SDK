@@ -46,7 +46,7 @@ class Subpayloads implements IValidator
         foreach ($this->subpayloadAccessors as $accessorMethod) {
             $subpayload = $payload->$accessorMethod();
             if (!$subpayload instanceof IPayload) {
-                throw new InvalidPayload(sprintf('%s does not produce a payload.', $accessorMethod));
+                throw new Exception\InvalidPayload(sprintf('%s does not produce a payload.', $accessorMethod));
             }
             $payload->$accessorMethod()->validate();
         }

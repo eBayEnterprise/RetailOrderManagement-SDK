@@ -64,4 +64,9 @@ class CustomAttributeIterable extends SPLObjectStorage implements ICustomAttribu
     {
         return static::ROOT_NODE;
     }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
+    }
 }

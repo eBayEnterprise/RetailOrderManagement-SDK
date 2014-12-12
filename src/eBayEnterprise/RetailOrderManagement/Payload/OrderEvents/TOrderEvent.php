@@ -42,12 +42,12 @@ trait TOrderEvent
 
     public function getCustomerOrderId()
     {
-        return $this->cleanString($this->orderId, 24);
+        return $this->orderId;
     }
 
     public function setCustomerOrderId($orderId)
     {
-        $this->orderId = $orderId;
+        $this->orderId = $this->cleanString($orderId, 24);
         return $this;
     }
 

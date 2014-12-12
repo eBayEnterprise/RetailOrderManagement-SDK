@@ -34,8 +34,8 @@ class TaxDescription implements ITaxDescription
     public function __construct(IValidatorIterator $validators)
     {
         $this->extractionPaths = [
-            'description' => 'string(TaxDescription)',
-            'amount' => 'number(TaxDescription/@amount)',
+            'description' => 'string(x:TaxDescription)',
+            'amount' => 'number(x:TaxDescription/@amount)',
         ];
         $this->validators = $validators;
     }
@@ -69,8 +69,15 @@ class TaxDescription implements ITaxDescription
 
     protected function serializeContents()
     {
-        return "<TaxDescription amount='{$this->getAmount()}'>"
-            . $this->getDescription()
-            . '</TaxDescription>';
+        return sprintf(
+            '<TaxDescription amount="%s">%s</TaxDescription>',
+            $this->formatAmount($this->getAmount()),
+            $this->getDescription()
+        );
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

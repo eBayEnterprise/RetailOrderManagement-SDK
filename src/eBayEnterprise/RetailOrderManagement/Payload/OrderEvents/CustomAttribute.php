@@ -33,8 +33,8 @@ class CustomAttribute implements ICustomAttribute
     public function __construct(IValidatorIterator $validators)
     {
         $this->extractionPaths = [
-            'key' => 'string(Key)',
-            'value' => 'string(Value)',
+            'key' => 'string(x:Key)',
+            'value' => 'string(x:Value)',
         ];
         $this->validators = $validators;
     }
@@ -73,5 +73,10 @@ class CustomAttribute implements ICustomAttribute
             $this->getKey(),
             $this->getValue()
         );
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }

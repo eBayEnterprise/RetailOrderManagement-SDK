@@ -21,7 +21,9 @@ interface IOrderItemIterable extends \Countable, \Iterator, \ArrayAccess, IPaylo
 {
     const ORDER_ITEM_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItem';
-    const SUBPAYLOAD_XPATH = 'OrderItem';
+    const SUBPAYLOAD_XPATH = 'x:OrderItem';
+    const ROOT_NODE = 'OrderItems';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     /**
      * Get a new, empty shipped item object.
      * @return IOrderItem

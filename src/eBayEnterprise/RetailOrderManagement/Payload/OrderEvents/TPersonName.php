@@ -74,9 +74,9 @@ trait TPersonName
     {
         $rootNode = $this->getPersonNameRootNodeName();
         return "<$rootNode>"
-            . "<Honorific>{$this->getHonorificName()}</Honorific>"
+            . ($this->getHonorificName() ? "<Honorific>{$this->getHonorificName()}</Honorific>" : '')
             . "<LastName>{$this->getLastName()}</LastName>"
-            . "<MiddleName>{$this->getMiddleName()}</MiddleName>"
+            . ($this->getMiddleName() ? "<MiddleName>{$this->getMiddleName()}</MiddleName>" : '')
             . "<FirstName>{$this->getFirstName()}</FirstName>"
             . "</$rootNode>";
     }

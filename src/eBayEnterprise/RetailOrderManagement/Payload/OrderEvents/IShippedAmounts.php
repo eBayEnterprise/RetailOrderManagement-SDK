@@ -15,19 +15,17 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-
-interface ICustomAttributeIterable extends \Countable, \Iterator, \ArrayAccess, IPayload
+interface IShippedAmounts
 {
-    const CUSTOM_ATTRIBUTE_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttribute';
-    const ROOT_NODE = 'CustomAttributes';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const SUBPAYLOAD_XPATH = 'x:Attribute';
-
     /**
-     * Get a new, emtpy custom attribute object.
-     * @return ICustomAttribute
+     * Amount paid for shipping
+     *
+     * @return float
      */
-    public function getEmptyCustomAttribute();
+    public function getShippedAmount();
+    /**
+     * @param float
+     * @return self
+     */
+    public function setShippedAmount($amount);
 }

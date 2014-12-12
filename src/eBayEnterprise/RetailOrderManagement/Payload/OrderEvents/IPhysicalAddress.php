@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-interface IPhysicalAddress extends IPayload
+interface IPhysicalAddress
 {
     /**
      * The street address and/or suite and building

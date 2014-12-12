@@ -26,7 +26,9 @@ trait TIterablePayload
         foreach ($this as $subpayload) {
             $serializedSubpayloads .= $subpayload->serialize();
         }
-        return sprintf('<%1$s>%2$s</%1$s>', $this->getRootNodeName(), $serializedSubpayloads);
+        return $serializedSubpayloads
+            ? sprintf('<%1$s>%2$s</%1$s>', $this->getRootNodeName(), $serializedSubpayloads)
+            : '';
     }
 
     public function deserialize($serializedData)
@@ -73,13 +75,13 @@ trait TIterablePayload
 
     /**
      * Load the payload XML into a DOMXPath for querying.
-     *
-     * @param string
-     * @return DOMXPath
+     * @param string $xmlString
+     * @return \DOMXPath
      */
     protected function getPayloadAsXPath($xmlString)
     {
         $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
+        $xpath->registerNamespace('x', $this->getXmlNamespace());
         return $xpath;
     }
 

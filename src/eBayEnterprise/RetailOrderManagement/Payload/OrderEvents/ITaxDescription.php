@@ -20,6 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 interface ITaxDescription extends IPayload
 {
     const ROOT_NODE = 'TaxesDutiesFeesInformation';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
 
     /**
      * Description of the tax, duty or fee.

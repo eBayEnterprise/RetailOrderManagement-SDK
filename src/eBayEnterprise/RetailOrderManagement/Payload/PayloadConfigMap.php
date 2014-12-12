@@ -280,7 +280,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttributes' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttribute' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CustomAttribute',
             ],
         ],
@@ -433,6 +433,8 @@ return call_user_func(function () {
             ],
         ],
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShippedOrderItemIterable'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItemIterable'];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItem'] = [
         'validators' => [
             [
