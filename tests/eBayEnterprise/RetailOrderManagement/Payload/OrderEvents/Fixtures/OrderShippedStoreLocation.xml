@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderShipped xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="01234567890" storeId="MAGT1">
+    <Customer customerId="000008012">
+        <Name>
+            <Honorific>Esq.</Honorific>
+            <LastName>Lastname</LastName>
+            <MiddleName>Middlename</MiddleName>
+            <FirstName>Firstname</FirstName>
+        </Name>
+        <EmailAddress>test@example.com</EmailAddress>
+        <LoyaltyPrograms>
+            <LoyaltyProgram>
+                <Account>ACCT_NO</Account>
+                <Program>Program Name</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Silver</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+        </LoyaltyPrograms>
+    </Customer>
+    <ShippedOrderItems>
+        <OrderItem webLineId="1" itemId="45-12345" quantity="3" shippedQuantity="3">
+            <Description>
+                <Description>A wet noodle...</Description>
+                <Title>Wet Noodle</Title>
+                <Color id="color_id_1">Orange</Color>
+                <Size id="size_id_1">S</Size>
+            </Description>
+            <Pricing>
+                <Amount remainder="0.02">5.00</Amount>
+                <UnitPrice>1.66</UnitPrice>
+            </Pricing>
+            <TrackingNumberList>
+                <TrackingInfo trackingNumber="1ZABC123" trackingURL="http://ups.com/track/1ZABC123"/>
+                <TrackingInfo trackingNumber="1ZABC123" trackingURL="http://ups.com/track/1ZABC123"/>
+            </TrackingNumberList>
+            <ShopRunnerMessage>ZOMG PROMO!1!11!</ShopRunnerMessage>
+        </OrderItem>
+        <OrderItem webLineId="2" itemId="45-54321" quantity="1" shippedQuantity="1">
+            <Description>
+                <Description>A dry noodle...</Description>
+                <Title>Dry Noodle</Title>
+                <Color id="color_id_1">Green</Color>
+                <Size id="size_id_1">L</Size>
+            </Description>
+            <Pricing>
+                <Amount>1.00</Amount>
+                <UnitPrice>1.00</UnitPrice>
+            </Pricing>
+            <TrackingNumberList>
+                <TrackingInfo trackingNumber="1ZABC123" trackingURL="http://ups.com/track/1ZABC123"/>
+            </TrackingNumberList>
+        </OrderItem>
+    </ShippedOrderItems>
+    <ShippedDestination>
+        <StoreFrontAddress>
+            <StoreFrontLocation id="store_1">
+                <StoreCode>STORE_CODE_664</StoreCode>
+                <StoreName>Store Store No. 664</StoreName>
+                <StoreEmail>store@example.com</StoreEmail>
+                <Address>
+                    <Line1>123 Main St</Line1>
+                    <Line2>Ste B</Line2>
+                    <Line3>Bldg 2</Line3>
+                    <Line4>Fl 6</Line4>
+                    <City>Saskatoon</City>
+                    <MainDivision>Ok</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>91234</PostalCode>
+                </Address>
+            </StoreFrontLocation>
+            <StoreDirections>http://example.com/directions_url</StoreDirections>
+            <StoreHours>8 AM - 8 PM</StoreHours>
+            <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>
+        </StoreFrontAddress>
+    </ShippedDestination>
+    <OrderSummary totalAmount="7.42" currency="USD" currencySymbol="$" totalTaxAmount="0.42" subTotalAmount="6.00" shippedAmount="1.00" dutyAmount="0.00" feesAmount="0.00" discountAmount="0.00">
+        <Payments>
+            <Payment>
+                <PaymentDescription>Visa</PaymentDescription>
+                <PaymentTenderType>VC</PaymentTenderType>
+                <PaymentMaskedAccount>************1111</PaymentMaskedAccount>
+                <PaymentAmount>6.42</PaymentAmount>
+            </Payment>
+            <Payment>
+                <PaymentDescription>Gift Card</PaymentDescription>
+                <PaymentTenderType>SV</PaymentTenderType>
+                <PaymentMaskedAccount>************0001</PaymentMaskedAccount>
+                <PaymentAmount>1.00</PaymentAmount>
+            </Payment>
+        </Payments>
+        <OrderTaxesDutiesFeesInformations>
+            <TaxesDutiesFeesInformation>
+                <TaxDescription amount="0.40">OK-STATE-TAX</TaxDescription>
+            </TaxesDutiesFeesInformation>
+            <TaxesDutiesFeesInformation>
+                <TaxDescription amount="0.02">Other</TaxDescription>
+            </TaxesDutiesFeesInformation>
+        </OrderTaxesDutiesFeesInformations>
+    </OrderSummary>
+</OrderShipped>
