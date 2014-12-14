@@ -743,5 +743,107 @@ return call_user_func(function () {
         'schemaValidator' => $xsdSchemaValidator,
         'childPayloads' => $noChildPayloads,
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderBackorder'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getCustomerFirstName',
+                    'getCustomerLastName',
+                    'getStoreId',
+                    'getCustomerOrderId',
+               ],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => [
+                    'getLoyaltyPrograms',
+                    'getShipGroups',
+                ],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IMailingAddress' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\MailingAddress',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\StoreFrontDetails',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\BackOrderItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\BackOrderItem',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IShipGroupIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShipGroupIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IShipGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShipGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IEddMessage' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\EddMessage',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\BackOrderItemIterable'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItemIterable'];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\BackOrderItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $orderItemParams,
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShipGroupIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IShipGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShipGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShipGroup'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => [
+                    'getOrderItems',
+                ],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IEddMessage' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\EddMessage',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\EddMessage'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
     return $map;
 });

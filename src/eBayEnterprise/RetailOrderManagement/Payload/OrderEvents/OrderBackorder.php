@@ -1,0 +1,111 @@
+<?php
+/**
+ * Copyright (c) 2013-2014 eBay Enterprise, Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @copyright   Copyright (c) 2013-2014 eBay Enterprise, Inc. (http://www.ebayenterprise.com/)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
+
+use DOMXPath;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
+
+class OrderBackorder implements IOrderBackorder
+{
+    use TTopLevelPayload, TCustomer, TOrderEvent, TShipGroupContainer;
+
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap
+    ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->payloadMap = $payloadMap;
+        $this->payloadFactory = new PayloadFactory();
+
+        $this->loyaltyPrograms =
+            $this->buildPayloadForInterface(static::LOYALTY_PROGRAM_ITERABLE_INTERFACE);
+        $this->shipGroups =
+            $this->buildPayloadForInterface(static::SHIP_GROUP_ITERABLE_INTERFACE);
+
+        $this->extractionPaths = [
+            'customerFirstName' => 'string(x:Customer/x:Name/x:FirstName)',
+            'customerLastName' => 'string(x:Customer/x:Name/x:LastName)',
+            'storeId' => 'string(@storeId)',
+            'orderId' => 'string(@customerOrderId)',
+        ];
+        $this->optionalExtractionPaths = [
+            'customerId' => 'x:Customer/@customerId',
+            'customerMiddleName' => 'x:Customer/x:Name/x:MiddleName',
+            'customerHonorificName' => 'x:Customer/x:Name/x:Honorific',
+            'customerEmailAddress' => 'x:Customer/x:EmailAddress',
+        ];
+        $this->subpayloadExtractionPaths = [
+            'loyaltyPrograms' => 'x:Customer/x:LoyaltyPrograms',
+            'shipGroups' => 'x:ShipGroups',
+        ];
+    }
+
+    public function getEventType()
+    {
+        return static::ROOT_NODE;
+    }
+
+    /**
+     * Build a new IPayload for the given interface.
+     *
+     * @param string
+     * @return IPayload
+     */
+    protected function buildPayloadForInterface($interface)
+    {
+        return $this->payloadFactory->buildPayload(
+            $this->payloadMap->getConcreteType($interface),
+            $this->payloadMap
+        );
+    }
+
+    protected function getRootAttributes()
+    {
+        return [
+            'xmlns' => $this->getXmlNamespace(),
+            'customerOrderId' => $this->getCustomerOrderId(),
+            'storeId' => $this->getStoreId(),
+        ];
+    }
+
+    protected function getSchemaFile()
+    {
+        return __DIR__ . '/schema/' . self::XSD;
+    }
+
+    protected function getXmlNamespace()
+    {
+        return static::XML_NS;
+    }
+
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    protected function serializeContents()
+    {
+        return $this->serializeCustomer()
+            . $this->getShipGroups()->serialize();
+    }
+}
