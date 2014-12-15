@@ -232,7 +232,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
      */
     protected function serializeLineItems()
     {
-        return $this->getLineItems()->serialize();
+        return count($this->getLineItems()) ? $this->getLineItems()->serialize() :'';
     }
 
     /**

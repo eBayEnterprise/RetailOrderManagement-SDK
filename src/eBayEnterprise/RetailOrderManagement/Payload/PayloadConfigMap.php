@@ -539,7 +539,7 @@ return call_user_func(function () {
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'] = [
         'validators' => [
             [
-                'validator' => $requiredFieldsValidator,
+                'validator' => $optionalGroupValidator,
                 'params' => [
                     'getLineItemsTotal',
                     'getShippingTotal',
@@ -585,7 +585,6 @@ return call_user_func(function () {
                         'getAmount',
                         'getAddressOverride',
                         'getCurrencyCode',
-                        'getLineItems',
                     ]
                 )
             ],
@@ -637,7 +636,6 @@ return call_user_func(function () {
                 'params' => array_merge(
                     $shippingAddressParams,
                     [
-                        'getLineItems',
                         'getRequestId',
                         'getOrderId',
                         'getPayerId',

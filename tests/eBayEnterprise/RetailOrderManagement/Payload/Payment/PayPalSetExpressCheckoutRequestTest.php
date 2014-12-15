@@ -31,6 +31,8 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     protected $validatorIterator;
     /** @var  Payload\ISchemaValidator */
     protected $schemaValidatorStub;
+    /** @var Payload\Payment\ILineItem (stub) */
+    protected $stubLineItemA;
     /** @var Payload\IPayloadMap (stub) */
     protected $payloadMapStub;
     /** @var Payload\Payment\ILineItemIterable (stub) */
@@ -263,6 +265,9 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
         $this->stubLineItemIterable->expects($this->any())
             ->method('serialize')
             ->will($this->returnValue('<LineItems></LineItems>'));
+        $this->stubLineItemIterable->expects($this->any())
+            ->method('count')
+            ->will($this->returnValue(1));
     }
 
     /**

@@ -229,7 +229,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     protected function serializeLineItems()
     {
-        return $this->getLineItems()->serialize();
+        return count($this->getLineItems()) ? $this->getLineItems()->serialize() :'';
     }
 
     /**
