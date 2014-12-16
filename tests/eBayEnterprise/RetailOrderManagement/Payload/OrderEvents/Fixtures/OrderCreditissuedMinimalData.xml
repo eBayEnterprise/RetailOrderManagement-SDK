@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderCreditIssued xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="01234567890" storeId="MAGT1"  currency="USD" currencySymbol="$">
+    <Customer customerId="000008012">
+        <Name>
+            <LastName>Lastname</LastName>
+            <FirstName>Firstname</FirstName>
+        </Name>
+    </Customer>
+    <AdjustedOrderItems>
+        <OrderItem webLineId="1" itemId="45-12345" quantity="1" remainingQuantity="1">
+            <Description>
+                <Description>Item description</Description>
+                <Title>Item Title</Title>
+                <Color id="color_id_1">Orange</Color>
+                <Size id="size_id_1">S</Size>
+            </Description>
+            <Pricing>
+                <AdjustedAmount>37.99</AdjustedAmount>
+            </Pricing>
+            <OrderReturnReason reasonCode="refund">Wrong size</OrderReturnReason>
+        </OrderItem>
+    </AdjustedOrderItems>
+    <CreditIssuedSummary returnOrCreditIssued="Return" creditRefNumber="001001" totalCredit="37.99"></CreditIssuedSummary>
+</OrderCreditIssued>
