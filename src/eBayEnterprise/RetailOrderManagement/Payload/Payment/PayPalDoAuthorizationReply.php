@@ -22,16 +22,10 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
 {
     const SUCCESS = 'Success';
 
-    use Payload\TTopLevelPayload, TOrderId;
+    use Payload\TTopLevelPayload, TOrderId, TPayPalPaymentInfo;
 
     /** @var string * */
     protected $responseCode;
-    /** @var string * */
-    protected $paymentStatus;
-    /** @var string * */
-    protected $pendingReason;
-    /** @var string * */
-    protected $reasonCode;
 
     /**
      * @param Payload\IValidatorIterator $validators
@@ -92,73 +86,8 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
         return $this->serializeOrderId()
         . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
         . "<AuthorizationInfo>"
-        . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
-        . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
-        . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
+        . $this->serializePayPalPaymentInfo()
         . "</AuthorizationInfo>";
-    }
-
-    /**
-     * This value is passed through from the Order Management System. It is returned from a PayPal Get.
-     * (However, this field is in the XSD for more than just Get.)
-     *
-     * @return string
-     */
-    public function getPaymentStatus()
-    {
-        return $this->paymentStatus;
-    }
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPaymentStatus($status)
-    {
-        $this->paymentStatus = $status;
-        return $this;
-    }
-
-    /**
-     * This value is passed through from the Order Management System. It is returned from a PayPal Get.
-     * (However, this field is in the XSD for more than just Get.)
-     *
-     * @return string
-     */
-    public function getPendingReason()
-    {
-        return $this->pendingReason;
-    }
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPendingReason($reason)
-    {
-        $this->pendingReason = $reason;
-        return $this;
-    }
-
-    /**
-     * This value is passed through from the Order Management System. It is returned from a PayPal Get.
-     * (However, this field is in the XSD for more than just Get.)
-     *
-     * @return string
-     */
-    public function getReasonCode()
-    {
-        return $this->reasonCode;
-    }
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setReasonCode($code)
-    {
-        $this->reasonCode = $code;
-        return $this;
     }
 
     /**

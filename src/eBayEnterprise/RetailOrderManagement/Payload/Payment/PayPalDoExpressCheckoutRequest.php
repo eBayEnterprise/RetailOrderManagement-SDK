@@ -24,7 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
 {
-    use TTopLevelPayload, TAmount, TOrderId, TCurrencyCode, TToken, TShippingAddress;
+    use TTopLevelPayload, TAmount, TOrderId, TCurrencyCode, TToken, TShippingAddress, TLineItemContainer;
 
     /** @var string* */
     protected $requestId;
@@ -38,8 +38,6 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     protected $shipToName;
     /** @var mixed * */
     protected $shippingAddress;
-    /** @var ILineItemContainer * */
-    protected $lineItems;
 
     public function __construct(
         IValidatorIterator $validators,
@@ -220,35 +218,6 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     public function setShipToName($name)
     {
         $this->shipToName = $name;
-        return $this;
-    }
-
-    /**
-     * Serialization of line items
-     * @return string
-     */
-    protected function serializeLineItems()
-    {
-        return count($this->getLineItems()) ? $this->getLineItems()->serialize() :'';
-    }
-
-    /**
-     * Get an iterable of the line items for this container.
-     *
-     * @return ILineItemIterable
-     */
-    public function getLineItems()
-    {
-        return $this->lineItems;
-    }
-
-    /**
-     * @param ILineItemIterable
-     * @return self
-     */
-    public function setLineItems(ILineItemIterable $items)
-    {
-        $this->lineItems = $items;
         return $this;
     }
 

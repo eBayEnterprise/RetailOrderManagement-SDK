@@ -24,7 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutRequest
 {
-    use TTopLevelPayload, TAmount, TOrderId, TCurrencyCode, TShippingAddress;
+    use TTopLevelPayload, TAmount, TOrderId, TCurrencyCode, TShippingAddress, TLineItemContainer;
 
     /** @var string * */
     protected $returnUrl;
@@ -36,8 +36,6 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     protected $amount;
     /** @var boolean * */
     protected $addressOverride;
-    /** @var string * */
-    protected $lineItems;
 
     public function __construct(
         IValidatorIterator $validators,
@@ -223,35 +221,6 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     public function setAddressOverride($override)
     {
         $this->addressOverride = $override;
-        return $this;
-    }
-
-    /**
-     * Serialization of line items
-     * @return string
-     */
-    protected function serializeLineItems()
-    {
-        return count($this->getLineItems()) ? $this->getLineItems()->serialize() :'';
-    }
-
-    /**
-     * Get an iterable of the line items for this container.
-     *
-     * @return ILineItemIterable
-     */
-    public function getLineItems()
-    {
-        return $this->lineItems;
-    }
-
-    /**
-     * @param ILineItemIterable
-     * @return self
-     */
-    public function setLineItems(ILineItemIterable $items)
-    {
-        $this->lineItems = $items;
         return $this;
     }
 
