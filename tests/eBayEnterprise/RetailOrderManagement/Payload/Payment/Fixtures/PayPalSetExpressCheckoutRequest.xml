@@ -13,5 +13,4 @@
         <CountryCode>US</CountryCode>
         <PostalCode>19019</PostalCode>
     </ShippingAddress>
-    <LineItems></LineItems>
 </PayPalSetExpressCheckoutRequest>
