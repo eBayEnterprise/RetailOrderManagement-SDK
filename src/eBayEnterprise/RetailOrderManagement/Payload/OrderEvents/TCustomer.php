@@ -100,9 +100,10 @@ trait TCustomer
 
     protected function serializeCustomer()
     {
+        $customerId = $this->getCustomerId();
         return sprintf(
-            '<Customer customerId="%s">%s%s%s</Customer>',
-            $this->getCustomerId(),
+            '<Customer %s>%s%s%s</Customer>',
+            $customerId ? "customerId='$customerId'" : '',
             $this->serializeCustomerName(),
             $this->serializeCustomerEmail(),
             $this->getLoyaltyPrograms()->serialize()

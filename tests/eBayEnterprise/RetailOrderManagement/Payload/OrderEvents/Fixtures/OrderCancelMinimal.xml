@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderCancelled xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="ORDERID" storeId="STORE1" currency="USD" currencySymbol="$">
+    <Customer>
+        <Name>
+            <LastName>Doe</LastName>
+            <FirstName>Jane</FirstName>
+        </Name>
+    </Customer>
+    <OrderCancelReason cancelReasonCode="REASONCODE">The Reason</OrderCancelReason>
+    <CancelledOrderItems>
+        <OrderItem webLineId="1" itemId="55-55555" quantity="3">
+            <Pricing/>
+        </OrderItem>
+    </CancelledOrderItems>
+</OrderCancelled>

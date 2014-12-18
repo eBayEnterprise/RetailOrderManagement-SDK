@@ -278,6 +278,41 @@ return call_user_func(function () {
             ],
         ],
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderCancel'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getCustomerFirstName',
+                    'getCustomerLastName',
+                    'getStoreId',
+                    'getCustomerOrderId',
+                    'getCancelReason',
+                    'getCancelReasonCode',
+               ],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => [
+                    'getLoyaltyPrograms',
+                    'getOrderItems',
+                ],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CancelledOrderItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CancelledOrderItem',
+            ],
+        ],
+    ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable'] = [
         'validators' => [
             [
@@ -488,6 +523,8 @@ return call_user_func(function () {
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShippedOrderItemIterable'] =
         $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItemIterable'];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CancelledOrderItemIterable'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItemIterable'];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItem'] = [
         'validators' => [
             [
@@ -521,6 +558,17 @@ return call_user_func(function () {
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TrackingNumberIterable',
             ],
         ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CancelledOrderItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $orderItemParams,
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
     ];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItem'] = [
         'validators' => [
