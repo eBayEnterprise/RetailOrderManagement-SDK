@@ -98,20 +98,6 @@ class OrderCreditIssued implements IOrderCreditIssued
         return self::ROOT_NODE;
     }
 
-    /**
-     * Build a new IPayload for the given interface.
-     *
-     * @param string
-     * @return IPayload
-     */
-    protected function buildPayloadForInterface($interface)
-    {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType($interface),
-            $this->payloadMap
-        );
-    }
-
     protected function serializeContents()
     {
         return $this->serializeCustomer()

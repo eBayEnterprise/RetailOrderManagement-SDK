@@ -65,20 +65,6 @@ class OrderBackorder implements IOrderBackorder
         return static::ROOT_NODE;
     }
 
-    /**
-     * Build a new IPayload for the given interface.
-     *
-     * @param string
-     * @return IPayload
-     */
-    protected function buildPayloadForInterface($interface)
-    {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType($interface),
-            $this->payloadMap
-        );
-    }
-
     protected function getRootAttributes()
     {
         return [

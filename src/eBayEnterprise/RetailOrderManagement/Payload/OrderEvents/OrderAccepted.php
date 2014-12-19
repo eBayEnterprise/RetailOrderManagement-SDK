@@ -19,16 +19,18 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
-class OrderCancel implements IOrderCancel
+class OrderAccepted implements IOrderAccepted
 {
-    use TTopLevelPayload, TCustomer, TOrderEvent, TOrderItemContainer, TCurrency;
+    use TTopLevelPayload, TOrderEvent, TCustomer, TCurrency, TOrderItemContainer,
+        TPaymentContainer, TSummaryAmounts, TAmount;
 
+    /** @var float */
+    protected $vatTaxAmount;
     /** @var string */
-    protected $cancelReason;
-    /** @var string */
-    protected $cancelReasonCode;
+    protected $orderAcceptedSource;
 
     public function __construct(
         IValidatorIterator $validators,
@@ -44,16 +46,24 @@ class OrderCancel implements IOrderCancel
             $this->buildPayloadForInterface(static::LOYALTY_PROGRAM_ITERABLE_INTERFACE);
         $this->orderItems =
             $this->buildPayloadForInterface(static::ORDER_ITEM_ITERABLE_INTERFACE);
+        $this->payments =
+            $this->buildPayloadForInterface(static::PAYMENT_ITERABLE_INTERFACE);
 
         $this->extractionPaths = [
             'customerFirstName' => 'string(x:Customer/x:Name/x:FirstName)',
             'customerLastName' => 'string(x:Customer/x:Name/x:LastName)',
             'storeId' => 'string(@storeId)',
             'orderId' => 'string(@customerOrderId)',
+            'orderAcceptedSource' => 'string(@orderAcceptedSource)',
             'currencyCode' => 'string(@currency)',
             'currencySymbol' => 'string(@currencySymbol)',
-            'cancelReason' => 'string(x:OrderCancelReason)',
-            'cancelReasonCode' => 'string(x:OrderCancelReason/@cancelReasonCode)',
+            'totalAmount' => 'number(x:OrderSummary/@totalAmount)',
+            'taxAmount' => 'number(x:OrderSummary/@salesTaxAmount)',
+            'vatTaxAmount' => 'number(x:OrderSummary/@vatTaxAmount)',
+            'subtotalAmount' => 'number(x:OrderSummary/@subTotalAmount)',
+            'dutyAmount' => 'number(x:OrderSummary/@dutyAmount)',
+            'feesAmount' => 'number(x:OrderSummary/@feesAmount)',
+            'discountAmount' => 'number(x:OrderSummary/@discountAmount)',
         ];
         $this->optionalExtractionPaths = [
             'customerId' => 'x:Customer/@customerId',
@@ -63,29 +73,30 @@ class OrderCancel implements IOrderCancel
         ];
         $this->subpayloadExtractionPaths = [
             'loyaltyPrograms' => 'x:Customer/x:LoyaltyPrograms',
-            'orderItems' => 'x:CancelledOrderItems',
+            'orderItems' => 'x:OrderAcceptedOrderItems',
+            'payments' => 'x:OrderAcceptedPayments',
         ];
     }
 
-    public function getCancelReason()
+    public function getVatTaxAmount()
     {
-        return $this->cancelReason;
+        return $this->vatTaxAmount;
     }
 
-    public function setCancelReason($cancelReason)
+    public function setVatTaxAmount($vatTaxAmount)
     {
-        $this->cancelReason = $cancelReason;
+        $this->vatTaxAmount = $this->sanitizeAmount($vatTaxAmount);
         return $this;
     }
 
-    public function getCancelReasonCode()
+    public function getOrderAcceptedSource()
     {
-        return $this->cancelReasonCode;
+        return $this->orderAcceptedSource;
     }
 
-    public function setCancelReasonCode($cancelReasonCode)
+    public function setOrderAcceptedSource($orderAcceptedSource)
     {
-        $this->cancelReasonCode = $cancelReasonCode;
+        $this->orderAcceptedSource = $orderAcceptedSource;
         return $this;
     }
 
@@ -112,18 +123,28 @@ class OrderCancel implements IOrderCancel
     protected function serializeContents()
     {
         return $this->serializeCustomer()
-            . $this->serializeCancelReason()
-            . $this->getOrderItems()->serialize();
+            . $this->getOrderItems()->serialize()
+            . $this->getPayments()->serialize()
+            . $this->serializeOrderSummary();
     }
 
-    protected function serializeCancelReason()
+    protected function serializeOrderSummary()
     {
+        $format = '<OrderSummary totalAmount="%s" salesTaxAmount="%s" '
+            . 'vatTaxAmount="%s" subTotalAmount="%s" dutyAmount="%s" '
+            . 'feesAmount="%s" discountAmount="%s"/>';
         return sprintf(
-            '<OrderCancelReason cancelReasonCode="%s">%s</OrderCancelReason>',
-            $this->getCancelReasonCode(),
-            $this->getCancelReason()
+            $format,
+            $this->formatAmount($this->getTotalAmount()),
+            $this->formatAmount($this->getTaxAmount()),
+            $this->formatAmount($this->getVatTaxAmount()),
+            $this->formatAmount($this->getSubtotalAmount()),
+            $this->formatAmount($this->getDutyAmount()),
+            $this->formatAmount($this->getFeesAmount()),
+            $this->formatAmount($this->getDiscountAmount())
         );
     }
+
     protected function getRootAttributes()
     {
         return [
@@ -132,6 +153,7 @@ class OrderCancel implements IOrderCancel
             'customerOrderId' => $this->getCustomerOrderId(),
             'currency' => $this->getCurrencyCode(),
             'currencySymbol' => $this->getCurrencySymbol(),
+            'orderAcceptedSource' => $this->getOrderAcceptedSource(),
         ];
     }
 }

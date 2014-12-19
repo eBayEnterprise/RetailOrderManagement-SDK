@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderAccepted
+    xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
+    customerOrderId="ORDER_ID" storeId="STORE_ID" orderAcceptedSource="ORSO" currency="USD" currencySymbol="$">
+    <Customer customerId="000008012">
+        <Name>
+            <Honorific>Mrs.</Honorific>
+            <LastName>Lastname</LastName>
+            <MiddleName>Middlename</MiddleName>
+            <FirstName>Firstname</FirstName>
+        </Name>
+        <EmailAddress>test@example.com</EmailAddress>
+        <LoyaltyPrograms>
+            <LoyaltyProgram>
+                <Account>ACCT_NO</Account>
+                <Program>Program Name</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Silver</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+            <LoyaltyProgram>
+                <Account>RED_ID</Account>
+                <Program>Red Program</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Leader</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+        </LoyaltyPrograms>
+    </Customer>
+    <OrderAcceptedOrderItems>
+        <OrderItem webLineId="3" itemId="55-11111" quantity="2">
+            <Description>
+                <Description>Item description</Description>
+                <Title>Item Title</Title>
+                <Color id="color_red">Red</Color>
+                <Size id="size_l">Large</Size>
+            </Description>
+            <Pricing>
+                <Amount remainder="0.01">5.99</Amount>
+                <UnitPrice>2.99</UnitPrice>
+            </Pricing>
+            <Shipping>
+                <ShipmentMethod displayText="USPS Flat Rate">FLAT_RATE</ShipmentMethod>
+                <EstimatedShipDate>2014-12-11</EstimatedShipDate>
+                <ShippedAddress>
+                    <PersonName>
+                        <Honorific>Mrs.</Honorific>
+                        <LastName>Lastname</LastName>
+                        <MiddleName>Middlename</MiddleName>
+                        <FirstName>Firstname</FirstName>
+                    </PersonName>
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <City>Saskatoon</City>
+                        <MainDivision>OK</MainDivision>
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>91234</PostalCode>
+                    </Address>
+                </ShippedAddress>
+            </Shipping>
+        </OrderItem>
+        <OrderItem webLineId="3" itemId="55-11111" quantity="2">
+            <Description>
+                <Description>Item description</Description>
+                <Title>Item Title</Title>
+                <Color id="color_red">Red</Color>
+                <Size id="size_l">Large</Size>
+            </Description>
+            <Shipping>
+                <ShipmentMethod displayText="USPS Flat Rate">FLAT_RATE</ShipmentMethod>
+                <StoreFrontAddress>
+                    <StoreFrontLocation id="store_1">
+                        <StoreCode>STORE_CODE_664</StoreCode>
+                        <StoreName>Store Store No. 664</StoreName>
+                        <StoreEmail>store@example.com</StoreEmail>
+                        <Address>
+                            <Line1>123 Main St</Line1>
+                            <Line2>Ste B</Line2>
+                            <Line3>Bldg 2</Line3>
+                            <Line4>Fl 6</Line4>
+                            <City>Saskatoon</City>
+                            <MainDivision>Ok</MainDivision>
+                            <CountryCode>US</CountryCode>
+                            <PostalCode>91234</PostalCode>
+                        </Address>
+                    </StoreFrontLocation>
+                    <StoreDirections>http://example.com/directions_url</StoreDirections>
+                    <StoreHours>8 AM - 8 PM</StoreHours>
+                    <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>
+                </StoreFrontAddress>
+            </Shipping>
+        </OrderItem>
+    </OrderAcceptedOrderItems>
+    <OrderAcceptedPayments>
+        <Payment>
+            <PaymentDescription>Visa</PaymentDescription>
+            <PaymentTenderType>VC</PaymentTenderType>
+            <PaymentMaskedAccount>************1111</PaymentMaskedAccount>
+            <PaymentAmount>2.40</PaymentAmount>
+        </Payment>
+        <Payment>
+            <PaymentDescription>Gift Card</PaymentDescription>
+            <PaymentTenderType>GC</PaymentTenderType>
+            <PaymentMaskedAccount>************0001</PaymentMaskedAccount>
+            <PaymentAmount>5.00</PaymentAmount>
+        </Payment>
+    </OrderAcceptedPayments>
+    <OrderSummary totalAmount="7.40" salesTaxAmount="0.40" vatTaxAmount="0.00" subTotalAmount="6.00" dutyAmount="0.00" feesAmount="1.00" discountAmount="0.00"/>
+</OrderAccepted>

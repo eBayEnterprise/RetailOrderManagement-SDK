@@ -29,6 +29,10 @@ trait TPayload
 {
     use TStrings;
 
+    /** @var IPayloadFactory */
+    protected $payloadFactory;
+    /** @var IPayloadMap */
+    protected $payloadMap;
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var IValidatorIterator */
@@ -170,6 +174,20 @@ trait TPayload
     protected function deserializeLineItems($serializedPayload)
     {
         return $this;
+    }
+
+    /**
+     * Build a new IPayload for the given interface.
+     *
+     * @param string
+     * @return IPayload
+     */
+    protected function buildPayloadForInterface($interface)
+    {
+        return $this->payloadFactory->buildPayload(
+            $this->payloadMap->getConcreteType($interface),
+            $this->payloadMap
+        );
     }
 
     /**

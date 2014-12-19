@@ -81,20 +81,6 @@ class ShipGroup implements IShipGroup
         return $this;
     }
 
-    /**
-     * Build a new IPayload for the given interface.
-     *
-     * @param string
-     * @return IPayload
-     */
-    protected function buildPayloadForInterface($interface)
-    {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType($interface),
-            $this->payloadMap
-        );
-    }
-
     protected function deserializeExtra($serializedPayload)
     {
         $this->setEstimatedShipDate($this->estimatedShipDate);

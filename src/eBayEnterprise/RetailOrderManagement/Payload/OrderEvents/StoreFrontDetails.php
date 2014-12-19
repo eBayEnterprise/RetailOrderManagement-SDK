@@ -156,18 +156,32 @@ class StoreFrontDetails implements IStoreFrontDetails
     protected function serializeLocation()
     {
         return "<StoreFrontLocation id='{$this->getLocationId()}'>"
-            . "<StoreCode>{$this->getStoreCode()}</StoreCode>"
-            . "<StoreName>{$this->getStoreName()}</StoreName>"
-            . "<StoreEmail>{$this->getEmailAddress()}</StoreEmail>"
+            . $this->serializeOptionalValue('StoreCode', $this->getStoreCode())
+            . $this->serializeOptionalValue('StoreName', $this->getStoreName())
+            . $this->serializeOptionalValue('StoreEmail', $this->getEmailAddress())
             . $this->serializePhysicalAddress()
             . '</StoreFrontLocation>';
     }
 
     protected function serializeDetails()
     {
-        return "<StoreDirections>{$this->getDirections()}</StoreDirections>"
-            . "<StoreHours>{$this->getHours()}</StoreHours>"
-            . "<StoreFrontPhoneNumber>{$this->getPhoneNumber()}</StoreFrontPhoneNumber>";
+        return $this->serializeOptionalValue('StoreDirections', $this->getDirections())
+            . $this->serializeOptionalValue('StoreHours', $this->getHours())
+            . $this->serializeOptionalValue('StoreFrontPhoneNumber', $this->getPhoneNumber());
+    }
+
+    /**
+     * Serialize the value as an xml element with the given node name. When
+     * given an empty value, returns an empty string instead of an empty
+     * element.
+     *
+     * @param string
+     * @param mixed
+     * @return string
+     */
+    protected function serializeOptionalValue($nodeName, $value)
+    {
+        return $value ? sprintf('<%s>%s</%1$s>', $nodeName, $value) : '';
     }
 
     protected function getPhysicalAddressRootNodeName()

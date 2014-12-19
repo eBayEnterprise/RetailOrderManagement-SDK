@@ -19,18 +19,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidator;
 
-class Subpayloads implements IValidator
+class OptionalSubpayloads extends Subpayloads implements IValidator
 {
-    /** @var string[] */
-    protected $subpayloadAccessors;
-
-    /**
-     * @param string[] Accessor methods to get subpayloads of the payload being validated
-     */
-    public function __construct(array $subpayloadAccessors = [])
-    {
-        $this->subpayloadAccessors = $subpayloadAccessors;
-    }
     /**
      * Validate each payload returned from by the accessor methods provided
      * to the validator. If any payload is invalid or any payload accessor
@@ -44,19 +34,14 @@ class Subpayloads implements IValidator
     public function validate(IPayload $payload)
     {
         foreach ($this->subpayloadAccessors as $accessorMethod) {
+            $subpayload = $payload->$accessorMethod();
+            // if there is no subpayload to validate, skip it and allow it to
+            // be not set.
+            if (!$subpayload) {
+                continue;
+            }
             $this->validatePayload($payload->$accessorMethod());
         }
-        return $this;
-    }
-
-    /**
-     * Ensure the subpayload is a valid IPayload.
-     *
-     * @return self
-     */
-    protected function validatePayload(IPayload $payload)
-    {
-        $payload->validate();
         return $this;
     }
 }
