@@ -70,7 +70,7 @@ class ShipGroup implements IShipGroup
         $this->hasEddMessageNode = false;
     }
 
-   public function getShippingDestination()
+    public function getShippingDestination()
     {
         return $this->destination;
     }
