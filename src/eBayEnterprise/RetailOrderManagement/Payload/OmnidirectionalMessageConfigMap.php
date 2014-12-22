@@ -25,6 +25,7 @@ return call_user_func(function () {
     $map['OrderCancelled'] = "$orderEvents\OrderCancel";
     $map['OrderCreditIssued'] = "$orderEvents\OrderCreditIssued";
     $map['OrderRejected'] = "$orderEvents\OrderRejected";
+    $map['OrderReturnInTransit'] = "$orderEvents\OrderReturnInTransit";
     $map['OrderShipped'] = "$orderEvents\OrderShipped";
     $map['Test'] = "$orderEvents\TestMessage";
     return $map;

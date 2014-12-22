@@ -39,6 +39,8 @@
       </xsd:annotation>
     </xsd:attribute>
     <xsd:attribute name="storeId" type="xsd:string"/>
+    <xsd:attribute name="currency" type="ISOCurrencyCodeType"/>
+    <xsd:attribute name="currencySymbol" type="xsd:string"/>
   </xsd:complexType>
   <xsd:complexType name="OrderReturnInTransitCustomerType">
     <xsd:annotation>
