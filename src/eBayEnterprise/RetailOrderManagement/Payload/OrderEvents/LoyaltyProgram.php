@@ -26,10 +26,6 @@ class LoyaltyProgram implements ILoyaltyProgram
 {
     use TPayload, TCustomAttributeContainer;
 
-    /** @var IPayloadMap */
-    protected $payloadMap;
-    /** @var PayloadFactory */
-    protected $payloadFactory;
     /** @var string */
     protected $account;
     /** @var string */

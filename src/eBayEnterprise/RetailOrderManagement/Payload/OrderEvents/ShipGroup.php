@@ -27,10 +27,6 @@ class ShipGroup implements IShipGroup
 {
     use TPayload, TOrderItemContainer;
 
-    /** @var IPayloadMap */
-    protected $payloadMap;
-    /** @var PayloadFactory */
-    protected $payloadFactory;
     /** @var IDestination */
     protected $destination;
     /** @var string */
