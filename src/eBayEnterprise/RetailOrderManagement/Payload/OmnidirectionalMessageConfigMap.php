@@ -25,7 +25,6 @@ return call_user_func(function () {
     $map['OrderCreditIssued'] = "$orderEvents\OrderCreditIssued";
     $map['OrderRejected'] = "$orderEvents\OrderRejected";
     $map['OrderShipped'] = "$orderEvents\OrderShipped";
-    $map['OrderCreditIssued'] = '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderCreditIssued';
     $map['Test'] = "$orderEvents\TestMessage";
     return $map;
 });
