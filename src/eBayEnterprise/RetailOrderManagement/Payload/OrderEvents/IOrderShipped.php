@@ -22,7 +22,7 @@ interface IOrderShipped extends IPayload, ICurrency, ICustomer, IOrderEvent, IOr
 {
     const ROOT_NODE = 'OrderShipped';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'Order-Shipping-Event-1.0.xsd';
+    const XSD = '/events/1.0/events/Order-Shipping-Event-1.0.xsd';
     const MAILING_ADDRESS_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IMailingAddress';
     const STORE_FRONT_DETAILS_INTERFACE =

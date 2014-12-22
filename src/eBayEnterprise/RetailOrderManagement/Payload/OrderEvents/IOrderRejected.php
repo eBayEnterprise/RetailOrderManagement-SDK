@@ -22,7 +22,7 @@ interface IOrderRejected extends IPayload, IOrderEvent
 {
     const ROOT_NODE = 'OrderRejected';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'Order-Rejected-Event-1.0.xsd';
+    const XSD = '/events/1.0/events/Order-Rejected-Event-1.0.xsd';
     const REJECTED_XML_TEMPLATE =
         '<%1$s xmlns="%2$s" customerOrderId="%3$s" storeId="%4$s" orderCreateTimestamp="%5$s">%6$s</%1$s>';
     const REASON_XML_TEMPLATE = '<%1$s code="%2$s">%3$s</%1$s>';

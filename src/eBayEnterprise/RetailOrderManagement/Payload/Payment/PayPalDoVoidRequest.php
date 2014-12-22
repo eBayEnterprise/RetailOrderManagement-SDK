@@ -54,13 +54,9 @@ class PayPalDoVoidRequest implements IPayPalDoVoidRequest
         return $this->serializeOrderId() . $this->serializeCurrencyCode();
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

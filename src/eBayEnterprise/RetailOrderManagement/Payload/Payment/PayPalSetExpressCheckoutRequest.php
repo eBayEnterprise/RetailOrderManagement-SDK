@@ -229,13 +229,9 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         return $this;
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

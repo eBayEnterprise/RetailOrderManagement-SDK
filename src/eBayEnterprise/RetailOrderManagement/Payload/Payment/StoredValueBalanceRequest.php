@@ -161,13 +161,9 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     // all methods below should be refactored as they are literal copies
     // from somewhere else
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . static::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

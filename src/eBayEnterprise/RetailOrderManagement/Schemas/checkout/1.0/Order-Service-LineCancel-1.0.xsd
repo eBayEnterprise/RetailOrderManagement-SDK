@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Order-Datatypes-Common-1.0.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation>
+            ${project.name}
+            Version: ${project.version}
+            Build Date: ${timestamp}
+        </xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="nonEmptyString">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AgentType">
+    <xsd:attribute name="id" type="nonEmptyString"/>
+    <xsd:attribute name="name" type="nonEmptyString"/>
+  </xsd:complexType>
+  <xsd:complexType name="OrderItemRequestType">
+    <xsd:sequence>
+      <xsd:element name="FinalQuantity" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Total qty - cancelled qty = final qty
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="lineId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation>
+                    The order prime line id
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="subLineId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation>
+                    The order sub line id
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="dynamicKit" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+                    Whether this line is a cto dynamic kit. Defaults to false.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="OrderItemsRequestType">
+    <xsd:sequence>
+      <xsd:element name="OrderItem" type="OrderItemRequestType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderLineCancelRequestType">
+    <xsd:sequence>
+      <!--<xsd:element name="SourceId" type="SourceId" />-->
+      <xsd:element name="CustomerOrderId" type="OrderId" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="ReasonCode" type="xsd:string"/>
+      <xsd:element name="Reason" type="xsd:string"/>
+      <xsd:element name="RequestingApplication" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Agent" type="AgentType" minOccurs="0"/>
+      <xsd:element name="InteractionId" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="TransactionId" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="OrderItems" type="OrderItemsRequestType"/>
+    </xsd:sequence>
+    <xsd:attribute name="orderType" type="OrderType" use="optional"/>
+  </xsd:complexType>
+  <xsd:element name="OrderLineCancelRequest" type="OrderLineCancelRequestType" nillable="false"/>
+  <xsd:simpleType name="CancelResponseStatus">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="CANCELLED"/>
+      <xsd:enumeration value="INITIATED"/>
+      <xsd:enumeration value="FAILED"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="OrderItemResponseType">
+    <xsd:sequence>
+      <xsd:element name="FinalQuantity" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Total qty - cancelled qty = final qty
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="responseCode" type="CancelResponseStatus" use="required"/>
+    <xsd:attribute name="lineId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation>
+                    Order prime line id
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="subLineId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation>
+                    Order subline id
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="dynamicKit" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+                    Whether this line is a cto dynamic kit. Defaults to false.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="LineCancelErrorType">
+    <xsd:sequence>
+      <xsd:element name="OMSLineId" type="nonEmptyString"/>
+      <xsd:element name="Description" type="nonEmptyString" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="code" type="nonEmptyString" use="required"/>
+  </xsd:complexType>
+  <xsd:complexType name="OrderItemsResponseType">
+    <xsd:sequence>
+      <xsd:element name="OrderItem" type="OrderItemResponseType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderLineCancelResponseType">
+    <xsd:sequence>
+      <xsd:choice minOccurs="1">
+        <xsd:sequence>
+          <xsd:element name="ReasonCode" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="Reason" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="RequestingApplication" type="nonEmptyString" minOccurs="0"/>
+          <xsd:element name="Agent" type="AgentType" minOccurs="0"/>
+          <xsd:element name="InteractionId" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="TransactionId" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="OrderItems" type="OrderItemsResponseType"/>
+        </xsd:sequence>
+        <xsd:sequence>
+          <xsd:element name="Error" type="LineCancelErrorType"/>
+        </xsd:sequence>
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="orderType" type="OrderType" use="optional"/>
+  </xsd:complexType>
+  <xsd:element name="OrderLineCancelResponse" type="OrderLineCancelResponseType" nillable="false"/>
+</xsd:schema>

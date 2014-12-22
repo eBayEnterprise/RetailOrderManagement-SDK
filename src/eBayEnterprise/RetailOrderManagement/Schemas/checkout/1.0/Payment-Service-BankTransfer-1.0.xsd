@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="AddressType">
+    <xsd:sequence>
+      <xsd:element name="Line1" type="xsd:string"/>
+      <xsd:element name="Line2" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Line3" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Line4" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="BuildingName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="PoBox" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Post Office Box (do not pass PO Box as part of the request. e.g. 765)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="City" type="xsd:string"/>
+      <xsd:element name="MainDivision" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This is the full displayable State/Province name
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MainDivisionCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Typically a two- or three-digit postal abbreviation for
+                        the state or province. Mainly used in Canada and the US.
+                        This does not necessarily conform to the ISO 3166-2 code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CountryName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="CountryCode" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Two digit ISO country code conforming to ISO 3166 alpha 2.
+                        See: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PostalCode" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="BankTransferCheckoutRequestType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment Transaction for an order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Amount to authorize
+                        The AmountType includes a required attribute for a three character ISO currency code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FirstName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="LastName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Address" type="AddressType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="ReturnUrl" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="BankTransferCheckoutRequest" type="BankTransferCheckoutRequestType"/>
+  <xsd:complexType name="BankTransferCheckoutReplyType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment Transaction for an order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ResponseCode" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Response code like Success, Failure etc
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RedirectUrl" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="BankTransferCheckoutReply" type="BankTransferCheckoutReplyType"/>
+  <xsd:complexType name="BankTransferStatusCheckoutRequestType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment Transaction for an order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CurrencyCode" type="ISOCurrencyCodeType"/>
+    </xsd:sequence>
+    <xsd:attribute name="requestId" type="RequestId" use="required"/>
+  </xsd:complexType>
+  <xsd:element name="BankTransferStatusCheckoutRequest" type="BankTransferStatusCheckoutRequestType"/>
+  <xsd:complexType name="BankTransferStatusCheckoutReplyType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment Transaction for an order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StoreId" type="StoreIdType"/>
+      <xsd:element name="Status">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="PENDING">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Bank payment is pending at the bank. Webstore can display
+                                    'thank you' page when this status is returned.
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="REJECTED">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Payment has been rejected. Order should be cancelled
+                                    when this status is returned. Webstore should display
+                                    an error page.
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="CONFIRMED_WITH_SECURITY_IND">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Bank has confirmed payment, security indicator is 1.
+                                    Some stores may choose to ship at this point.
+                                    Webstore can display 'thank you' page when this status
+                                    is returned.
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="PAID">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Payment has been transfered from customers account to
+                                    payment gateway. Safe to ship at this point.
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="TIMEOUT">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Request to payment gateway timed out
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="ERROR">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Error scenario e.g. no prior bank transfer request found.
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="skip" namespace="##any"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="BankTransferStatusCheckoutReply" type="BankTransferStatusCheckoutReplyType"/>
+</xsd:schema>

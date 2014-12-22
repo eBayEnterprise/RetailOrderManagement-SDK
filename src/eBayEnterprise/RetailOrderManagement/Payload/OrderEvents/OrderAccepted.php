@@ -117,7 +117,7 @@ class OrderAccepted implements IOrderAccepted
 
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     protected function serializeContents()

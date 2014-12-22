@@ -90,15 +90,10 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
         . "</AuthorizationInfo>";
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
-
 
     /**
      * Return the name of the xml root node.

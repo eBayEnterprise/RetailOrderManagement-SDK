@@ -133,7 +133,7 @@ class OrderShipped implements IOrderShipped
 
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     protected function getXmlNamespace()

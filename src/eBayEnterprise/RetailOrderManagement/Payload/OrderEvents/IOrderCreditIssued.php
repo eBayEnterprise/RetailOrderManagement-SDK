@@ -22,5 +22,5 @@ interface IOrderCreditIssued extends IPayload, IOrderEvent, ICurrency, ICustomer
 {
     const ROOT_NODE = 'OrderCreditIssued';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'Order-CreditIssued-Event-1.0.xsd';
+    const XSD = '/events/1.0/events/Order-CreditIssued-Event-1.0.xsd';
 }

@@ -21,7 +21,7 @@ interface IOrderCancel extends IPayload, IOrderEvent, ICustomer, IOrderItemConta
 {
     const ROOT_NODE = 'OrderCancelled';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'Order-Cancel-Event-1.0.xsd';
+    const XSD = '/events/1.0/events/Order-Cancel-Event-1.0.xsd';
 
     /**
      * Get a description of the reason for the order cancellation.

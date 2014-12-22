@@ -250,15 +250,6 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     }
 
     /**
-     * Return the schema file path.
-     * @return string
-     */
-    protected function getSchemaFile()
-    {
-        return '';
-    }
-
-    /**
      * Return the name of the xml root node.
      *
      * @return string

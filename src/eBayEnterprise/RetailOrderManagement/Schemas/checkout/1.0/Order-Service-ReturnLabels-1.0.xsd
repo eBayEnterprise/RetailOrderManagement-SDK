@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Order-Datatypes-Common-1.0.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation>
+            ${project.name}
+            Version: ${project.version}
+            Build Date: ${timestamp}
+        </xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="OrderReturnLabelsRequestType">
+    <xsd:sequence>
+      <!--<xsd:element name="SourceId" type="SourceId" minOccurs="1"/>-->
+      <!--<xsd:choice>-->
+      <!--<xsd:element name="WebOrderId" type="OrderId" minOccurs="0" maxOccurs="1"/>-->
+      <!--<xsd:element name="ExternalOrderId" type="OrderId" minOccurs="0" maxOccurs="1"/>-->
+      <!--<xsd:element name="OmsOrderId" type="OrderId" minOccurs="0" maxOccurs="1"/>-->
+      <!--</xsd:choice>-->
+      <xsd:element name="CustomerOrderId" type="OrderId" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>The unique order id for a price adjustment request
+
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: 24
+                        Default Value: blank
+                        Restrictions: This string must be unique within the webstore.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="orderType" type="OrderType" use="required"/>
+  </xsd:complexType>
+  <xsd:element name="OrderReturnLabelsRequest" type="OrderReturnLabelsRequestType"/>
+  <xsd:complexType name="OrderReturnLabelsResponseType">
+    <xsd:sequence>
+      <xsd:element name="ReturnLabels" type="ReturnLabelsType" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReturnLabelsType">
+    <xsd:sequence>
+      <xsd:element name="Label" type="LabelType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LabelType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                The Fee element should only be missing if the Fee is unknown.  A value of 0 would indicate the label is free of charge.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="CustomerOrderId" type="OrderId" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>The unique order id for a price adjustment request
+
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: 24
+                        Default Value: blank
+                        Restrictions: This string must be unique within the webstore.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Fee" type="CurrencyAmount" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="Trackings" type="TrackingsType"/>
+    </xsd:sequence>
+    <xsd:attribute name="type" type="xsd:string"/>
+    <xsd:attribute name="description" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:complexType name="TrackingsType">
+    <xsd:sequence>
+      <xsd:element name="Tracking" type="TrackingType" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TrackingType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                CarrierCode and CarrierMode are required for most label types.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="URL" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="CarrierCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="CarrierMode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="ScanCodes" type="ScanCodesType" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+    <xsd:attribute name="number" type="xsd:string"/>
+    <xsd:attribute name="type" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:complexType name="ScanCodesType">
+    <xsd:sequence>
+      <xsd:element name="ScanCode" type="ScanCodeType" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ScanCodeType">
+    <xsd:attribute name="type" type="xsd:string" use="required"/>
+    <xsd:attribute name="date" type="xsd:dateTime" use="required"/>
+  </xsd:complexType>
+  <xsd:element name="OrderReturnLabelsResponse" type="OrderReturnLabelsResponseType"/>
+</xsd:schema>

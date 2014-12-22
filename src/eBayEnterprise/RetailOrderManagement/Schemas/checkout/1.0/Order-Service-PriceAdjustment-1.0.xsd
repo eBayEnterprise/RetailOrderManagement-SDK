@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Order-Datatypes-Common-1.0.xsd"/>
+  <xsd:annotation>
+    <xsd:documentation>
+            ${project.name}
+            Version: ${project.version}
+            Build Date: ${timestamp}
+        </xsd:documentation>
+  </xsd:annotation>
+  <xsd:group name="PriceAdjustmentCommonGroup">
+    <xsd:annotation>
+      <xsd:documentation>
+                Contains the customer order id, requester user id, and transaction id elements.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="CustomerOrderId" type="OrderId" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>The unique order id for a price adjustment request
+
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: 24
+                        Default Value: blank
+                        Restrictions: This string must be unique within the webstore.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RequesterUserId" type="xsd:string"/>
+      <xsd:element name="TransactionId" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:group>
+  <xsd:complexType name="PriceAdjustmentRequest">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">Price Adjustment Request</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence minOccurs="1">
+      <xsd:group ref="PriceAdjustmentCommonGroup"/>
+      <xsd:element name="LineAdjustment" type="LineAdjustmentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="HeaderAdjustment" type="HeaderAdjustmentType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="isValidationRequest" type="xsd:boolean" use="optional"/>
+    <xsd:attribute name="orderType" type="OrderType" use="optional"/>
+  </xsd:complexType>
+  <xsd:element name="PriceAdjustmentRequest" type="PriceAdjustmentRequest" nillable="false"/>
+  <xsd:complexType name="PriceAdjustmentResponseType">
+    <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+      <xsd:element name="RequesterUserId" type="xsd:string"/>
+      <xsd:element name="TransactionId" type="xsd:string"/>
+      <xsd:element name="ResponseCode" type="xsd:string"/>
+      <xsd:element name="LineAdjustment" type="ResponseLineAdjustmentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="HeaderAdjustment" type="ResponseHeaderAdjustmentType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="isValidationRequest" type="xsd:boolean" use="optional"/>
+  </xsd:complexType>
+  <xsd:element name="PriceAdjustmentResponse" type="PriceAdjustmentResponseType" nillable="false"/>
+</xsd:schema>

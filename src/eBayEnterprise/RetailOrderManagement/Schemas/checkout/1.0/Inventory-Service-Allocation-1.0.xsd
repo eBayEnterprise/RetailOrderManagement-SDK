@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://api.gsicommerce.com/schema/checkout/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Inventory-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="AllocationRequestMessage">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">The allocation operation should be called immediately after the shopping
+user acts to submit a new order. The operation is used to reserve inventory for a customer order.
+
+This allocation operation is executed separately from order creation so that inventory can be reserved for a shopping session while the sometimes lengthy process of creating the new order is transacted and a competing shopper session doesn't get the inventory first.  This practice also helps prevent over-selling high velocity items.
+
+This type defines the syntax of a request message sent to the inventory allocation API.  This request requires: a reservation ID, a request ID and one or more order items.
+
+A reservation ID which  identifies  the reservation created by this request to the backing order management system.  The reservation ID must be unique.
+
+A request ID which protects against duplicate request submissions.  The request ID must be unique.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="OrderItem" type="InventoryLine" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="requestId" type="RequestId" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">A unique string provided by the Exchange server platform consuming application which identifies the request.
+
+This value is used by the Exchange server platform to detect duplicate request submissions.
+
+Allowable Values: Text string
+Required:Yes
+Length: 40
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="reservationId" type="ReservationId" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">reservationId is a unique value provided by the application using the Exchange Server platform.
+
+This reservation ID identifies the inventory reservation which is created by this operation.
+
+This reservationId ID is passed to the Exchange Server platform when creating an order so that the inventory represented by the reservation can be allocated to the order.
+
+This reservation ID can also be passed to the inventory roll-back allocation operation in the event that the order processing fails before the order can be created.
+
+Allowable Values: Text string
+Required: Yes
+Length: 40
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:element name="AllocationRequestMessage" type="AllocationRequestMessage" nillable="false"/>
+  <xsd:element name="AllocationResponseMessage">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">This type defines the syntax of a response message returned from the inventory allocation API to the service consumer.
+
+The response will contain one or more AllocationResponse elements one for each line -- i.e. OrderItem -- in the originating AllocationResquestMessage.
+
+The response message will also contain the reservation ID value sent on the request if at least one of the lines in the response has allocated quantity.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="AllocationResponse" type="AllocationResponse" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="reservationId" type="ReservationId" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>This is the reservation ID received in the AllocationRequestMessage.
+
+Allowable Values: Text string
+Required: No
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="AllocationResponse">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">AllocationResponse represents an order line in the allocation response message.
+
+There is one line in the response for each line in the request, that is each item in the order (OrderItem).
+
+Each response line can be correlated with the corresponding request line via the lineId attribute value.
+
+Each response line contains: the item ID for the line the quantity allocated for the line the lineId for the line which is used to correlate the response line with a request line.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="AmountAllocated" type="xsd:unsignedInt">
+        <xsd:annotation>
+          <xsd:documentation>This is the quantity of the items actually allocated for the order.  This value will be less than or equal to the Quantity specifiedd in the AllocationRequestMessage/OrderIteem
+
+Allowable Values: Unsigned integer
+Required: Yes
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    This xsd:any element indicates that future optional elements may show up in this location of the XML document in the responses returned from the service.
+                    The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added
+                    to the service's responses without the service clients' code throwing exceptions.
+                    The client code for this service call should be written to not break if new optional XML elements show up in this part
+                    of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box
+                    (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions
+                    if new optional elements appear within the xsd:any section of the XML document).
+                    Developers' unit tests of their service client code should include a test case where this reply message
+                    contains one or more new elements in this location of the XML document.
+                    If new optional elements are added to this interface, a new schema will be created, communications will be sent out,
+                    and you will have the option to modify your service client code to process and use the new elements.
+                    If there is no need/desire to process the new optional elements, your service client should continue to run
+                    uninterrupted as long as it is built to honor this xsd:any element.
+                </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+    <xsd:attribute name="lineId" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>This is the line ID received in the AllocationRequestMessage.
+
+Allowable Values: Text string
+Required: Yes
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A
+</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="itemId" type="ItemId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>This is the itemID received in the AllocationRequestMessage.
+
+Allowable Values: Text string
+Required: Yes
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A
+</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://api.gsicommerce.com/schema/checkout/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Inventory-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="InStoreQuantityRequestMessage">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="us">This API requests the quantity of a given item available-to-sell at a specific store.
+
+It is used to build a web widget to present  "Item Availability at Stores Near You" in a web store.
+
+This type defines the API to request the in store quantity of an item at a given physical store. </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">A unique identifier for a store location defined by the Exchange Platform consumer.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="StoreFrontId" type="String100" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Identifies a physical brick and mortar store.
+Allowable Values: Text string
+Required: Yes
+Length: 100
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="itemId" type="ItemId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Represents the identifier for an inventoriable product.  a.k.a. SKU
+
+Allowable Values: Text string
+Required: Yes
+Length: 20
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:element name="InStoreQuantityRequestMessage" type="InStoreQuantityRequestMessage" nillable="false"/>
+  <xsd:complexType name="StoreFrontQuantity">
+    <xsd:sequence>
+      <xsd:element name="StoreFrontId" type="String100">
+        <xsd:annotation>
+          <xsd:documentation>Identifies a physical brick and mortar store.
+
+Allowable Values: Text string
+Required: Yes
+Length: 100
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Quantity" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation>Presents the quantity of a given item in the brick and mortar store identified.
+
+Allowable Values: Integer
+Required: No
+Length: Integer
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="InStoreQuantityResponseMessage">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">This type defines the syntax of an in-store quantity response message.
+
+The response message consists of the item identifier that the request was made for and a list of one or more store front identifier, quantity pairs each of which represents the available to sell quantity for the item at a specific store location.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="StoreFrontQuantity" type="StoreFrontQuantity" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="itemId" type="ItemId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Represents the identifier for an inventoriable product.  a.k.a. SKU
+
+Allowable Values: Text string
+Required: Yes
+Length: 20
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:element name="InStoreQuantityResponseMessage" type="InStoreQuantityResponseMessage" nillable="false"/>
+</xsd:schema>

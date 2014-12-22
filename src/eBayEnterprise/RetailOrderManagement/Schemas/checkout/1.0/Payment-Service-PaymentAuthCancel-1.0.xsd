@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:element name="PaymentAuthCancelRequest" type="PaymentAuthCancelRequestType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">The request message for Payment Authorization Cancellation operation
+	      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="PaymentAuthCancelReply" type="PaymentAuthCancelReplyType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">The reply message for Payment Authorization Cancellation operation
+	      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="PaymentAuthCancelRequestType">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Payment context combines with the tender type in the URI to	uniquely identify a Payment Transaction for an order. Some tenders do not pass a PaymentAccountUniqueId in the payment context.             </xsd:documentation>
+        </xsd:annotation>
+        <xsd:element name="PaymentContextBase" type="PaymentContextBaseType">
+          <xsd:annotation>
+            <xsd:documentation>Payment context without a PaymentAccountUniqueId.
+				PayPal is one tender that does not have a PaymentAccountUniqueId for auth cancel transaction.        		</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="PaymentContext" type="PaymentContextType">
+          <xsd:annotation>
+            <xsd:documentation>Payment context with a PaymentAccountUniqueId.
+	         		</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:element name="Amount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Amount to cancel. The AmountType includes a required attribute for a three character ISO currency code.	        </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="requestId" type="RequestId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>A unique identifier for the request. The client is responsible for ensuring uniqueness across all requests the client initiates with this service.
+
+Allowable Values: Text string
+Required: No
+Length: 20
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A       </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentAuthCancelReplyType">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:element name="PaymentContextBase" type="PaymentContextBaseType">
+          <xsd:annotation>
+            <xsd:documentation>Payment context without a PaymentAccountUniqueId.
+PayPal is one tender that does not have a PaymentAccountUniqueId for auth cancel transaction.
+	         		</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="PaymentContext" type="PaymentContextType">
+          <xsd:annotation>
+            <xsd:documentation>Payment context with a PaymentAccountUniqueId.
+	         		</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:element name="TenderType" type="TenderTypeType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This element identifies the tender type.
+                        Example values: VC (Visa), MC (Master Card), OGC (Online Gift Certificate)
+                        SM (Maestro UK), SO (Solo UK)
+                        Gift Cards tender type codes are provider specific (i.e Blackhawk, SVS, etc.)
+                        Example: BH (Blackhawk), SP (SVS)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ResponseCode" type="SuccessFailResponseCodeType">
+        <xsd:annotation>
+          <xsd:documentation>Contains the result of the request transaction.
+
+Examples: StoredValueRedeem - Fail means the redemption did not occur.
+
+CreditCardAuth - Fail means the authorization did not occur.
+
+For credit cards more information is returned in Auth, AVS and CSC ResponseCodes.
+Timeout means the service timed out waiting for a response from the authorizer.
+Depending on your company's business rules, you may want to accept an order where the ResponseCode is Timeout for a credit card authorization so as not to lose the order.
+The authorization can be attempted by the OMS before processing the order.
+In the case of a StoredValue, you would never accept an order unless the redeem was successful.
+s
+Allowable Values: Text string (Fail, Success, Timeout)
+Required: No
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A
+</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+		        	Amount cancelled.
+		        	The AmountType includes a required attribute for a three character ISO currency code.
+		        </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExtendedResponseCode">
+        <xsd:annotation>
+          <xsd:documentation>
+              			A supplement to the ResponseCode providing additional details of the result of the transaction.
+              			In example, NoAuthFoundException is returned when the reversal failed because no auth is found in payments db.
+              		</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="0"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="StoreId" type="StoreIdType"/>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="skip">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+	                  This xsd:any element indicates that future optional elements may show up in this location of the XML document in the
+	                  responses returned from the service.
+	                  The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added
+	                  to the service's responses without the service clients' code throwing exceptions.
+	                  The client code for this service call should be written to not break if new optional XML elements show up in this part
+	                  of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box
+	                  (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions
+	                  if new optional elements appear within the xsd:any section of the XML document).
+	                  Developers' unit tests of their service client code should include a test case where this reply message
+	                  contains one or more new elements in this location of the XML document.
+	                  If new optional elements are added to this interface, a new schema will be created, communications will be sent out,
+	                  and you will have the option to modify your service client code to process and use the new elements.
+	                  If there is no need/desire to process the new optional elements, your service client should continue to run
+	                  uninterrupted as long as it is built to honor this xsd:any element.
+              		</xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

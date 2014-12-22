@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="TaxDutyFee-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="PromotionalDiscounts">
+    <xsd:sequence>
+      <xsd:element name="Discount" type="Discount" nillable="false" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Discount">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Optional code typically entered by the customer to explicitly apply a promotion to the
+                        order/item. Example: FF20
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Description" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Description of the discount.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountBaseType"/>
+      <xsd:element name="QuoteAmount" type="AmountBaseType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents Tax quote amount.
+                        It is set as flexible number field 1 on Tax Invoice request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Taxes" type="TaxGroup" minOccurs="0"/>
+      <xsd:element name="Extension" type="TaxExclusiveAmountExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="ReferenceId" use="optional"/>
+    <xsd:attribute name="calculateDuty" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                    This type represents whether duty needs to be calculated for particular discount.
+                    It will be ignored for all other line items except 'Merchandise' and 'Shipping' (Cost Including
+                    Freight calculation only).
+                    If overall duty is not present in input, then this flag will be ignored and duty will be calculated
+                    for all available discounts.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="FeeListRequest">
+    <xsd:sequence>
+      <xsd:element name="Fee" type="FeeRequest" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FeeRequest">
+    <xsd:sequence>
+      <xsd:element name="FeeType" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Example: geographicalSurcharge, importSurcharge</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Description" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Example: CA Recycling Fee $18.00</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FeeId" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Identifier for the fee. ItemId will be used for any legal fees offered in the
+                        output.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Charge" type="PriceGroup"/>
+      <xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Adjustments">
+    <xsd:sequence>
+      <xsd:element name="Adjustment" type="Adjustment" nillable="false" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Adjustment">
+    <xsd:sequence>
+      <xsd:element name="Description" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Description of the adjustment.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountBaseType"/>
+      <xsd:element name="QuoteAmount" type="AmountBaseType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents Tax quote amount.
+                        It is set as flexible number field 1 on Tax Invoice request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Taxes" type="TaxGroup" minOccurs="0"/>
+      <xsd:element name="Extension" type="TaxExclusiveAmountExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="ReferenceId" use="optional"/>
+    <xsd:attribute name="calculateDuty" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                    This type represents whether duty needs to be calculated for particular adjustment.
+                    It will be ignored for all other line items except 'Merchandise' and 'Shipping' (Cost Including
+                    Freight calculation only).
+                    If overall duty is not present in input, then this flag will be ignored and duty will be calculated
+                    for all available adjustments.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TaxExclusiveAmountExtensionType">
+    <xsd:sequence>
+      <xsd:element name="TaxExclusiveAmount" type="TaxExclusiveAmount"/>
+      <xsd:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="TaxExclusiveAmount">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the tax exclusive amount where pricing is tax-inclusive.
+                It will be the same amount considered for taxation in case of non tax-inclusive cases.
+                This is an optional output field, for which no value will be present in cases like discounts involving
+                net taxation model.
+                Amount might be pro-rated similar to flat rate shipping tax involving stores defined for vat rounding
+                correction and vat inclusive pricing.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal">
+      <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="PriceGroup">
+    <xsd:sequence>
+      <xsd:element name="Amount" type="AmountBaseType" minOccurs="0" nillable="true">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents Amount for Tax calculation purposes.
+                        Duty amount is set as flexible number field 3 on Tax Invoice request for Merchandise line item.
+                        Merchandise amount is set as flexible number field 4 on Tax Quote and Invoice request for
+                        Shipping line item.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxData" type="TaxDataType" minOccurs="0"/>
+      <xsd:element name="PromotionalDiscounts" type="PromotionalDiscounts" minOccurs="0"/>
+      <xsd:element name="Adjustments" type="Adjustments" minOccurs="0"/>
+      <xsd:element name="Extension" type="TaxExclusiveAmountExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomFeature">
+    <xsd:sequence>
+      <xsd:element name="CustomizationId" type="ReferenceId" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Optional value used to group customization instructions into logical sets.
+                        Examples may be: "Stone2", "Left Shoulder"
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ItemId" type="ItemId" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Optional item identifier (SKU) used to identify an inventory item.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ItemDesc" type="ItemDescription" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Optional item description (SKU) used to identify an inventory item.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Upcharge" type="MerchandisePriceGroup" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Optional charge associated to the given Customization.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="ReferenceId" use="optional"/>
+  </xsd:complexType>
+  <xsd:complexType name="TaxDataType">
+    <xsd:sequence>
+      <xsd:element name="TaxClass" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents class for Tax calculation purposes. Typically the default tax class for
+                        shipping is 93000.
+                        It is set as flexible code field 4 on Tax Quote and Invoice request for Shipping line item.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="QuoteAmount" type="AmountBaseType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents Tax quote amount.
+                        With EHF handling, no longer used to set as flexible number field 1 on Tax Invoice request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Taxes" type="TaxGroup" minOccurs="0"/>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomFeatureList">
+    <xsd:sequence>
+      <xsd:element name="CustomFeature" type="CustomFeature" maxOccurs="unbounded">
+            </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomizationService">
+    <xsd:sequence>
+      <xsd:element name="CustomFeatureList" type="CustomFeatureList"/>
+      <xsd:element name="BasePrice" type="MerchandisePriceGroup" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Destination">
+    <xsd:sequence>
+      <xsd:element name="DestinationTarget" type="DestinationTargetType"/>
+      <xsd:element name="Items" type="OrderItemList" nillable="false"/>
+      <xsd:element name="DestinationLevelGifting" type="GiftPackaging" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DestinationList">
+    <xsd:sequence>
+      <xsd:element name="Destination" type="Destination" nillable="false" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DutyPriceGroup">
+    <xsd:complexContent>
+      <xsd:extension base="PriceGroup">
+        <xsd:sequence>
+          <xsd:element name="CalculationError" type="CalculationError" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="GiftPackaging">
+    <xsd:sequence>
+      <xsd:element name="ItemId" type="ItemId"/>
+      <xsd:element name="ItemDesc" type="ItemDesc" minOccurs="0"/>
+      <xsd:element name="VendorPartNumber" type="VendorPartNumber" minOccurs="0"/>
+      <xsd:element name="ShippingCartonId" type="ShippingCartonId" minOccurs="0"/>
+      <xsd:element name="Pricing" type="MerchandisePriceGroup"/>
+      <xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="ReferenceId" use="optional"/>
+  </xsd:complexType>
+  <xsd:complexType name="MerchandisePriceGroup">
+    <xsd:complexContent>
+      <xsd:extension base="PriceGroup">
+        <xsd:sequence>
+          <xsd:element name="UnitPrice" type="AmountBaseType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                This type represents Unit Price Amount for particular line item.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrderItem">
+    <xsd:sequence>
+      <xsd:element name="ItemId" type="ItemId"/>
+      <xsd:element name="ItemDesc" type="ItemDesc" minOccurs="0"/>
+      <xsd:element name="HTSCode" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Harmonized Tariff Code used for duties calculation.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="VendorPartNumber" type="VendorPartNumber" minOccurs="0"/>
+      <xsd:element name="ShippingCartonId" type="ShippingCartonId" minOccurs="0"/>
+      <xsd:element name="ScreenSize" type="ScreenSize" minOccurs="0"/>
+      <xsd:element name="LocationCode" type="LocationCode" minOccurs="0"/>
+      <xsd:element name="Origins" type="Origins"/>
+      <xsd:element name="Quantity" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Quantity of the item.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Pricing" type="OrderItemPricing"/>
+      <xsd:element name="Gifting" type="GiftPackaging" minOccurs="0"/>
+      <xsd:element name="Customization" type="CustomizationService" minOccurs="0"/>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="lineNumber" type="LineNumber" use="required"/>
+  </xsd:complexType>
+  <xsd:complexType name="OrderItemList">
+    <xsd:sequence>
+      <xsd:element name="OrderItem" type="OrderItem" nillable="false" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderItemPricing">
+    <xsd:sequence>
+      <xsd:element name="Merchandise" type="MerchandisePriceGroup"/>
+      <xsd:element name="PriceGroup" type="PriceGroup" minOccurs="0"/>
+      <xsd:element name="Duty" type="DutyPriceGroup" minOccurs="0"/>
+      <xsd:element name="FeeListRequest" type="FeeListRequest" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipGroupType">
+    <xsd:sequence>
+      <xsd:element name="DestinationTarget" type="DestinationTargetType"/>
+      <xsd:element name="Items" type="OrderItemList" nillable="false"/>
+      <xsd:element name="Gifting" type="GiftPackaging" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+                    The id field is used to uniquely identify the shipgroup within an XML document
+                    to allow XML references.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="chargeType" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+                    The type of shipping charge. i.e. - FLAT, WEIGHT
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:simpleType name="InvoiceType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Invoice type identification (mainly from OMS).
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="SALE">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Relates to SHIPMENT, ORDER, DEBIT_MEMO.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CREDIT_MEMO">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Relates to appeasement. As legal fee (e.g. EHF) need not be refunded, tax class override done
+                        for merchandise as well, if applicable
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="RETURN">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Relates to returns.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="ShippingType">
+    <xsd:sequence>
+      <xsd:element name="ShipGroups" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ShipGroup" type="ShipGroupType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Destinations" type="TdfDestinationsType" nillable="false" maxOccurs="1" minOccurs="1"/>
+      <xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderFeeList">
+    <xsd:sequence>
+      <xsd:element name="Fee" type="OrderFee" nillable="false" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderFee">
+    <xsd:annotation>
+      <xsd:documentation>
+                A fixed surcharge that is placed on an order when cash on delivery or convenience store payment method
+                is used.
+                It can be used for other fee types as well e.g. Hassle Free Return etc.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FeeType" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Fee type information about the order fee.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Description" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Description of the distribute order fee.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Charge" type="PriceGroup"/>
+      <xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="VATInclusivePricing">
+    <xsd:sequence>
+      <xsd:element name="VATInclusivePricing" type="xsd:boolean" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:anyAttribute>
+      <xsd:annotation>
+        <xsd:documentation>
+                    Specifies whether pricing is VAT inclusive or exclusive.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:anyAttribute>
+  </xsd:complexType>
+  <xsd:complexType name="TaxInvoiceRequest">
+    <xsd:sequence>
+      <xsd:element name="OrderId" type="OrderId"/>
+      <xsd:element name="OriginalOrderId" type="OriginalOrderId" minOccurs="0"/>
+      <xsd:element name="WebOrderNumber" type="WebOrderNumber" minOccurs="0"/>
+      <xsd:element name="InvoiceNumber" type="InvoiceNumber"/>
+      <xsd:element name="InvoiceType" type="InvoiceType" minOccurs="0"/>
+      <xsd:element name="OrderDateTime" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Date and Time of the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OriginalOrderDateTime" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Original date and time of the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ShipDateTime" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Shipping date and time of the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Currency" type="ISOCurrencyCodeType"/>
+      <xsd:element name="CurrencyConversionRate" type="CurrencyConversionRate" minOccurs="0"/>
+      <xsd:element name="VATInvoiceNumber" type="NonWhitespaceString20Type" minOccurs="0"/>
+      <xsd:element name="VATInclusivePricing" type="xsd:boolean"/>
+      <xsd:element name="CustomerTaxId" type="CustomerTaxId" minOccurs="0"/>
+      <xsd:element name="BillingInformation" type="DestinationTargetType"/>
+      <xsd:element name="Shipping" type="ShippingType" minOccurs="0"/>
+      <xsd:element name="Fees" type="OrderFeeList" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="TaxInvoiceRequest" type="TaxInvoiceRequest" nillable="false"/>
+</xsd:schema>

@@ -21,7 +21,7 @@ interface IOrderAccepted extends IPayload, IOrderEvent, ICustomer, ICurrency, IO
 {
     const ROOT_NODE = 'OrderAccepted';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'Order-Accepted-Event-1.0.xsd';
+    const XSD = '/events/1.0/events/Order-Accepted-Event-1.0.xsd';
 
     /**
      * VAT Tax amount

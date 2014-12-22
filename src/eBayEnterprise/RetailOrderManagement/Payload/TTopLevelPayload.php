@@ -52,4 +52,14 @@ trait TTopLevelPayload
      * @return string
      */
     abstract protected function getSchemaFile();
+
+    /**
+     * Get path to the shared schema directory.
+     *
+     * @return string
+     */
+    protected function getSchemaDir()
+    {
+        return __DIR__ . '/../Schemas';
+    }
 }

@@ -225,13 +225,9 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
         );
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . static::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

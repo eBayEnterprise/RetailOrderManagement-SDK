@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://api.gsicommerce.com/schema/storelocator/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.gsicommerce.com/schema/storelocator/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:element name="Locations">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Location" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="Id" type="xsd:int"/>
+              <xsd:element name="StoreCode" type="xsd:string"/>
+              <xsd:element name="GeoPoint">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="Latitude" type="xsd:double"/>
+                    <xsd:element name="Longitude" type="xsd:double"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="Address" type="PhysicalAddressType"/>
+              <xsd:element name="StsAddress" type="PhysicalAddressType" nillable="true"/>
+              <xsd:element name="PhoneNumber" type="xsd:string" nillable="true"/>
+              <xsd:element name="Email" type="xsd:string" nillable="true"/>
+              <xsd:element name="LocationTypes">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="LocationType" minOccurs="1" maxOccurs="unbounded">
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="Id" type="xsd:string"/>
+                          <xsd:element name="TypeCode" type="xsd:string"/>
+                          <xsd:element name="DisplayName" type="xsd:string"/>
+                          <xsd:element name="DisplayDesc" type="xsd:string"/>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="Name" type="xsd:string"/>
+              <xsd:element name="Distance" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="Value" type="xsd:double"/>
+                    <xsd:element name="Unit" type="xsd:string"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="Hours">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="HoursOpen" maxOccurs="unbounded">
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="DayOfWeek" type="xsd:string"/>
+                          <xsd:choice>
+                            <xsd:element name="Closed">
+                              <xsd:complexType>
+                                <xsd:complexContent>
+                                  <xsd:restriction base="xsd:anyType"/>
+                                </xsd:complexContent>
+                              </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="Open24Hours">
+                              <xsd:complexType>
+                                <xsd:complexContent>
+                                  <xsd:restriction base="xsd:anyType"/>
+                                </xsd:complexContent>
+                              </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="OpenCloseRange">
+                              <xsd:complexType>
+                                <xsd:sequence>
+                                  <xsd:element name="Open" type="xsd:string"/>
+                                  <xsd:element name="Close" type="xsd:string"/>
+                                </xsd:sequence>
+                              </xsd:complexType>
+                            </xsd:element>
+                          </xsd:choice>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="LocationCode" type="xsd:string"/>
+              <xsd:element name="IspEligibilityInd" type="BooleanType"/>
+              <xsd:element name="InventoryOnlyEligibilityInd" type="BooleanType"/>
+              <xsd:element name="IspReservationOnlyEligibilityInd" type="BooleanType"/>
+              <xsd:element name="StsEligibilityInd" type="BooleanType"/>
+              <xsd:element name="SfsEligibilityInd" type="BooleanType"/>
+              <xsd:element name="TimezoneGmtOffset" type="xsd:int"/>
+              <xsd:element name="TimezoneDstInd" type="BooleanType"/>
+              <xsd:element name="Attributes" nillable="true">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="Attribute" minOccurs="0" maxOccurs="unbounded">
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="Name" type="xsd:string"/>
+                          <xsd:element name="Value" type="xsd:string"/>
+                          <xsd:element name="DisplayName" type="xsd:string"/>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="StsAddressAvailInd" type="BooleanType"/>
+              <xsd:element name="Status" type="StatusType"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="BooleanType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="F"/>
+      <xsd:enumeration value="T"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StatusType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="A"/>
+      <xsd:enumeration value="I"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AddressLineType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="70"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="PhysicalAddressType">
+    <xsd:annotation>
+      <xsd:documentation>The street, city, state and country of a location.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Line1" type="AddressLineType"/>
+      <xsd:element name="Line2" type="AddressLineType" minOccurs="0"/>
+      <xsd:element name="Line3" type="AddressLineType" minOccurs="0"/>
+      <xsd:element name="Line4" type="AddressLineType" minOccurs="0"/>
+      <xsd:element name="City">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="35"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MainDivision" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="35"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="CountryCode">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="2"/>
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PostalCode" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="15"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -106,7 +106,7 @@ class OrderCancel implements IOrderCancel
 
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     protected function serializeContents()
