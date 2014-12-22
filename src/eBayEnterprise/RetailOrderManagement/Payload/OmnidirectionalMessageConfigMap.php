@@ -20,6 +20,7 @@
 return call_user_func(function () {
     $orderEvents = '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents';
     $map = [];
+    $map['OrderAccepted'] = "$orderEvents\OrderAccepted";
     $map['OrderBackorder'] = "$orderEvents\OrderBackorder";
     $map['OrderCancelled'] = "$orderEvents\OrderCancel";
     $map['OrderCreditIssued'] = "$orderEvents\OrderCreditIssued";
