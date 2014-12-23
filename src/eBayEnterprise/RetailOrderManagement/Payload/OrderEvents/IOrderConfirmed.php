@@ -15,6 +15,13 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface IBackOrderItem extends IOrderItem, IProductPrice
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+
+interface IOrderConfirmed extends IPayload, IOrderEvent, ICustomer, IShipGroupContainer, IPaymentContainer
 {
+    const ROOT_NODE = 'OrderConfirmed';
+    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
+    const XSD = 'Order-Confirmed-Event-1.0.xsd';
+    const MAILING_ADDRESS_INTERFACE =
+        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IMailingAddress';
 }

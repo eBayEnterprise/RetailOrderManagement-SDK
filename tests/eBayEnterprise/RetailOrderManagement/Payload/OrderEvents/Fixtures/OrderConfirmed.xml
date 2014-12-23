@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderConfirmed xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="1000223123" storeId="GTA38382" currency="USD" currencySymbol="$">
+    <Customer customerId="somecustomerid">
+        <Name>
+            <Honorific>Mr.</Honorific> <!-- optional -->
+            <LastName>Someone</LastName>
+            <MiddleName>thing</MiddleName> <!-- optional -->
+            <FirstName>somebody</FirstName>
+        </Name>
+        <EmailAddress>test@test.com</EmailAddress> <!-- optional 150 characters max -->
+        <LoyaltyPrograms> <!-- optional ILoyaltyProgramContainer -->
+            <LoyaltyProgram>
+                <Account>Some_Account</Account>
+                <Program>Some Program</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Some Key</Key>
+                        <Value>Some Value</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+        </LoyaltyPrograms>
+    </Customer>
+    <ShipGroups> <!-- requires at least one shipgroup (will get caught by xsd validation) -->
+        <ShipGroup>
+            <OrderConfirmedOrderItems>
+                <OrderItem webLineId="5" itemId="87-54321" quantity="2"> <!-- all is required -->
+                    <Description> <!-- optional -->
+                        <Description>Some Item Desc</Description>
+                        <Title>Some Item Title</Title>
+                        <Color id="c333">Blue</Color> <!-- color is optional, id attribute is optional-->
+                        <Size id="s993">M</Size>
+                    </Description>
+                    <Pricing>
+                        <Amount remainder="0.01">9.98</Amount> <!-- optional -->
+                        <UnitPrice>4.99</UnitPrice> <!-- required by oms, so is a business requirement that should be handled by user of sdk -->
+                    </Pricing>
+                </OrderItem>
+            </OrderConfirmedOrderItems>
+            <ShipmentMethod displayText="United States Postal Service">USPS</ShipmentMethod> <!-- displayText is optional -->
+            <ShippedAddress>
+                <PersonName>
+                    <Honorific>Mr.</Honorific>
+                    <LastName>Someone</LastName>
+                    <MiddleName>thing</MiddleName>
+                    <FirstName>Somebody</FirstName>
+                </PersonName>
+                <Address>
+                    <Line1>Somwhere street</Line1>
+                    <City>Some Place</City>
+                    <MainDivision>PA</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>19406</PostalCode>
+                </Address>
+            </ShippedAddress>
+        </ShipGroup>
+        <ShipGroup>
+            <OrderConfirmedOrderItems>
+                <OrderItem webLineId="5" itemId="87-54321" quantity="2"> <!-- all is required -->
+                    <Description> <!-- optional -->
+                        <Description>Some Item Desc</Description>
+                        <Title>Some Item Title</Title>
+                        <Color id="c333">Blue</Color> <!-- color is optional, id attribute is optional-->
+                        <Size id="s993">M</Size>
+                    </Description>
+                    <Pricing>
+                        <Amount remainder="0.01">9.98</Amount> <!-- optional -->
+                        <UnitPrice>4.99</UnitPrice> <!-- required by oms, so is a business requirement that should be handled by user of sdk -->
+                    </Pricing>
+                </OrderItem>
+            </OrderConfirmedOrderItems>
+            <ShipmentMethod displayText="United States Postal Service">USPS</ShipmentMethod> <!-- displayText is optional -->
+            <StoreFrontAddress>
+                <StoreFrontLocation id="s990">
+                    <StoreCode>Some_code</StoreCode>
+                    <StoreName>Some Store Name</StoreName>
+                    <StoreEmail>someStore@someStore.com</StoreEmail>
+                    <Address>
+                        <Line1>Some Ave</Line1>
+                        <Line2>Line 2</Line2>
+                        <Line3>Line 3</Line3>
+                        <Line4>Line 4</Line4>
+                        <City>Some Place</City>
+                        <MainDivision>PA</MainDivision>
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>19046</PostalCode>
+                    </Address>
+                </StoreFrontLocation>
+                <StoreDirections>http://somestore.com/location</StoreDirections>
+                <StoreHours>10:30 AM - 10:00 PM</StoreHours>
+                <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>
+            </StoreFrontAddress>
+        </ShipGroup>
+    </ShipGroups>
+    <OrderConfirmedPayments>
+        <Payment>
+            <PaymentDescription>payment description</PaymentDescription>
+            <PaymentTenderType>MSC</PaymentTenderType>
+            <PaymentMaskedAccount>*************1234</PaymentMaskedAccount>
+            <PaymentAmount>7.40</PaymentAmount>
+        </Payment>
+    </OrderConfirmedPayments>
+    <OrderSummary totalAmount="7.40" subTotalAmount="6.00" salesTaxAmount="0.00" shippingAmount="0.00" dutyAmount="0.00" feesAmount="0.00" discountAmount="0.00" />
+</OrderConfirmed>

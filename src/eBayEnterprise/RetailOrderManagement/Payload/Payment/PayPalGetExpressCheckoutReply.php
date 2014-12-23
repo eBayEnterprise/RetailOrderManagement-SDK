@@ -45,10 +45,6 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     protected $payerCountry;
     /** @var string * */
     protected $payerPhone;
-    /** @var Payload\IPayloadFactory */
-    protected $payloadFactory;
-    /** @var Payload\IPayloadMap */
-    protected $payloadMap;
 
     public function __construct(
         Payload\IValidatorIterator $validators,

@@ -21,7 +21,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
-class BackOrderItem extends OrderItem implements IBackOrderItem
+class PricedOrderItem extends OrderItem implements IPricedOrderItem
 {
     use TShippedItem, TProductPrice, TAmount {
         TAmount::serializeAmount insteadof TProductPrice;

@@ -25,8 +25,6 @@ interface IShipGroup extends IPayload, IOrderItemContainer
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IMailingAddress';
     const STORE_FRONT_DETAILS_INTERFACE =
         '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails';
-    const EDD_MESSAGE_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IEddMessage';
 
     /**
      * Get the destination the items were shipped to. May be a customer
@@ -55,28 +53,15 @@ interface IShipGroup extends IPayload, IOrderItemContainer
     public function setShipmentMethod($method);
 
     /**
-     * The estimated ship date
+     * Get the string to display for the shipment method
      *
-     * @return DateTime | null
+     * @return string
      */
-    public function getEstimatedShipDate();
+    public function getShipmentMethodDisplayText();
 
     /**
      * @param string
      * @return self
      */
-    public function setEstimatedShipDate($date);
-
-    /**
-     * The estimated delivery date (EDD)
-     *
-     * @return IEddMessage
-     */
-    public function getEddMessage();
-
-    /**
-     * @param IEddMessage
-     * @return self
-     */
-    public function setEddMessage(IEddMessage $message);
+    public function setShipmentMethodDisplayText($displayText);
 }

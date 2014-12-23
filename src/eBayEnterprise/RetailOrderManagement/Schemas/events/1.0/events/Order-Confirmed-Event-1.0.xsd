@@ -42,6 +42,8 @@
       </xsd:annotation>
     </xsd:attribute>
     <xsd:attribute name="storeId" type="xsd:string"/>
+    <xsd:attribute name="currency" type="ISOCurrencyCodeType" use="required"/>
+    <xsd:attribute name="currencySymbol" type="xsd:string" use="required"/>
   </xsd:complexType>
   <xsd:complexType name="OrderConfirmedCustomerType">
     <xsd:annotation>
@@ -99,7 +101,7 @@
     <xsd:sequence>
       <xsd:element name="OrderConfirmedOrderItems" type="OrderConfirmedItemListType"/>
       <xsd:element name="ShipmentMethod" type="ShippingMethodType" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="EstimatedShipDate" type="xsd:date" minOccurs="0"/>
+      <!--<xsd:element name="EstimatedShipDate" type="xsd:date" minOccurs="0"/>-->
       <xsd:choice minOccurs="1" maxOccurs="1">
         <xsd:element name="ShippedAddress" type="MailingAddress"/>
         <xsd:element name="StoreFrontAddress" type="StoreFrontDetails"/>
@@ -108,7 +110,6 @@
   </xsd:complexType>
   <xsd:complexType name="OrderConfirmedSummaryType">
     <xsd:sequence>
-      <xsd:element name="Payments" type="OrderConfirmedPaymentListType"/>
       <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
@@ -131,10 +132,9 @@
       </xsd:any>
     </xsd:sequence>
     <xsd:attribute name="totalAmount" type="AmountBaseType"/>
-    <xsd:attribute name="currency" type="ISOCurrencyCodeType"/>
-    <xsd:attribute name="currencySymbol" type="xsd:string"/>
-    <xsd:attribute name="totalTaxAmount" type="AmountBaseType"/>
+    <xsd:attribute name="salesTaxAmount" type="AmountBaseType"/>
     <xsd:attribute name="subTotalAmount" type="AmountBaseType"/>
+    <xsd:attribute name="shippingAmount" type="AmountBaseType"/>
     <xsd:attribute name="dutyAmount" type="AmountBaseType"/>
     <xsd:attribute name="feesAmount" type="AmountBaseType"/>
     <xsd:attribute name="discountAmount" type="AmountBaseType"/>

@@ -23,14 +23,10 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
-class ShipGroup implements IShipGroup
+class BackOrderShipGroup implements IBackOrderShipGroup
 {
-    use TPayload, TOrderItemContainer;
+    use TPayload, TOrderItemContainer, TShipGroup;
 
-    /** @var IDestination */
-    protected $destination;
-    /** @var string */
-    protected $shipmentMethod;
     /** @var DateTime */
     protected $estimatedShipDate;
     /** @var IEddMessage */
@@ -57,24 +53,14 @@ class ShipGroup implements IShipGroup
             'shipmentMethod' => 'string(x:ShipmentMethod)',
         ];
         $this->optionalExtractionPaths = [
-            'estimatedShipDate' => 'x:EstimatedShipDate',
+            'shipmentMethodDisplayText' => 'x:ShipmentMethod/@displayText',
+            'estimatedShipDate' => 'x:EstimatedShipDate'
         ];
         $this->subpayloadExtractionPaths = [
-            'orderItems' => 'x:BackorderOrderItems',
             'eddMessage' => 'x:EDDMessage',
+            'orderItems' => 'x:BackorderOrderItems',
         ];
         $this->hasEddMessageNode = false;
-    }
-
-    public function getShippingDestination()
-    {
-        return $this->destination;
-    }
-
-    public function setShippingDestination(IDestination $destination)
-    {
-        $this->destination = $destination;
-        return $this;
     }
 
     protected function deserializeExtra($serializedPayload)
@@ -85,27 +71,13 @@ class ShipGroup implements IShipGroup
         return $this->deserializeShippingDestination($xpath);
     }
 
-    protected function deserializeShippingDestination(DOMXPath $xpath)
+    protected function serializeContents()
     {
-        $addressMap = [
-            'ShippedAddress' => static::MAILING_ADDRESS_INTERFACE,
-            'StoreFrontAddress' => static::STORE_FRONT_DETAILS_INTERFACE,
-        ];
-        $destination = null;
-        $destinationNode = null;
-        foreach ($addressMap as $type => $interface) {
-            $node = $xpath->query("x:$type");
-            if ($node->length) {
-                $destinationNode = $node->item(0);
-                $destination = $this->buildPayloadForInterface($interface);
-                break;
-            }
-        }
-        if ($destination && $destinationNode) {
-            $destination->deserialize($destinationNode->C14N());
-            $this->setShippingDestination($destination);
-        }
-        return $this;
+        return $this->getOrderItems()->serialize()
+            . $this->serializeShipmentMethod()
+            . $this->serializeEstimatedShipDate()
+            . $this->serializeEddMessage()
+            . $this->getShippingDestination()->serialize();
     }
 
     /**
@@ -118,33 +90,9 @@ class ShipGroup implements IShipGroup
         return ($xpath->query('x:EDDMessage')->length > 0);
     }
 
-    protected function getRootNodeName()
-    {
-        return static::ROOT_NODE;
-    }
-
-    protected function getRootAttributes()
-    {
-        return [];
-    }
-
-    protected function serializeContents()
-    {
-        return $this->getOrderItems()->serialize()
-            . "<ShipmentMethod>{$this->getShipmentMethod()}</ShipmentMethod>"
-            . $this->serializeEstimatedShipDate()
-            . $this->serializeEddMessage()
-            . $this->getShippingDestination()->serialize();
-    }
-
     protected function serializeEddMessage()
     {
         return $this->hasEddMessageNode ? $this->getEddMessage()->serialize() : '';
-    }
-
-    protected function getXmlNamespace()
-    {
-        return self::XML_NS;
     }
 
     protected function serializeEstimatedShipDate()
@@ -152,17 +100,6 @@ class ShipGroup implements IShipGroup
         $date = $this->getEstimatedShipDate();
         return ($date instanceof DateTime)
             ? "<EstimatedShipDate>{$date->format('Y-m-d')}</EstimatedShipDate>" : '';
-    }
-
-    public function getShipmentMethod()
-    {
-        return $this->shipmentMethod;
-    }
-
-    public function setShipmentMethod($method)
-    {
-        $this->shipmentMethod = $method;
-        return $this;
     }
 
     public function getEstimatedShipDate()
@@ -186,5 +123,20 @@ class ShipGroup implements IShipGroup
     {
         $this->eddMessage = $message;
         return $this;
+    }
+
+    protected function getRootNodeName()
+    {
+        return static::ROOT_NODE;
+    }
+
+    protected function getRootAttributes()
+    {
+        return [];
+    }
+
+    protected function getXmlNamespace()
+    {
+        return self::XML_NS;
     }
 }
