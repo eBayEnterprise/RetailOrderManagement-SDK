@@ -50,4 +50,13 @@ interface IReturnSummary
      * @return self
      */
     public function setReturnOrCredit($returnOrCredit);
+    /**
+     * @return bool
+     */
+    public function isReturn();
+
+    /**
+     * @return bool
+     */
+    public function isCredit();
 }

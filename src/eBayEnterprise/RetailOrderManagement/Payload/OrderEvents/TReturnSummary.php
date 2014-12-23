@@ -57,6 +57,16 @@ trait TReturnSummary
         return $this;
     }
 
+    public function isReturn()
+    {
+        return strtolower($this->returnOrCredit) === 'return';
+    }
+
+    public function isCredit()
+    {
+        return strtolower($this->returnOrCredit) === 'credit';
+    }
+
     /**
      * ensure the amount is rounded to two decimal places.
      * @param  mixed $amount any numeric value
