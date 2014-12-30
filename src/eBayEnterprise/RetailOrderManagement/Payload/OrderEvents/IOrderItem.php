@@ -49,6 +49,7 @@ interface IOrderItem extends IPayload, IOrderItemDescription
      * @return self
      */
     public function setItemId($itemId);
+
     /**
      * Quantity of the item in the order
      *

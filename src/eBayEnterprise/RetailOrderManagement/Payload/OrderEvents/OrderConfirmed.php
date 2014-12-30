@@ -19,7 +19,7 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 
 class OrderConfirmed implements IOrderConfirmed
 {
-    use Payload\TTopLevelPayload, Payload\Payment\TAmount, TOrderEvent, TCurrency, TCustomer, TPaymentContainer, TSummaryAmounts;
+    use Payload\TTopLevelPayload, Payload\Payment\TAmount, TOrderEvent, TCurrency, TLoyaltyProgramCustomer, TPaymentContainer, TSummaryAmounts;
 
     /** @var float */
     protected $shippingAmount;

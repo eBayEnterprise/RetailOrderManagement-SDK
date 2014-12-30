@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
-interface IOrderShipped extends IPayload, ICurrency, ICustomer, IOrderEvent, IOrderItemContainer, IPaymentContainer, ISummaryAmounts, IShippedAmounts, ITaxDescriptionContainer
+interface IOrderShipped extends IPayload, ICurrency, ILoyaltyProgramCustomer, IOrderEvent, IOrderItemContainer, IPaymentContainer, ISummaryAmounts, IShippedAmounts, ITaxDescriptionContainer
 {
     const ROOT_NODE = 'OrderShipped';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';

@@ -24,7 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class OrderAccepted implements IOrderAccepted
 {
-    use TTopLevelPayload, TOrderEvent, TCustomer, TCurrency, TOrderItemContainer,
+    use TTopLevelPayload, TOrderEvent, TLoyaltyProgramCustomer, TCurrency, TOrderItemContainer,
         TPaymentContainer, TSummaryAmounts, TAmount;
 
     /** @var float */

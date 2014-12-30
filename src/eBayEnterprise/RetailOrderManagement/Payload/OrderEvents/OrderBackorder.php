@@ -25,7 +25,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
 class OrderBackorder implements IOrderBackorder
 {
-    use TTopLevelPayload, TCustomer, TOrderEvent, TShipGroupContainer;
+    use TTopLevelPayload, TLoyaltyProgramCustomer, TOrderEvent, TShipGroupContainer;
 
     public function __construct(
         IValidatorIterator $validators,

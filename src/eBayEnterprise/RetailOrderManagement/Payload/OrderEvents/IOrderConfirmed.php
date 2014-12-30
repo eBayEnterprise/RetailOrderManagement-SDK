@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-interface IOrderConfirmed extends IPayload, IOrderEvent, ICustomer, IShipGroupContainer, IPaymentContainer
+interface IOrderConfirmed extends IPayload, IOrderEvent, ILoyaltyProgramCustomer, IShipGroupContainer, IPaymentContainer
 {
     const ROOT_NODE = 'OrderConfirmed';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';

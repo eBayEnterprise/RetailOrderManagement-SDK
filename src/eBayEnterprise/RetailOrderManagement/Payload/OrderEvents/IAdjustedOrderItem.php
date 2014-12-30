@@ -17,33 +17,36 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-interface IOrderAccepted extends IPayload, IOrderEvent, ILoyaltyProgramCustomer, ICurrency, IOrderItemContainer, IPaymentContainer, ISummaryAmounts
+interface IAdjustedOrderItem extends IPayload, IOrderItemDescription, IItemPriceAdjustmentContainer
 {
-    const ROOT_NODE = 'OrderAccepted';
+    const ROOT_NODE = 'OrderItem';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = '/events/1.0/events/Order-Accepted-Event-1.0.xsd';
+    const LINE_NUMBER_MIN = 0;
+    const LINE_NUMBER_MAX = 999;
+    const ITEM_ID_MAX_LENGTH = 20;
 
     /**
-     * VAT Tax amount
+     * Line number of the item in the cart when the order was placed.
      *
-     * xsd restriction: 2 decimal, non-negative
-     * @return float
+     * xsd restriction: min value 1, max value 999
+     * @return int
      */
-    public function getVatTaxAmount();
+    public function getLineNumber();
     /**
-     * @param float
+     * @param int
      * @return self
      */
-    public function setVatTaxAmount($vatTaxAmount);
+    public function setLineNumber($lineNumber);
     /**
-     * Get the source of the order
+     * Identifier for the inventoriable product. SKU
      *
+     * xsd restriction: 1-20 characters
      * @return string
      */
-    public function getOrderAcceptedSource();
+    public function getItemId();
     /**
      * @param string
      * @return self
      */
-    public function setOrderAcceptedSource($orderAcceptedSource);
+    public function setItemId($itemId);
 }

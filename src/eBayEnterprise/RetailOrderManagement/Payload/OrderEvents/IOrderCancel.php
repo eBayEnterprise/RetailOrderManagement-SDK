@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-interface IOrderCancel extends IPayload, IOrderEvent, ICustomer, IOrderItemContainer, ICurrency
+interface IOrderCancel extends IPayload, IOrderEvent, ILoyaltyProgramCustomer, IOrderItemContainer, ICurrency
 {
     const ROOT_NODE = 'OrderCancelled';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';

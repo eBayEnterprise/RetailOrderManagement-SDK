@@ -24,7 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class OrderReturnInTransit implements IOrderReturnInTransit
 {
-    use TTopLevelPayload, TCurrency, TCustomer, TOrderEvent;
+    use TTopLevelPayload, TCurrency, TLoyaltyProgramCustomer, TOrderEvent;
 
     public function __construct(
         IValidatorIterator $validators,

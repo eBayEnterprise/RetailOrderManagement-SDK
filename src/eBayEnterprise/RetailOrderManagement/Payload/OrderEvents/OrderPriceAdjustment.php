@@ -23,13 +23,12 @@ use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
-class OrderShipped implements IOrderShipped
+class OrderPriceAdjustment implements IOrderPriceAdjustment
 {
-    use TTopLevelPayload, TAmount, TCurrency, TLoyaltyProgramCustomer, TOrderEvent, TOrderItemContainer,
-        TPaymentContainer, TSummaryAmounts, TShippedAmounts, TTaxDescriptionContainer;
+    use TTopLevelPayload, TAmount, TCurrency, TCustomer, TOrderEvent, TSummaryAmounts, TShippedAmounts;
 
-    /** @var IDestination */
-    protected $destination;
+    /** @var IPerformedAdjustmentIterable */
+    protected $performedAdjustments;
 
     public function __construct(
         IValidatorIterator $validators,
@@ -41,14 +40,10 @@ class OrderShipped implements IOrderShipped
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
 
-        $this->loyaltyPrograms =
-            $this->buildPayloadForInterface(static::LOYALTY_PROGRAM_ITERABLE_INTERFACE);
-        $this->payments =
-            $this->buildPayloadForInterface(static::PAYMENT_ITERABLE_INTERFACE);
-        $this->taxDescriptions =
-            $this->buildPayloadForInterface(static::TAX_DESCRIPTION_ITERABLE_INTERFACE);
         $this->orderItems =
             $this->buildPayloadForInterface(static::ORDER_ITEM_ITERABLE_INTERFACE);
+        $this->performedAdjustments =
+            $this->buildPayloadForInterface(static::ADJUSTMENT_ITERABLE_INTERFACE);
 
         $this->extractionPaths = [
             'currencyCode' => 'string(x:OrderSummary/@currency)',
@@ -72,10 +67,8 @@ class OrderShipped implements IOrderShipped
             'customerEmailAddress' => 'x:Customer/x:EmailAddress',
         ];
         $this->subpayloadExtractionPaths = [
-            'loyaltyPrograms' => 'x:Customer/x:LoyaltyPrograms',
-            'orderItems' => 'x:ShippedOrderItems',
-            'payments' => 'x:OrderSummary/x:Payments',
-            'taxDescriptions' => 'x:OrderSummary/x:OrderTaxesDutiesFeesInformations',
+            'orderItems' => 'x:AdjustedOrderItems',
+            'performedAdjustments' => 'x:PerformedAdjustments',
         ];
     }
 
@@ -84,41 +77,33 @@ class OrderShipped implements IOrderShipped
         return static::ROOT_NODE;
     }
 
-    public function getShippingDestination()
+    /**
+     * Get all adjustments performed.
+     * @return IPerformedAdjustmentIterable
+     */
+    public function getPerformedAdjustments()
     {
-        return $this->destination;
+        return $this->performedAdjustments;
     }
 
-    public function setShippingDestination(IDestination $destination)
+    /**
+     * @param IPerformedAdjustmentIterable
+     * @return self
+     */
+    public function setPerformedAdjustments(IPerformedAdjustmentIterable $adjustments)
     {
-        $this->destination = $destination;
+        $this->performedAdjustments = $adjustments;
         return $this;
     }
 
-    protected function deserializeExtra($serializedPayload)
+    public function getOrderItems()
     {
-        $xpath = $this->getPayloadAsXPath($serializedPayload);
-        return $this->deserializeShippingDestination($xpath);
+        return $this->orderItems;
     }
 
-    protected function deserializeShippingDestination(DOMXPath $xpath)
+    public function setOrderItems(IAdjustedOrderItemIterable $orderItems)
     {
-        $destinationNode = $xpath->query('x:ShippedDestination/*')->item(0);
-        $mailingAddress = static::MAILING_ADDRESS_INTERFACE;
-        $storeFront = static::STORE_FRONT_DETAILS_INTERFACE;
-        $destination = null;
-        switch ($destinationNode->nodeName) {
-            case $mailingAddress::ROOT_NODE:
-                $destination = $this->buildPayloadForInterface($mailingAddress);
-                break;
-            case $storeFront::ROOT_NODE:
-                $destination = $this->buildPayloadForInterface($storeFront);
-                break;
-        }
-        if ($destination) {
-            $destination->deserialize($destinationNode->C14N());
-            $this->setShippingDestination($destination);
-        }
+        $this->orderItems = $orderItems;
         return $this;
     }
 
@@ -143,23 +128,22 @@ class OrderShipped implements IOrderShipped
 
     protected function getRootNodeName()
     {
-        return static::ROOT_NODE;
+        return self::ROOT_NODE;
     }
 
     protected function serializeContents()
     {
         return $this->serializeCustomer()
             . $this->getOrderItems()->serialize()
-            . "<ShippedDestination>{$this->getShippingDestination()->serialize()}</ShippedDestination>"
+            . $this->getPerformedAdjustments()->serialize()
             . $this->serializeOrderSummary();
     }
 
     protected function serializeOrderSummary()
     {
-        $format = '<OrderSummary totalAmount="%s" currency="%s" currencySymbol="%s"'
-            . ' totalTaxAmount="%s" subTotalAmount="%s" shippedAmount="%s"'
-            . ' dutyAmount="%s" feesAmount="%s" discountAmount="%s">'
-            . '%s%s</OrderSummary>';
+        $format = '<OrderSummary totalAmount="%.2F" currency="%s" currencySymbol="%s"'
+            . ' totalTaxAmount="%.2F" subTotalAmount="%.2F" shippedAmount="%.2F"'
+            . ' dutyAmount="%.2F" feesAmount="%.2F" discountAmount="%.2F" />';
         return sprintf(
             $format,
             $this->formatAmount($this->getTotalAmount()),
@@ -170,9 +154,7 @@ class OrderShipped implements IOrderShipped
             $this->formatAmount($this->getShippedAmount()),
             $this->formatAmount($this->getDutyAmount()),
             $this->formatAmount($this->getFeesAmount()),
-            $this->formatAmount($this->getDiscountAmount()),
-            $this->getPayments()->serialize(),
-            $this->getTaxDescriptions()->serialize()
+            $this->formatAmount($this->getDiscountAmount())
         );
     }
 }

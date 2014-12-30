@@ -23,7 +23,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class OrderCancel implements IOrderCancel
 {
-    use TTopLevelPayload, TCustomer, TOrderEvent, TOrderItemContainer, TCurrency;
+    use TTopLevelPayload, TLoyaltyProgramCustomer, TOrderEvent, TOrderItemContainer, TCurrency;
 
     /** @var string */
     protected $cancelReason;

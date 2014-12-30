@@ -33,7 +33,7 @@ return call_user_func(function () {
     $shippingAddressParams = ['getShipToLines', 'getShipToCity', 'getShipToCountryCode'];
     $physicalAddressParams = ['getLines', 'getCity', 'getCountryCode'];
     $personNameParams = ['getLastName', 'getFirstName'];
-    $orderItemParams = ['getLineNumber', 'getItemId', 'getQuantity', 'getTitle', 'getDescription'];
+    $orderItemParams = ['getLineNumber', 'getItemId', 'getQuantity', 'getTitle'];
     $shippedItemParams = ['getShippedQuantity'];
     $creditItemParams = ['getRemainingQuantity'];
     $noChildPayloads = [
@@ -1128,6 +1128,143 @@ return call_user_func(function () {
         $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderItemIterable'];
     $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderConfirmedPaymentIterable'] =
         $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\PaymentIterable'];
-;
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderPriceAdjustment'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getCurrencyCode',
+                    'getCurrencySymbol',
+                    'getCustomerFirstName',
+                    'getCustomerLastName',
+                    'getStoreId',
+                    'getCustomerOrderId',
+                    'getTotalAmount',
+                    'getTaxAmount',
+                    'getSubtotalAmount',
+                    'getDutyAmount',
+                    'getFeesAmount',
+                    'getDiscountAmount',
+                    'getShippedAmount',
+               ],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => [
+                    'getOrderItems',
+                    'getPerformedAdjustments',
+                ],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IPerformedAdjustmentIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\PerformedAdjustmentIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IAdjustedOrderItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\AdjustedOrderItemIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\PerformedAdjustmentIterable'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => []
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IPerformedAdjustment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\PerformedAdjustment',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\PerformedAdjustment'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getType',
+                    'getDisplay'
+                ]
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\AdjustedOrderItemIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IAdjustedOrderItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\AdjustedOrderItem',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\AdjustedOrderItem'] =[
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getLineNumber', 'getItemId', 'getTitle', 'getAdjustments'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IItemPriceAdjustmentIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ItemPriceAdjustmentIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ItemPriceAdjustmentIterable'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => []
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IItemPriceAdjustment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ItemPriceAdjustment',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ItemPriceAdjustment'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getModificationType',
+                    'getAdjustmentCategory',
+                    'getIsCredit',
+                    'getAmount'
+                ]
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
     return $map;
 });

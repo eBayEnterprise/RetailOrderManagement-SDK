@@ -13,14 +13,20 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-
-interface IOrderCreditIssued extends IPayload, IOrderEvent, ICurrency, ILoyaltyProgramCustomer, IOrderItemContainer, IReturnSummary
+interface IPerformedAdjustmentContainer
 {
-    const ROOT_NODE = 'OrderCreditIssued';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = '/events/1.0/events/Order-CreditIssued-Event-1.0.xsd';
+    const ADJUSTMENT_ITERABLE_INTERFACE =
+        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IPerformedAdjustmentIterable';
+    /**
+     * Get all adjustments performed.
+     * @return IPerformedAdjustmentIterable
+     */
+    public function getPerformedAdjustments();
+    /**
+     * @param IPerformedAdjustmentIterable
+     * @return self
+     */
+    public function setPerformedAdjustments(IPerformedAdjustmentIterable $adjustments);
 }

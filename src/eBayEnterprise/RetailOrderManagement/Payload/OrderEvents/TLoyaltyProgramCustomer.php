@@ -13,14 +13,21 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-
-interface IOrderCreditIssued extends IPayload, IOrderEvent, ICurrency, ILoyaltyProgramCustomer, IOrderItemContainer, IReturnSummary
+trait TLoyaltyProgramCustomer
 {
-    const ROOT_NODE = 'OrderCreditIssued';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = '/events/1.0/events/Order-CreditIssued-Event-1.0.xsd';
+    use TCustomer, TLoyaltyProgramContainer;
+
+    protected function serializeCustomer()
+    {
+        $customerId = $this->getCustomerId();
+        return sprintf(
+            '<Customer %s>%s%s%s</Customer>',
+            $customerId ? "customerId='$customerId'" : '',
+            $this->serializeCustomerName(),
+            $this->serializeCustomerEmail(),
+            $this->getLoyaltyPrograms()->serialize()
+        );
+    }
 }

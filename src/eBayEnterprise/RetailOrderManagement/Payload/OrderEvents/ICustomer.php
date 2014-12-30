@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface ICustomer extends ILoyaltyProgramContainer
+interface ICustomer
 {
     /**
      * Assigned by the system that is taking the order. This can be either an

@@ -24,7 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
 class OrderCreditIssued implements IOrderCreditIssued
 {
-    use TTopLevelPayload, TOrderEvent, TCurrency, TCustomer, TOrderItemContainer, TReturnSummary, TAmount;
+    use TTopLevelPayload, TOrderEvent, TCurrency, TLoyaltyProgramCustomer, TOrderItemContainer, TReturnSummary, TAmount;
 
     public function __construct(
         IValidatorIterator $validators,

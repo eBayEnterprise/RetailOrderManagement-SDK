@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderPriceAdjustment xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="01234567890" storeId="MAGT1">
+    <Customer customerId="000008012">
+        <Name>
+            <LastName>Lastname</LastName>
+            <FirstName>Firstname</FirstName>
+        </Name>
+    </Customer>
+    <AdjustedOrderItems>
+        <OrderItem webLineId="1" itemId="45-12345">
+            <Adjustments />
+        </OrderItem>
+    </AdjustedOrderItems>
+    <PerformedAdjustments />
+    <OrderSummary totalAmount="7.40" currency="USD" currencySymbol="$" totalTaxAmount="0.40" subTotalAmount="6.00" shippedAmount="1.00" dutyAmount="0.00" feesAmount="0.00" discountAmount="0.00" />
+</OrderPriceAdjustment>

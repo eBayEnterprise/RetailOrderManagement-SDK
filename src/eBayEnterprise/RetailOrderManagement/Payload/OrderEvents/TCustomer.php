@@ -17,8 +17,6 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 trait TCustomer
 {
-    use TLoyaltyProgramContainer;
-
     /** @var string */
     protected $customerId;
     /** @var string */
@@ -102,11 +100,10 @@ trait TCustomer
     {
         $customerId = $this->getCustomerId();
         return sprintf(
-            '<Customer %s>%s%s%s</Customer>',
+            '<Customer %s>%s%s</Customer>',
             $customerId ? "customerId='$customerId'" : '',
             $this->serializeCustomerName(),
-            $this->serializeCustomerEmail(),
-            $this->getLoyaltyPrograms()->serialize()
+            $this->serializeCustomerEmail()
         );
     }
 

@@ -7,7 +7,7 @@
     <xsd:sequence>
       <xsd:element name="Customer" type="OrderPriceAdjustmentCustomerType"/>
       <xsd:element name="AdjustedOrderItems" type="OrderPriceAdjustmentItemListType"/>
-      <xsd:element name="OrderSummary" type="OrderPriceAdjustmentSummaryType"/>
+      <xsd:element name="PerformedAdjustments" type="PerformedAdjustmentTypeList"/>
       <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
@@ -41,6 +41,8 @@
       </xsd:annotation>
     </xsd:attribute>
     <xsd:attribute name="storeId" type="xsd:string"/>
+    <xsd:attribute name="currency" type="ISOCurrencyCodeType" use="optional"/>
+    <xsd:attribute name="currencySymbol" type="xsd:string" use="optional"/>
   </xsd:complexType>
   <xsd:complexType name="OrderPriceAdjustmentCustomerType">
     <xsd:annotation>
@@ -70,11 +72,6 @@
           </xsd:restriction>
         </xsd:simpleType>
       </xsd:element>
-      <xsd:element name="LoyaltyPrograms" type="LoyaltyPrograms" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>Contains loyalty program information for the customer.</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="customerId" type="CustomerIdType" use="optional">
       <xsd:annotation>
@@ -89,10 +86,17 @@
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>
+  <xsd:complexType name="AdjustmentType">
+    <xsd:attribute type="xsd:string" name="type"/>
+    <xsd:attribute type="xsd:string" name="display"/>
+  </xsd:complexType>
+  <xsd:complexType name="PerformedAdjustmentTypeList">
+    <xsd:sequence>
+      <xsd:element name="Adjustment" type="AdjustmentType" maxOccurs="unbounded" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
   <xsd:complexType name="OrderPriceAdjustmentSummaryType">
     <xsd:sequence>
-      <xsd:element name="Payments" type="OrderPriceAdjustmentPaymentListType" minOccurs="0"/>
-      <xsd:element name="OrderTaxesDutiesFeesInformations" type="OrderPriceAdjustmentTaxesDutiesFeesInformationListType"/>
       <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
@@ -115,41 +119,11 @@
       </xsd:any>
     </xsd:sequence>
     <xsd:attribute name="totalAmount" type="AmountBaseType"/>
-    <xsd:attribute name="currency" type="ISOCurrencyCodeType"/>
-    <xsd:attribute name="currencySymbol" type="xsd:string"/>
     <xsd:attribute name="totalTaxAmount" type="AmountBaseType"/>
     <xsd:attribute name="subTotalAmount" type="AmountBaseType"/>
     <xsd:attribute name="shippedAmount" type="AmountBaseType"/>
     <xsd:attribute name="dutyAmount" type="AmountBaseType"/>
     <xsd:attribute name="feesAmount" type="AmountBaseType"/>
-    <xsd:attribute name="discountAmount" type="AmountBaseType"/>
-  </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentTrackingNumberListType">
-    <xsd:sequence>
-      <xsd:element name="TrackingInfo" type="OrderPriceAdjustmentTrackingInfoType" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentTrackingInfoType">
-    <xsd:attribute name="trackingNumber" type="xsd:string"/>
-    <xsd:attribute name="trackingURL" type="xsd:string"/>
-  </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentTaxesDutiesFeesInformationListType">
-    <xsd:sequence>
-      <xsd:element name="TaxesDutiesFeesInformation" type="OrderPriceAdjustmentTaxesDutiesFeesInformationType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentTaxesDutiesFeesInformationType">
-    <xsd:sequence>
-      <xsd:element name="TaxDescription">
-        <xsd:complexType>
-          <xsd:simpleContent>
-            <xsd:extension base="xsd:string">
-              <xsd:attribute name="amount" type="AmountBaseType"/>
-            </xsd:extension>
-          </xsd:simpleContent>
-        </xsd:complexType>
-      </xsd:element>
-    </xsd:sequence>
   </xsd:complexType>
   <xsd:complexType name="OrderPriceAdjustmentItemListType">
     <xsd:sequence>
@@ -159,10 +133,7 @@
   <xsd:complexType name="OrderPriceAdjustmentItemType">
     <xsd:sequence>
       <xsd:element name="Description" type="OrderPriceAdjustmentProductDescriptionType" minOccurs="0"/>
-      <xsd:element name="Pricing" type="OrderPriceAdjustmentItemPriceType"/>
-      <xsd:element name="TrackingNumberList" type="OrderPriceAdjustmentTrackingNumberListType"/>
-      <xsd:element name="ShopRunnerMessage" type="ShopRunnerMessageType" minOccurs="0"/>
-      <!--<xsd:element name="CustomAttributes" type="CustomAttributesType" minOccurs="0" maxOccurs="1"/>-->
+      <xsd:element name="Adjustments" type="OrderPriceAdjustmentsListType"/>
     </xsd:sequence>
     <xsd:attribute name="webLineId" type="OrderItemLineNumber" use="required">
       <xsd:annotation>
@@ -173,32 +144,20 @@
       </xsd:annotation>
     </xsd:attribute>
     <xsd:attribute name="itemId" type="ItemId"/>
-    <xsd:attribute name="quantity" type="xsd:decimal"/>
-    <xsd:attribute name="shippedQuantity" type="xsd:decimal">
-
-		</xsd:attribute>
-  </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentDestinationType">
-    <xsd:sequence>
-      <xsd:choice minOccurs="1" maxOccurs="1">
-        <xsd:element name="ShippedAddress" type="MailingAddress"/>
-        <xsd:element name="StoreFrontAddress" type="StoreFrontDetails"/>
-      </xsd:choice>
-    </xsd:sequence>
   </xsd:complexType>
   <xsd:complexType name="OrderPriceAdjustmentProductDescriptionType">
     <xsd:complexContent>
       <xsd:extension base="ProductDescriptionBaseType">
         <xsd:sequence>
           <xsd:element name="Title" type="xsd:string"/>
-          <xsd:element name="Color" type="ColorShippedType" minOccurs="0">
+          <xsd:element name="Color" type="ColorPriceAdjustmentType" minOccurs="0">
             <xsd:annotation>
               <xsd:documentation>
                                 Optional product color in the locale in which the order was taken.
                             </xsd:documentation>
             </xsd:annotation>
           </xsd:element>
-          <xsd:element name="Size" type="SizeShippedType" minOccurs="0">
+          <xsd:element name="Size" type="SizePriceAdjustmentType" minOccurs="0">
             <xsd:annotation>
               <xsd:documentation>
                                 Optional product productSize in the locale in which the order was taken.
@@ -209,89 +168,30 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="ColorShippedType">
+  <xsd:complexType name="ColorPriceAdjustmentType">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string">
         <xsd:attribute name="id" use="optional"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:complexType name="SizeShippedType">
+  <xsd:complexType name="SizePriceAdjustmentType">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string">
         <xsd:attribute name="id" use="optional"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentItemPriceType">
+  <xsd:complexType name="OrderPriceAdjustmentsListType">
     <xsd:sequence>
-      <xsd:element name="Amount" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>This field is a computed amount that is valued from the OMS.  It is based on the unit price and other fields that impact the order's total.. For example, the total amount would be $380, if you start with two $200 items,and then take a 5% discount off the order. All line items in an order must have a shipping type specified. If this is not the case, the shipping type must be defined at the order level, at which point line items that do not have shipping specified will inherit that value. If the shipping type is not defined for all line items, and is not defined at the order level, the entire order is not released for shipping.
-                        Allowable Values: Text string
-                        Required: No
-                        Length: TBD
-                        Default Value: blank
-                        Restrictions: N/A
-                        Aliases: N/A</xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexType>
-          <xsd:simpleContent>
-            <xsd:extension base="AmountBaseType">
-              <xsd:annotation>
-                <xsd:documentation>
-                                    Remainder refers to the VAT (Value Added Tax.. the price of the item already
-                                    has tax included) remainder that can occur when
-                                    the total amount divided by the order item quantity does not come out even.
-
-                                    Amount - remainder = UnitPrice * Quantity
-                                    Amount = (UnitPrice * Quantity) + remainder
-
-                                    For example, Amount is 100 and the quantity is 3.
-                                    The amount would be 100.00, the remainder would be 0.01, and
-                                    the UnitPrice would be 33.33.
-
-                                </xsd:documentation>
-              </xsd:annotation>
-              <xsd:attribute name="remainder" type="AmountBaseType" use="optional">
-                <xsd:annotation>
-                  <xsd:documentation>This field contains an amount that is added to the odd item.  For example if the promotion is buy 3 items for $10, this amount shows $0.01, and if it is buy 3 for $100, then the remainder is $1.  This is used when you cannot enter different unit prices for multiple items on a single line.
-                                        Allowable Values: Text string
-                                        Required: No
-                                        Length: TBD
-                                        Default Value: blank
-                                        Restrictions: N/A
-                                        Aliases: N/A</xsd:documentation>
-                </xsd:annotation>
-              </xsd:attribute>
-            </xsd:extension>
-          </xsd:simpleContent>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="UnitPrice" type="AmountBaseType" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>This fields indicates the individual unit price for each item on the line (before any discounts are applied)  If a clinet isn't using our discounting capability, then this is broken down into the Net unit price after any discounting that was already done. OMS requires this field and any rounded charges for line total.
-                        Allowable Values: Decimal
-                        Required: Not by the schema, but OMS requires the value from this field.
-                        Length: TBD
-                        Default Value: blank
-                        Restrictions: N/A
-                        Aliases: N/A</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
+      <xsd:element name="LineItemAdjustment" type="OrderPriceAdjustmentsType" maxOccurs="unbounded" minOccurs="0"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentPaymentListType">
-    <xsd:sequence>
-      <xsd:element name="Payment" type="OrderPriceAdjustmentPaymentType" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="OrderPriceAdjustmentPaymentType">
-    <xsd:sequence>
-      <xsd:element name="PaymentDescription" type="xsd:string"/>
-      <xsd:element name="PaymentTenderType" type="xsd:string"/>
-      <xsd:element name="PaymentMaskedAccount" type="xsd:string"/>
-      <xsd:element name="PaymentAmount" type="AmountBaseType"/>
-    </xsd:sequence>
+  <xsd:complexType name="OrderPriceAdjustmentsType">
+    <xsd:attribute name="ModificationType" type="xsd:string"/>
+    <xsd:attribute name="AdjustmentCategory" type="xsd:string"/>
+    <xsd:attribute name="IsCredit" type="xsd:string"/>
+    <xsd:attribute name="Amount" type="AmountBaseType">
+      </xsd:attribute>
   </xsd:complexType>
 </xsd:schema>

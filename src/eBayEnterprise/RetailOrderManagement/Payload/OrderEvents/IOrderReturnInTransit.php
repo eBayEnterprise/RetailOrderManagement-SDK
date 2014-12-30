@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
-interface IOrderReturnInTransit extends IPayload, ICurrency, ICustomer, IOrderEvent
+interface IOrderReturnInTransit extends IPayload, ICurrency, ILoyaltyProgramCustomer, IOrderEvent
 {
     const ROOT_NODE = 'OrderReturnInTransit';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
