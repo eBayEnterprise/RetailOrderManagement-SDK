@@ -39,9 +39,8 @@ class HttpApi implements IBidirectionalApi
      * what payload object to use, what URI to send to, etc.
      *
      * @param IHttpConfig $config
-     * @param array $args
      */
-    public function __construct(IHttpConfig $config, array $args = [])
+    public function __construct(IHttpConfig $config)
     {
         $this->config = $config;
 

@@ -20,6 +20,9 @@ use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
 use ReflectionClass;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PayPalDoExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
     use TPayloadTest;

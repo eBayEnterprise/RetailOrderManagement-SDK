@@ -170,6 +170,7 @@ trait TPayload
      * convert line item substrings into line item objects
      * @param  string $serializedPayload
      * @return self
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function deserializeLineItems($serializedPayload)
     {

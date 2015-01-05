@@ -21,6 +21,9 @@ use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
 use ReflectionClass;
 use ReflectionMethod;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
     use Payload\TTopLevelPayloadTest;
@@ -50,7 +53,7 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
     }
     public function createNewPayload()
     {
-        return $payload = new PayPalSetExpressCheckoutRequest(
+        return new PayPalSetExpressCheckoutRequest(
             $this->validatorIterator,
             $this->schemaValidatorStub,
             $this->payloadMapStub,

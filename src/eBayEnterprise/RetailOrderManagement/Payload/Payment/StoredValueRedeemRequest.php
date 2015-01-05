@@ -97,7 +97,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
     {
         return $this->serializePaymentContext()
         . $this->serializePin()
-        . $this->serializeAmounts('');
+        . $this->serializeAmount();
     }
 
     /**
@@ -127,10 +127,9 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
 
     /**
      * Build the Amount node
-     * @param string $amountType either 'AmountRedeemed' or 'BalanceAmount'
      * @return string
      */
-    protected function serializeAmounts($amountType)
+    protected function serializeAmount()
     {
         return sprintf('<Amount currencyCode="%s">%1.02F</Amount>', $this->getCurrencyCode(), $this->getAmount());
     }
