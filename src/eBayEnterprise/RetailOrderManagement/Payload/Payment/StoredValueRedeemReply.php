@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 /**
  * Class StoredValueRedeemReply
@@ -26,7 +26,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
  */
 class StoredValueRedeemReply implements IStoredValueRedeemReply
 {
-    use TPayload, TPaymentContext;
+    use TTopLevelPayload, TPaymentContext;
 
     /** @var string */
     protected $pin;
@@ -265,13 +265,9 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
         return $this;
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . static::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

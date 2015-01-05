@@ -1,0 +1,4 @@
+<Attribute xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Key>the key</Key>
+    <Value>the value</Value>
+</Attribute>

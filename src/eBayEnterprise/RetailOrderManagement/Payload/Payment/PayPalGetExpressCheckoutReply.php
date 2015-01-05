@@ -23,7 +23,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     const ADDRESS_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress';
     const SUCCESS = 'Success';
 
-    use Payload\TPayload, TOrderId, TBillingAddress, TShippingAddress;
+    use Payload\TTopLevelPayload, TOrderId, TBillingAddress, TShippingAddress;
 
     /** @var string * */
     protected $responseCode;
@@ -45,10 +45,6 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     protected $payerCountry;
     /** @var string * */
     protected $payerPhone;
-    /** @var Payload\IPayloadFactory */
-    protected $payloadFactory;
-    /** @var Payload\IPayloadMap */
-    protected $payloadMap;
 
     public function __construct(
         Payload\IValidatorIterator $validators,
@@ -393,13 +389,9 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         return $this;
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

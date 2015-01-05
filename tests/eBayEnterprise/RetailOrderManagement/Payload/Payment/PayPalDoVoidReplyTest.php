@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 
 class PayPalDoVoidReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -241,5 +242,19 @@ class PayPalDoVoidReplyTest extends \PHPUnit_Framework_TestCase
         $newPayload = $this->createNewPayload();
         $newPayload->deserialize($xml);
         $this->assertEquals($payload, $newPayload);
+    }
+
+    /**
+     * Test that a known, good serialization will be deserialized and serialized
+     * properly by a payload. Uses a "real" payload, direct from the factory, so
+     * no mocked validators or configurations.
+     */
+    public function testSerializeDeserialize()
+    {
+        $fac = new PayloadFactory;
+        $payload = $fac->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoVoidReply');
+        $serializedData = $this->loadXmlTestString();
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
     }
 }

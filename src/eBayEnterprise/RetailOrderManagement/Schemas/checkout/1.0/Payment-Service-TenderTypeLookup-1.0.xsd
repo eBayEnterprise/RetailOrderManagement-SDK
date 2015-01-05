@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:element name="TenderTypeLookupRequest" type="TenderTypeLookupRequestType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">The Request Message for the Tender Type Lookup Operation
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="TenderTypeLookupReply" type="TenderTypeLookupReplyType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        The Reply Message for the Tender Type Lookup Operation
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="TenderTypeLookupRequestType">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:element name="PaymentAccountUniqueId" type="PaymentAccountUniqueIdType">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">Either a raw PAN or a token representing a PAN.
+                            The type includes an attribute, isToken, to indicate if the PAN is tokenized.
+
+                            Allowable Values: Text string
+                            Required: No
+                            Length: TBD
+                            Default Value: blank
+                            Restrictions: N/A
+                            Aliases: N/A
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="EncryptedPaymentAccountUniqueId" type="EncryptedPayloadType">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Either a raw PAN or a token representing a PAN.
+                            The type includes an attribute, isToken, to indicate if the PAN is tokenized.
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:element name="TenderClass" type="TenderClassType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Payment tender class enum
+
+Allowable Values: Text string
+Required: No
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A	            </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CurrencyCode" type="ISOCurrencyCodeType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">ISO currency code
+
+Allowable Values: Text string
+Required: No
+Length: 3
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A	            </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TenderTypeLookupReplyType">
+    <xsd:sequence>
+      <xsd:element name="TenderType" type="TenderTypeType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Matching Tender Type. Element is not displayed in the xml if the value is null. This element identifies the tender type.
+
+Example values: Credit card: VC (Visa), MC (Master Card), AM (American Express) Stred Value: Stored Value tender type codes are provider specific (i.e Blackhawk, SVS, etc.) Example: BH (Blackhawk), SP (SVS), OGC (GSI Online Gift Certificate)
+
+Allowable Values: Text string
+Required: No
+Length: 4
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A	            </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ResponseCode">
+        <xsd:annotation>
+          <xsd:documentation>This element can have the values listed below:
+
+Allowable Values: Text string
+TENDER_TYPE_FOUND -
+A matching tender type is found by account number, tender class, currency code and store id.
+PAN_FAILS_LUHN_CHECK	 - The account number fails to pass Luhn check. http://en.wikipedia.org/wiki/Luhn_algorithm
+NO_TENDER_TYPE_FOUND - No tender type matches the account number, tender class, currency code and store id
+PAN_NOT_CONFIGURED_TO_STORE - Tender type matches the account number, tender class and currency code but not the store id
+UNKNOWN_FAILURE - Failed to find a tender type for unknown cause/s
+Required: No
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="TENDER_TYPE_FOUND">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    A matching tender type is found by account number,
+                                    tender class, currency code and store id.
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="PAN_FAILS_LUHN_CHECK">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    The account number fails to pass Luhn check.
+                                    http://en.wikipedia.org/wiki/Luhn_algorithm
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="NO_TENDER_TYPE_FOUND">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    No tender type matches the account number, tender class,
+                                    currency code and store id
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="PAN_NOT_CONFIGURED_TO_STORE">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Tender type matches the account number, tender class
+                                    and currency code but not the store id
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="UNKNOWN_FAILURE">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                                    Failed to find a tender type for unknown cause/s
+                                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">This xsd:any element indicates that future optional elements may show up in this location of the XML document in the responses returned from the service.
+
+The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added to the service's responses without the service clients' code throwing exceptions.
+
+The client code for this service call should be written to not break if new optional XML elements show up in this part of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions if new optional elements appear within the xsd:any section of the XML document).
+
+Developers' unit tests of their service client code should include a test case where this reply message contains one or more new elements in this location of the XML document.
+
+If new optional elements are added to this interface, a new schema will be created, communications will be sent out, and you will have the option to modify your service client code to process and use the new elements.
+
+If there is no need/desire to process the new optional elements, your service client should continue to run          uninterrupted as long as it is built to honor this xsd:any element.
+              </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -18,11 +18,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
 {
-    use TPayload, TPaymentContext, TBillingAddress, TShippingAddress;
+    use TTopLevelPayload, TPaymentContext, TBillingAddress, TShippingAddress;
 
     /** @var string */
     protected $requestId;
@@ -650,13 +650,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . static::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

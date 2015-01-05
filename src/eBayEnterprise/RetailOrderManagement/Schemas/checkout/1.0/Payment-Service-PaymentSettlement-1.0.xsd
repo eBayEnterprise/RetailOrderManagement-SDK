@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:element name="PaymentSettlementRequest" type="PaymentSettlementRequestType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	        The Request Message for the Credit Card Authorization Operation
+	      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="PaymentSettlementRequestType">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+						Payment context combines with the tender type in the URI to	uniquely identify a Payment Transaction for an order.
+						Some tenders do not pass a PaymentAccountUniqueId in the payment context.
+					</xsd:documentation>
+        </xsd:annotation>
+        <xsd:element name="PaymentContextBase" type="PaymentContextBaseType">
+          <xsd:annotation>
+            <xsd:documentation>
+							Payment context without a PaymentAccountUniqueId.
+							PayPal is one tender that does not have a PaymentAccountUniqueId for auth cancel transaction.
+						</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="PaymentContext" type="PaymentContextType">
+          <xsd:annotation>
+            <xsd:documentation>Payment context with a PaymentAccountUniqueId.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:element name="InvoiceId" type="String20" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Unique identifier assigned to an invoice</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+		        	Amount to settle.
+		        	The AmountType includes a required attribute for a three character ISO currency code.
+		        </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxAmount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+		        	Tax amount.
+		        	The AmountType includes a required attribute for a three character ISO currency code.
+		        </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SettlementType" type="SettlementTypeType"/>
+      <xsd:element name="AuthorizationResponseCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+		    			Authorization Code returned by the payment processor upon a successful credit card auth.
+          				Any order taken by the Order Service that is paid for by Credit Card MUST have this
+          				authorization code.
+		    		</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AuthorizationDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+		    			Date when the authorization code has been issued by the credit card issuer or issuing bank.
+		    		</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExpirationDate" type="xsd:gYearMonth" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+			          Expiration date of the credit card.
+			        </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClientContext" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+						A unique identifier (optional) passed by the client that is echoed back in the payment settlement status message.
+						It enables the client to associate a specific settlement status(reply) with its settlement request for
+						multi-settlement, same tender type order.
+						Example: order XYZ is paid using two gift cards (gc#1 is tender GS, gc#2 is tender GS too)
+		    		</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FinalDebit" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+						Indicates if this settlement is the final debit in a multiple settlement order.
+						For European credit card settlements, it's mandatory to send the final debit= True on the last debit settlement.
+						If the last order line item has been cancelled, the client still needs to
+						send a settlement with final debit = True and amount = 0.
+		    		</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BillingAddress" type="MailingAddress" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+		          Billing Address of the credit card.
+		        </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InvoiceData" type="InvoiceDataType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+		    			Product quantity, prices and additional details relating to the items used in the sale transaction.
+		    		</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="requestId" type="RequestId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>A unique identifier for the request. The client is responsible for ensuring uniqueness across all requests the client initiates with this service.
+					Allowable Values: Text string
+					Required: No
+					Length: 20
+					Default Value: blank
+					Restrictions: N/A
+					Aliases: N/A
+	       		</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentSettlementStatusType">
+    <xsd:sequence>
+      <!-- Choice between full payment, and base payment -->
+      <xsd:choice>
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Payment context combines with the tender type in the URI to	uniquely identify a Payment Transaction for an order. Some tenders do not pass a PaymentAccountUniqueId in the payment context.             </xsd:documentation>
+        </xsd:annotation>
+        <xsd:element name="PaymentContextBase" type="PaymentContextBaseType">
+          <xsd:annotation>
+            <xsd:documentation>Payment context without a PaymentAccountUniqueId.
+                            PayPal is one tender that does not have a PaymentAccountUniqueId for auth cancel transaction.        		</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="PaymentContext" type="PaymentContextType">
+          <xsd:annotation>
+            <xsd:documentation>Payment context with a PaymentAccountUniqueId.
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:element name="TenderType" type="TenderTypeType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This element identifies the tender type.
+                        Example values: VC (Visa), MC (Master Card), OGC (Online Gift Certificate)
+                        SM (Maestro UK), SO (Solo UK)
+                        Gift Cards tender type codes are provider specific (i.e Blackhawk, SVS, etc.)
+                        Example: BH (Blackhawk), SP (SVS)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountType"/>
+      <xsd:element name="SettlementType" type="SettlementTypeType"/>
+      <xsd:element name="SettlementStatus" type="SettlementStatusType"/>
+      <xsd:element name="DeclineReason" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This is an optional element to accompany Declined Settlements.
+                        It will contain processor-specific decline codes and be used for research
+                        reference, and to be available for future reporting.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClientContext" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="StoreId" type="StoreIdType"/>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="skip">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+	                  This xsd:any element indicates that future optional elements may show up in this location of the XML document in the
+	                  responses returned from the service.
+	                  The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added
+	                  to the service's responses without the service clients' code throwing exceptions.
+	                  The client code for this service call should be written to not break if new optional XML elements show up in this part
+	                  of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box
+	                  (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions
+	                  if new optional elements appear within the xsd:any section of the XML document).
+	                  Developers' unit tests of their service client code should include a test case where this reply message
+	                  contains one or more new elements in this location of the XML document.
+	                  If new optional elements are added to this interface, a new schema will be created, communications will be sent out,
+	                  and you will have the option to modify your service client code to process and use the new elements.
+	                  If there is no need/desire to process the new optional elements, your service client should continue to run
+	                  uninterrupted as long as it is built to honor this xsd:any element.
+              		</xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="PaymentSettlementStatus" type="PaymentSettlementStatusType"/>
+</xsd:schema>

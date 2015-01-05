@@ -26,5 +26,5 @@ interface IPayPalDoExpressCheckout extends IPayload, IOrderId
 {
     // XML related values - document root node, XMLNS and name of the xsd schema file
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'Payment-Service-PayPalDoExpress-1.0.xsd';
+    const XSD = '/checkout/1.0/Payment-Service-PayPalDoExpress-1.0.xsd';
 }

@@ -29,7 +29,7 @@ interface ICreditCardAuth extends IPayload, IPaymentContext
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     const ENCRYPTED_CVV_NODE = 'EncryptedCardSecurityCode';
     const RAW_CVV_NODE = 'CardSecurityCode';
-    const XSD = 'Payment-Service-CreditCardAuth-1.0.xsd';
+    const XSD = '/checkout/1.0/Payment-Service-CreditCardAuth-1.0.xsd';
     // API response codes relevant to payload success/failure and OMS response code
     const AUTHORIZATION_APPROVED = 'AP01';
     const AUTHORIZATION_TIMEOUT_PAYMENT_PROVIDER = 'TO01';

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://api.gsicommerce.com/schema/checkout/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Order-Datatypes-Common-1.0.xsd"/>
+  <xsd:complexType name="GiftSearchType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">Gift Certificate Summary Request</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="CustomerOrderId" type="OrderId" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="SenderEmail" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="RecipientEmail" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="RecipientName" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="GiftCardCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="Source" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        A label of the origination of the order. Examples are WEB, MOBILE, DASHBOARD
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DateRange" type="DateRangeType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GiftSearchRequestType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Gift Certificate Search
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="GiftSearch" type="GiftSearchType"/>
+    </xsd:sequence>
+    <xsd:attribute name="maximumRecords" type="xsd:int" use="optional"/>
+    <xsd:attribute name="orderType" type="OrderType" use="optional"/>
+  </xsd:complexType>
+  <xsd:simpleType name="orderItemLineCountType">
+    <xsd:annotation>
+      <xsd:documentation>
+                The number of or Order Item lines returned. It is not the total items in an order as it
+                does not account for multiple quantities on an order item.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:int"/>
+  </xsd:simpleType>
+  <xsd:complexType name="GiftSearchResponseType">
+    <xsd:annotation>
+      <xsd:documentation>Search</xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0">
+      <xsd:element name="GiftItemSummary" type="GiftItemSummaryType" nillable="false" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:complexType name="GiftItemSummaryType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">Gift Item Summary</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="CustomerOrderId" type="OrderId" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="SenderEmail" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="RecipientEmail" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="RecipientName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Quantity" type="xsd:float"/>
+      <xsd:element name="Description" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="OrderDate" type="xsd:dateTime"/>
+      <xsd:element name="Code" type="xsd:string"/>
+      <xsd:element name="Amount" type="xsd:float"/>
+      <xsd:element name="Pin" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="orderType" type="OrderType" use="required"/>
+    <xsd:attribute name="orderPurpose" type="xsd:string" use="optional"/>
+    <xsd:attribute name="itemId" type="ItemId" use="required"/>
+    <xsd:attribute name="lineId" type="xsd:int" use="required"/>
+    <xsd:attribute name="subLineId" type="xsd:int" use="optional"/>
+    <xsd:attribute name="orderItemLineCount" type="orderItemLineCountType"/>
+  </xsd:complexType>
+  <xsd:element name="GiftSearchRequest" type="GiftSearchRequestType" nillable="false"/>
+  <xsd:element name="GiftSearchResponse" type="GiftSearchResponseType" nillable="false"/>
+</xsd:schema>

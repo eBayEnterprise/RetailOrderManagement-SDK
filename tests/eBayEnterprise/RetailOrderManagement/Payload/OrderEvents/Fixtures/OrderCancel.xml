@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderCancelled xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="ORDERID" storeId="STORE1" currency="USD" currencySymbol="$">
+    <Customer customerId="CUSTOMERID">
+        <Name>
+            <Honorific>Mrs.</Honorific>
+            <LastName>Doe</LastName>
+            <MiddleName>E</MiddleName>
+            <FirstName>Jane</FirstName>
+        </Name>
+        <EmailAddress>test@example.com</EmailAddress>
+        <LoyaltyPrograms>
+            <LoyaltyProgram>
+                <Account>ACCT_NO</Account>
+                <Program>Program Name</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Silver</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+            <LoyaltyProgram>
+                <Account>BLUE_ACCT</Account>
+                <Program>Blue Program</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Gold</Value>
+                    </Attribute>
+                    <Attribute>
+                        <Key>Type</Key>
+                        <Value>Member</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+        </LoyaltyPrograms>
+    </Customer>
+    <OrderCancelReason cancelReasonCode="REASONCODE">The Reason</OrderCancelReason>
+    <CancelledOrderItems>
+        <OrderItem webLineId="1" itemId="55-55555" quantity="3">
+            <Description>
+                <Description>Item description</Description>
+                <Title>Item Title</Title>
+                <Color id="color_id">Red</Color>
+                <Size id="size_id">Medium</Size>
+            </Description>
+            <Pricing>
+                <Amount remainder="0.01">4.99</Amount>
+                <UnitPrice>1.66</UnitPrice>
+            </Pricing>
+        </OrderItem>
+        <OrderItem webLineId="2" itemId="55-666666" quantity="1">
+            <Description>
+                <Description>The next item</Description>
+                <Title>Next Item</Title>
+                <Size id="size_id">Medium</Size>
+            </Description>
+            <Pricing>
+                <Amount>1.99</Amount>
+                <UnitPrice>1.99</UnitPrice>
+            </Pricing>
+        </OrderItem>
+        <OrderItem webLineId="3" itemId="55-7777777" quantity="1">
+            <Description>
+                <Description>The third item.</Description>
+                <Title>Item Three</Title>
+            </Description>
+            <Pricing/>
+        </OrderItem>
+        <OrderItem webLineId="4" itemId="55-888888" quantity="10">
+            <Pricing/>
+        </OrderItem>
+    </CancelledOrderItems>
+</OrderCancelled>

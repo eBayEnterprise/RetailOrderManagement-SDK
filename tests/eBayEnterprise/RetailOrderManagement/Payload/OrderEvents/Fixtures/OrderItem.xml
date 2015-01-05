@@ -1,0 +1,8 @@
+<OrderItem xmlns="http://api.gsicommerce.com/schema/checkout/1.0" webLineId="5" itemId="11-11111" quantity="2">
+    <Description>
+        <Description>the item description</Description>
+        <Title>the item title</Title>
+        <Color id="0000ff">blue</Color>
+        <Size id="2">M</Size>
+    </Description>
+</OrderItem>

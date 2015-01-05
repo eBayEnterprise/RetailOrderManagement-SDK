@@ -1,0 +1,10 @@
+<CustomAttributes xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Attribute>
+        <Key>key</Key>
+        <Value>value</Value>
+    </Attribute>
+    <Attribute>
+        <Key>key 2</Key>
+        <Value>value 2</Value>
+    </Attribute>
+</CustomAttributes>

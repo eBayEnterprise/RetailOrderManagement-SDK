@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use DateTimeZone;
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
@@ -554,5 +555,35 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+    }
+
+    /**
+     * Return each of the tests cases a set of serialized data exists for.
+     *
+     * @return array
+     */
+    public function provideSerializationCase()
+    {
+        return [
+            ['UnencryptedCardData'],
+            ['EncryptedCardData'],
+        ];
+    }
+
+    /**
+     * Test that a known, good serialization will be deserialized and serialized
+     * properly by a payload. Uses a "real" payload, direct from the factory, so
+     * no mocked validators or configurations.
+     *
+     * @param string
+     * @dataProvider provideSerializationCase
+     */
+    public function testSerializeDeserialize($testCase)
+    {
+        $fac = new PayloadFactory;
+        $payload = $fac->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest');
+        $serializedData = $this->xmlTestString($testCase);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
     }
 }

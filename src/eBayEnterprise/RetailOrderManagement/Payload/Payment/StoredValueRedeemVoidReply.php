@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 /**
  * StoredValueRedeemVoidReply Payload
@@ -27,7 +27,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
  */
 class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
 {
-    use TPayload, TPaymentContext;
+    use TTopLevelPayload, TPaymentContext;
 
     protected $responseCode;
     /** @var array response codes that are considered a success */
@@ -104,14 +104,9 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
         );
     }
 
-    /**
-     * Return the schema file path.
-     *
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . static::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

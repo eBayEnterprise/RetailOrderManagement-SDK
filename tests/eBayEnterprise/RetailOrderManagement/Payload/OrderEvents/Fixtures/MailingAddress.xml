@@ -1,0 +1,15 @@
+<ShippedAddress xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <PersonName>
+        <Honorific>Mr.</Honorific>
+        <LastName>Jones</LastName>
+        <MiddleName>Earl</MiddleName>
+        <FirstName>James</FirstName>
+    </PersonName>
+    <Address>
+        <Line1>123 Main St</Line1>
+        <City>King of Prussia</City>
+        <MainDivision>PA</MainDivision>
+        <CountryCode>US</CountryCode>
+        <PostalCode>19406</PostalCode>
+    </Address>
+</ShippedAddress>

@@ -22,7 +22,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
 {
     const SUCCESS = 'Success';
 
-    use Payload\TPayload, TOrderId, TPaymentInfo;
+    use Payload\TTopLevelPayload, TOrderId, TPayPalPaymentInfo;
 
     /** @var string * */
     protected $responseCode;
@@ -86,9 +86,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
         return $this->serializeOrderId()
         . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
         . "<AuthorizationInfo>"
-        . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
-        . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
-        . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
+        . $this->serializePayPalPaymentInfo()
         . "</AuthorizationInfo>";
     }
 
@@ -98,7 +96,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
      */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="TaxDutyFee-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="DistributeShipGroupType">
+    <xsd:sequence>
+      <xsd:element name="DestinationTarget" type="DestinationTargetType"/>
+      <xsd:element name="Items" type="DistributeOrderItemList" nillable="false"/>
+      <xsd:element name="Gifting" type="DistributeGiftPackaging" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+                    The id field is used to uniquely identify the shipgroup within an XML document
+                    to allow XML references.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="chargeType" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+                    The type of shipping charge. i.e. - FLAT, WEIGHT
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="DistributeOrderItemList">
+    <xsd:sequence>
+      <xsd:element name="OrderItem" type="DistributeOrderItem" nillable="false" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DistributeOrderItem">
+    <xsd:sequence>
+      <xsd:element name="ItemId" type="ItemId" minOccurs="0"/>
+      <xsd:element name="ItemDesc" type="ItemDesc" minOccurs="0"/>
+      <xsd:element name="HTSCode" type="HTSCode" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Harmonized Tariff Code used for duties calculation.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="VendorPartNumber" type="VendorPartNumber" minOccurs="0"/>
+      <xsd:element name="ShippingCartonId" type="ShippingCartonId" minOccurs="0"/>
+      <xsd:element name="LocationCode" type="LocationCode" minOccurs="0"/>
+      <xsd:element name="Origins" type="Origins"/>
+      <xsd:element name="Quantity" type="xsd:int" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Quantity of the item.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxCreditAmount" type="CreditAmount">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents Tax Credit Amount / Input Total Tax for Tax adjustment.
+                        It is set as flexible number field 1 on Tax Distribute request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="lineNumber" type="LineNumber" use="required"/>
+  </xsd:complexType>
+  <xsd:simpleType name="CreditAmount">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                Represents a decimal currency with two decimal points. Sample value: -4.20
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal">
+      <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="DistributeGiftPackaging">
+    <xsd:sequence>
+      <xsd:element name="ItemId" type="ItemId"/>
+      <xsd:element name="ItemDesc" type="ItemDescription" minOccurs="0"/>
+      <xsd:element name="VendorPartNumber" type="VendorPartNumber" minOccurs="0"/>
+      <xsd:element name="ShippingCartonId" type="ShippingCartonId" minOccurs="0"/>
+      <xsd:element name="TaxCreditAmount" type="CreditAmount">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents Tax Credit Amount / Input Total Tax for Tax adjustment.
+                        It is set as flexible number field 1 on Tax Distribute request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DistributeShippingType">
+    <xsd:sequence>
+      <xsd:element name="ShipGroups" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ShipGroup" type="DistributeShipGroupType" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Destinations" type="TdfDestinationsType" nillable="false" maxOccurs="1" minOccurs="1">
+            </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DistributeOrderFeeList">
+    <xsd:sequence>
+      <xsd:element name="Fee" type="DistributeOrderFee" nillable="false" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DistributeOrderFee">
+    <xsd:annotation>
+      <xsd:documentation>
+                A fixed surcharge that is placed on an order when cash on delivery or
+                convenience store payment method is used.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FeeType" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Fee type information about the distribute order fee.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Description" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Description of the distribute order fee.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxCreditAmount" type="CreditAmount">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This type represents Tax Credit Amount / Input Total Tax for Tax adjustment.
+                        It is set as flexible number field 1 on Tax Distribute request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TaxDistributeRequest">
+    <xsd:sequence>
+      <xsd:element name="OrderId" type="OrderId"/>
+      <xsd:element name="OriginalOrderId" type="OriginalOrderId"/>
+      <xsd:element name="WebOrderNumber" type="WebOrderNumber" minOccurs="0"/>
+      <xsd:element name="InvoiceNumber" type="InvoiceNumber"/>
+      <xsd:element name="OrderDateTime" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Date and Time of the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OriginalOrderDateTime" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Original date and time of the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ShipDateTime" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Shipping date and time of the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Currency" type="ISOCurrencyCodeType"/>
+      <xsd:element name="CurrencyConversionRate" type="CurrencyConversionRate" minOccurs="0"/>
+      <xsd:element name="VATInvoiceNumber" type="NonWhitespaceString20Type" minOccurs="0"/>
+      <xsd:element name="CustomerTaxId" type="CustomerTaxId" minOccurs="0"/>
+      <xsd:element name="BillingInformation" type="DestinationTargetType"/>
+      <xsd:element name="Shipping" type="DistributeShippingType" minOccurs="0"/>
+      <xsd:element name="Fees" type="DistributeOrderFeeList" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="TaxDistributeRequest" type="TaxDistributeRequest" nillable="false"/>
+</xsd:schema>

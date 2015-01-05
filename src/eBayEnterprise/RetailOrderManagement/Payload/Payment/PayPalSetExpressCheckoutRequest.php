@@ -20,11 +20,11 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutRequest
 {
-    use TPayload, TAmount, TOrderId, TCurrencyCode, TShippingAddress;
+    use TTopLevelPayload, TAmount, TOrderId, TCurrencyCode, TShippingAddress, TLineItemContainer;
 
     /** @var string * */
     protected $returnUrl;
@@ -36,19 +36,19 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     protected $amount;
     /** @var boolean * */
     protected $addressOverride;
-    /** @var string * */
-    protected $lineItems;
 
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        ILineItemIterable $lineItems = null
     ) {
         $this->extractionPaths = [
-            'orderId' => 'string(x:PaymentContext/x:OrderId)',
+            'orderId' => 'string(x:OrderId)',
             'amount' => 'number(x:Amount)',
             'returnUrl' => 'string(x:ReturnUrl)',
             'cancelUrl' => 'string(x:CancelUrl)',
+            'localeCode' => 'string(x:LocaleCode)',
             'currencyCode' => 'string(x:Amount/@currencyCode)',
             // see addressLinesFromXPath - Address lines Line1 through Line4 are specially handled with that function
             'shipToCity' => 'string(x:ShippingAddress/x:City)',
@@ -68,11 +68,14 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
-        $payloadFactory = new PayloadFactory();
-        $this->lineItems = $payloadFactory->buildPayload(
-            $payloadMap->getConcreteType(static::ITERABLE_INTERFACE),
-            $payloadMap
-        );
+        $this->lineItems = $lineItems;
+        if (is_null($this->lineItems)) {
+            $payloadFactory = new PayloadFactory();
+            $this->lineItems = $payloadFactory->buildPayload(
+                $this->payloadMap->getConcreteType(static::ITERABLE_INTERFACE),
+                $this->payloadMap
+            );
+        }
     }
 
     /**
@@ -226,42 +229,9 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         return $this;
     }
 
-    /**
-     * Serialization of line items
-     * @return string
-     */
-    protected function serializeLineItems()
-    {
-        return $this->getLineItems()->serialize();
-    }
-
-    /**
-     * Get an iterable of the line items for this container.
-     *
-     * @return ILineItemIterable
-     */
-    public function getLineItems()
-    {
-        return $this->lineItems;
-    }
-
-    /**
-     * @param ILineItemIterable
-     * @return self
-     */
-    public function setLineItems(ILineItemIterable $items)
-    {
-        $this->lineItems = $items;
-        return $this;
-    }
-
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

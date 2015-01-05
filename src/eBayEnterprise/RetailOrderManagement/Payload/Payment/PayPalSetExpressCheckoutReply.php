@@ -20,7 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
 {
-    use TOrderId, TToken, Payload\TPayload;
+    use TOrderId, TToken, Payload\TTopLevelPayload;
 
     const SUCCESS_MESSAGE = 'Success';
 
@@ -127,13 +127,9 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
         return $this;
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://api.gsicommerce.com/schema/storelocator/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.gsicommerce.com/schema/storelocator/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:element name="LocationTypes">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="LocationType" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="Id" type="xsd:string"/>
+              <xsd:element name="TypeCode" type="xsd:string"/>
+              <xsd:element name="DisplayName" type="xsd:string"/>
+              <xsd:element name="DisplayDesc" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

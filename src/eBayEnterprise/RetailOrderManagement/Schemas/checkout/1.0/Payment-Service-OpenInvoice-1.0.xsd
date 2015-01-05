@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="AddressType">
+    <xsd:sequence>
+      <xsd:element name="Line1" type="xsd:string"/>
+      <xsd:element name="Line2" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Line3" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Line4" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="BuildingName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="PoBox" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Post Office Box (do not pass PO Box as part of the request. e.g. 765)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="City" type="xsd:string"/>
+      <xsd:element name="MainDivision" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        This is the full displayable State/Province name
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MainDivisionCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Typically a two- or three-digit postal abbreviation for
+                        the state or province. Mainly used in Canada and the US.
+                        This does not necessarily conform to the ISO 3166-2 code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CountryName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="CountryCode" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Two digit ISO country code conforming to ISO 3166 alpha 2.
+                        See: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PostalCode" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="GenderType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Gender information associated with the order.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="male"/>
+      <xsd:enumeration value="female"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String255Type">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="255"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="MailingAddressType">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="Customer" minOccurs="0"/>
+      <xsd:element name="Address" type="AddressType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="String50Type">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="50"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="Customer">
+    <xsd:sequence>
+      <xsd:element name="PersonName" type="PersonNameType"/>
+      <xsd:element name="Company" type="String50Type" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+                    Assigned by the order taking application.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="ShipGroupsType">
+    <xsd:sequence>
+      <xsd:element name="ShipGroup" type="ShipGroupType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipGroupType">
+    <xsd:sequence>
+      <xsd:element name="ShippingAddress" type="MailingAddressType" minOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+                        List of mailing addresses.  This will contain just a single mailing address unless we are shipping
+                        to multiple destinations.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LineItems" type="InvoiceLineItems"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OpenInvoiceSkuDataType">
+    <xsd:sequence>
+      <xsd:element name="SkuId" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Represents the identifier for an inventoriable product.  a.k.a. SKU
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClientSkuId" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Represents the vendor/client's sku id
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Quantity" type="xsd:decimal"/>
+      <xsd:element name="QuantityOrdered" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The originally quantity that was ordered.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="VendorPartNumber" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="SkuShortDescription" type="SkuShortDesc"/>
+      <xsd:element name="VATInclusiveUnitPrice" type="AmountType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        For VAT stores, this is the vat inclusive price per unit.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LineCharges" type="ChargeTypes" minOccurs="0"/>
+      <xsd:element name="VATRateInfo" type="OpenInvoiceVATRateInfoType" minOccurs="0"/>
+      <xsd:element name="CustomAttributes" type="CustomAttributesType" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+    <xsd:attribute name="lidCode" type="LineItemDescCodeType" use="optional"/>
+    <xsd:attribute name="lineId" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+  <xsd:complexType name="OpenInvoiceVATRateInfoType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                For VAT stores. The VAT sub-totals grouped per VAT rate.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="VAT" type="OpenInvoiceVATType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OpenInvoiceVATType">
+    <xsd:annotation>
+      <xsd:documentation>
+                An amount of value added tax for a given VAT rate, in the currency of the enclosing context.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="VATRegistrationId" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Tax identifier used for value added tax purposes.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OpenInvoiceVATAmount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>VAT amount</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="rate" type="xsd:decimal" use="required">
+      <xsd:annotation>
+        <xsd:documentation>VAT rate</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="ChargeTypes">
+    <xsd:sequence>
+      <xsd:element name="LineCharge" type="ChargeType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomAttributesType">
+    <xsd:annotation>
+      <xsd:documentation>
+                A list of Generic Key/Value pair used for partner customizations.
+                Example use: Loyalty Program
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Attribute" type="AttributeType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AttributeType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Generic Key/Value pair
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Key" type="xsd:string"/>
+      <xsd:element name="Value" type="xsd:normalizedString"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ChargeType">
+    <xsd:sequence>
+      <xsd:element name="ChargeAmount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Gross amount for all the quantities.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="chargeCategory" type="ChargeCategoryType"/>
+    <xsd:attribute name="isDiscount" type="xsd:boolean"/>
+  </xsd:complexType>
+  <xsd:simpleType name="ChargeCategoryType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="MerchandiseDiscount"/>
+      <xsd:enumeration value="Shipping"/>
+      <xsd:enumeration value="ShippingDiscount"/>
+      <xsd:enumeration value="Duty"/>
+      <xsd:enumeration value="DutyDiscount"/>
+      <xsd:enumeration value="Fees"/>
+      <xsd:enumeration value="FeesDiscount"/>
+      <xsd:enumeration value="Customization"/>
+      <xsd:enumeration value="CustomizationDisc"/>
+      <xsd:enumeration value="GiftWrap"/>
+      <xsd:enumeration value="GiftWrapDiscount"/>
+      <xsd:enumeration value="CODSurcharge"/>
+      <xsd:enumeration value="CVSSurcharge"/>
+      <xsd:enumeration value="HFR"/>
+      <xsd:enumeration value="ZCRCharge"/>
+      <xsd:enumeration value="RestockingFee"/>
+      <xsd:enumeration value="HFRCredit"/>
+      <xsd:enumeration value="RestockingFeeCredit"/>
+      <xsd:enumeration value="PriceAdjustment"/>
+      <xsd:enumeration value="ShippingCredit"/>
+      <xsd:enumeration value="TaxCredit"/>
+      <xsd:enumeration value="DutyCredit"/>
+      <xsd:enumeration value="FeesCredit"/>
+      <xsd:enumeration value="CustomizationCredit"/>
+      <xsd:enumeration value="GiftWrapCredit"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="BankAccountDetails">
+    <xsd:sequence>
+      <xsd:element name="AccountName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Account holder's name
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BankName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Name of the consumer bank
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BankCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Bank code, see http://en.wikipedia.org/wiki/Bank_code for more details
+
+                        Actual meaning depends on country, e.g.US = ABA Number/Transit Routing number,
+                        UK = Sort code, IT = ABI code
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BankCity" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        City of the consumer bank
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BankCountry" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        ISO 3166 country code of the consumer bank
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BranchCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Branch code, see http://en.wikipedia.org/wiki/Bank_code for more details
+
+                        Actual meaning depends on country, e.g. FR = Code guichet, IT = CAB code
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BankCheckDigit" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en"><![CDATA[
+                        Bank Check digit, see http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
+                        for more details. Required for ES & FR
+                        ]]></xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BankIdentifierCode" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OpenInvoicePaymentInstructionType">
+    <xsd:complexContent>
+      <xsd:extension base="BankAccountDetails">
+        <xsd:sequence>
+          <xsd:element name="BankAccountNumber" type="PaymentAccountNumberType" minOccurs="0"/>
+          <xsd:element name="IBAN" type="PaymentAccountNumberType" minOccurs="0">
+            <xsd:annotation>
+              <xsd:documentation>
+                                The International Bank Account Number (IBAN) is an internationally agreed means of
+                                identifying bank accounts across national borders with a reduced risk of propagating
+                                transcription errors. It was originally adopted by the European Committee for
+                                Banking Standards (ECBS), and later adopted as an international standard
+                                under ISO 13616:1997.  For more information refer to:
+                                http://en.wikipedia.org/wiki/International_Bank_Account_Number
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="TransactionReference" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="TransactionAmount" type="AmountType"/>
+          <xsd:element name="PaymentPeriodDays" type="xsd:int" minOccurs="0"/>
+          <xsd:element name="Instructions" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="LegalNote" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="OpenInvoiceProvider" type="xsd:string"/>
+          <xsd:element name="MaxDunningPauseDays" type="xsd:unsignedShort"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:simpleType name="String15Type">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String30Type">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="30"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ChannelId">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AddressChangeType">
+    <xsd:sequence>
+      <xsd:element name="CustomerSalutation" type="String15Type">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Represents salutation of the customer placing the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustomerFirstName" type="String30Type">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Represents first name of the customer placing the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustomerLastName" type="String50Type">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Represents last name of the customer placing the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustomerAddress" type="AddressType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The address to use for sending documents and other messages to the customer, i.e. the legal address of the customer.
+                        Line1 maxLength=50, PoBox maxLength=30, PostalCode maxLength=10 (required), City maxLength=50
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InvoiceAddress" type="AddressType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Alternative address to be used as postal address for invoices, if different from the customer address.
+                        Line1 maxLength=50, PoBox maxLength=30, PostalCode maxLength=10 (required), City maxLength=50
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipGroups">
+    <xsd:sequence>
+      <xsd:element name="ShipGroup" type="OpenInvoiceShipGroupsType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OpenInvoiceShipGroupsType">
+    <xsd:sequence>
+      <xsd:element name="ShippingAddress" type="MailingAddressType" minOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+                        List of mailing addresses.  This will contain just a single mailing address unless we are shipping
+                        to multiple destinations.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LineItems" type="OpenInvoiceInvoiceLineItems"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OpenInvoiceInvoiceLineItems">
+    <xsd:sequence>
+      <xsd:element name="LineItem" type="OpenInvoiceSkuDataType" minOccurs="1" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OpenInvoiceAuthCheckoutRequestType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment
+                        Transaction for an order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Amount to authorize
+                        The AmountType includes a required attribute for a three character ISO currency code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxAmount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Tax amount.
+                        The AmountType includes a required attribute for a three character ISO currency code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OrderContainsDigitalGoods" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Indicates if this order contains digital goods or not. Bill safe does not accept
+                        payments on invoice if the order includes digital goods.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StoreCountryCode" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Store Country Code in 2 digit ISO 3166 format.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Gender" type="GenderType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Gender information of the primary person responsbile for the payment.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DateOfBirth" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Birth Date information associated with the order, e.g. YYYY-MM-DD
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IpAddress" type="String255Type">
+        <xsd:annotation>
+          <xsd:documentation>
+                        IP Address from which the order was placed.  Used for Fraud Check.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Email" type="String255Type">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Email Address of the primary person associated with the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PhoneNumber" type="String255Type">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Phone Number of the primary person associated with the order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BillingAddress" type="MailingAddressType" minOccurs="1"/>
+      <xsd:element name="ShipGroups" type="ShipGroups"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="OpenInvoiceAuthCheckoutRequest" type="OpenInvoiceAuthCheckoutRequestType"/>
+  <xsd:complexType name="OpenInvoiceAuthCheckoutReplyType">
+    <xsd:choice>
+      <xsd:sequence>
+        <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment
+                            Transaction for an order.
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="PaymentInstruction" type="OpenInvoicePaymentInstructionType" minOccurs="0"/>
+        <xsd:element name="ResponseCode" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Response code like Success, Failure etc
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:element name="OpenInvoiceAuthCheckoutReply" type="OpenInvoiceAuthCheckoutReplyType"/>
+  <xsd:complexType name="OpenInvoiceStatusType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment
+                        Transaction for an order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Amount to authorize
+                        The AmountType includes a required attribute for a three character ISO currency code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SettlementType" type="SettlementTypeType"/>
+      <xsd:element name="Status" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        ACK &gt;&gt;&gt; when RatePay gets the invoice/credit into their system
+                        ERR &gt;&gt;&gt; returned when RatePay encounters a problem with the request file
+                        SETL &gt;&gt;&gt; when RatePay pays the customer for a credit
+                        SETL &gt;&gt;&gt; when RatePay gets payment (can be partial)
+                        PMTR &gt;&gt;&gt; when RatePay sends out payment reminder notification
+                        DUNN &gt;&gt;&gt; when RatePay sends out a dunning letter
+                        DUNB &gt;&gt;&gt; when RatePay sees a dunning block on order for the customer
+                        RTML &gt;&gt;&gt; when RatePay gets back mail notifications
+                        ADDR &gt;&gt;&gt; when RatePay gets a change in address
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AddressChange" type="AddressChangeType" minOccurs="0"/>
+      <xsd:element name="extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="channelId" type="ChannelId" use="optional"/>
+  </xsd:complexType>
+  <xsd:element name="OpenInvoiceStatus" type="OpenInvoiceStatusType"/>
+  <xsd:complexType name="OpenInvoiceCustomerInvoiceCreateType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType"/>
+      <xsd:element name="Email" type="xsd:string"/>
+      <xsd:element name="VATInvoiceNumber" type="NonWhitespaceString20Type"/>
+      <xsd:element name="CustomerInvoiceUrl" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="BillingAddress" type="MailingAddressType"/>
+      <xsd:element name="PaymentInstruction" type="OpenInvoicePaymentInstructionType" minOccurs="0"/>
+      <xsd:element name="ClientContext" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="StoreId" type="StoreIdType"/>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="skip"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="OpenInvoiceCustomerInvoiceCreate" type="OpenInvoiceCustomerInvoiceCreateType"/>
+</xsd:schema>

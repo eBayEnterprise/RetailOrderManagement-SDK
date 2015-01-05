@@ -1,0 +1,6 @@
+<Payment xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <PaymentDescription>Visa</PaymentDescription>
+    <PaymentTenderType>VC</PaymentTenderType>
+    <PaymentMaskedAccount>************1111</PaymentMaskedAccount>
+    <PaymentAmount>5.55</PaymentAmount>
+</Payment>

@@ -23,125 +23,14 @@ use ReflectionMethod;
 
 class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
-    use TPayloadTest;
+    use Payload\TTopLevelPayloadTest;
 
-    /** @var  Payload\IValidator */
-    protected $validatorStub;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var  Payload\ISchemaValidator */
-    protected $schemaValidatorStub;
+    /** @var Payload\Payment\ILineItem (stub) */
+    protected $stubLineItemA;
     /** @var Payload\IPayloadMap (stub) */
     protected $payloadMapStub;
-
-    /**
-     * data provider of empty array of properties
-     * Empty properties will generate an invalid IPayload object
-     *
-     * @return array $payloadData
-     */
-    public function provideInvalidPayload()
-    {
-        $payloadData = [];
-
-        return [
-            [$payloadData]
-        ];
-    }
-
-    /**
-     * Provide test data for the cleanAddressLines function.
-     * @return array
-     */
-    public function provideCleanAddressLinesTests()
-    {
-        return [
-            [  // good data
-                "Street 1\nStreet 2\nStreet 3\nStreet 4",
-                ['Street 1', 'Street 2', 'Street 3', 'Street 4'],
-            ],
-            [  // extra lines
-                "Street 1\n"
-                . "Street 2\n"
-                . " Street 3\n"
-                . "Street 4\n\n\n\n\n"
-                . str_repeat('.', 100),
-                ['Street 1', 'Street 2', 'Street 3', 'Street 4 ' . str_repeat('.', 61)],
-            ],
-            [ // not a string
-                100,
-                null
-            ]
-        ];
-    }
-
-    /**
-     * Provide test data to verify serializeShippingAddress
-     */
-    public function provideShippingAddressData()
-    {
-        return [
-            [
-                [
-                    'shipToLines' => ['Chester Cheetah', '630 Allendale Rd', '2nd FL'],
-                    'shipToCity' => 'King of Prussia',
-                    'shipToMainDivision' => 'PA',
-                    'shipToCountryCode' => 'US',
-                    'shipToPostalCode' => '19406'
-                ],
-                // full section returned
-                '<ShippingAddress>'
-                . '<Line1>Chester Cheetah</Line1>'
-                . '<Line2>630 Allendale Rd</Line2>'
-                . '<Line3>2nd FL</Line3>'
-                . '<City>King of Prussia</City>'
-                . '<MainDivision>PA</MainDivision>'
-                . '<CountryCode>US</CountryCode>'
-                . '<PostalCode>19406</PostalCode>'
-                . '</ShippingAddress>'
-            ]
-        ];
-    }
-
-    /**
-     * @param $lines
-     * @param $expected
-     * @dataProvider provideCleanAddressLinesTests
-     */
-    public function testCleanAddressLines($lines, $expected)
-    {
-        $payload = new PayPalSetExpressCheckoutRequest(
-            $this->validatorIterator,
-            $this->schemaValidatorStub,
-            $this->payloadMapStub
-        );
-        $method = new ReflectionMethod(
-            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest',
-            'cleanAddressLines'
-        );
-        $method->setAccessible(true);
-        $cleaned = $method->invokeArgs($payload, [$lines]);
-        $this->assertSame($expected, $cleaned);
-    }
-
-    /**
-     * @param array $properties
-     * @param $expected
-     * @dataProvider provideShippingAddressData
-     */
-    public function testSerializeShippingAddress($properties, $expected)
-    {
-        $payload = new PayPalSetExpressCheckoutRequest(
-            $this->validatorIterator,
-            $this->schemaValidatorStub,
-            $this->payloadMapStub
-        );
-        $this->injectProperties($payload, $properties);
-        $method = new ReflectionMethod($payload, 'serializeShippingAddress');
-        $method->setAccessible(true);
-        $actual = $method->invoke($payload);
-        $this->assertSame($expected, $actual);
-    }
+    /** @var Payload\Payment\ILineItemIterable (stub) */
+    protected $lineItemIterableStub;
 
     /**
      * Inject property values into $class
@@ -159,73 +48,51 @@ class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
             $requestProperty->setValue($class, $value);
         }
     }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
+    public function createNewPayload()
     {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
-    }
-
-    /**
-     * Take an array of property values with property names as keys and return an IPayload object
-     *
-     * @param array $properties
-     * @return PayPalSetExpressCheckoutRequest
-     */
-    protected function buildPayload(array $properties)
-    {
-        $payload = new PayPalSetExpressCheckoutRequest(
+        return $payload = new PayPalSetExpressCheckoutRequest(
             $this->validatorIterator,
             $this->schemaValidatorStub,
-            $this->payloadMapStub
+            $this->payloadMapStub,
+            $this->lineItemIterableStub
         );
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-        return $payload;
     }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailPayloadValidation(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload()));
-        $payload->serialize();
-    }
-
     protected function setUp()
     {
-        $this->payloadMapStub = $this->stubPayloadMap();
+        $this->payloadMapStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
+        $this->lineItemIterableStub = $this->getMock(
+            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable'
+        );
+        $this->lineItemIterableStub->expects($this->any())
+            ->method('serialize')
+            ->will($this->returnValue(''));
+        $this->lineItemIterableStub->expects($this->any())
+            ->method('count')
+            ->will($this->returnValue(0));
+        $this->fullPayload = $this->buildPayload([
+            'setOrderId' => '1234567',
+            'setReturnUrl' => 'http://mysite.com/checkout/return.html',
+            'setCancelUrl' => 'http://mysite.com/checkout/cancel.html',
+            'setLocaleCode' => 'en_US',
+            'setAmount' => 50.00,
+            'setCurrencyCode' => 'USD',
+            'setShipToLines' => "123 Main St\n",
+            'setShipToCity' => 'Philadelphia',
+            'setShipToMainDivision' => 'PA',
+            'setShipToCountryCode' => 'US',
+            'setShipToPostalCode' => '19019'
+        ]);
     }
 
     /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
+     * get the file path for the fixture file
      * @return string
      */
-    protected function xmlTestString()
+    protected function getCompleteFixtureFile()
     {
-        $dom = new DOMDocument();
-        $dom->load(__DIR__ . '/Fixtures/PayPalSetExpressCheckoutRequest.xml');
-        $string = $dom->C14N();
-
-        return $string;
+        return __DIR__ . '/Fixtures/PayPalSetExpressCheckoutRequest.xml';
     }
 }

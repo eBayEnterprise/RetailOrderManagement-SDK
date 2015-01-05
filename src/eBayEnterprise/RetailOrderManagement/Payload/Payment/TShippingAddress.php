@@ -70,19 +70,19 @@ trait TShippingAddress
             $finalLines = array_slice($newLines, 0, 4);
         }
 
-        return $finalLines;
+        return empty($finalLines) ? null : $finalLines;
     }
 
     /**
-     * Aggregate the shipTo address lines into the ShippingAddress node
+     * Aggregate the shipTo address lines into the ShippingAddress node. This is an optional node.
      *
      * @return string
      */
     protected function serializeShippingAddress()
     {
         $lines = [];
-        $shipToLines = is_array($this->shipToLines) ? $this->shipToLines : [];
         $idx = 0;
+        $shipToLines = is_array($this->shipToLines) ? $this->shipToLines : [];
         foreach ($shipToLines as $line) {
             $idx++;
             $lines[] = sprintf(
@@ -91,7 +91,17 @@ trait TShippingAddress
                 $line
             );
         }
+        // If we don't have any address lines, we treat as having no address at all.
+        return ($idx) ? $this->buildShippingAddressNode($lines) : '';
+    }
 
+    /**
+     * Build the Shipping Address Node
+     * @param array lines Street Address
+     * @return type
+     */
+    protected function buildShippingAddressNode(array $lines)
+    {
         return sprintf(
             '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
             implode('', $lines),

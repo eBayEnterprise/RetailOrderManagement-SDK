@@ -18,11 +18,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalDoAuthorizationRequest implements IPayPalDoAuthorizationRequest
 {
-    use TPayload, TAmount, TOrderId, TCurrencyCode;
+    use TTopLevelPayload, TAmount, TOrderId, TCurrencyCode;
 
     /** @var string * */
     protected $requestId;
@@ -82,13 +82,9 @@ class PayPalDoAuthorizationRequest implements IPayPalDoAuthorizationRequest
         return $this;
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

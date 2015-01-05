@@ -1,0 +1,4 @@
+<TrackingNumberList xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <TrackingInfo trackingNumber="TRACKINGNUMBER1" trackingURL="http://example.com/track/1"/>
+    <TrackingInfo trackingNumber="TRACKINGNUMBER2" trackingURL="http://example.com/track/2"/>
+</TrackingNumberList>

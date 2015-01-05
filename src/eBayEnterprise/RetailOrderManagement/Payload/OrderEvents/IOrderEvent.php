@@ -26,4 +26,27 @@ interface IOrderEvent
      * @return string
      */
     public function getEventType();
+    /**
+     * Identifier of the store in which the order was placed.
+     *
+     * @return string
+     */
+    public function getStoreId();
+    /**
+     * @param string
+     * @return self
+     */
+    public function setStoreId($storeId);
+    /**
+     * Unique test string identifying the order.
+     *
+     * xsd restriction: 1-24 characters
+     * @return string
+     */
+    public function getCustomerOrderId();
+    /**
+     * @param string
+     * @return self
+     */
+    public function setCustomerOrderId($orderId);
 }

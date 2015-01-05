@@ -32,10 +32,6 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
     protected $taxTotal;
     /** @var string */
     protected $currencyCode;
-    /** @var \eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap */
-    protected $payloadMap;
-    /** @var \eBayEnterprise\RetailOrderManagement\Payload\IPayloadFactory */
-    protected $payloadFactory;
 
     public function __construct(
         Payload\IValidatorIterator $validators,
@@ -247,15 +243,6 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
             $this->payloadMap->getConcreteType(static::LINE_ITEM_INTERFACE),
             $this->payloadMap
         );
-    }
-
-    /**
-     * Return the schema file path.
-     * @return string
-     */
-    protected function getSchemaFile()
-    {
-        return '';
     }
 
     /**

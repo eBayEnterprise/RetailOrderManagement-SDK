@@ -185,15 +185,6 @@ class LineItem implements ILineItem
     }
 
     /**
-     * Return the schema file path.
-     * @return string
-     */
-    protected function getSchemaFile()
-    {
-        return null;
-    }
-
-    /**
      * The XML namespace for the payload.
      *
      * @return string

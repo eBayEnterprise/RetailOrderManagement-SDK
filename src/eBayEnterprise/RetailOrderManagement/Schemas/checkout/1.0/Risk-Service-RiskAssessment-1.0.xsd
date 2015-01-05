@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Risk-Service-Datatypes-1.0.xsd"/>
+  <xsd:element name="RiskAssessmentRequest" type="RiskAssessmentRequestType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+				The full detail for an event being submitted for fraud validation
+			</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="RiskAssessmentReply" type="RiskAssessmentReplyType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+				The response for an event submitted for fraud validation
+			</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Fault">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                The response for when an error occurs with an event submitted for fraud validation
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="OrderId" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Order ID from the RiskAssessmentRequest
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="Code" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Error code or exception name
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="Description" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Description of the error
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="StoreId" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Store ID from the RiskAssessmentRequest
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="RiskAssessmentRequestType">
+    <xsd:sequence>
+      <xsd:element name="Order" type="OrderDataType"/>
+      <xsd:element name="ServerInfo" type="ServerInfoType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    	Definition: Information collected about the event on the Web application server.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DeviceInfo" type="DeviceInfoType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Definition: Information collected about the device both on the device and at the Web application server.
+                        </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustomProperties" type="CustomPropertiesType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RiskAssessmentReplyType">
+    <xsd:sequence>
+      <xsd:element name="OrderId" type="OrderIdType"/>
+      <xsd:element name="TransactionDeviceInfo" type="TransactionDeviceInfoType" minOccurs="0"/>
+      <xsd:element name="RiskInfo" type="RiskInfoType"/>
+      <xsd:element name="MockOrderEvent" type="xsd:boolean" minOccurs="0"/>
+      <xsd:element name="ResponseCode" type="ResponseCodeType"/>
+      <xsd:element name="StoreId" type="StoreIdType"/>
+      <xsd:element name="any" type="AnyExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

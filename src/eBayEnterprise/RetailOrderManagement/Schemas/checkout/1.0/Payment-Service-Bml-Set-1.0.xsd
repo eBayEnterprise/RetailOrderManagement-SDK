@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="BMLSetRequestType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        The PaymentContext combines with the tendertype in the URI to uniquely identify a Payment Transaction for an order.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BMLAuthParam" type="BMLAuthParamType"/>
+      <xsd:choice>
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Select either interim or success URL depending on Set/Release (review page) vs. Set/Status (confirmation page) flow.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:element name="PayCaptureInterimURL" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Interim URL refers to order review page and is the indicator for Set and Release API flow.
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="PayCaptureSuccessURL" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                            Success URL refers to order confirmation page and is the indicator for Set and Status API flow.
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:element name="PayCaptureFailureURL" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Used to redirect customer when BML authorization is not successful.
+                        Recommended to send customer back to payment page to reselect BML or another payment method.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="BMLSetRequest" type="BMLSetRequestType"/>
+  <xsd:complexType name="BMLSetReplyType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType"/>
+      <xsd:element name="ResponseCode" type="SuccessFailResponseCodeType"/>
+      <!-- ResponseText is used to display error message so that user can correct input -->
+      <xsd:element name="ResponseText" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="RedirectSuccessUrl" type="xsd:string"/>
+      <xsd:element name="RedirectFailUrl" type="xsd:string"/>
+      <xsd:element name="SessionKey" type="xsd:string"/>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="skip" namespace="##any"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="BMLSetReply" type="BMLSetReplyType"/>
+</xsd:schema>

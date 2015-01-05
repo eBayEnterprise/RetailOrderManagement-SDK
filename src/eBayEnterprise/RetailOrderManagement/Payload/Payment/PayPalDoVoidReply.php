@@ -22,7 +22,7 @@ class PayPalDoVoidReply implements IPayPalDoVoidReply
 {
     const SUCCESS = 'Success';
 
-    use Payload\TPayload, TOrderId;
+    use Payload\TTopLevelPayload, TOrderId;
 
     /** @var string */
     protected $responseCode;
@@ -67,13 +67,9 @@ class PayPalDoVoidReply implements IPayPalDoVoidReply
         return $this;
     }
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

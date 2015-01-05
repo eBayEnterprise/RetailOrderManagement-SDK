@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:element name="ProtectPanRequest" type="ProtectPanRequestType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">The Request Message for Tokenization of actual Payment Account Number (PAN) operation      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ProtectPanReply" type="ProtectPanReplyType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">The Reply Message for Tokenization of actual Payment Account Number (PAN) operation.
+
+Payment card numbers are found on payment cards, such as credit cards and debit cards, as well as stored-value cards, gift cards and other similar cards. Some card issuers refer to the card number as the primary account number or PAN.     </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="ProtectPanRequestType">
+    <xsd:sequence>
+      <xsd:element name="PaymentAccountNumber" type="PaymentAccountNumberType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Actual Payment Account Number (PAN). Payment card numbers are found on payment cards, such as credit cards and debit cards, as well as stored-value cards, gift cards and other similar cards. Some card issuers refer to the card number as the primary account number or PAN.
+
+Allowable Values: Text string
+Required: No
+Length:  50
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TenderClass" type="TenderClassType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Tender class represents type of Payment Account Number (PAN): PrivateLabelCreditCard, CreditCard and StoredValue (gift card).
+
+ TenderClass used for API requests like Tender Type Look Up API or Protect Pan API.
+
+NOTE: Use CreditCard tender class type instead of PrivateLabelCreditCard for private label credit card account numbers;
+                PrivateLabelCreditCard is treated as CreditCard tender class type and available here for backward compatibility purpose only.
+
+Allowable Values: Text string
+Required: No
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProtectPanReplyType">
+    <xsd:sequence>
+      <xsd:element name="Token" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">Token representing actual Payment Account Number (PAN).  Payment card numbers are found on payment cards, such as credit cards and debit cards, as well as stored-value cards, gift cards and other similar cards. Some card issuers refer to the card number as the primary account number or PAN.
+
+Allowable Values: Text string
+Required: No
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A  </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">This xsd:any element indicates that future optional elements may show up in this location of the XML document in the responses returned from the service.
+
+The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added to the service's responses without the service clients' code throwing exceptions.
+
+The client code for this service call should be written to not break if new optional XML elements show up in this part of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions if new optional elements appear within the xsd:any section of the XML document).
+
+Developers' unit tests of their service client code should include a test case where this reply message contains one or more new elements in this location of the XML document.
+
+If new optional elements are added to this interface, a new schema will be created, communications will be sent out, and you will have the option to modify your service client code to process and use the new elements.
+
+If there is no need/desire to process the new optional elements, your service client should continue to run uninterrupted as long as it is built to honor this xsd:any element.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

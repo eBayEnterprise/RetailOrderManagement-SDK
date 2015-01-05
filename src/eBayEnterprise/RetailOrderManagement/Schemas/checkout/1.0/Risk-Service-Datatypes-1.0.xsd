@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Payment-Datatypes-CurrencyCode-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="OrderDataType">
+    <xsd:sequence>
+      <xsd:element name="OrderId" type="OrderIdType"/>
+      <xsd:element name="PromoCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        A code used to indicate reduced cost based on a promotional offer.
+                        This can be a comma delimited list of promo codes.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustomerList" type="CustomerListType">
+        <xsd:unique name="UniqueAddressId">
+          <xsd:selector xpath="./*"/>
+          <xsd:field xpath="@AddressId"/>
+        </xsd:unique>
+      </xsd:element>
+      <xsd:element name="ShippingList" type="ShippingListType" minOccurs="0">
+        <xsd:unique name="UniqueShipmentId">
+          <xsd:selector xpath="./*"/>
+          <xsd:field xpath="@ShipmentId"/>
+        </xsd:unique>
+      </xsd:element>
+      <xsd:element name="LineItems" type="OrderLineItemsListType" minOccurs="0"/>
+      <xsd:element name="ExternalRiskResults" type="ExternalRiskResultListType" minOccurs="0"/>
+      <xsd:element name="ShoppingSession" type="ShoppingSessionType" minOccurs="0"/>
+      <xsd:element name="TotalCost" type="TotalCostType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerListType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            CustomerInfos contains the various name and address information associated to the order.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Customer" type="CustomerType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                A classification for the type of customer.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="PersonName" type="PersonName50Type" minOccurs="0"/>
+      <xsd:element name="Email" type="String256Type" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        A valid email address format.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Telephone" type="TelephoneType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="Address" type="AddressType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="MemberLoggedIn" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Indicates if the member was logged in at the time the order was placed.
+                    Sample Data: false
+                    Implementation Notes: MemberLoggedIn should be set to true for the purchaser. All others must have this attribute set to false.
+                    More than one customer element with MemberLoggedIn set to true will generate an error.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CustLoyalty" type="CustLoyaltyType" minOccurs="0"/>
+      <xsd:element name="CurrencyCode" type="ISOCurrencyCodeType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShippingListType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains shipment details for the event.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Shipment" type="ShipmentType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipmentType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains shipment attributes and details for the cost of the shipment.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="CostTotals" type="CostTotalsType" minOccurs="0"/>
+      <xsd:element name="ShippingMethod" type="nonEmptyString">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The method of shipment for the order.
+                    Sample Data: Standard_Ground
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="AddressId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                Unique address identifier. Used to identify addresses in a multi-address shipment.
+                Sample Data: 1 or 2 or 3
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ShipmentId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                Unique identifier for this shipment.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="OrderLineItemsListType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains the line items on the order.
+            Sample Data: N/A
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="LineItem" type="OrderLineItemType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrderLineItemType">
+    <xsd:sequence>
+      <xsd:element name="LineTotalAmount" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The total amount of the specific line item.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="UnitCostAmount" type="AmountType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The cost of an individual unit.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Quantity" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The number of units ordered.
+                    Sample Data: 3
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ProductName" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The product name.
+                    Sample Data: Widget XYZ
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ProductDescription" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: A brief description of the product.
+                    Sample Data: Small box filled with things.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="UnitWeight" type="WeightType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The weight of the product.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ProductCategory" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Identifies the class of product the individual unit belongs to.
+                    Sample Data: Apparel
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PromoCode" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: A code used to identify if the purchase was related to a promotional campaign.
+                    Sample Data: Promo1
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ItemId" type="ItemId" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: A unique identifier for a distinct product.
+                    Sample Data: 13548975
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="LineItemId" type="ItemId" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                Definition: The unique identifier for a specific line item.
+                Sample Data: ATX1821
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ShipmentId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                Identifier if the shipment associated with this line item.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="ExternalRiskResultListType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains the risk scores from other sources outside of FraudNet.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="ExternalRiskResult" type="ExternalRiskResultType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExternalRiskResultType">
+    <xsd:sequence>
+      <xsd:element name="Score" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The risk score from other sources outside of FraudNet.
+                    Sample Data: 782
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Code" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The reason code from other sources outside of FraudNet.
+                    Sample Data: DECLF
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Source" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The source of the external risk score or reason code.
+                    Sample Data: responseToWeb
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShoppingSessionType">
+    <xsd:sequence>
+      <xsd:element name="TimeOnSite" type="xsd:double" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The total time shopping in minutes.
+                    Sample Data: 18
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ReturnCustomer" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The flag indicating whether the shopper is a return customer.
+                    Sample Data: false
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ItemsRemoved" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Indicates if items were added to order/cart and then subsequently removed.
+                    Sample Data: true
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TotalCostType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains all FormOfPayment sections necessary to represent all forms of payment used.
+            Multiple instances of the same FormOfPayment are allowed for multiple cards or multiple accounts.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FormOfPayment" type="FormOfPaymentType" maxOccurs="unbounded"/>
+      <xsd:element name="CostTotals" type="CostTotalsType"/>
+      <xsd:element name="FailedCc" type="FailedCcType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PersonName50Type">
+    <xsd:sequence>
+      <xsd:element name="Honorific" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="LastName">
+        <xsd:annotation>
+          <xsd:documentation>Definition: The last (family) name.
+                    Sample Data: Williams
+                    Implementation Notes: Letters only, upper or lower case. Maximum of 50 characters
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="50"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MiddleName" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Definition: The middle name of the person.
+                    Sample Data: Edward
+                    Implementation Notes: Letters only, upper or lower case. Maximum of 10 characters
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="FirstName">
+        <xsd:annotation>
+          <xsd:documentation>
+                    Definition: The person's (given) name.
+                    Sample Data: David
+                    Implementation Notes:  Letters only, upper or lower case. Maximum of 50 characters
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="50"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Suffix" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Definition: Letters that follow a person's name and provide information about that person, for example Jr.
+                    Sample Data: Jr.
+                    Maximum of 20 characters
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="20"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AddressType">
+    <xsd:sequence>
+      <xsd:element name="Line1">
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="100"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Line2" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="100"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Line3" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="100"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Line4" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="100"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="BuildingName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="PoBox" type="xsd:string" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Post Office Box (do not pass PO Box as part of the request. e.g. 765)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="City" type="xsd:string"/>
+      <xsd:element name="MainDivision" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Typically a two- or three-digit postal abbreviation for
+                        the state or province. Mainly used in Canada and the US.
+                        This does not necessarily conform to the ISO 3166-2 code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CountryName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="CountryCode" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Two digit ISO country code conforming to ISO 3166 alpha 2.
+                        See: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PostalCode" type="nonEmptyString" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="AddressId" type="nonEmptyString">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                Unique address identifier. Used to identify addresses in a multi-address party.
+                Sample Data: 1 or 2 or 3
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TelephoneType">
+    <xsd:sequence>
+      <xsd:element name="Number" type="nonEmptyString">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        Phone number, sent as-is to processor.
+                        Sample Data: (480) 555-1212 or 4805551212 or 01-4805551212 (last format preferred)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TelephoneLocation" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Location of the phone number. i.e. Home, work, etc,.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Primary"/>
+            <xsd:enumeration value="Home"/>
+            <xsd:enumeration value="Work"/>
+            <xsd:enumeration value="Mobile"/>
+            <xsd:enumeration value="Fax"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CostTotalsType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains the total cost details regarding currency used, before tax amount, and after tax amount.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="AmountBeforeTax" type="AmountType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The total fare excluding taxes.
+                    If the AdditionalFeesExcludedIndicator is True, then this amount also excludes fees.
+                    Implementation Notes: This data is not loaded in the eCommerce use case.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AmountAfterTax" type="AmountType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: All charges including fare, fees, and taxes.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FormOfPaymentType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: The FormOfPayment section allows multiple forms of payment to be used on an order.
+            Each FormOfPayment must be one that has been identified within the Fraudnet platform.
+            Each FormOfPayment will have the structures necessary for that form of payment.
+            Please work with the Professional Services team to identify any custom forms of payment
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="PaymentCard" type="PaymentCardType" minOccurs="0"/>
+      <xsd:element name="Authorization" type="AuthorizationType" minOccurs="0"/>
+      <xsd:element name="Email" type="String256Type" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="PersonName" type="PersonName50Type" minOccurs="0"/>
+      <xsd:element name="Address" type="AddressType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Billing address for the form of payment.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Telephone" type="TelephoneType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="TransactionResponses" type="TransactionResponseListType" minOccurs="0"/>
+      <xsd:element name="PaymentTransactionDate" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The timestamp of the credit card transaction.
+                    Sample Data: 4/28/2010 7:57:00 AM
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PaymentTransactionTypeCode" type="nonEmptyString">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Two character tender type code used for the form of payment like for example Visa, MasterCard, PayPal, etc
+                    Sample Data: VC, MC, AM, PY, BL
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PaymentTransactionID" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The transaction ID for the payment.
+                    Sample Data: 4217669601
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ItemListRPH" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Unique identifier within the event used for reference.
+                        Since we don't associate a specific line item with a specific payment, ItemListRPH should be the entire set of item ids
+                    Sample Data: 1
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Amount" type="AmountType"/>
+      <xsd:element name="AccountID" type="PaymentAccountUniqueIdType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Reserved for future use.
+                    Card numbers are passed in PaymentCard/PaymentAccountUniqueId
+                    This field could be used in the future to hold other types of account numbers,
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TenderClass">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CreditCard"/>
+            <xsd:enumeration value="StoredValue"/>
+            <xsd:enumeration value="Other"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentCardType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains credit card and card holder information.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="CardHolderName" type="CardHolderNameType"/>
+      <xsd:element name="PaymentAccountUniqueId" type="PaymentAccountUniqueIdType">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definintion: The account id.
+                    This should be the unencrypted/raw account number or the tokenized account number.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExpireDate" type="xsd:gYearMonth" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definintion: The credit card expiration date.
+                    Sample Data: 2011-09
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CardType" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The type of card used for payment; for example, Visa, American Express, Diners Club, MasterCard, any private label.
+                    Sample Data: Visa
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="CardHolderNameType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: The credit card holder's name as it appears on the credit card.
+            Sample Data: Samuel Florez
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="nonEmptyString">
+      <xsd:maxLength value="100"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AuthorizationType">
+    <xsd:sequence>
+      <xsd:element name="Decline" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Indicates that this is a declined credit card authorization.
+                    Sample Data: 0
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Code" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The authorization code of the credit card transaction.
+                    Sample Data: 000572
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TransactionResponseListType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains the list of responses from the payment processor.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="TransactionResponse" type="TransactionResponseType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TransactionResponseType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Each transaction response specifies the type of transaction response and the value returned.
+            Sample Data: neg
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="nonEmptyString">
+        <xsd:attribute name="ResponseType" type="nonEmptyString" use="required">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                        Definition: The transaction response type.
+                        Sample Data: cvv2
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FailedCcType">
+    <xsd:attribute name="Number" type="xsd:int" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                Definition: The number of failed credit card authorizations.
+                Sample Data: 3
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="CustomPropertiesType">
+    <xsd:sequence>
+      <xsd:element name="CustomPropertyGroup" type="CustomPropertyGroupType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CustomPropertyGroupType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: The groups of custom values for this record.
+            You may include more than one group with same group name.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence maxOccurs="unbounded">
+      <xsd:element name="CustomProperty">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The name of the collected field.
+                    Implementation Notes: A custom property must have a name and exactly one of the value types
+                    StringValue, IntegerValue, FloatValue, or DateTimeValue. Custom property names must be unique within a CustomPropertyGroup.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:choice>
+            <xsd:element name="StringValue" type="xsd:string"/>
+            <xsd:element name="IntegerValue" type="xsd:long"/>
+            <xsd:element name="FloatValue" type="xsd:double"/>
+            <xsd:element name="DateTimeValue" type="xsd:dateTime"/>
+          </xsd:choice>
+          <xsd:attribute name="Name" type="nonEmptyString" use="required">
+            <xsd:annotation>
+              <xsd:documentation xml:lang="en">
+                                Name of the property
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="Name" type="nonEmptyString" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                    Name of the custom property group
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="WeightType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            The numeric representation of the weight and unit of weight.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:float">
+        <xsd:attribute name="unit" type="UnitOfWeightType" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="UnitOfWeightType">
+    <xsd:restriction base="nonEmptyString">
+      <xsd:enumeration value="pound"/>
+      <xsd:enumeration value="ounce"/>
+      <xsd:enumeration value="kilogram"/>
+      <xsd:enumeration value="gram"/>
+      <xsd:enumeration value="unknown"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="CustLoyaltyType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Each CustomerInfo record includes CustLoyalty data for each person for whom that data is available.
+            When no customer loyalty program data is available for the purchaser or traveler, the CustLoyalty section is omitted.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="TotalPoints" type="xsd:long" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Lifetime points earned in the customer loyalty account.
+                    Sample Data: 205606
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The status of the customer loyalty account.
+                    Sample Data: Active
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SignupDate" type="xsd:date" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The customer loyalty program enrollment date.
+                    Sample Data: 2010-05-03
+                    Implementation Notes: Data format is YYYY-MM-DD
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Remark" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Remarks for the customer loyalty program.
+                    Sample Data: Active
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ProgramID" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The name of the loyalty program.
+                    Sample Data: LoyaltyClub
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MembershipID" type="nonEmptyString">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The customer loyalty program membership ID.
+                    Sample Data: 1852874303
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="UserId" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The login user name for this customer.
+                    Sample Data: CS228132
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LoyalLevel" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Indicates elite status in customer loyalty account.
+                    Sample Data: Platinum
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExpireDate" type="xsd:date" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The date the customer loyalty program for this customer will be deactivated.
+                    Sample Data: 2015-01-01
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EffectiveDate" type="xsd:date" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The date the customer loyalty program for this customer was initiated.
+                    Sample Data: 2000-01-01
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CurrentPoints" type="xsd:long" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The current points balance in the customer loyalty account.
+                    Sample Data: 519072
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="VendorCode" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The provider of the customer loyalty account.
+                    Sample Data: CO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClubStatus" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The club status in the customer loyalty account.
+                    Sample Data: Active
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MemberLoggedIn" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Indicates if the member was logged in during the transaction.
+                    Sample Data: False
+                    Implementation Notes: MemberLoggedIn should be set to true only for the primary loyalty account for the purchaser
+                    (the customer record with MemberLoggedIn set to true).
+                    This will define the primary user account used in this event.
+                    All other customers for this itinerary that have CustLoyalty elements must have this attribute set to false.
+                    Multiple CustLoyalty elements with MemberLoggedIn set to true for the purchaser will also generate an error
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LastLogin" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The last login of the user if not all logins are considered events,
+                    in the case of a user logging in before this event but not making a purchase.
+                    Sample Data: 2010-12-01T20:10:33.22
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="UserTenure" type="xsd:float" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The time the user has had an account in days.
+                    Sample Data: 100.0
+                    Implementation Notes: If this attribute is not set, then the value will be calculated from the sign up time for this account.
+                    If there is no sign up time, this will be null.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="UserPassword" type="nonEmptyString" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The user's encrypted password.
+                    Sample Data: cm3nyt#
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FailedLoginAttempts" type="xsd:int" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The number of failed login attempts for this account.
+                    Sample Data: 3
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ServerInfoType">
+    <xsd:sequence>
+      <xsd:element name="Time">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The server timestamp at the time of the event, in UTC.
+                    Sample Data: 2011-03-11T18:38:59.910Z
+                    Implementation Notes: Format is YYYY-MM-DDTHH:MM:SS.SSS
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:dateTime">
+            <xsd:minInclusive value="1900-01-01T00:00:00"/>
+            <xsd:maxInclusive value="2100-01-01T00:00:00"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="TZOffset" type="xsd:decimal">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The time zone offset for the server at the time of the event. Is used for TDL.
+                    Sample Data: 0
+                    Implementation Notes: The range is from -12 to 13 in half or quarter hour increments.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TZOffsetRaw" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The time zone offset for the server at the time of the event,
+                    used when the time data sent is not the same as on the server.
+                    Sample Data: -5
+                    Implementation Notes: Range is from -12 to 13 in half or quarter hour increments.
+                    This field is stored in the database, but is not used nor displayed.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DSTActive" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Is set to True if DST was active on the server at the time of the event.
+                    Is set to false if DST was not active on the server at the time of the event.
+                    Sample Data: false
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DeviceInfoType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Contains information about the user's device when an order is placed electronically.
+            Does not apply for phone orders.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="JSCData" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: Raw return string from The 41st Parameter JavaScript Collector.
+                    Sample Data: TF1;014;5;7;18066;6%2C0%2C2900%2C5512;6%2C0%2C2900%2C5512;
+                        6%2C0%2C3%2C531;6%2C0%2C1%2C223;10%2C0%2C.
+                    Implementation Notes: This field is typically 1500 characters, but should NEVER be truncated.
+                    When using a database to store this value, the storage structure recommended is a BLOB.
+                    This value will be split into its consitutent parts for use by the Fraudnet system.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="preserve"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="SessionID" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The user's session ID is used to identify session hijacking occurrences.
+                    Sample Data: XMQ1L1FNNY6nTQxXy85gTs3CGcXhR0xq5DN31WrGnpX31fngBLnb!-825360097!1262421389821
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="255"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="DeviceIP" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The IP address of the device making the request to the server.
+                    Sample Data: 10.0.0.1
+                    Implementation Notes: Dotted decmial representation of an IP address.
+                    Geolocation lookup will be performed on the IP Address. Data comes from User Agent Info.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="15"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="DeviceHostname" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The name of the host that corresponds to the browser's IP address.
+                    Sample Data: device.mybyte.com
+                    Implementation Notes: The reverse DNS lookup value of browser IP.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="nonEmptyString">
+            <xsd:maxLength value="100"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="HttpHeaders" type="HttpHeaderListType" minOccurs="0"/>
+      <xsd:element name="UserCookie" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    Definition: The specific portion of the cookie that refers to the session in progress with the device.
+                    Sample Data: e4e672ed1bd84d475d346561f5cce9bebe421a76
+                    Implementation Notes: This is the portion of the HttpHeader "cookie"
+                    that is used by the Web system integrating with the fraud system.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="HttpHeaderListType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: The HTTP Headers are collected on the Web Application server on receipt of the request containing the JSC data.
+            Implementation Notes: Includes Accept, Accept-Encoding, Accept-Charset, Accept-Language,
+            Cookie, User-Agent, Referer, From, Embedded Web Browser From, UA-CPU, UA-OS
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="HttpHeader" type="HttpHeaderType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="HttpHeaderType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Definition: Each HttpHeader element represents one HTTP header entry collected from the HTTP session on the web application server.
+            Implementation Notes: Header names should conform to HTTP 1.1 spec.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="name" type="nonEmptyString" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransactionDeviceInfoType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Contains information about the device.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="DeviceID" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    The identifier for the device on which the transaction was committed.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TDL" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    The TDL value for the event.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RiskInfoType">
+    <xsd:annotation>
+      <xsd:documentation>The container for the risk assessment of the reported event.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Actions" type="ActionsType"/>
+      <xsd:element name="Investigator" type="InvestigatorType" minOccurs="0"/>
+      <xsd:element name="Score" type="ScoreType"/>
+      <xsd:element name="AuditTrail" type="AuditTrailType" minOccurs="0"/>
+      <xsd:element name="Memos" type="MemoListType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ActionsType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            All actions for the event. This includes actions perfomed by the system and the investigator.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="SystemAction" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    The recommended action from the system after calculating the probability of risk with respect to the event being reported.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InvestigatorAction" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    The action the fraud investigator took on the reported event after investigation.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FinalAction" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    The final action taken on the event based on the combination of the system action and the investigator action.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ActionReasonCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                    The reason code selected by the investigator for the action taken by the investigator.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FulfillmentAction" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="InvestigatorType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Information about which investigator took the action on the reported event.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="LastName" type="xsd:string"/>
+      <xsd:element name="FirstName" type="xsd:string"/>
+      <xsd:element name="LoginId" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ScoreType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Any score information about the event.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="SystemScore" type="xsd:int" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+                The score calculated by the system for the reported event. The higher the score, the higher the probability of risk.
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="AuditTrailType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            The audit trail of rules that fired, the calculated risk score, and the action taken.
+            If a rule fired, but an exception is applied and that rule risk score is not included in the final risk score,
+            it is not included in the audit trail.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Rule" type="RuleType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RuleType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Information about a rule that fired
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Action" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Score" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MemoListType">
+    <xsd:sequence>
+      <xsd:element name="Memo" type="MemoType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MemoType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+            Memo information entered by fraud investigators while processing reported event.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="LoginId" type="xsd:string" use="required">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                        The login ID for the author of the memo.
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="CreateTime" type="xsd:dateTime" use="required">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                        The time the memo was entered into the system.
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <!-- TODO eb2c datatype is enum vs. internal service is string type -->
+  <xsd:simpleType name="ResponseCodeType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+		   	 Definition: Canonicalized response indicating the order status as determined by the fraud system.
+		    </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Accept"/>
+      <xsd:enumeration value="Manual_Accept"/>
+      <xsd:enumeration value="Cancel"/>
+      <xsd:enumeration value="Reject"/>
+      <xsd:enumeration value="Ignore"/>
+      <xsd:enumeration value="Suspend"/>
+      <xsd:enumeration value="Reject_Pending"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String256Type">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="256"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="nonEmptyString">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AnyExtensionType">
+    <xsd:sequence>
+      <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML elements show up in this part
+                        of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created, communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new elements.
+                        If there is no need/desire to process the new optional elements, your service client should continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

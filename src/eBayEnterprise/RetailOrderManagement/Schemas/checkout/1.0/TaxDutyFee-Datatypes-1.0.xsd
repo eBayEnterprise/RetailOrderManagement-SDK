@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://api.gsicommerce.com/schema/checkout/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Payment-Datatypes-CurrencyCode-1.0.xsd"/>
+  <xsd:simpleType name="CalculationError">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the specific error message related to internal calculation.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="CountryCode">
+    <xsd:annotation>
+      <xsd:documentation>
+                Two digit country code.
+                Allowable Values: Text string
+                Required: Yes
+                Length: 2-40 characters
+                Default Value: blank
+                Restrictions: Use of ISO 3166 alpha 2 code is recommended, but not required. See:
+                http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+                Aliases: N/A
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="2"/>
+      <xsd:maxLength value="40"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String60">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="60"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CustomerTaxId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents a string identifier for a customer tax id.
+                A user-defined id that represents the customer for the transaction or line item.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="40"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="TdfDestinationsType">
+    <xsd:sequence>
+      <xsd:element name="MailingAddress" type="MailingAddressType" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+      <xsd:element name="Email" type="EmailDestinationType" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EmailDestinationType">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="PersonNameType" minOccurs="0"/>
+      <xsd:element name="EmailAddress" type="EmailAddress"/>
+      <xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML elements show up in this part
+                        of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created, communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new elements.
+                        If there is no need/desire to process the new optional elements, your service client should continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:complexType name="GiftPackagingBase">
+    <xsd:sequence>
+      <xsd:element name="ItemId" type="ItemId"/>
+      <xsd:element name="ItemDesc" type="ItemDesc" minOccurs="0"/>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="ReferenceId" use="optional"/>
+  </xsd:complexType>
+  <!-- TODO: This should be removed and references changed to ItemDesc to match internal schema -->
+  <xsd:simpleType name="ItemDescription">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the identifier for a product name.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ItemDesc">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the identifier for a product name across the v11 universe.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="HTSCode">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                Each item has a HTSCode assigned by TradeBeam for duty calculation purposes.
+                This code is required if duty calculation is desired.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="LineNumber">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents a string identifier for the order item line number.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="Origins">
+    <xsd:sequence>
+      <xsd:element name="AdminOrigin" type="TaxDutyPhysicalAddress">
+        <xsd:annotation>
+          <xsd:documentation>
+                        The Admin origin is the administrative address (business) address, order taking,
+                        order acceptance or place of principle negotiation location of the Store.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ShippingOrigin" type="TaxDutyPhysicalAddress">
+        <xsd:annotation>
+          <xsd:documentation>
+                        The Shipping origin is the address from which the item is expected to ship from.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ManufacturingCountryCode" type="CountryCode" minOccurs="0" nillable="true">
+        <xsd:annotation>
+          <xsd:documentation>
+	                    Country of origin refers to the country where the item was manufactured or underwent
+	                    the most significant manufacturing process. For agricultural products, the country of
+	                    origin is the country where the commodity was grown or raised. For manufactured goods,
+	                    it is the country where the goods were underwent their most significant manufacturing
+	                    process.
+	                </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="ReferenceId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the unique reference identifier as part of request (where applicable), which will be echoed out in the response.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="12"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ScreenSize">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                Drives the Environment Handling Fee (EHF - Canada/California) calculations on Vertex for electronic items like television sets.
+                Expected value is screen size in inches. It is set as flexible number field 1 on Tax Quote/Invoice request.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="VendorPartNumber">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the identifier for a vendor product number.
+                It is set as flexible code field 8 on Tax Invoice request.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="ShippingCartonId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the identifier for a shipping carton id.
+                It is set as flexible code field 14 on Tax Invoice request.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="LocationCode">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                A value that can be used for tax return filing in jurisdictions that require taxes to be filed for
+                individual retail locations.
+                Used for Invoice and Distribute requests only.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CurrencyConversionRate">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents a string identifier for a currency conversion rate.
+                It is set as flexible number field 2 on Tax Invoice and Distribute request.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:complexType name="MailingAddressType">
+    <xsd:sequence>
+      <xsd:element name="PersonName" type="PersonNameType"/>
+      <xsd:element name="Address" type="TaxDutyPhysicalAddress"/>
+      <xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+  <xsd:complexType name="TaxDutyPhysicalAddress">
+    <xsd:sequence>
+      <xsd:element name="Line1" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Line 1 of the address.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Line2" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Line 2 of the address.
+                        It is set as flexible code field 9 on Tax Invoice and Distribute request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Line3" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Line 3 of the address.
+                        It is set as flexible code field 10 on Tax Invoice and Distribute request.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Line4" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Line 4 of the address.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="BuildingName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Building name of the address.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PoBox" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Post office box of the address (do not pass PO Box as part of the request, i.e. 765).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="City" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        The proper city name of the address.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MainDivision" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        The proper state, province, or territory name of the address.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MainDivisionCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Typically a two or three-digit postal abbreviation for the state, province or territory.
+                        Mainly used in Canada and the US. This does not necessarily conform to the ISO 3166-2 code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CountryName" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        The proper country name of the address.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CountryCode" type="CountryCode"/>
+      <xsd:element name="PostalCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        The proper postal or zip code of the address.
+                        In the U.S., both ZIP Codes and ZIP+4 Codes are supported.
+                        Acceptable formats for the U.S. are:
+                        NNNNN - 5 numeric characters
+                        NNNNNNNNN - 9 numeric characters
+                        NNNNN-NNNN - 9 numeric characters delimited by a hyphen
+                        NNNNN NNNN - 9 numeric characters delimited by a space
+                        Canadian postal codes are composed of upper-case alpha characters (A) and numeric characters
+                        (N).
+                        Acceptable formats for Canada are:
+                        ANA - first 3 alpha-numeric characters
+                        ANANAN - 6 alpha-numeric characters
+                        ANA NAN - 6 alpha-numeric characters delimited by a space
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="OriginalOrderId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the unique identifier for an original order to be used for Tax Invoice Return or
+                Distribute request.
+                It is set as flexible code field 1 on Tax Invoice Return and Distribute request.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="WebOrderNumber">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents a string identifier for a web order number.
+                It is set as flexible code field 7 on Tax Invoice and Distribute request.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="InvoiceNumber">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the identifier for an invoice number to be used for forming Tax documentNumber and
+                transactionId along with orderId.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="OrderId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                This type represents the unique identifier for an order.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+</xsd:schema>

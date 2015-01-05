@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderReturnInTransit xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="01234567890" storeId="MAGT1" currency="USD" currencySymbol="$">
+    <Customer customerId="000008012">
+        <Name>
+            <Honorific>Mrs.</Honorific>
+            <LastName>Lastname</LastName>
+            <MiddleName>Middlename</MiddleName>
+            <FirstName>Firstname</FirstName>
+        </Name>
+        <EmailAddress>test@example.com</EmailAddress>
+        <LoyaltyPrograms>
+            <LoyaltyProgram>
+                <Account>ACCT_NO</Account>
+                <Program>Program Name</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Silver</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+        </LoyaltyPrograms>
+    </Customer>
+</OrderReturnInTransit>

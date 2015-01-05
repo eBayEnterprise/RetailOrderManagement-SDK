@@ -29,6 +29,10 @@ trait TPayload
 {
     use TStrings;
 
+    /** @var IPayloadFactory */
+    protected $payloadFactory;
+    /** @var IPayloadMap */
+    protected $payloadMap;
     /** @var ISchemaValidator */
     protected $schemaValidator;
     /** @var IValidatorIterator */
@@ -41,6 +45,11 @@ trait TPayload
     protected $booleanExtractionPaths = [];
     /** @var array pair address lines properties with xpaths for extraction */
     protected $addressLinesExtractionMap = [];
+    /**
+     * @var array property/XPath pairs. if property is a payload, first node matched
+     *            will be deserialized by that payload
+     */
+    protected $subpayloadExtractionPaths = [];
 
     /**
      * Fill out this payload object with data from the supplied string.
@@ -73,6 +82,13 @@ trait TPayload
         }
         $this->addressLinesFromXPath($xpath);
         $this->deserializeLineItems($serializedPayload);
+        foreach ($this->subpayloadExtractionPaths as $property => $path) {
+            $foundNode = $xpath->query($path)->item(0);
+            if ($foundNode && $this->$property instanceof IPayload) {
+                $this->$property->deserialize($foundNode->C14N());
+            }
+        }
+        $this->deserializeExtra($serializedPayload);
         // payload is only valid if the unserialized data is also valid
         $this->validate();
         return $this;
@@ -86,17 +102,10 @@ trait TPayload
     protected function schemaValidate($serializedData)
     {
         if ($this->schemaValidator) {
-            $this->schemaValidator->validate($serializedData, $this->getSchemaFile());
+            $this->schemaValidator->validate($serializedData);
         }
         return $this;
     }
-
-    /**
-     * Return the schema file path.
-     *
-     * @return string
-     */
-    abstract protected function getSchemaFile();
 
     /**
      * Load the payload XML into a DOMXPath for querying.
@@ -123,13 +132,6 @@ trait TPayload
     }
 
     /**
-     * The XML namespace for the payload.
-     *
-     * @return string
-     */
-    abstract protected function getXmlNamespace();
-
-    /**
      * Get Line1 through Line4 for an Address
      * Find all of the nodes in the address node that
      * start with 'Line' and add their value to the
@@ -150,6 +152,21 @@ trait TPayload
     }
 
     /**
+     * Additional deserialization of the payload data. May contain any
+     * special case deserialization that cannot be expressed by the supported
+     * deserialization paths. Default implementation is a no-op. Expected to
+     * be overridden by payloads that need it.
+     *
+     * @param string
+     * @return self
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function deserializeExtra($serializedPayload)
+    {
+        return $this;
+    }
+
+    /**
      * convert line item substrings into line item objects
      * @param  string $serializedPayload
      * @return self
@@ -157,6 +174,20 @@ trait TPayload
     protected function deserializeLineItems($serializedPayload)
     {
         return $this;
+    }
+
+    /**
+     * Build a new IPayload for the given interface.
+     *
+     * @param string
+     * @return IPayload
+     */
+    protected function buildPayloadForInterface($interface)
+    {
+        return $this->payloadFactory->buildPayload(
+            $this->payloadMap->getConcreteType($interface),
+            $this->payloadMap
+        );
     }
 
     /**
@@ -217,15 +248,20 @@ trait TPayload
     }
 
     /**
+     * XML Namespace of the document.
+     *
+     * @return string
+     */
+    abstract protected function getXmlNamespace();
+
+    /**
      * Name, value pairs of root attributes
      *
      * @return array
      */
     protected function getRootAttributes()
     {
-        return [
-            'xmlns' => $this->getXmlNamespace(),
-        ];
+        return [];
     }
 
     /**

@@ -30,7 +30,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 /**
  * Class StoredValueBalanceRequest
@@ -38,7 +38,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
  */
 class StoredValueBalanceRequest implements IStoredValueBalanceRequest
 {
-    use TPayload, TPaymentAccountUniqueId;
+    use TTopLevelPayload, TPaymentAccountUniqueId;
 
     /** @var string $requestId */
     protected $requestId;
@@ -161,13 +161,9 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
     // all methods below should be refactored as they are literal copies
     // from somewhere else
 
-    /**
-     * Return the schema file path.
-     * @return string
-     */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . static::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**

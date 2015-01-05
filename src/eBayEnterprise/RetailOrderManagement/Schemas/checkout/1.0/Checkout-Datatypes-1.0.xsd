@@ -1,0 +1,966 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:simpleType name="AmountBaseType">
+    <xsd:annotation>
+      <xsd:documentation>Represents a decimal currency with two decimal points. Sample value: 4.75.
+                Allowable Values: Two integers separated by a decimal point. .The second integer must be two characters
+                in length.
+                Required: No
+                Length: TBD
+                Default Value: blank
+                Restrictions: Note that this indicates only a quantity, not the type of currency being used.
+                Aliases: N/A
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal">
+      <xsd:fractionDigits value="2"/>
+      <xsd:minInclusive value="0"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AmountBaseNegativeAllowedType">
+    <xsd:annotation>
+      <xsd:documentation>Represents a decimal currency with two decimal points. Sample value: 4.75.
+                Allowable Values: Two integers separated by a decimal point. .The second integer must be two characters
+                in length.
+                Required: No
+                Length: TBD
+                Default Value: blank
+                Restrictions: Note that this indicates only a quantity, not the type of currency being used.
+                Aliases: N/A
+                Same as AmountBaseType but allows negative values.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:decimal">
+      <xsd:fractionDigits value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ItemId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                Represents the identifier for an inventoriable product. a.k.a. SKU
+                Allowable Values: Text string
+                Required: No
+                Length: 20
+                Default Value: blank
+                Restrictions: N/A
+                Aliases: N/A
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EmailAddress">
+    <xsd:annotation>
+      <xsd:documentation>
+                The email address associated with a person or enterprise.
+                Allowable Values: Text string
+                Required: Yes
+                Length: 70 characters
+                Default Value: blank
+                Restrictions: This field is restricted to a valid email address containing an at sign (@) and a period
+                (.).
+                Aliases: N/A
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="70"/>
+      <!--<xsd:pattern value="([a-zA-Z0-9_\-])([a-zA-Z0-9_\-\.]*)@(\[((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}|((([a-zA-Z0-9\-]+)\.)+))([a-zA-Z]{2,}|(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\])"/>-->
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IPv4Address">
+    <xsd:annotation>
+      <xsd:documentation>
+                IPv4 address in the dotted-decimal notation.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AddressLineType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="70"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="PhysicalAddressType">
+    <xsd:annotation>
+      <xsd:documentation>The street, city, state and country of a location.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Line1" type="AddressLineType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        The "Line#" components contain the street address and, if necessary, suite and building
+                        identifiers for the physical address.
+                        Allowable Values: Text string
+                        Required: Line1 is required. Other Line# components are optional.
+                        Length: 70
+                        Default Value: blank
+                        Restrictions: For U.S. addresses, the last Line# component valued before the U.S. state must
+                        contain the number and street. Additional address information, such as a building name or a
+                        department mustt precede it.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Line2" type="AddressLineType" minOccurs="0"/>
+      <xsd:element name="Line3" type="AddressLineType" minOccurs="0"/>
+      <xsd:element name="Line4" type="AddressLineType" minOccurs="0"/>
+      <xsd:element name="City">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Name of the city.
+
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: 35
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="35"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MainDivision" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Typically a two- or three-digit postal abbreviation for the state or province. .
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: 35
+                        Default Value: blank
+                        Restrictions: Use of the ISO 3166-2 code is recommended, but not required..See
+                        http://en.wikipedia.org/wiki/ISO_3166-2.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="35"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="CountryCode">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Two digit country code.
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: 2-40 characters
+                        Default Value: blank
+                        Restrictions: Use of ISO 3166 alpha 2 code is recommended, but not required. See:
+                        http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="2"/>
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="PostalCode" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Typically, the string of letters and/or numbers that more closely specifies the delivery area
+                        than just the City component alone, for example, the Zip Code in the U.S.
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: 15
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="15"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PersonNameType">
+    <xsd:sequence>
+      <xsd:element name="Honorific" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A title you can assign to a person. Typically "Dr.", "Mr.", "Ms." etc.
+                        Allowable Values: Text string.
+                        Required: No
+                        Length: 10
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: Salutation
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="10"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="LastName">
+        <xsd:annotation>
+          <xsd:documentation>The surname of the person.
+                        Allowable Values: Text string.
+                        Required: Yes
+                        Length: 64
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="64"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="MiddleName" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The middle name or names of the person.
+                        Allowable Values: Text string.
+                        Required: No
+                        Length: 40
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="40"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="FirstName">
+        <xsd:annotation>
+          <xsd:documentation>The first name of the person.
+                        Allowable Values: Text string.
+                        Required: Yes
+                        Length: 64
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="64"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="minStringLength1">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                simple type to validate string elements are not empty
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NonWhitespaceString20Type">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="20"/>
+      <xsd:pattern value=".*\S.*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String20">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                simple type to validate string elements are not empty
+                and are at most 20 characters long
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String30">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                simple type to validate string elements are not empty
+                and are at most 30 characters long
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="30"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String40">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                simple type to validate string elements are not empty
+                and are at most 40 characters long
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="40"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RequestId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                RequestId is used to globally identify a request message and is used
+                for duplicate request protection.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="40"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ReservationId">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                Identifier for an available to promise inventory reservation.
+
+                Allowable Values: Text string
+                Required: No
+                Length: 40
+                Default Value: blank
+                Restrictions: N/A
+                Aliases: N/A
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="40"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="DateRange">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                A period of time. The "From" date must precede the "To" date. You must specify both values. Used, for
+                example, to represent an estimated delivery date range.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="From" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>Allowable Values: ISO 8601 standard with offset from UTC in datetime data format
+                        which is yyyy-mm-ddTHH:mm:ss-hh:mm for e.g. 2012-01-11T14:19:05-06:00.
+                        Required: Yes
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="To" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>Allowable Values: ISO 8601 standard with offset from UTC in datetime data format
+                        which is yyyy-mm-ddTHH:mm:ss-hh:mm for e.g. 2012-01-11T14:19:05-06:00.
+                        Required:Yes
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DateRangeType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">A period of time. The "From" date must precede the "To" date. You must
+                specify both values. Used, for example, to represent an estimated delivery date range.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="From" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Allowable Values: ISO 8601 standard with offset from UTC in datetime data format
+                        which is yyyy-mm-ddTHH:mm:ss-hh:mm for e.g. 2012-01-11T14:19:05-06:00.
+                        Required: Yes
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="To" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>Allowable Values: ISO 8601 standard with offset from UTC in datetime data format
+                        which is yyyy-mm-ddTHH:mm:ss-hh:mm for e.g. 2012-01-11T14:19:05-06:00.
+                        Required:Yes
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CarrierType">
+    <xsd:annotation>
+      <xsd:documentation>Shipping Carrier such as "UPS" or "FEDEX"
+                Carrier mode is such as 1Day or Ground, etc.
+                Represents the logical Carriers (SCAC) and modes (CarrierServiceCode).
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:annotation>
+        <xsd:documentation>
+                    Shipping Carrier such as "UPS" or "FEDEX"
+                    Carrier mode is such as 1Day or Ground, etc.
+                    Represents the
+                    logical Carriers (SCAC) and modes (CarrierServiceCode)
+                </xsd:documentation>
+      </xsd:annotation>
+      <xsd:extension base="String40">
+        <xsd:attribute name="mode" type="String40" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Indicates the carrier method for example Std_GnD or 2Day
+
+                            Allowable Values: Text string
+                            Required: No
+                            Length: 40
+                            Default Value: blank
+                            Restrictions: N/A
+                            Aliases: N/A
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="displayText" type="xsd:string" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Specifies the text to display when the mode is quierried.
+                            Example: Standard Ground
+                            Allowable Values: Text string
+                            Required: No
+                            Length: TBD
+                            Default Value: blank
+                            Restrictions: N/A
+                            Aliases: N/A
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Imposition">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="impositionType" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Categorizes the tax being imposed. Examples include include General Sales and
+                            Use Tax, Surcharge, and VAT.
+
+                            Allowable Values: Text string
+                            Required: Yes
+                            Length: 60
+                            Default Value: blank
+                            Restrictions: N/A
+                            Aliases: N/A
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InvoiceTextCodes">
+    <xsd:annotation>
+      <xsd:documentation>This type maps to Tax response Invoice Text Codes.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="InvoiceTextCode" type="xsd:string" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Value returned from the tax Calculation message.
+
+                        Allowable Values: Text string See Appendix
+                        Required: Yes
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Jurisdiction">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="jurisdictionLevel" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Identifies the jurisdiction's common classification based on its geopolitical
+                            and/or taxing context. The values listed below are recommended and commonly used.
+
+                            Allowable Values: Text String
+                            - APO
+                            - BOROUGH
+                            - CITY
+                            - COUNTRY
+                            - COUNTY
+                            - DISTRICT
+                            - FPO LOCAL_IMPROVEMENT_DISTRICT
+                            - PARISH
+                            - PROVINCE SPECIAL_PURPOSE_DISTRICT
+                            - STATE
+                            - TERRITORY
+                            - TOWNSHIP
+                            - TRADE_BLOCK
+                            - TRANSIT_DISTRICT
+                            Required: Yes
+                            Length: TBD
+                            Default Value: blank
+                            Restrictions: N/A
+                            Aliases: N/A
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="jurisdictionId" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Jurisdiction code assigned by the relevant governmental authority.
+                            Allowable Values: Text string
+                            Required: Yes
+                            Length: TBD
+                            Default Value: blank
+                            Restrictions: N/A
+                            Aliases: N/A
+                        </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Tax">
+    <xsd:sequence>
+      <xsd:element name="Situs" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The situs or taxing location as determined by the calculation engine for the line
+                        item.
+
+                        Allowable Values: Text string
+                        Required: No
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Jurisdiction" type="Jurisdiction" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The name of jurisdiction to which a tax is applied.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Imposition" type="Imposition" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The name of the imposition to which the relevant tax rule belongs.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EffectiveRate" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>For Buyer Input tax and Seller Import tax, this rate is calculated based on the
+                        Extended Price and Tax Amount (Import or Input) passed in the Request message.
+                        If you total the Extended Price and Tax Amounts before passing them in, this rate is an average.
+                        For all other message types, this is the effective rate the system used to calculate tax.
+                        Represents a decimal representation of currency. Sample value: 4.75.
+                        Allowable Values: Two integers separated by a decimal point. The second integer must be two
+                        characters in length. For example: 4.05
+
+                        Allowable Values: decimal
+                        Required: No
+                        Length: two integers
+                        Default Value: 0.00
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TaxableAmount" type="AmountBaseType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The amount for which tax is calculated.
+                        Represents a decimal representation of currency. Sample value: 4.75.
+
+                        Allowable Values: Two integers separated by a decimal point. The second integer must be two
+                        characters in length. For example: 4.05
+                        Required: No
+                        Length: two integers
+                        Default Value: 0.00
+                        Restrictions: Note that this indicates only a quantity, not the type of currency being used.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExemptAmount" type="AmountBaseType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Amount of the line item not subject to tax due to exempt status. Represents a
+                        decimal representation of currency. Sample value: 4.75.
+
+                        Allowable Values: Two integers separated by a decimal point. The second integer must be two
+                        characters in length. For example: 4.05
+                        Required: No
+                        Length: TBD
+                        Default Value: 0.00
+                        Restrictions: Note that this indicates only a quantity, not the type of currency being used.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NonTaxableAmount" type="AmountBaseType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Amount of the line item not subject to tax due to nontaxable status.
+                        Represents a decimal representation of currency. Sample value: 4.75.
+
+                        Allowable Values: Two integers separated by a decimal point. The second integer must be two
+                        characters in length. For example: 4.05
+                        Required: No
+                        Length: TBD
+                        Default Value: 0.00
+                        Restrictions: Note that this indicates only a quantity, not the type of currency being used.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CalculatedTax" type="AmountBaseType" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Amount of tax calculated by the calculation engine.
+                        Represents a decimal representation of currency. Sample value: 4.75.
+
+                        Allowable Values: Two integers separated by a decimal point. The second integer must be two
+                        characters in length. For example: 4.05
+                        Required: No
+                        Length: TBD
+                        Default Value: 0.00
+                        Restrictions: Note that this indicates only a quantity, not the type of currency being used.
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SellerRegistrationId" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The Registration ID for the Seller associated with this line item tax.
+
+                        Allowable Values: text string
+                        Required: No
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="InvoiceTextCodes" type="InvoiceTextCodes" minOccurs="0"/>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="taxType" type="TaxType">
+      <xsd:annotation>
+        <xsd:documentation>System determined tax type, based on situs, transaction type, and party role type
+                    (perspective). The possible values are:
+
+                    Allowable Values: Text string acceptable values:
+                    SALES SELLER_USE CONSUMERS_USE
+                    VAT
+                    IMPORT_VAT
+                    NONE
+                    Required: Yes
+                    Length: TBD
+                    Default Value: blank
+                    Restrictions: N/A
+                    Aliases: N/A
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="taxability" type="Taxability">
+      <xsd:annotation>
+        <xsd:documentation>System determination of taxable status based on situs and item type. The possible
+                    values are shown below:
+
+                    Allowable Values: Text string
+                    TAXABLE - item is taxable
+                    NONTAXABLE - item is nontaxable
+                    EXEMPT - item is exempt from tax
+                    DPPAPPLIED - Direct Pay Permit was used on this transaction.
+                    NO_TAX - no tax on this item
+                    DEFERRED - tax deferred on this item
+                    Required: Yes
+                    Length: TBD
+                    Default Value: blank
+                    Restrictions: N/A
+                    Aliases: N/A
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:simpleType name="Taxability">
+    <xsd:annotation>
+      <xsd:documentation>
+                System determination of taxable status based on situs and item type. The possible values are:
+                TAXABLE
+                NONTAXABLE
+                EXEMPT
+                DPPAPPLIED
+                NO_TAX
+                DEFERRED
+
+                Allowable Values: Text string
+                Required: Yes
+                Length: TBD
+                Default Value: blank
+                Restrictions: N/A
+                Aliases: N/A
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="TAXABLE"/>
+      <xsd:enumeration value="NONTAXABLE"/>
+      <xsd:enumeration value="EXEMPT"/>
+      <xsd:enumeration value="DPPAPPLIED"/>
+      <xsd:enumeration value="NO_TAX"/>
+      <xsd:enumeration value="DEFERRED"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="TaxData">
+    <xsd:sequence>
+      <xsd:element name="TaxClass" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>This type represents class for Tax calculation purposes. Typically the default
+                        tax class for shipping is 93000.
+                        For fees default tax class will be used as 89999.
+
+                        Allowable Values: Text string
+                        Required: No
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Taxes" type="TaxGroup" minOccurs="0"/>
+      <xsd:element name="Extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TaxGroup">
+    <xsd:sequence>
+      <xsd:element name="Tax" type="Tax" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="TaxType">
+    <xsd:annotation>
+      <xsd:documentation>
+                System determined tax type, based on situs, transaction type, and party role type (perspective). The
+                possible values are:
+                SALES
+                SELLER_USE
+                CONSUMERS_USE
+                VAT
+                IMPORT_VAT
+                NONE
+
+                Allowable Values: Text string
+                Required: No
+                Length: TBD
+                Default Value: blank
+                Restrictions: N/A
+                Aliases: N/A
+
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="SALES"/>
+      <xsd:enumeration value="SELLER_USE"/>
+      <xsd:enumeration value="CONSUMERS_USE"/>
+      <xsd:enumeration value="VAT"/>
+      <xsd:enumeration value="IMPORT_VAT"/>
+      <xsd:enumeration value="NONE"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="DestinationTargetType">
+    <xsd:attribute name="ref" type="xsd:IDREF">
+      <xsd:annotation>
+        <xsd:documentation>
+                    Unique key used for relating orders through IDREFs
+
+                    Allowable Values: IDREF
+                    Required: Yes
+                    Length:TBD
+                    Default Value: TBD
+                    Restrictions: N/A
+                    Aliases: N/A
+                </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="MailingAddress">
+    <xsd:annotation>
+      <xsd:documentation>Combines a name with a physical address.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="PersonName" type="PersonNameType"/>
+      <xsd:element name="Address" type="PhysicalAddressType">
+        <xsd:annotation>
+          <xsd:documentation>The number, street, city state, postal code and country that define a location.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <!--<xsd:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded">-->
+      <!--<xsd:annotation>-->
+      <!--<xsd:documentation xml:lang="en">-->
+      <!--This xsd:any element indicates that future optional elements may show up in this location of the XML document in the-->
+      <!--responses returned from the service.-->
+      <!--The purpose of this xsd:any element is to define a more robust service interface that allows for new, optional elements to be added-->
+      <!--to the service's responses without the service clients' code throwing exceptions.-->
+      <!--The client code for this service call should be written to not break if new optional XML elements show up in this part-->
+      <!--of the service response.  Modern XML marshalling frameworks often process xsd:any elements properly out-of-the-box-->
+      <!--(for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and don't throw exceptions-->
+      <!--if new optional elements appear within the xsd:any section of the XML document).-->
+      <!--Developers' unit tests of their service client code should include a test case where this reply message-->
+      <!--contains one or more new elements in this location of the XML document.-->
+      <!--If new optional elements are added to this interface, a new schema will be created, communications will be sent out,-->
+      <!--and you will have the option to modify your service client code to process and use the new elements.-->
+      <!--If there is no need/desire to process the new optional elements, your service client should continue to run-->
+      <!--uninterrupted as long as it is built to honor this xsd:any element.-->
+      <!--</xsd:documentation>-->
+      <!--</xsd:annotation>-->
+      <!--</xsd:any>-->
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="AckReply" type="AckReplyType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">The initial reply message for asynchronous APIs like Payment Auth Cancel,
+                Payment Settlement Request, Risk Assessment, etc to acknowledge that Public Api has successfully
+                received the request. Note that there is a subsequent final asynchronous reply for the request.
+            </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="AckReplyType">
+    <xsd:sequence>
+      <xsd:element name="Received" type="EmptyReceivedElementType">
+        <xsd:annotation>
+          <xsd:documentation>Tells the recipient that the public API successfully received the request.
+                        Allowable Values: Text string
+                        Required: Yes
+                        Length: TBD
+                        Default Value: blank
+                        Restrictions: N/A
+                        Aliases: N/A
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">This xsd:any element indicates that future optional elements may
+                        show up in this location of the XML document in the responses returned from the service.
+
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added to the service's responses without the service clients' code
+                        throwing exceptions.
+
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part of the service response. Modern XML marshalling frameworks often
+                        process xsd:any elements properly out-of-the-box (for example, in Java, JAXB and JibX XML
+                        marshalling frameworks both honor xsd:any elements and don't throw exceptions if new optional
+                        elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message contains one or more new elements in this location of the XML document.
+
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out, and you will have the option to modify your service client code
+                        to process and use the new elements.
+
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EmptyReceivedElementType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+                An empty element representing a successful acknowledgement.
+                Sample:
+                <Received/>
+            </xsd:documentation>
+    </xsd:annotation>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionType">
+    <xsd:sequence>
+      <xsd:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        This xsd:any element indicates that future optional elements may show up in this location of the
+                        XML document in the
+                        responses returned from the service.
+                        The purpose of this xsd:any element is to define a more robust service interface that allows for
+                        new, optional elements to be added
+                        to the service's responses without the service clients' code throwing exceptions.
+                        The client code for this service call should be written to not break if new optional XML
+                        elements show up in this part
+                        of the service response. Modern XML marshalling frameworks often process xsd:any elements
+                        properly out-of-the-box
+                        (for example, in Java, JAXB and JibX XML marshalling frameworks both honor xsd:any elements and
+                        don't throw exceptions
+                        if new optional elements appear within the xsd:any section of the XML document).
+                        Developers' unit tests of their service client code should include a test case where this reply
+                        message
+                        contains one or more new elements in this location of the XML document.
+                        If new optional elements are added to this interface, a new schema will be created,
+                        communications will be sent out,
+                        and you will have the option to modify your service client code to process and use the new
+                        elements.
+                        If there is no need/desire to process the new optional elements, your service client should
+                        continue to run
+                        uninterrupted as long as it is built to honor this xsd:any element.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:any>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

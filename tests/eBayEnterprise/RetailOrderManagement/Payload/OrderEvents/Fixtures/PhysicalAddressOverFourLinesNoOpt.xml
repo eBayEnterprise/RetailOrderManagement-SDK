@@ -1,0 +1,8 @@
+<Address xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Line1>123 Main St</Line1>
+    <Line2>Ste 2</Line2>
+    <Line3>Bldg 6</Line3>
+    <Line4>Last Concat In Last</Line4>
+    <City>King of Prussia</City>
+    <CountryCode>US</CountryCode>
+</Address>

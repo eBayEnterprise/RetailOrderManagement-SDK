@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" version="${project.version}">
+  <xsd:include schemaLocation="Payment-Datatypes-1.0.xsd"/>
+  <xsd:include schemaLocation="Checkout-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="BMLStatusRequestType">
+    <xsd:sequence>
+      <xsd:element name="PaymentContext" type="PaymentContextBaseType"/>
+      <xsd:element name="CurrencyCode" type="ISOCurrencyCodeType"/>
+      <xsd:element name="SessionKey" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="BMLStatusRequest" type="BMLStatusRequestType"/>
+  <xsd:complexType name="BMLStatusReplyType">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                        During success response, BML account number is available.
+                        During error response, BML account number is not available.
+                    </xsd:documentation>
+        </xsd:annotation>
+        <!-- Used when BML account number is NOT available in error reply -->
+        <xsd:element name="PaymentContextBase" type="PaymentContextBaseType"/>
+        <!-- Used when BML account number is available in success reply -->
+        <xsd:element name="PaymentContext" type="PaymentContextType"/>
+      </xsd:choice>
+      <xsd:element name="ResponseCode" type="SuccessFailResponseCodeType"/>
+      <!-- ResponseText is used to display error message so that user can correct input -->
+      <xsd:element name="ResponseText" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="AuthorizationCode" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="extension" type="ExtensionType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="BMLStatusReply" type="BMLStatusReplyType"/>
+</xsd:schema>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://api.gsicommerce.com/schema/checkout/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
+  <xsd:include schemaLocation="Inventory-Datatypes-1.0.xsd"/>
+  <xsd:complexType name="FulfillmentLocationId">
+    <xsd:simpleContent>
+      <xsd:extension base="String100">
+        <xsd:attribute name="type" type="FulfillmentLocationType">
+          <xsd:annotation>
+            <xsd:documentation>Enumerates supported fulfillment location types.  At present only ISPU is supported, but this might be extended to support warehouse and SFS as fulfillment types.
+
+Allowable Values: Enumeration
+ISPU - In store Pickup
+Required: Yes
+Length: TBD
+Default Value: blank
+Restrictions: Text String
+Aliases: N/A</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="QuantityRequestMessage">
+    <xsd:annotation>
+      <xsd:documentation>QuantityRequestMessage API is used to check Available To Promise (ATP) inventory for one or more items. Default is fulfillment center ATP inventory for the item, but an item request can be qualified by store ID to get in-store ATP inventory for the item at a specific store location.
+
+Prescribed API usage:
+     add to cart
+     update quantity in cart
+     move from wish list to cart
+     restoring cart from persistent storage
+
+A quantity request message consists of a list of one or more quantity request lines each of which in turn consists of an item identifier, a line identifier used to correlate request lines with response lines and optional store identifier for in store pickup lines.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="QuantityRequest" type="QuantityRequest" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="QuantityRequestMessage" type="QuantityRequestMessage" nillable="false"/>
+  <xsd:complexType name="QuantityRequest">
+    <xsd:sequence>
+      <xsd:element name="FulfillmentLocationId" type="FulfillmentLocationId" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="lineId" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Uniquely identifies an OrderItem within a request.
+
+Allowable Values: Text string
+Required: Yes
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="itemId" type="ItemId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Represents the identifier for an inventoriable product.  a.k.a. SKU
+
+Allowable Values: Text string
+Required: Yes
+Length: 20
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:element name="QuantityResponseMessage">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">This type defines the syntax of a response message for the Exchange Platform inventory quantity operation.  A quantity response message consists of a list of one or more quantity response lines each in turn consisting of an item identifier, a line identifier used to correlate response lines with request lines and a quantity value.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="QuantityResponse" type="QuantityResponse" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="QuantityResponse">
+    <xsd:sequence>
+      <xsd:element name="Quantity" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation>Specifies the number of items identified by the itemId.
+
+Allowable Values:  integer
+Required: Yes
+Length: N/A
+Default Value: 0
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="lineId" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>  Identifier for an inventory line item.  Must be unique among all lines in the order.  Must be non-blank.
+
+Allowable Values: Text string
+Required: Yes
+Length: TBD
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="itemId" type="ItemId" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Represents the identifier for an inventoriable product.  a.k.a. SKU
+
+Allowable Values: Text string
+Required: Yes
+Length: 20
+Default Value: blank
+Restrictions: N/A
+Aliases: N/A</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+</xsd:schema>

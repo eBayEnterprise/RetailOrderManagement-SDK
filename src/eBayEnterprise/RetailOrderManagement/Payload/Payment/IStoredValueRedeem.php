@@ -25,5 +25,5 @@ interface IStoredValueRedeem extends IPayload, IPaymentContext
 {
     // XML related values - document root node, XMLNS and name of the xsd schema file
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const XSD = 'Payment-Service-StoredValueRedeem-1.0.xsd';
+    const XSD = '/checkout/1.0/Payment-Service-StoredValueRedeem-1.0.xsd';
 }

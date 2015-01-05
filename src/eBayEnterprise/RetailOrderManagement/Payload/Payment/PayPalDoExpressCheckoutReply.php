@@ -20,7 +20,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 
 class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
 {
-    use Payload\TPayload, TOrderId, TPaymentInfo;
+    use Payload\TTopLevelPayload, TOrderId, TPayPalPaymentInfo;
 
     const SUCCESS = 'Success';
 
@@ -30,12 +30,6 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     protected $transactionId;
     /** @var string * */
     protected $errorMessage;
-    /** @var string * */
-    protected $paymentStatus;
-    /** @var string * */
-    protected $pendingReason;
-    /** @var string * */
-    protected $reasonCode;
 
     /**
      * @param Payload\IValidatorIterator $validators
@@ -116,9 +110,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
         . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
         . "<TransactionID>{$this->getTransactionId()}</TransactionID>"
         . "<PaymentInfo>"
-        . "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
-        . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
-        . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>"
+        . $this->serializePayPalPaymentInfo()
         . "</PaymentInfo>";
     }
 
@@ -149,7 +141,7 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
      */
     protected function getSchemaFile()
     {
-        return __DIR__ . '/schema/' . self::XSD;
+        return $this->getSchemaDir() . self::XSD;
     }
 
     /**
