@@ -25,10 +25,11 @@ return call_user_func(function () {
     $map['OrderCancelled'] = "$orderEvents\OrderCancel";
     $map['OrderConfirmed'] = "$orderEvents\OrderConfirmed";
     $map['OrderCreditIssued'] = "$orderEvents\OrderCreditIssued";
+    $map['OrderGiftCardActivation'] = "$orderEvents\OrderGiftCardActivation";
+    $map['OrderPriceAdjustment'] = "$orderEvents\OrderPriceAdjustment";
     $map['OrderRejected'] = "$orderEvents\OrderRejected";
     $map['OrderReturnInTransit'] = "$orderEvents\OrderReturnInTransit";
     $map['OrderShipped'] = "$orderEvents\OrderShipped";
-    $map['OrderPriceAdjustment'] = "$orderEvents\OrderPriceAdjustment";
     $map['Test'] = "$orderEvents\TestMessage";
     return $map;
 });

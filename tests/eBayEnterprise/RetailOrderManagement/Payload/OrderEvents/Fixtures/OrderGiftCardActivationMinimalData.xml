@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderGiftCardActivation currency="USD" currencySymbol="$" customerOrderId="10000501" storeId="STORE_ID" xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Customer>
+        <Name>
+            <LastName>Doe</LastName>
+            <FirstName>Jane</FirstName>
+        </Name>
+    </Customer>
+    <OrderGiftCardActivations>
+        <GiftCertificate/>
+        <GiftCertificate giftCertificateAction="Activate" denomination="15.00" giftCertCode="9999" giftCertPin="2222"/>
+    </OrderGiftCardActivations>
+</OrderGiftCardActivation>

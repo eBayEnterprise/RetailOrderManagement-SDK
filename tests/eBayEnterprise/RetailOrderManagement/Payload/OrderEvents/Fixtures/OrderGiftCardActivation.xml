@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderGiftCardActivation currency="USD" currencySymbol="$" customerOrderId="10000501" storeId="STORE_ID" xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Customer customerId="CUSTOMERID">
+        <Name>
+            <Honorific>Mrs.</Honorific>
+            <LastName>Doe</LastName>
+            <MiddleName>E</MiddleName>
+            <FirstName>Jane</FirstName>
+        </Name>
+        <EmailAddress>test@example.com</EmailAddress>
+        <LoyaltyPrograms>
+            <LoyaltyProgram>
+                <Account>ACCT_NO</Account>
+                <Program>Program Name</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Silver</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+            <LoyaltyProgram>
+                <Account>BLUE_ACCT</Account>
+                <Program>Blue Program</Program>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Level</Key>
+                        <Value>Gold</Value>
+                    </Attribute>
+                    <Attribute>
+                        <Key>Type</Key>
+                        <Value>Member</Value>
+                    </Attribute>
+                </CustomAttributes>
+            </LoyaltyProgram>
+        </LoyaltyPrograms>
+    </Customer>
+    <OrderGiftCardActivations>
+        <GiftCertificate giftCertificateAction="Activate" denomination="50.00" giftCertCode="1234" giftCertSecondaryCode="12341234" giftCertPin="1111" giftCertFaceIdentifier="SVS" to="You" from="Me" message="Here you are."/>
+        <GiftCertificate giftCertificateAction="Activate" denomination="15.00" giftCertCode="9999" giftCertSecondaryCode="99991111" giftCertPin="2222" giftCertFaceIdentifier="SPS" to="Mike" from="Mark" message="Happy Birthday"/>
+    </OrderGiftCardActivations>
+</OrderGiftCardActivation>

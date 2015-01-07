@@ -1266,5 +1266,59 @@ return call_user_func(function () {
         'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderGiftCardActivation'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getCurrencyCode',
+                    'getCurrencySymbol',
+                    'getCustomerFirstName',
+                    'getCustomerLastName',
+                    'getStoreId',
+                    'getCustomerOrderId',
+               ],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getGiftCardActivations'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getLoyaltyPrograms'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IGiftCardActivationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\GiftCardActivationIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IGiftCardActivation' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\GiftCardActivation',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\GiftCardActivationIterable'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IGiftCardActivation' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\GiftCardActivation',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\GiftCardActivation'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
     return $map;
 });
