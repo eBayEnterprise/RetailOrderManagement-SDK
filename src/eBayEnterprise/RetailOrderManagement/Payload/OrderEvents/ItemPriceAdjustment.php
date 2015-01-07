@@ -129,6 +129,7 @@ class ItemPriceAdjustment implements IItemPriceAdjustment
      * sanitize the amount field.
      * @param  string $serializedData
      * @return self
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function deserializeExtra($serializedData)
     {
