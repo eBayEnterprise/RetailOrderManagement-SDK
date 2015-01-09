@@ -51,7 +51,7 @@ class PayPalGetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
         return new PayPalGetExpressCheckoutRequest($this->validatorIterator, $this->stubSchemaValidator);
     }
 
-   /**
+    /**
      * Load some invalid XML from a fixture file and canonicalize it. Returns
      * the canonical XML string.
      * @return string

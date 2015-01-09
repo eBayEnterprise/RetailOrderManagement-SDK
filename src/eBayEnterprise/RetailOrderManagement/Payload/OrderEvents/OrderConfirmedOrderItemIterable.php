@@ -25,6 +25,6 @@ class OrderConfirmedOrderItemIterable extends OrderItemIterable
      */
     protected function getRootNodeName()
     {
-    	return self::ROOT_NODE;
+        return self::ROOT_NODE;
     }
 }

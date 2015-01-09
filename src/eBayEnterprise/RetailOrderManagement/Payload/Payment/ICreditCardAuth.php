@@ -15,7 +15,6 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 /**

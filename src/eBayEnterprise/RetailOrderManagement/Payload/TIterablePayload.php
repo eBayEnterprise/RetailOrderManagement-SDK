@@ -37,10 +37,8 @@ trait TIterablePayload
     {
         $xpath = $this->getPayloadAsXPath($serializedData);
         foreach ($xpath->query($this->getSubpayloadXPath()) as $subpayloadNode) {
-                $pl = $this->getNewSubpayload()->deserialize($subpayloadNode->C14N());
-            $this->offsetSet($pl
-            );
-            if ($pl instanceof OrderItem) var_dump($pl);
+            $pl = $this->getNewSubpayload()->deserialize($subpayloadNode->C14N());
+            $this->offsetSet($pl);
         }
         $this->validate();
         return $this;
