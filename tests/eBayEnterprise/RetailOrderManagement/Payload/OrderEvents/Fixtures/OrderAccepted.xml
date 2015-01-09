@@ -75,21 +75,19 @@
             <Shipping>
                 <ShipmentMethod displayText="USPS Flat Rate">FLAT_RATE</ShipmentMethod>
                 <StoreFrontAddress>
-                    <StoreFrontLocation id="store_1">
-                        <StoreCode>STORE_CODE_664</StoreCode>
-                        <StoreName>Store Store No. 664</StoreName>
-                        <StoreEmail>store@example.com</StoreEmail>
-                        <Address>
-                            <Line1>123 Main St</Line1>
-                            <Line2>Ste B</Line2>
-                            <Line3>Bldg 2</Line3>
-                            <Line4>Fl 6</Line4>
-                            <City>Saskatoon</City>
-                            <MainDivision>Ok</MainDivision>
-                            <CountryCode>US</CountryCode>
-                            <PostalCode>91234</PostalCode>
-                        </Address>
-                    </StoreFrontLocation>
+                    <StoreCode>STORE_CODE_664</StoreCode>
+                    <StoreName>Store Store No. 664</StoreName>
+                    <StoreEmail>store@example.com</StoreEmail>
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <Line2>Ste B</Line2>
+                        <Line3>Bldg 2</Line3>
+                        <Line4>Fl 6</Line4>
+                        <City>Saskatoon</City>
+                        <MainDivision>Ok</MainDivision>
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>91234</PostalCode>
+                    </Address>
                     <StoreDirections>http://example.com/directions_url</StoreDirections>
                     <StoreHours>8 AM - 8 PM</StoreHours>
                     <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>

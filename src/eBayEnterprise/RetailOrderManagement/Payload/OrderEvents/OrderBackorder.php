@@ -25,7 +25,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
 class OrderBackorder implements IOrderBackorder
 {
-    use TTopLevelPayload, TLoyaltyProgramCustomer, TOrderEvent, TShipGroupContainer;
+    use TTopLevelPayload, TLoyaltyProgramCustomer, TOrderEvent, TShipGroupContainer, TCurrency;
 
     public function __construct(
         IValidatorIterator $validators,
@@ -47,6 +47,8 @@ class OrderBackorder implements IOrderBackorder
             'customerLastName' => 'string(x:Customer/x:Name/x:LastName)',
             'storeId' => 'string(@storeId)',
             'orderId' => 'string(@customerOrderId)',
+            'currencyCode' => 'string(@currency)',
+            'currencySymbol' => 'string(@currencySymbol)',
         ];
         $this->optionalExtractionPaths = [
             'customerId' => 'x:Customer/@customerId',
@@ -71,6 +73,8 @@ class OrderBackorder implements IOrderBackorder
             'xmlns' => $this->getXmlNamespace(),
             'customerOrderId' => $this->getCustomerOrderId(),
             'storeId' => $this->getStoreId(),
+            'currency' => $this->getCurrencyCode(),
+            'currencySymbol' => $this->getCurrencySymbol(),
         ];
     }
 

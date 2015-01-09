@@ -42,6 +42,8 @@
       </xsd:annotation>
     </xsd:attribute>
     <xsd:attribute name="storeId" type="xsd:string"/>
+    <xsd:attribute name="currency" type="ISOCurrencyCodeType" use="required"/>
+    <xsd:attribute name="currencySymbol" type="xsd:string" use="required"/>
   </xsd:complexType>
   <xsd:complexType name="OrderShippedCustomerType">
     <xsd:annotation>
@@ -116,8 +118,6 @@
       </xsd:any>
     </xsd:sequence>
     <xsd:attribute name="totalAmount" type="AmountBaseType"/>
-    <xsd:attribute name="currency" type="ISOCurrencyCodeType"/>
-    <xsd:attribute name="currencySymbol" type="xsd:string"/>
     <xsd:attribute name="totalTaxAmount" type="AmountBaseType"/>
     <xsd:attribute name="subTotalAmount" type="AmountBaseType"/>
     <xsd:attribute name="shippedAmount" type="AmountBaseType"/>

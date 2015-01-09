@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<OrderShipped xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="01234567890" storeId="MAGT1">
+<OrderShipped xmlns="http://api.gsicommerce.com/schema/checkout/1.0" customerOrderId="01234567890" storeId="MAGT1" currency="USD" currencySymbol="$">
     <Customer customerId="000008012">
         <Name>
             <Honorific>Esq.</Honorific>
@@ -57,27 +57,25 @@
     </ShippedOrderItems>
     <ShippedDestination>
         <StoreFrontAddress>
-            <StoreFrontLocation id="store_1">
-                <StoreCode>STORE_CODE_664</StoreCode>
-                <StoreName>Store Store No. 664</StoreName>
-                <StoreEmail>store@example.com</StoreEmail>
-                <Address>
-                    <Line1>123 Main St</Line1>
-                    <Line2>Ste B</Line2>
-                    <Line3>Bldg 2</Line3>
-                    <Line4>Fl 6</Line4>
-                    <City>Saskatoon</City>
-                    <MainDivision>Ok</MainDivision>
-                    <CountryCode>US</CountryCode>
-                    <PostalCode>91234</PostalCode>
-                </Address>
-            </StoreFrontLocation>
+            <StoreCode>STORE_CODE_664</StoreCode>
+            <StoreName>Store Store No. 664</StoreName>
+            <StoreEmail>store@example.com</StoreEmail>
+            <Address>
+                <Line1>123 Main St</Line1>
+                <Line2>Ste B</Line2>
+                <Line3>Bldg 2</Line3>
+                <Line4>Fl 6</Line4>
+                <City>Saskatoon</City>
+                <MainDivision>Ok</MainDivision>
+                <CountryCode>US</CountryCode>
+                <PostalCode>91234</PostalCode>
+            </Address>
             <StoreDirections>http://example.com/directions_url</StoreDirections>
             <StoreHours>8 AM - 8 PM</StoreHours>
             <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>
         </StoreFrontAddress>
     </ShippedDestination>
-    <OrderSummary totalAmount="7.42" currency="USD" currencySymbol="$" totalTaxAmount="0.42" subTotalAmount="6.00" shippedAmount="1.00" dutyAmount="0.00" feesAmount="0.00" discountAmount="0.00">
+    <OrderSummary totalAmount="7.42" totalTaxAmount="0.42" subTotalAmount="6.00" shippedAmount="1.00" dutyAmount="0.00" feesAmount="0.00" discountAmount="0.00">
         <Payments>
             <Payment>
                 <PaymentDescription>Visa</PaymentDescription>

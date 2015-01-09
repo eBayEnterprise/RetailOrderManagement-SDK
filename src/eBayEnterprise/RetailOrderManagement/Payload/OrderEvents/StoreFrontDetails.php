@@ -34,25 +34,21 @@ class StoreFrontDetails implements IStoreFrontDetails
     protected $hours;
     /** @var string */
     protected $phoneNumber;
-    /** @var string */
-    protected $locationId;
-
     /**
      * @param IValidatorIterator
      */
     public function __construct(IValidatorIterator $validators)
     {
         $this->extractionPaths = [
-            'city' => 'string(x:StoreFrontLocation/x:Address/x:City)',
-            'countryCode' => 'string(x:StoreFrontLocation/x:Address/x:CountryCode)',
-            'locationId' => 'string(x:StoreFrontLocation/@id)'
+            'city' => 'string(x:Address/x:City)',
+            'countryCode' => 'string(x:Address/x:CountryCode)',
         ];
         $this->optionalExtractionPaths = [
-            'mainDivision' => 'x:StoreFrontLocation/x:Address/x:MainDivision',
-            'postalCode' => 'x:StoreFrontLocation/x:Address/x:PostalCode',
-            'storeCode' => 'x:StoreFrontLocation/x:StoreCode',
-            'storeName' => 'x:StoreFrontLocation/x:StoreName',
-            'emailAddress' => 'x:StoreFrontLocation/x:StoreEmail',
+            'mainDivision' => 'x:Address/x:MainDivision',
+            'postalCode' => 'x:Address/x:PostalCode',
+            'storeCode' => 'x:StoreCode',
+            'storeName' => 'x:StoreName',
+            'emailAddress' => 'x:StoreEmail',
             'directions' => 'x:StoreDirections',
             'hours' => 'x:StoreHours',
             'phoneNumber' => 'x:StoreFrontPhoneNumber',
@@ -60,7 +56,7 @@ class StoreFrontDetails implements IStoreFrontDetails
         $this->addressLinesExtractionMap = [
             [
                 'property' => 'lines',
-                'xPath' => 'x:StoreFrontLocation/x:Address/*[starts-with(name(), "Line")]'
+                'xPath' => 'x:Address/*[starts-with(name(), "Line")]'
             ],
         ];
         $this->validators = $validators;
@@ -132,17 +128,6 @@ class StoreFrontDetails implements IStoreFrontDetails
         return $this;
     }
 
-    public function getLocationId()
-    {
-        return $this->locationId;
-    }
-
-    public function setLocationId($locationId)
-    {
-        $this->locationId = $this->cleanId($locationId);
-        return $this;
-    }
-
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
@@ -155,12 +140,10 @@ class StoreFrontDetails implements IStoreFrontDetails
 
     protected function serializeLocation()
     {
-        return "<StoreFrontLocation id='{$this->getLocationId()}'>"
-            . $this->serializeOptionalValue('StoreCode', $this->getStoreCode())
+        return $this->serializeOptionalValue('StoreCode', $this->getStoreCode())
             . $this->serializeOptionalValue('StoreName', $this->getStoreName())
             . $this->serializeOptionalValue('StoreEmail', $this->getEmailAddress())
-            . $this->serializePhysicalAddress()
-            . '</StoreFrontLocation>';
+            . $this->serializePhysicalAddress();
     }
 
     protected function serializeDetails()

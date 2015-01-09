@@ -47,15 +47,13 @@
             <Shipping>
                 <ShipmentMethod displayText="USPS Flat Rate">FLAT_RATE</ShipmentMethod>
                 <StoreFrontAddress>
-                    <StoreFrontLocation id="store_1">
-                        <Address>
-                            <Line1>123 Main St</Line1>
-                            <City>Saskatoon</City>
-                            <MainDivision>Ok</MainDivision>
-                            <CountryCode>US</CountryCode>
-                            <PostalCode>91234</PostalCode>
-                        </Address>
-                    </StoreFrontLocation>
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <City>Saskatoon</City>
+                        <MainDivision>Ok</MainDivision>
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>91234</PostalCode>
+                    </Address>
                 </StoreFrontAddress>
             </Shipping>
         </OrderItem>

@@ -51,8 +51,8 @@ class OrderShipped implements IOrderShipped
             $this->buildPayloadForInterface(static::ORDER_ITEM_ITERABLE_INTERFACE);
 
         $this->extractionPaths = [
-            'currencyCode' => 'string(x:OrderSummary/@currency)',
-            'currencySymbol' => 'string(x:OrderSummary/@currencySymbol)',
+            'currencyCode' => 'string(@currency)',
+            'currencySymbol' => 'string(@currencySymbol)',
             'customerFirstName' => 'string(x:Customer/x:Name/x:FirstName)',
             'customerLastName' => 'string(x:Customer/x:Name/x:LastName)',
             'storeId' => 'string(@storeId)',
@@ -128,6 +128,8 @@ class OrderShipped implements IOrderShipped
             'xmlns' => $this->getXmlNamespace(),
             'customerOrderId' => $this->getCustomerOrderId(),
             'storeId' => $this->getStoreId(),
+            'currency' => $this->getCurrencyCode(),
+            'currencySymbol' => $this->getCurrencySymbol(),
         ];
     }
 
@@ -156,15 +158,13 @@ class OrderShipped implements IOrderShipped
 
     protected function serializeOrderSummary()
     {
-        $format = '<OrderSummary totalAmount="%s" currency="%s" currencySymbol="%s"'
+        $format = '<OrderSummary totalAmount="%s"'
             . ' totalTaxAmount="%s" subTotalAmount="%s" shippedAmount="%s"'
             . ' dutyAmount="%s" feesAmount="%s" discountAmount="%s">'
             . '%s%s</OrderSummary>';
         return sprintf(
             $format,
             $this->formatAmount($this->getTotalAmount()),
-            $this->getCurrencyCode(),
-            $this->getCurrencySymbol(),
             $this->formatAmount($this->getTaxAmount()),
             $this->formatAmount($this->getSubtotalAmount()),
             $this->formatAmount($this->getShippedAmount()),

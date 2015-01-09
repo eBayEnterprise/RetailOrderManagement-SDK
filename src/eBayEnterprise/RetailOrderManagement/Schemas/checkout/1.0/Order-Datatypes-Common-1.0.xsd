@@ -1678,7 +1678,10 @@ Aliases: N/A
   </xsd:complexType>
   <xsd:complexType name="StoreFrontDetails">
     <xsd:sequence>
-      <xsd:element name="StoreFrontLocation" type="StoreLocation"/>
+      <xsd:element name="StoreCode" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="StoreName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="StoreEmail" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Address" type="PhysicalAddressType"/>
       <xsd:element name="StoreDirections" type="xsd:string" minOccurs="0"/>
       <xsd:element name="StoreHours" type="xsd:string" minOccurs="0"/>
       <xsd:element name="StoreFrontPhoneNumber" type="xsd:string" minOccurs="0"/>

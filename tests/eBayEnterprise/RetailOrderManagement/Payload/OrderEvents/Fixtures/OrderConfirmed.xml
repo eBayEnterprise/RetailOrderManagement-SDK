@@ -71,21 +71,19 @@
             </OrderConfirmedOrderItems>
             <ShipmentMethod displayText="United States Postal Service">USPS</ShipmentMethod> <!-- displayText is optional -->
             <StoreFrontAddress>
-                <StoreFrontLocation id="s990">
-                    <StoreCode>Some_code</StoreCode>
-                    <StoreName>Some Store Name</StoreName>
-                    <StoreEmail>someStore@someStore.com</StoreEmail>
-                    <Address>
-                        <Line1>Some Ave</Line1>
-                        <Line2>Line 2</Line2>
-                        <Line3>Line 3</Line3>
-                        <Line4>Line 4</Line4>
-                        <City>Some Place</City>
-                        <MainDivision>PA</MainDivision>
-                        <CountryCode>US</CountryCode>
-                        <PostalCode>19046</PostalCode>
-                    </Address>
-                </StoreFrontLocation>
+                <StoreCode>Some_code</StoreCode>
+                <StoreName>Some Store Name</StoreName>
+                <StoreEmail>someStore@someStore.com</StoreEmail>
+                <Address>
+                    <Line1>Some Ave</Line1>
+                    <Line2>Line 2</Line2>
+                    <Line3>Line 3</Line3>
+                    <Line4>Line 4</Line4>
+                    <City>Some Place</City>
+                    <MainDivision>PA</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>19046</PostalCode>
+                </Address>
                 <StoreDirections>http://somestore.com/location</StoreDirections>
                 <StoreHours>10:30 AM - 10:00 PM</StoreHours>
                 <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>

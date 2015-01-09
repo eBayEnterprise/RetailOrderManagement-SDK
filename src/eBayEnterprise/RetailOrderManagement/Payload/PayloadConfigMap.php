@@ -509,7 +509,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => array_merge($physicalAddressParams, ['getLocationId']),
+                'params' => $physicalAddressParams,
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -908,6 +908,8 @@ return call_user_func(function () {
                     'getCustomerLastName',
                     'getStoreId',
                     'getCustomerOrderId',
+                    'getCurrencyCode',
+                    'getCurrencySymbol',
                ],
             ],
             [

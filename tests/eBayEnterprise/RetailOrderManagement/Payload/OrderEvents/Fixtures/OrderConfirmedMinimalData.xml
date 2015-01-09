@@ -34,13 +34,11 @@
             </OrderConfirmedOrderItems>
             <ShipmentMethod>USPS</ShipmentMethod>
             <StoreFrontAddress>
-                <StoreFrontLocation id="s990">
-                    <Address>
-                        <Line1>Some Ave</Line1>
-                        <City>Some Place</City>
-                        <CountryCode>US</CountryCode>
-                    </Address>
-                </StoreFrontLocation>
+                <Address>
+                    <Line1>Some Ave</Line1>
+                    <City>Some Place</City>
+                    <CountryCode>US</CountryCode>
+                </Address>
             </StoreFrontAddress>
         </ShipGroup>
     </ShipGroups>

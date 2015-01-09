@@ -192,6 +192,6 @@
     <xsd:attribute name="AdjustmentCategory" type="xsd:string"/>
     <xsd:attribute name="IsCredit" type="xsd:string"/>
     <xsd:attribute name="Amount" type="AmountBaseType">
-      </xsd:attribute>
+			</xsd:attribute>
   </xsd:complexType>
 </xsd:schema>

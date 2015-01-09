@@ -2,11 +2,12 @@
 <xsd:schema xmlns="http://api.gsicommerce.com/schema/checkout/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.gsicommerce.com/schema/checkout/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="${project.version}">
   <xsd:include schemaLocation="../../../checkout/1.0/Checkout-Datatypes-1.0.xsd"/>
   <xsd:include schemaLocation="../../../checkout/1.0/Order-Datatypes-Common-1.0.xsd"/>
-  <xsd:element name="OrderBackorder" type="OrderBackorderType" nillable="false"/>
-  <xsd:complexType name="OrderBackorderType">
+  <xsd:element name="OrderPickupReady" type="OrderPickupReadyType" nillable="false"/>
+  <xsd:complexType name="OrderPickupReadyType">
     <xsd:sequence>
-      <xsd:element name="Customer" type="OrderBackorderCustomerType"/>
-      <xsd:element name="ShipGroups" type="OrderBackorderShipGroupListType"/>
+      <xsd:element name="Customer" type="OrderPickupReadyCustomerType"/>
+      <xsd:element name="OrderItems" type="OrderPickupReadyItemListType"/>
+      <xsd:element name="Destination" type="OrderPickupReadyDestinationType"/>
       <xsd:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
@@ -43,7 +44,7 @@
     <xsd:attribute name="currency" type="ISOCurrencyCodeType" use="required"/>
     <xsd:attribute name="currencySymbol" type="xsd:string" use="required"/>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderCustomerType">
+  <xsd:complexType name="OrderPickupReadyCustomerType">
     <xsd:annotation>
       <xsd:documentation>Contains customer information including name and loyalty program information.</xsd:documentation>
     </xsd:annotation>
@@ -90,15 +91,17 @@
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderItemListType">
+  <xsd:complexType name="OrderPickupReadyItemListType">
     <xsd:sequence>
-      <xsd:element name="OrderItem" type="OrderBackorderItemType" nillable="false" maxOccurs="unbounded"/>
+      <xsd:element name="OrderItem" type="OrderPickupReadyItemType" nillable="false" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderItemType">
+  <xsd:complexType name="OrderPickupReadyItemType">
     <xsd:sequence>
-      <xsd:element name="Description" type="OrderBackorderProductDescriptionType" minOccurs="0"/>
-      <xsd:element name="Pricing" type="OrderBackorderItemPriceType"/>
+      <xsd:element name="Description" type="OrderPickupReadyProductDescriptionType" minOccurs="0"/>
+      <xsd:element name="Pricing" type="OrderPickupReadyItemPriceType"/>
+      <xsd:element name="ReleaseStatuses" type="OrderPickupReadyReleaseStatusListType" minOccurs="1"/>
+      <xsd:element name="ProxyInformation" type="OrderPickupReadyProxyType" minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="webLineId" type="OrderItemLineNumber" use="required">
       <xsd:annotation>
@@ -109,26 +112,13 @@
       </xsd:annotation>
     </xsd:attribute>
     <xsd:attribute name="itemId" type="ItemId"/>
-    <xsd:attribute name="quantity" type="xsd:decimal"/>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderShipGroupListType">
+  <xsd:complexType name="OrderPickupReadyDestinationType">
     <xsd:sequence>
-      <xsd:element name="ShipGroup" type="OrderBackorderShipGroupType" minOccurs="1" maxOccurs="unbounded"/>
+      <xsd:element name="StoreFrontDetail" type="StoreFrontDetails"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderShipGroupType">
-    <xsd:sequence>
-      <xsd:element name="BackorderOrderItems" type="OrderBackorderItemListType"/>
-      <xsd:element name="ShipmentMethod" type="ShippingMethodType" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="EstimatedShipDate" type="xsd:date" minOccurs="0"/>
-      <xsd:element name="EDDMessage" type="OrderBackorderEstimatedDeliveryDateType" minOccurs="0"/>
-      <xsd:choice minOccurs="1" maxOccurs="1">
-        <xsd:element name="ShippedAddress" type="MailingAddress"/>
-        <xsd:element name="StoreFrontAddress" type="StoreFrontDetails"/>
-      </xsd:choice>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="OrderBackorderProductDescriptionType">
+  <xsd:complexType name="OrderPickupReadyProductDescriptionType">
     <xsd:complexContent>
       <xsd:extension base="ProductDescriptionBaseType">
         <xsd:sequence>
@@ -151,26 +141,6 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderEstimatedDeliveryDateType">
-    <xsd:annotation>
-      <xsd:documentation>
-                        The estimated delivery date (EDD)
-            </xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="Mode" type="DeliveryEstimateMode" minOccurs="0"/>
-      <xsd:element name="MessageType" type="DeliveryType" minOccurs="0"/>
-      <xsd:element name="Template" type="xsd:string" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>
-                        The Template text value has a varying number string variable markers depending on the
-                        template selected by OMS.
-                    </xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="DeliveryWindow" type="DateRangeType" minOccurs="0"/>
-    </xsd:sequence>
-  </xsd:complexType>
   <xsd:complexType name="ColorShippedType">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string">
@@ -185,7 +155,7 @@
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderItemPriceType">
+  <xsd:complexType name="OrderPickupReadyItemPriceType">
     <xsd:sequence>
       <xsd:element name="Amount" minOccurs="0">
         <xsd:annotation>
@@ -243,17 +213,53 @@
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderPaymentListType">
+  <xsd:complexType name="OrderPickupReadyReleaseStatusListType">
     <xsd:sequence>
-      <xsd:element name="Payment" type="OrderBackorderPaymentType" maxOccurs="unbounded"/>
+      <xsd:element name="ReleaseStatus" type="ReleaseStatusType" maxOccurs="unbounded" minOccurs="1"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType name="OrderBackorderPaymentType">
+  <xsd:complexType name="ReleaseStatusType">
+    <xsd:attribute name="statusCode" type="xsd:string"/>
+    <xsd:attribute name="statusDescription" type="xsd:string"/>
+    <xsd:attribute name="quantity" type="xsd:decimal"/>
+    <xsd:attribute name="shipmentQuantity" type="xsd:decimal"/>
+    <xsd:attribute name="totalQuantity" type="xsd:decimal"/>
+  </xsd:complexType>
+  <xsd:complexType name="OrderPickupReadyProxyType">
     <xsd:sequence>
-      <xsd:element name="PaymentDescription" type="xsd:string"/>
-      <xsd:element name="PaymentTenderType" type="xsd:string"/>
-      <xsd:element name="PaymentMaskedAccount" type="xsd:string"/>
-      <xsd:element name="PaymentAmount" type="AmountBaseType"/>
+      <xsd:element name="ProxyName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ProxyFirstName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ProxyLastName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ProxyEmail" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="ProxyPhone" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Address" type="ProxyPickupAddress" minOccurs="0"/>
+      <xsd:element name="Relationship" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProxyPickupAddress">
+    <xsd:annotation>
+      <xsd:documentation>
+                This address type is used on an order item when a proxy pickup is used and the
+                user enters their address.  It is a subset of a physical address
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Line1" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Line2" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Line3" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="Line4" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="City" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="MainDivisionCode" type="xsd:string" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Typically a two- or three-digit postal abbreviation for
+                        the state or province.  Mainly used in Canada and the US.
+                        This does not necessarily conform to the ISO 3166-2 code.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CountryCode" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="PostalCode" type="xsd:string" minOccurs="0"/>
     </xsd:sequence>
   </xsd:complexType>
 </xsd:schema>

@@ -45,7 +45,6 @@ class StoreFrontDetailsTest extends \PHPUnit_Framework_TestCase
             'setDirections' => 'directions',
             'setHours' => '9:00 AM - 8:00 PM',
             'setPhoneNumber' => '555-555-5555',
-            'setLocationId' => '_loc1',
         ]);
     }
 

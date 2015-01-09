@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
-interface IOrderBackorder extends IPayload, ILoyaltyProgramCustomer, IOrderEvent, IShipGroupContainer
+interface IOrderBackorder extends IPayload, ILoyaltyProgramCustomer, IOrderEvent, IShipGroupContainer, ICurrency
 {
     const ROOT_NODE = 'OrderBackorder';
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';

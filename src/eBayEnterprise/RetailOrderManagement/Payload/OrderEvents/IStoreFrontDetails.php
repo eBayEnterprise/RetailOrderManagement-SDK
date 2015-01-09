@@ -90,18 +90,4 @@ interface IStoreFrontDetails extends IDestination, IPhysicalAddress
      * @return self
      */
     public function setPhoneNumber($phoneNumber);
-    /**
-     * Uniquely identify a destination within the serialized data.
-     *
-     * xsd restrictions: xsd:id first character must be letter or '_', may
-     *                   only contain alphanumeric, '_', '-', and '.' characters,
-     *                   must be unique to the serialized XML document
-     * @return string
-     */
-    public function getLocationId();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setLocationId($locationId);
 }

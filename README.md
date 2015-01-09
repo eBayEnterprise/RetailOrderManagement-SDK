@@ -2,6 +2,8 @@
 
 by eBay Enterprise
 
+Compatible with Retail Order Management schema version 1.8.20.
+
 ## The Problem
 
 Our implementation of Retail Order Management as a Magento extension is too tightly coupled to Magento 1. Among other things, that means
