@@ -16,86 +16,53 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
-use eBayEnterprise\RetailOrderManagement\Util\TPayloadTest;
-use ReflectionClass;
-use ReflectionMethod;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class PayPalSetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
-    use Payload\TTopLevelPayloadTest;
-
-    /** @var Payload\Payment\ILineItem (stub) */
-    protected $stubLineItemA;
-    /** @var Payload\IPayloadMap (stub) */
-    protected $payloadMapStub;
-    /** @var Payload\Payment\ILineItemIterable (stub) */
-    protected $lineItemIterableStub;
+    use TPayloadTest;
 
     /**
-     * Inject property values into $class
+     * Setup a stub validator and validator iterator for each payload to use
+     */
+    public function setUp()
+    {
+        $this->payloadFactory = new PayloadFactory();
+    }
+
+    public function provideSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/PayPalSetExpressCheckoutRequest.xml'
+            ]
+        ];
+    }
+
+    /**
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
      *
-     * @param $class
-     * @param array $properties array of property => value pairs
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
      */
-    protected function injectProperties($class, $properties)
+    public function testDeserializeSerialize($serializedDataFile)
     {
-        // use reflection to inject properties/values into the $class object
-        $reflection = new ReflectionClass($class);
-        foreach ($properties as $property => $value) {
-            $requestProperty = $reflection->getProperty($property);
-            $requestProperty->setAccessible(true);
-            $requestProperty->setValue($class, $value);
-        }
-    }
-    public function createNewPayload()
-    {
-        return new PayPalSetExpressCheckoutRequest(
-            $this->validatorIterator,
-            $this->schemaValidatorStub,
-            $this->payloadMapStub,
-            $this->lineItemIterableStub
-        );
-    }
-    protected function setUp()
-    {
-        $this->payloadMapStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap');
-        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
-        $this->lineItemIterableStub = $this->getMock(
-            '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItemIterable'
-        );
-        $this->lineItemIterableStub->expects($this->any())
-            ->method('serialize')
-            ->will($this->returnValue(''));
-        $this->lineItemIterableStub->expects($this->any())
-            ->method('count')
-            ->will($this->returnValue(0));
-        $this->fullPayload = $this->buildPayload([
-            'setOrderId' => '1234567',
-            'setReturnUrl' => 'http://mysite.com/checkout/return.html',
-            'setCancelUrl' => 'http://mysite.com/checkout/cancel.html',
-            'setLocaleCode' => 'en_US',
-            'setAmount' => 50.00,
-            'setCurrencyCode' => 'USD',
-            'setShipToLines' => "123 Main St\n",
-            'setShipToCity' => 'Philadelphia',
-            'setShipToMainDivision' => 'PA',
-            'setShipToCountryCode' => 'US',
-            'setShipToPostalCode' => '19019'
-        ]);
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
     }
 
     /**
-     * get the file path for the fixture file
-     * @return string
+     * Get a new PayPalSetExpressCheckoutRequest payload.
+     *
+     * @return PayPalSetExpressCheckoutRequest
      */
-    protected function getCompleteFixtureFile()
+    protected function createNewPayload()
     {
-        return __DIR__ . '/Fixtures/PayPalSetExpressCheckoutRequest.xml';
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutRequest');
     }
 }

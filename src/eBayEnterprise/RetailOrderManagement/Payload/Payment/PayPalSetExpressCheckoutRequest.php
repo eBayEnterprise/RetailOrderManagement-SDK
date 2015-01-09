@@ -55,6 +55,9 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
             'shipToMainDivision' => 'string(x:ShippingAddress/x:MainDivision)',
             'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
             'shipToPostalCode' => 'string(x:ShippingAddress/x:PostalCode)',
+            'shippingTotal' => 'number(x:LineItems/x:ShippingTotal)',
+            'taxTotal' => 'number(x:LineItems/x:TaxTotal)',
+            'lineItemsTotal' => 'number(x:LineItems/x:LineItemsTotal)',
         ];
         $this->addressLinesExtractionMap = [
             [
@@ -64,6 +67,9 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         ];
         $this->booleanExtractionPaths = [
             'addressOverride' => 'string(x:AddressOverride)',
+        ];
+        $this->subpayloadExtractionPaths = [
+            'lineItems' => "x:LineItems",
         ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
@@ -91,7 +97,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
         . $this->serializeAddressOverride()
         . $this->serializeShippingAddress()
-        . $this->serializeLineItems();
+        . $this->serializeLineItemsContainer();
     }
 
     /**
@@ -194,6 +200,13 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     {
         $this->amount = $this->sanitizeAmount($amount);
         return $this;
+    }
+
+    protected function deserializeExtra()
+    {
+        if (count($this->getLineItems()) && $this->getLineItemsTotal() === null) {
+            $this->calculateLineItemsTotal();
+        }
     }
 
     /**

@@ -16,26 +16,19 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
 class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Payload\IValidator (stub) */
-    protected $stubValidator;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var Payload\ISchemaValidator (stub) */
-    protected $stubSchemaValidator;
+    use TPayloadTest;
 
     /**
-     * Setup a stub validator and validator iterator for each payload to use
+     * Setup payload factory to create the order shipped payloads to test.
      */
     public function setUp()
     {
-        // use stub to allow validation success/failure to be scripted.
-        $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
-        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadFactory = new PayloadFactory;
     }
 
     /**
@@ -53,23 +46,6 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
                     'setOrderId' => 'o3trodZDaS2zhZHirJnA',
                 ]
             ],
-        ];
-    }
-
-    /**
-     * Data provider for valid payloads
-     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
-     */
-    public function provideValidPayload()
-    {
-        $base = [
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setPanIsToken' => false,
-            'setResponseCode' => 'Fail',
-        ];
-        return [
-            [$base, ''],
         ];
     }
 
@@ -108,145 +84,13 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Simply ensure that when one validator fails validation, the exception
-     * is thrown - is not validating the actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to fail validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
-    }
-
-    /**
-     * Create a payload with the provided data injected.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return StoredValueRedeemVoidReply
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-        return $payload;
-    }
-
-    /**
-     * Get a new StoredValueRedeemVoidReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
+     * Get a new StoredValueRedeemVoidReply payload.
      * @return StoredValueRedeemVoidReply
      */
     protected function createNewPayload()
     {
-        return new StoredValueRedeemVoidReply($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
-     * Simply ensure that when none of the validators fail, the payload is
-     * considered valid - is not validating actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testValidateWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to pass validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $this->assertSame($payload, $payload->validate());
-    }
-
-    /**
-     * Tests that serialize will perform validation. Should any validator
-     * fail, serialization should also fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithInvalidPayload(array $payloadData)
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * Test that if a payload should pass validation but still produce an
-     * XSD invalid payload, serialization should fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithXsdInvalidPayloadData(array $payloadData)
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @param string $case
-     * @dataProvider provideValidPayload
-     */
-    public function testSerializeWillPass(array $payloadData, $case)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $domPayload = new DOMDocument();
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-
-        $this->assertEquals($this->loadXmlTestString($case), $serializedString);
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @param  string $case
-     * @return string
-     */
-    protected function loadXmlTestString($case)
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/StoredValueRedeemVoidReply{$case}.xml");
-    }
-
-    /**
-     * load an xml file and return the canonicalized string of its contents
-     * @return string
-     */
-    protected function canonicalize($file)
-    {
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->load($file);
-        return $doc->C14N();
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailSchemaInvalid()
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemVoidReply');
     }
 
     /**
@@ -257,35 +101,6 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
     protected function loadXmlInvalidTestString()
     {
         return $this->canonicalize(__DIR__ . "/Fixtures/InvalidStoredValueRedeemVoidReply.xml");
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailPayloadInvalid()
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * @param array $payloadData
-     * @param string $case
-     * @dataProvider provideValidPayload
-     */
-    public function testDeserializeWillPass(array $payloadData, $case)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $xml = $this->loadXmlTestString($case);
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-
-        $this->assertEquals($payload, $newPayload);
     }
 
     /**
@@ -301,5 +116,35 @@ class StoredValueRedeemVoidReplyTest extends \PHPUnit_Framework_TestCase
         } else {
             $this->assertFalse($wasVoided);
         }
+    }
+
+    /**
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
+     */
+    public function provideSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/StoredValueRedeemVoidReply.xml'
+            ],
+        ];
+    }
+
+    /**
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
+     */
+    public function testDeserializeSerialize($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
     }
 }

@@ -27,7 +27,17 @@ trait TPayloadTest
     protected $stubSchemaValidator;
     /** @var IPayload A sample payload with data matching the serialized fixture data */
     protected $fullPayload;
+    /** @var PayloadFactory */
+    protected $payloadFactory;
 
+    /**
+     * Create a new payload and set any data passed in the properties param.
+     * Each key in array should be a setter method to call and will be given
+     * the value at that key.
+     *
+     * @param  array
+     * @return IPayload
+     */
     protected function buildPayload(array $properties = [])
     {
         $payload = $this->createNewPayload();
@@ -44,14 +54,6 @@ trait TPayloadTest
      * @return IPayload
      */
     abstract protected function createNewPayload();
-
-    /**
-     * Return the name of the fixture file containing a complte data set to be
-     * used for base serialize/deserialize tests.
-     *
-     * @return string
-     */
-    abstract protected function getCompleteFixtureFile();
 
     /**
      * Return a C14N, whitespace removed, XML string. If $removeNs is true, any
@@ -74,52 +76,4 @@ trait TPayloadTest
 
         return $string;
     }
-
-    public function testSerialize()
-    {
-        $this->assertSame(
-            $this->loadXmlTestString($this->getCompleteFixtureFile(), true),
-            $this->fullPayload->serialize()
-        );
-    }
-
-    public function testDeserialize()
-    {
-        $payload = $this->buildPayload();
-        $this->assertEquals(
-            $this->fullPayload,
-            $payload->deserialize($this->loadXmlTestString($this->getCompleteFixtureFile()))
-        );
-    }
-
-    /**
-     * Asserts that two variables have the same type and value.
-     * Used on objects, it asserts that two variables reference
-     * the same object.
-     *
-     * @param mixed  $expected
-     * @param mixed  $actual
-     * @param string $message
-     */
-    abstract public static function assertSame($expected, $actual, $message = '');
-    /**
-     * Asserts that two variables are equal.
-     *
-     * @param mixed   $expected
-     * @param mixed   $actual
-     * @param string  $message
-     * @param float   $delta
-     * @param integer $maxDepth
-     * @param boolean $canonicalize
-     * @param boolean $ignoreCase
-     */
-    abstract public static function assertEquals(
-        $expected,
-        $actual,
-        $message = '',
-        $delta = 0.0,
-        $maxDepth = 10,
-        $canonicalize = false,
-        $ignoreCase = false
-    );
 }

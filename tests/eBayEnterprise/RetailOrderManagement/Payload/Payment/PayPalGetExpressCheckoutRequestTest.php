@@ -16,48 +16,49 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
 class PayPalGetExpressCheckoutRequestTest extends \PHPUnit_Framework_TestCase
 {
-    use \eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayloadTest;
+    use TPayloadTest;
 
-    protected $payloadProperties = [
-        'setOrderId' => '1234567',
-        'setToken' => 'EC-5YE59312K56892714',
-        'setCurrencyCode' => 'USD',
-    ];
-
-    /**
-     * Setup a stub validator and validator iterator for each payload to use
-     */
     public function setUp()
     {
-        // use stub to allow validation success/failure to be scripted.
-        $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
-        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->fullPayload = $this->buildPayload($this->payloadProperties);
+        $this->payloadFactory = new PayloadFactory();
+    }
+
+    public function provideSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/PayPalGetExpressCheckoutRequestTest.xml'
+            ]
+        ];
     }
 
     /**
-     * Get a new PayPalGetExpressCheckoutRequest payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
+     */
+    public function testDeserializeSerialize($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
+    }
+
+    /**
+     * Get a new PayPalGetExpressCheckoutRequest payload.
      * @return PayPalGetExpressCheckoutRequest
      */
     protected function createNewPayload()
     {
-        return new PayPalGetExpressCheckoutRequest($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function getCompleteFixtureFile()
-    {
-        return __DIR__ . '/Fixtures/PayPalGetExpressCheckoutRequestTest.xml';
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalGetExpressCheckoutRequest');
     }
 }

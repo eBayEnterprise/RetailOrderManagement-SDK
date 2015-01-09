@@ -46,20 +46,29 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     ) {
         $this->extractionPaths = [
             'requestId' => 'string(@requestId)',
-            'orderId' => 'string(x:PaymentContext/x:OrderId)',
+            'orderId' => 'string(x:OrderId)',
+            'payerId' => 'string(x:PayerId)',
+            'token' => 'string(x:Token)',
             'amount' => 'number(x:Amount)',
             'shipToName' => 'string(x:ShipToName)',
+            'currencyCode' => 'string(x:Amount/@currencyCode)',
             // see addressLinesFromXPath - Address lines Line1 through Line4 are specially handled with that function
             'shipToCity' => 'string(x:ShippingAddress/x:City)',
             'shipToMainDivision' => 'string(x:ShippingAddress/x:MainDivision)',
             'shipToCountryCode' => 'string(x:ShippingAddress/x:CountryCode)',
             'shipToPostalCode' => 'string(x:ShippingAddress/x:PostalCode)',
+            'shippingTotal' => 'number(x:LineItems/x:ShippingTotal)',
+            'taxTotal' => 'number(x:LineItems/x:TaxTotal)',
+            'lineItemsTotal' => 'number(x:LineItems/x:LineItemsTotal)',
         ];
         $this->addressLinesExtractionMap = [
             [
                 'property' => 'shipToLines',
                 'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]",
             ]
+        ];
+        $this->subpayloadExtractionPaths = [
+            'lineItems' => "x:LineItems",
         ];
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
@@ -93,6 +102,13 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         return $this;
     }
 
+    protected function deserializeExtra()
+    {
+        if (count($this->getLineItems()) && $this->getLineItemsTotal() === null) {
+            $this->calculateLineItemsTotal();
+        }
+    }
+
     /**
      * Serialize the various parts of the payload into XML strings and
      * concatenate them together.
@@ -107,7 +123,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         . $this->serializePickupStoreId()
         . $this->serializeShipToName()
         . $this->serializeShippingAddress() // TShippingAddress
-        . $this->serializeLineItems();
+        . $this->serializeLineItemsContainer();
     }
 
     /**

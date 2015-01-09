@@ -1,6 +1,0 @@
-<LineItems>
-    <LineItemsTotal currencyCode="USD">2.00</LineItemsTotal>
-    <ShippingTotal currencyCode="USD">0.50</ShippingTotal>
-    <TaxTotal currencyCode="USD">0.25</TaxTotal>
-    <LineItem/>
-</LineItems>

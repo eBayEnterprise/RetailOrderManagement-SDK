@@ -16,56 +16,25 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
+use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
 {
-    use TTestReflection;
-
-    /** @var Payload\IValidator (stub) */
-    protected $stubValidator;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var Payload\ISchemaValidator (stub) */
-    protected $stubSchemaValidator;
+    use TPayloadTest, TTestReflection;
 
     /**
      * Setup a stub validator and validator iterator for each payload to use
      */
     public function setUp()
     {
+        $this->payloadFactory = new PayloadFactory();
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
+        $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-    }
-
-    /**
-     * Data provider for invalid payloads
-     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
-     */
-    public function provideInvalidPayload()
-    {
-        return [
-            [[]],
-            [
-                [
-                    // order id should fail XSD validation
-                    'orderId' => '1234567890123456789012345',
-                    'cardNumber' => '4111ABC123ZYX987',
-                    'panIsToken' => true,
-                    'authorizationResponseCode' => 'AP01',
-                    'bankAuthorizationCode' => 'OK',
-                    'cvv2ResponseCode' => 'M',
-                    'avsResponseCode' => 'M',
-                    'amountAuthorized' => 55.99,
-                    'currencyCode' => 'USD',
-                    'phoneResponseCode' => 'PHONE_OK',
-                    'nameResponseCode' => 'NAME_OK',
-                ]
-            ],
-        ];
     }
 
     /**
@@ -291,181 +260,15 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Simply ensure that when one validator fails validation, the exception
-     * is thrown - is not validating the actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to fail validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
-    }
-
-    /**
      * Create a payload with the provided data injected.
      * @param  mixed[] $properties key/value pairs of property => value
      * @return CreditCardAuthReply
      */
-    protected function buildPayload($properties)
+    protected function buildPayloadWithReflection($properties)
     {
         $payload = $this->createNewPayload();
         $this->setRestrictedPropertyValues($payload, $properties);
         return $payload;
-    }
-
-    /**
-     * Get a new CreditCardAuthReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return CreditCardAuthReply
-     */
-    protected function createNewPayload()
-    {
-        return new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
-     * Simply ensure that when none of the validators fail, the payload is
-     * considered valid - is not validating actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testValidateWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to pass validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $this->assertSame($payload, $payload->validate());
-    }
-
-    /**
-     * Tests that serialize will perform validation. Should any validator
-     * fail, serialization should also fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithInvalidPayload(array $payloadData)
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * Test that if a payload should pass validation but still produce an
-     * XSD invalid payload, serialization should fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithXsdInvalidPayloadData(array $payloadData)
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testSerializeWillPass(array $payloadData, $testCase)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $domPayload = new DOMDocument();
-        $domPayload->preserveWhiteSpace = false;
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-        $domPayload->loadXML($this->loadXmlTestString($testCase));
-        $expectedString = $domPayload->C14N();
-
-        $this->assertEquals($expectedString, $serializedString);
-    }
-
-    /**
-     * Load the XML from a fixture file and canonicalize it. Returns the
-     * canonical XML string.
-     * @param string $testCase Specifies a test case file to load - default to decrypted data
-     * @return string
-     */
-    protected function loadXmlTestString($testCase = 'UnencryptedCardData')
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__ . '/Fixtures/' . $testCase . '/CreditCardAuthReply.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailSchemaInvalid()
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__ . '/Fixtures/InvalidCreditCardAuthReply.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailPayloadInvalid()
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testDeserializeWillPass(array $payloadData, $testCase)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $xml = $this->loadXmlTestString($testCase);
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-
-        $this->assertEquals($payload, $newPayload);
     }
 
     /**
@@ -476,7 +279,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIsAuthSuccessfulPayloadWithErrors(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertFalse($payload->getIsAuthSuccessful());
     }
 
@@ -488,7 +291,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIsAuthSuccessfulPayloadNoErrors(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertTrue($payload->getIsAuthSuccessful());
     }
 
@@ -500,7 +303,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIsAuthAcceptableUnacceptablePayload(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertFalse($payload->getIsAuthAcceptable());
     }
 
@@ -512,7 +315,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIsAuthAcceptableAcceptablePayload(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertTrue($payload->getIsAuthAcceptable());
     }
 
@@ -527,7 +330,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetReplyResponseCode(array $payloadData, $responseCode)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertSame($responseCode, $payload->getResponseCode());
     }
 
@@ -538,7 +341,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testAvsCorrectionRequired(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertTrue($payload->getIsAVSCorrectionRequired());
     }
 
@@ -549,7 +352,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testAvsCorrectionNotRequired(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertFalse($payload->getIsAVSCorrectionRequired());
     }
 
@@ -560,7 +363,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsCVV2CorrectionRequired(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertTrue($payload->getIsCVV2CorrectionRequired());
     }
 
@@ -571,7 +374,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsCVV2CorrectionNotRequired(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertFalse($payload->getIsCVV2CorrectionRequired());
     }
 
@@ -582,7 +385,49 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsAuthTimeout(array $payloadData)
     {
-        $payload = $this->buildPayload($payloadData);
+        $payload = $this->buildPayloadWithReflection($payloadData);
         $this->assertTrue($payload->getIsAuthTimeout());
+    }
+
+    /**
+     * Get a new CreditCardAuthReply payload.
+     * @return CreditCardAuthReply
+     */
+    protected function createNewPayload()
+    {
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply');
+    }
+
+    /**
+     * Provide paths to fixture files containing valid serialized data.
+     *
+     * @return array
+     */
+    public function provideSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/UnencryptedCardData/CreditCardAuthReply.xml'
+            ],
+            [
+                __DIR__ . '/Fixtures/EncryptedCardData/CreditCardAuthReply.xml'
+            ],
+        ];
+    }
+
+    /**
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
+     */
+    public function testDeserializeSerialize($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
     }
 }

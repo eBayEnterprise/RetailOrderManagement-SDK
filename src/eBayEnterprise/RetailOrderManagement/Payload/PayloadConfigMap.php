@@ -40,6 +40,12 @@ return call_user_func(function () {
         'payloadMap' => $payloadMap,
         'types' => [],
     ];
+    $iLineItemContainerParams = [
+        'getLineItemsTotal',
+        'getShippingTotal',
+        'getTaxTotal',
+        'getCurrencyCode',
+    ];
     $iLineItemIterableChildPayloads = [
         'payloadMap' => $payloadMap,
         'types' => [
@@ -694,14 +700,9 @@ return call_user_func(function () {
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'] = [
         'validators' => [
             [
-                'validator' => $optionalGroupValidator,
-                'params' => [
-                    'getLineItemsTotal',
-                    'getShippingTotal',
-                    'getTaxTotal',
-                    'getCurrencyCode',
-                ]
-            ],
+                'validator' => $iterableValidator,
+                'params' => [],
+            ]
         ],
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
@@ -731,14 +732,17 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => [
-                    'getReturnUrl',
-                    'getCancelUrl',
-                    'getLocaleCode',
-                    'getAmount',
-                    'getAddressOverride',
-                    'getCurrencyCode',
-                ]
+                'params' => array_merge(
+                    $iLineItemContainerParams,
+                    [
+                        'getReturnUrl',
+                        'getCancelUrl',
+                        'getLocaleCode',
+                        'getAmount',
+                        'getAddressOverride',
+                        'getCurrencyCode',
+                    ]
+                )
             ],
             [
                 'validator' => $optionalGroupValidator,
@@ -791,6 +795,7 @@ return call_user_func(function () {
                 'validator' => $requiredFieldsValidator,
                 'params' => array_merge(
                     $shippingAddressParams,
+                    $iLineItemContainerParams,
                     [
                         'getRequestId',
                         'getOrderId',

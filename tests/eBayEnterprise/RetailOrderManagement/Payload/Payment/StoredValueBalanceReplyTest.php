@@ -16,67 +16,50 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
 {
-    use TTestReflection;
-
-    /** @var Payload\IValidator (stub) */
-    protected $stubValidator;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var Payload\ISchemaValidator (stub) */
-    protected $stubSchemaValidator;
+    use TPayloadTest, TTestReflection;
 
     /**
      * Setup a stub validator and validator iterator for each payload to use
      */
     public function setUp()
     {
-        // use stub to allow validation success/failure to be scripted.
-        $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
-        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadFactory = new PayloadFactory();
     }
 
     /**
-     * Data provider for invalid payloads
-     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
      */
-    public function provideInvalidPayload()
+    public function provideSerializedDataFile()
     {
         return [
-            [[]], // Empty payload should fail validation.
             [
-                [
-                    'cardNumber' => 'RvS1kwB3eCxzk5lI',
-                    'panIsToken' => false,
-                    'responseCode' => 'glom', // Invalid response code
-                    'currencyCode' => 'USD',
-                ]
+                __DIR__ . '/Fixtures/StoredValueBalanceReply.xml'
             ],
         ];
     }
 
     /**
-     * Data provider for valid payloads
-     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
      */
-    public function provideValidPayload()
+    public function testDeserializeSerialize($serializedDataFile)
     {
-        return [
-            [
-                [
-                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
-                    'panIsToken' => true,
-                    'balanceAmount' => 87.44,
-                    'currencyCode' => 'USD',
-                    'responseCode' => 'Success',
-                ]
-            ]
-        ];
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
     }
 
     /**
@@ -88,199 +71,32 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
-                    'panIsToken' => true,
-                    'balanceAmount' => 87.44,
-                    'currencyCode' => 'USD',
-                    'responseCode' => 'Success',
+                    'setCardNumber' => 'KDVXYXCeFCG8GfH6',
+                    'setPanIsToken' => true,
+                    'setBalanceAmount' => 87.44,
+                    'setCurrencyCode' => 'USD',
+                    'setResponseCode' => 'Success',
                 ]
             ],
             [
                 [
-                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
-                    'panIsToken' => true,
-                    'balanceAmount' => 87.44,
-                    'currencyCode' => 'USD',
-                    'responseCode' => 'Failure',
+                    'setCardNumber' => 'KDVXYXCeFCG8GfH6',
+                    'setPanIsToken' => true,
+                    'setBalanceAmount' => 87.44,
+                    'setCurrencyCode' => 'USD',
+                    'setResponseCode' => 'Failure',
                 ]
             ],
             [
                 [
-                    'cardNumber' => 'KDVXYXCeFCG8GfH6',
-                    'panIsToken' => true,
-                    'balanceAmount' => 87.44,
-                    'currencyCode' => 'USD',
-                    'responseCode' => 'Timeout',
+                    'setCardNumber' => 'KDVXYXCeFCG8GfH6',
+                    'setPanIsToken' => true,
+                    'setBalanceAmount' => 87.44,
+                    'setCurrencyCode' => 'USD',
+                    'setResponseCode' => 'Timeout',
                 ]
             ]
         ];
-    }
-
-    /**
-     * Simply ensure that when one validator fails validation, the exception
-     * is thrown - is not validating the actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to fail validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
-    }
-
-    /**
-     * Create a payload with the provided data injected.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return StoredValueBalanceReply
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-        $this->setRestrictedPropertyValues($payload, $properties);
-        return $payload;
-    }
-
-    /**
-     * Get a new StoredValueBalanceReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return StoredValueBalanceReply
-     */
-    protected function createNewPayload()
-    {
-        return new StoredValueBalanceReply($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
-     * Simply ensure that when none of the validators fail, the payload is
-     * considered valid - is not validating actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testValidateWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to pass validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $this->assertSame($payload, $payload->validate());
-    }
-
-    /**
-     * Tests that serialize will perform validation. Should any validator
-     * fail, serialization should also fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithInvalidPayload(array $payloadData)
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * Test that if a payload should pass validation but still produce an
-     * XSD invalid payload, serialization should fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithXsdInvalidPayloadData(array $payloadData)
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testSerializeWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $domPayload = new DOMDocument();
-        $domPayload->preserveWhiteSpace = false;
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-        $domPayload->loadXML($this->loadXmlTestString());
-        $expectedString = $domPayload->C14N();
-
-        $this->assertSame($expectedString, $serializedString);
-    }
-
-    /**
-     * Load the XML from a fixture file and canonicalize it. Returns the
-     * canonical XML string.
-     * @return string
-     */
-    protected function loadXmlTestString()
-    {
-        return file_get_contents(__DIR__ . '/Fixtures/StoredValueBalanceReply.xml');
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailSchemaInvalid()
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        return file_get_contents(__DIR__ . '/Fixtures/InvalidStoredValueBalanceReply.xml');
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailPayloadInvalid()
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testDeserializeWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $xml = $this->loadXmlTestString();
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-
-        $this->assertEquals($payload, $newPayload);
     }
 
     /**
@@ -296,5 +112,15 @@ class StoredValueBalanceReplyTest extends \PHPUnit_Framework_TestCase
         } else {
             $this->assertFalse($isSuccessful);
         }
+    }
+
+    /**
+     * Get a new StoredValueBalanceReply payload.
+     * @return StoredValueBalanceReply
+     */
+    protected function createNewPayload()
+    {
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceReply');
     }
 }

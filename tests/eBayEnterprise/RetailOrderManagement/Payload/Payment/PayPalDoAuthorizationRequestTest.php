@@ -16,46 +16,58 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
 class PayPalDoAuthorizationRequestTest extends \PHPUnit_Framework_TestCase
 {
-    use Payload\TTopLevelPayloadTest;
+    use TPayloadTest;
 
     /**
-     * Setup a stub validator and validator iterator for each payload to use
+     * Setup payload factory to create the order shipped payloads to test.
      */
     public function setUp()
     {
-        // use stub to allow validation success/failure to be scripted.
-        $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
-        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->fullPayload = $this->buildPayload([
-            'setRequestId' => '1234567890',
-            'setOrderId' => '1234567',
-            'setAmount' => 150.00,
-            'setCurrencyCode' => 'USD',
-        ]);
+        $this->payloadFactory = new PayloadFactory;
     }
 
     /**
-     * Get a new PayPalDoAuthorizationRequest payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
+     */
+    public function provideSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/PayPalDoAuthorizationRequestTest.xml',
+            ],
+        ];
+    }
+
+    /**
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
+     */
+    public function testDeserializeSerialize($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
+    }
+
+    /**
+     * Get a new PayPalDoAuthorizationRequest payload.
      * @return PayPalDoAuthorizationRequest
      */
     protected function createNewPayload()
     {
-        return new PayPalDoAuthorizationRequest($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
-     * get the fixture Xml file name
-     * @return string
-     */
-    protected function getCompleteFixtureFile()
-    {
-        return __DIR__ . "/Fixtures/PayPalDoAuthorizationRequestTest.xml";
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoAuthorizationRequest');
     }
 }

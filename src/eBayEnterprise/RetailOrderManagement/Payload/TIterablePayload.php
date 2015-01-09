@@ -21,15 +21,17 @@ use DOMXPath;
 trait TIterablePayload
 {
     protected $includeIfEmpty = false;
+    protected $buildRootNode = true;
 
     public function serialize()
     {
+        $format = $this->buildRootNode ? '<%1$s>%2$s</%1$s>' : '%2$s';
         $serializedSubpayloads = '';
         foreach ($this as $subpayload) {
             $serializedSubpayloads .= $subpayload->serialize();
         }
         return ($this->includeIfEmpty || $serializedSubpayloads)
-            ? sprintf('<%1$s>%2$s</%1$s>', $this->getRootNodeName(), $serializedSubpayloads)
+            ? sprintf($format, $this->getRootNodeName(), $serializedSubpayloads)
             : '';
     }
 

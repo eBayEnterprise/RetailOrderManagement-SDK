@@ -23,9 +23,14 @@
         <TaxTotal currencyCode="USD">5.00</TaxTotal>
         <LineItem>
             <Name>Product A</Name>
+            <SequenceNumber>1</SequenceNumber>
+            <Quantity>1</Quantity>
+            <UnitAmount currencyCode="USD">55.00</UnitAmount>
         </LineItem>
         <LineItem>
             <Name>Product B</Name>
+            <Quantity>1</Quantity>
+            <UnitAmount currencyCode="USD">45.00</UnitAmount>
         </LineItem>
     </LineItems>
 </PayPalDoExpressCheckoutRequest>

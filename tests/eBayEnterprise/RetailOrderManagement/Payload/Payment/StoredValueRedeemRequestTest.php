@@ -16,7 +16,8 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
 /**
  * Class StoredValueRedeemRequestTest
@@ -27,219 +28,80 @@ use eBayEnterprise\RetailOrderManagement\Payload;
  */
 class StoredValueRedeemRequestTest extends \PHPUnit_Framework_TestCase
 {
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-
-    /** @var  Payload\IValidator */
-    protected $validatorStub;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var  Payload\ISchemaValidator */
-    protected $schemaValidatorStub;
-
-    /**
-     * data provider to provide an empty array of properties
-     * Empty properties will generate and invalid IPayload object
-     *
-     * @return array $payloadData
-     */
-    public function provideInvalidPayload()
-    {
-        $payloadData = [];
-        return [
-            [$payloadData]
-        ];
-    }
-
-    /**
-     * Data provider to provide an array of valid property values that will generate an valid IPayload object
-     *
-     * @return array $payloadData
-     */
-    public function provideValidPayload()
-    {
-        // move to JSON
-        $properties = [
-            'setRequestId' => '2DkKj6frchv81zQF',
-            'setOrderId' => 'o3trodZDaS2zhZHirJnA',
-            'setPanIsToken' => false,
-            'setCardNumber' => 'hmrROxcsoE8BDmbZFUME0+',
-            'setPin' => 'dmiFblP4',
-            'setAmount' => 15.55,
-            'setCurrencyCode' => 'USD',
-        ];
-
-        return [
-            [$properties]
-        ];
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
-    }
-
-    /**
-     * Take an array of property values with property names as keys and return an IPayload object
-     *
-     * @param array $properties
-     * @return StoredValueRedeemRequest
-     */
-    protected function buildPayload(array $properties)
-    {
-        $payload = new StoredValueRedeemRequest($this->validatorIterator, $this->schemaValidatorStub);
-
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-
-        return $payload;
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testValidateWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $this->assertSame($payload, $payload->validate());
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailPayloadValidation(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload()));
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailXsdValidation(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload()));
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testSerializeWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $domPayload = new DOMDocument();
-        $domPayload->preserveWhiteSpace = false;
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-        $domPayload->loadXML($this->xmlTestString());
-        $expectedString = $domPayload->C14N();
-
-        $this->assertEquals($expectedString, $serializedString);
-    }
-
-    /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlTestString()
-    {
-        $dom = new DOMDocument();
-        $dom->load(__DIR__ . '/Fixtures/StoredValueRedeemRequest.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailSchemaValidation()
-    {
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->xmlInvalidTestString();
-
-        $newPayload = new StoredValueRedeemRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * Read an XML file with invalid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlInvalidTestString()
-    {
-        $dom = new DOMDocument();
-        $dom->load(__DIR__ . '/Fixtures/InvalidStoredValueRedeemRequest.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailPayloadValidation()
-    {
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->xmlInvalidTestString();
-
-        $newPayload = new StoredValueRedeemRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testDeserializeWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $xml = $this->xmlTestString();
-
-        $newPayload = new StoredValueRedeemRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $newPayload->deserialize($xml);
-
-        $this->assertEquals($payload, $newPayload);
-    }
+    use TPayloadTest;
 
     protected function setUp()
     {
-        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
-        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadFactory = new PayloadFactory;
+    }
+
+    /**
+     * Construct a new PayPalDoAuthorizationReply payload.
+     *
+     * @return IPayload
+     */
+    protected function createNewPayload()
+    {
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueRedeemRequest');
+    }
+
+    /**
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
+     */
+    public function provideSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/StoredValueRedeemRequest.xml',
+            ],
+        ];
+    }
+
+    /**
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
+     */
+    public function testDeserializeSerialize($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
+    }
+
+    /**
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
+     */
+    public function provideInvalidSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/InvalidStoredValueRedeemRequest.xml',
+            ],
+        ];
+    }
+
+    /**
+     * Test deserializing invalid data will throw an InvalidPayload Exception
+     *
+     * @param string path to fixture file
+     * @dataProvider provideInvalidSerializedDataFile
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testDeserializeInvalidPayload($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
     }
 }

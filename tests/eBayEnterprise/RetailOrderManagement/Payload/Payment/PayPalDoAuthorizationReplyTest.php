@@ -16,233 +16,62 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
 class PayPalDoAuthorizationReplyTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Payload\IValidator (stub) */
-    protected $stubValidator;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var Payload\ISchemaValidator (stub) */
-    protected $stubSchemaValidator;
+    use TPayloadTest;
 
     /**
-     * Setup a stub validator and validator iterator for each payload to use
+     * Setup payload factory to create the order shipped payloads to test.
      */
     public function setUp()
     {
-        // use stub to allow validation success/failure to be scripted.
-        $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
-        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadFactory = new PayloadFactory;
     }
 
     /**
-     * Data provider for invalid payloads
-     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
      */
-    public function provideInvalidPayload()
-    {
-        return [
-            [[]] // Empty payload should fail validation.
-        ];
-    }
-
-    /**
-     * Data provider for valid payloads
-     * @return array[] Array of arg arrays, each containing a set of payload data suitable for self::buildPayload
-     */
-    public function provideValidPayload()
+    public function provideSerializedDataFile()
     {
         return [
             [
-                [
-                    'setOrderId' => 'OrderId0',
-                    'setResponseCode' => 'Success',
-                    'setPaymentStatus' => 'Pending',
-                    'setPendingReason' => 'authorization',
-                    'setReasonCode' => ''
-                ]
+                __DIR__ . '/Fixtures/PayPalDoAuthorizationReplyTest.xml',
+                true // isSuccess Expectation
             ],
         ];
     }
 
     /**
-     * Simply ensure that when one validator fails validation, the exception
-     * is thrown - is not validating the actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @param bool   expectation for the isSuccess method
+     * @dataProvider provideSerializedDataFile
      */
-    public function testValidateWillFail(array $payloadData)
+    public function testDeserializeSerialize($serializedDataFile, $isSuccess)
     {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to fail validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($isSuccess, $payload->isSuccess());
+        $this->assertSame($serializedData, $payload->serialize());
     }
 
     /**
-     * Create a payload with the provided data.
-     * @param  mixed[] $properties key/value pairs of property => value
-     * @return PayPalDoAuthorizationReply
-     */
-    protected function buildPayload($properties)
-    {
-        $payload = $this->createNewPayload();
-
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-        return $payload;
-    }
-
-    /**
-     * Get a new PayPalDoAuthorizationReply payload. Each payload will contain a
-     * ValidatorIterator (self::validatorIterator) containing a single mocked
-     * validator (self::$stubValidator).
-     * @return PayPalDoAuthorizationReply
+     * Construct a new PayPalDoAuthorizationReply payload.
+     *
+     * @return IPayload
      */
     protected function createNewPayload()
     {
-        return new PayPalDoAuthorizationReply($this->validatorIterator, $this->stubSchemaValidator);
-    }
-
-    /**
-     * Simply ensure that when none of the validators fail, the payload is
-     * considered valid - is not validating actual payload data.
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testValidateWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        // script the validator to pass validation
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $this->assertSame($payload, $payload->validate());
-    }
-
-    /**
-     * Tests that serialize will perform validation. Should any validator
-     * fail, serialization should also fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithInvalidPayload(array $payloadData)
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * Test that if a payload should pass validation but still produce an
-     * XSD invalid payload, serialization should fail.
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailWithXsdInvalidPayloadData(array $payloadData)
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload = $this->buildPayload($payloadData);
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testSerializeWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $domPayload = new DOMDocument();
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-
-        $this->assertEquals($this->loadXmlTestString(), $serializedString);
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlTestString()
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/PayPalDoAuthorizationReplyTest.xml");
-    }
-
-    /**
-     * load an xml file and return the canonicalized string of its contents
-     * @return string
-     */
-    protected function canonicalize($file)
-    {
-        $doc = new DOMDocument();
-        $doc->preserveWhiteSpace = false;
-        $doc->load($file);
-        return $doc->C14N();
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailSchemaInvalid()
-    {
-        $this->stubSchemaValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * Load some invalid XML from a fixture file and canonicalize it. Returns
-     * the canonical XML string.
-     * @return string
-     */
-    protected function loadXmlInvalidTestString()
-    {
-        return $this->canonicalize(__DIR__ . "/Fixtures/InvalidPayPalDoAuthorizationReplyTest.xml");
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailPayloadInvalid()
-    {
-        $this->stubValidator->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->loadXmlInvalidTestString();
-
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testDeserializeWillPass(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $xml = $this->loadXmlTestString();
-        $newPayload = $this->createNewPayload();
-        $newPayload->deserialize($xml);
-        $this->assertEquals($payload, $newPayload);
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoAuthorizationReply');
     }
 }

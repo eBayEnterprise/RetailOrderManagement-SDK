@@ -16,212 +16,88 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
 class StoredValueBalanceRequestTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  Payload\IValidator */
-    protected $validatorStub;
-    /** @var Payload\IValidatorIterator */
-    protected $validatorIterator;
-    /** @var  Payload\ISchemaValidator */
-    protected $schemaValidatorStub;
-
-    /**
-     * data provider to provide an empty array of properties
-     * Empty properties will generate and invalid IPayload object
-     *
-     * @return array $payloadData
-     */
-    public function provideInvalidPayload()
-    {
-        $payloadData = [];
-
-        return [
-            [$payloadData]
-        ];
-    }
-
-    /**
-     * Data provider to provide an array of valid property values that will generate an valid IPayload object
-     *
-     * @return array $payloadData
-     */
-    public function provideValidPayload()
-    {
-        // move to JSON
-        $properties = [
-            'setPanIsToken' => true,
-            'setCardNumber' => 'KDVXYXCeFCG8GfH6',
-            'setCurrencyCode' => 'GBP',
-            'setPin' => '1234',
-        ];
-        $noPin = [
-            'setPanIsToken' => true,
-            'setCardNumber' => 'KDVXYXCeFCG8GfH6',
-            'setCurrencyCode' => 'GBP',
-        ];
-
-        return [
-            [$properties, ''],
-            [$noPin, 'NoPin'],
-        ];
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testValidateWillFail(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $payload->validate();
-    }
-
-    /**
-     * Take an array of property values with property names as keys and return an IPayload object
-     *
-     * @param array $properties
-     * @return StoredValueBalanceRequest
-     */
-    protected function buildPayload(array $properties)
-    {
-        $payload = new StoredValueBalanceRequest($this->validatorIterator, $this->schemaValidatorStub);
-
-        foreach ($properties as $property => $value) {
-            $payload->$property($value);
-        }
-
-        return $payload;
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailPayloadValidation(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload()));
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideInvalidPayload
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testSerializeWillFailXsdValidation(array $payloadData)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload()));
-        $payload->serialize();
-    }
-
-    /**
-     * @param array $payloadData
-     * @param string $case
-     * @dataProvider provideValidPayload
-     */
-    public function testSerializeWillPass(array $payloadData, $case)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->returnSelf());
-        $domPayload = new DOMDocument();
-        $domPayload->loadXML($payload->serialize());
-        $serializedString = $domPayload->C14N();
-
-        $this->assertEquals($this->xmlTestString($case), $serializedString);
-    }
-
-    /**
-     * Read an XML file with valid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlTestString($case)
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__ . "/Fixtures/StoredValueBalanceRequest{$case}.xml");
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailSchemaValidation()
-    {
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->xmlInvalidTestString();
-
-        $newPayload = new StoredValueBalanceRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * Read an XML file with invalid payload data and return a canonicalized string
-     *
-     * @return string
-     */
-    protected function xmlInvalidTestString()
-    {
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->load(__DIR__ . '/Fixtures/InvalidStoredValueBalanceRequest.xml');
-        $string = $dom->C14N();
-
-        return $string;
-    }
-
-    /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailPayloadValidation()
-    {
-        $this->validatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->xmlInvalidTestString();
-
-        $newPayload = new StoredValueBalanceRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $newPayload->deserialize($xml);
-    }
-
-    /**
-     * @param array $payloadData
-     * @dataProvider provideValidPayload
-     */
-    public function testDeserializeWillPass(array $payloadData, $case)
-    {
-        $payload = $this->buildPayload($payloadData);
-        $xml = $this->xmlTestString($case);
-        $this->assertNotEmpty($xml);
-        $newPayload = new StoredValueBalanceRequest($this->validatorIterator, $this->schemaValidatorStub);
-        $newPayload->deserialize($xml);
-
-        $this->assertEquals($payload, $newPayload);
-    }
+    use TPayloadTest;
 
     protected function setUp()
     {
-        $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
-        $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadFactory = new PayloadFactory;
+    }
+
+    /**
+     * Construct a new PayPalDoAuthorizationReply payload.
+     *
+     * @return IPayload
+     */
+    protected function createNewPayload()
+    {
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceRequest');
+    }
+
+    /**
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
+     */
+    public function provideSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/StoredValueBalanceRequest.xml',
+            ],
+            [
+                __DIR__ . '/Fixtures/StoredValueBalanceRequestNoPin.xml',
+            ],
+        ];
+    }
+
+    /**
+     * Test deserializing data into a payload and then deserializing back
+     * to match the original data.
+     *
+     * @param string path to fixture file
+     * @dataProvider provideSerializedDataFile
+     */
+    public function testDeserializeSerialize($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
+        $this->assertSame($serializedData, $payload->serialize());
+    }
+
+    /**
+     * Provide paths to fixutre files containing valid serializations of
+     * order shipped payloads.
+     *
+     * @return array
+     */
+    public function provideInvalidSerializedDataFile()
+    {
+        return [
+            [
+                __DIR__ . '/Fixtures/InvalidStoredValueBalanceRequest.xml',
+            ],
+        ];
+    }
+
+    /**
+     * Test deserializing invalid data will throw an InvalidPayload Exception
+     *
+     * @param string path to fixture file
+     * @dataProvider provideInvalidSerializedDataFile
+     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
+     */
+    public function testDeserializeInvalidPayload($serializedDataFile)
+    {
+        $payload = $this->buildPayload();
+        $serializedData = $this->loadXmlTestString($serializedDataFile);
+        $payload->deserialize($serializedData);
     }
 }

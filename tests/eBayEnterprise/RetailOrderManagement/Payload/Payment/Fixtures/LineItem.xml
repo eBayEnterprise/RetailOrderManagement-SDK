@@ -1,6 +1,0 @@
-<LineItem>
-    <Name>line item</Name>
-    <SequenceNumber>1</SequenceNumber>
-    <Quantity>1</Quantity>
-    <UnitAmount currencyCode="USD">2.00</UnitAmount>
-</LineItem>

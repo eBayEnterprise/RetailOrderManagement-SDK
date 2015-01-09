@@ -17,11 +17,11 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 
 class OrderAcceptedTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var PayloadFactory */
-    protected $payloadFactory;
+    use TPayloadTest;
 
     /**
      * Setup payload factory to create the order shipped payloads to test.
@@ -32,25 +32,7 @@ class OrderAcceptedTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Create a new payload and set any data passed in the properties param.
-     * Each key in array should be a setter method to call and will be given
-     * the value at that key.
-     *
-     * @param array
-     * @return IPayload
-     */
-    protected function buildPayload(array $properties = [])
-    {
-        $payload = $this->createNewPayload();
-
-        foreach ($properties as $setterMethod => $value) {
-            $payload->$setterMethod($value);
-        }
-        return $payload;
-    }
-
-    /**
-     * Create a new order shipped payload.
+     * Construct a new order accepted payload.
      *
      * @return IPayload
      */

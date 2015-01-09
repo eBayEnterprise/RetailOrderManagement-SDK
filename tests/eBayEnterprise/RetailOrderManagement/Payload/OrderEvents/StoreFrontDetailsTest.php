@@ -57,4 +57,21 @@ class StoreFrontDetailsTest extends \PHPUnit_Framework_TestCase
     {
         return __DIR__ . '/Fixtures/' . static::FULL_FIXTURE_FILE;
     }
+
+    public function testSerialize()
+    {
+        $this->assertSame(
+            $this->loadXmlTestString($this->getCompleteFixtureFile(), true),
+            $this->fullPayload->serialize()
+        );
+    }
+
+    public function testDeserialize()
+    {
+        $payload = $this->buildPayload();
+        $this->assertEquals(
+            $this->fullPayload,
+            $payload->deserialize($this->loadXmlTestString($this->getCompleteFixtureFile()))
+        );
+    }
 }
