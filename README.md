@@ -2,245 +2,209 @@
 
 by eBay Enterprise
 
+A PHP implementation of the Retail Order Management API(s) that hides unnecessary details such as request/response handling and XML parsing from the API user in order to provide a minimal interface for remote messages and procedure calls.
+
+Requires PHP 5.4 and later.
+
 Compatible with Retail Order Management schema version 1.8.20.
 
-## The Problem
+## Setup
 
-Our implementation of Retail Order Management as a Magento extension is too tightly coupled to Magento 1. Among other things, that means
+For best results, install via [Composer].
 
-- Transition to Magento 2 may be problematic.
-- We are prevented from using PHP best practices because Magento 1 does not support many of them.
-- We have to know too much about the API itself, from HTTP to XML.
+In composer.json:
 
-## What the SDK does
-
-The SDK is a PHP implementation of the Retail Order Management API(s) that hides unnecessary details such as request/response handling and XML parsing from the API user in order to provide a minimal interface for remote messages and procedure calls.
-
-## How does it do that?
-
-Explicitly. For each service and operation, we attempt to build a flat, clean and consistent interface. We use abstraction to provide consistent behavior between different services and operations to smooth over the rough parts of the API.
-
-Let's start with a concrete, but prototypical usage example*:
-
-The API object needs particular values just to exist at all, so those must be provided by the config object. For HTTP, they are:
-
-- API key
-- host
-- major and minor version
-- store id
-- service
-- operation
-
-and optionally
-
-- format ('xml' by default)
-- query string parameters (nothing by default)
-
-The API instance stores these values and uses them to construct the full URL to the service.
-
-#### Example Usage: Creating and configuring the Api Object
-
-```
-/**
- * Create a new ROM SDK API object. API will be configured with core configuration
- * and the service and operation provided.
- * @param  string $service   SDK API service
- * @param  string $operation SDK API operation
- * @return Api\IBidirectionalApi
- */
-public function getSdkApi($service, $operation)
-{
-    $config = $this->getConfigModel();
-    $apiConfig = new Api\HttpConfig(
-        $config->apiKey,
-        $config->apiHostname,
-        $config->apiMajorVersion,
-        $config->apiMinorVersion,
-        $config->storeId,
-        $service,   // ex.: payments
-        $operation  // ex.: creditcard/auth/VC
-    );
-    return new Api\HttpApi($apiConfig);
+```json
+"require": {
+    "ebayenterprise/retail-order-management": "~1.0"
 }
 ```
 
-Once you have a valid Api object you will need to configure the request payload according to the ROM service and operation you want. The Api object will create the appropriate request payload type based on the configuration passed in the constructor.
-  - Ask the Api object for a request payload
-   - `$request = $api->getRequestBody();`
-  - Configure the payload
+Or with the Composer CLI:
 
-#### Example Usage: Authorizing a Credit Card
-
+```bash
+php composer.phar require ebayenterprise/retail-order-management:~1.0
 ```
-/**
- * Fill out the request payload with payment data and update the API request
- * body with the complete request.
- * @param Api\IBidirectionalApi $api
- * @param Varien_Object $payment Most likely a Mage_Sales_Model_Order_Payment
- * @return self
- */
-protected function _prepareApiRequest(Api\IBidirectionalApi $api, Varien_Object $payment)
-{
-    $request = $api->getRequestBody();
-    $order = $payment->getOrder();
-    $billingAddress = $order->getBillingAddress();
-    $shippingAddress = $order->getShippingAddress() ?: $billingAddress;
-    $request
-        ->setRequestId($this->_coreHelper->generateRequestId('CCA-'))
-        ->setOrderId($payment->getOrder()->getIncrementId())
-        ->setPanIsToken(true)
-        ->setCardNumber($payment->getCcNumber())
-        // use first day of month/year so the date can be recognized and parsed
-        ->setExpirationDate($this->_coreHelper->getNewDateTime(sprintf('01/%02d/%02d', $payment->getCcExpMonth(), $payment->getCcExpYear())))
-        ->setCardSecurityCode($payment->getCcCid())
-        ->setAmount($payment->getBaseAmountAuthorized())
-        ->setCurrencyCode(Mage::app()->getStore()->getBaseCurrencyCode())
-        ->setEmail($billingAddress->getEmail())
-        ->setIp($this->_httpHelper->getRemoteAddr())
-        ->setBillingFirstName($billingAddress->getFirstname())
-        ->setBillingLastName($billingAddress->getLastname())
-        ->setBillingPhone($billingAddress->getTelephone())
-        ->setBillingLines($billingAddress->getStreet(-1)) // getStreet(-1) returns all lines, nl separated
-        ->setBillingCity($billingAddress->getCity())
-        ->setBillingMainDivision($billingAddress->getRegionCode())
-        ->setBillingCountryCode($billingAddress->getCountry())
-        ->setBillingPostalCode($billingAddress->getPostcode())
-        ->setShipToFirstName($shippingAddress->getFirstname())
-        ->setShipToLastName($shippingAddress->getLastname())
-        ->setShipToPhone($shippingAddress->getTelephone())
-        ->setShipToLines($shippingAddress->getStreet(-1)) // getStreet(-1) returns all lines, nl separated
-        ->setShipToCity($shippingAddress->getCity())
-        ->setShipToMainDivision($shippingAddress->getRegionCode())
-        ->setShipToCountryCode($shippingAddress->getCountry())
-        ->setShipToPostalCode($shippingAddress->getPostcode())
-        ->setIsRequestToCorrectCVVOrAVSError((bool) $payment->getAdditionalInformation('is_correction_request'));
-    }
-```
-  - Call `api->send()` to execute the request
-  - Call `api->getResponseBody()` to check the result
 
-#### Example Usage: Validating the response
-```
-/**
- * check is success
- * - true - return, payment was authorized successfully
- * check is avs errors
- * - true - throw exception? w/ AVS error message and redir to billing address
- * check is cvv errors
- * - true - throw exception? w/ CVV error message and redir to payment
- * check is acceptable
- * - true - return, payment may not be a complete success but is still acceptable
- *   with no additional fixes/changes needed - timeout maybe?
- */
-protected function _validateResponse(Payload\Payment\CreditCardAuthReply $response)
-{
-    if ($response->getIsAuthSuccessful()) {
-        return $this;
-    }
-    throw Mage::exception('EbayEnterprise_CreditCard', $this->_helper->__('Credit card could not be authorized.'));
-}
-```
-The interesting parts are:
+## Payloads
 
-- `getRequestBody()`, which returns a new, empty payload object specific to the service/operation request that API instance was instantiated with.
-- `setRequestBody($payload)`, which sets the request payload.
-- You can set the payload fields in any order as long as all required business data is supplied to the api before calling `send` on the api or `validate` or `serialize` on the payload object (the latter not shown).
-- When you call `send`, the api:
-    1. validates the payload, which does any supplied validation; e.g. business validation in addition to xsd validation.
-    2. Attempts to construct an xml string from the payload.
-    3. Throws an InvalidPayload if the xml cannot be constructed.
-    4. sets up an http request object and POSTs the serialized request payload
-        - Blocks, waiting for a response
-        - Throws a NetworkError if the http object can't connect to the host or the connection times out or is closed unexpectedly
-- When you call `getResponseBody`, the api attempts to parse the response into a response payload object, and throws the following if it can't.
-    - an `UnexpectedResponse` exception is thrown if the message cannot be parsed/read.
-    - an `InvalidPayload` exception is thrown if the message fails validation when the payload is deserialized.
-
-## Guidelines
-
-Note: Please use [PSR style](STYLE.md) for this codebase, as opposed to the old style we use for Magento 1 code.
-
-### Payloads
-
-The payloads need to be crafted specifically for each service/operation, but they can all be serialized, deserialized and validated. General guidance:
-
-#### Flat
-
-Make things flat when possible. In a few cases (such as when maxOccurrences > 1) we can't assume there will only be one of a node, so the payload can't be perfectly flat. In these cases the payload should have an internal sub-payload that implements appropriate iteration features such as `Countable`, `Iterable` and `ArrayAccess` and iterates over yet another sub-payload. (In general, I think the term _composite payload_ works well when the payload is composed of one or more sub-payloads.) Here's an example usage as it might be seen in order create:
+Payloads represent the data that is sent or received through the SDK.
 
 ```php
-use \eBayEnterprise\RetailOrderManagement\Payload\Order;
-$orderCreatePayload = $orderCreateApi->getRequestBody();
-…
-/** @var ILineItemIterable $payloadItems */
-$payloadItems = $orderCreatePayload->getLineItems();
-foreach ($items as $item) {
-    /** @var ILineItem $payloadItem */
-    $payloadItem = $payloadItems->getEmptyLineItem();
-    $payloadItem
-        ->setItemId('abc123')
-        ->setQuantity(3)
-    …;
-    $payloadItems[] = $payloadItem;
-}
-$orderCreatePayload->setLineItems($payloadItems);
-```
+// The payload factory can be used to create any of the
+// supported payloads types.
+$payloadFactory = new \eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+// Instantiate a payload object with the factory by passing
+// the full class name of the payload to the factory.
+$payload = $payloadFactory
+    ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\StoredValueBalanceRequest');
 
-#### Payload Independence
+// Payloads can be populated with data by:
 
-The payload should be retrievable from the api object, but it should also be distinct from it. It will be useful to be able to recover a payload far down the line (for example, to see the credit card auth reply during order create), but the api object it came from can perish. Thus, you should be able to detach the payload from the api object and store it independently.
+// Calling setters for all of the required data.
+$payload->setCardNumber('11112222')
+    ->setPanIsToken(false)
+    ->setRequestId('1234567890')
+    ->setPin('5555')
+    ->setCurrencyCode('USD');
 
-#### Implied Currency Codes
+// Deserializing a serialized set of data.
+$payload->deserialize('<StoreValueBalanceRequest>...</StoredValueBalanceRequest>');
 
-Multiple currency codes within a payload are not supported, so payloads with more than one amount should still have only one getter/setter pair for currency code. At the outer interface layer, the user should only be aware of the one getter/setter; however, composite payloads will probably have to have dependencies with their own public getters and setters, too.
-
-### Network Issues
-
-The API operates over the TCP/IP stack. The design is intended to abstract the various differences between application protocols, so the `NetworkError` type is very generic. Besides the error object itself, details about what happened should be accessible from the api object. This will allow the api to be used both synchronously and asynchronously, so that error handlers can get details from the api object when error _events_ happen. For example, in HTTP:
-
-```php
+// Complete payload can now be validated.
 try {
-    $api->send();
-} catch (Api\Exception\NetworkError $e) {
-    // You don't have to use this exception for anything. It's here for your convenience.
-    // If this exception occurs, though, then you must assume certain other properties won't be well-defined:
+    $payload->validate();
+} catch (\eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload $e) {
+    // The payload is invalid. The exception message, $e->getMessage(),
+    // will contain details of the validation error.
 }
 
-$httpMessage = $api->getHttpMessage();
-$httpStatus = $api->getHttpMessage()->getResponseCode();
+// Serializing a payload will produce an XML representation of the payload.
+$payload->serialize();
 ```
 
-### Implementing Interfaces
+### Request Payloads
 
-The interfaces define certain contracts that implementations must follow. Even though PHP doesn't always provide the means to statically guarantee adherence to the contract, you, the developer, should not consider them optional (even the things in the docblocks). An implementation may (probably even should) have some public methods that are not mentioned in the interface, but please try to understand if you're creating a new normative type as a pure implementation, and bring that up for discussion. In other words, don't create new defacto interfaces unconsciously.
-
-As a rule, interfaces make the best type hints because the parameters to a method should only care what a passed object does, not how it does it. Anyway, you should always require the least specific type that does exactly what you need. Assume that:
-
-1. You can't change the type later.
-2. Someone will subclass your class later and abuse anything you didn't specify.
-
-The contract idea means that if I say a method (e.g. `setRequestBody`) takes an interface type (e.g. `IPayload`), I'm guaranteeing statically that I can validate and serialize that object, but beyond that I don't care _how_ the payload does it. So, for example, this does not restrict the payload to doing all its validation internally. The below is a perfectly acceptable example of a partial implementation:
+Request payloads represent a set of data to be sent across the SDK.
 
 ```php
-/**
- * Uses an injected validator to actually validate the payload object
- */
-abstract class ExternallyValidatedPayload implements IPayload
-{
-    function __construct(IValidator $v) {
-        $this->validator = $v;
-    }
-    function validate() {
-        $this->validator->validate($this);
-    }
-    // ...
-}
+/** @var \eBayEnterprise\RetailOrderManagement\Api\HttpApi $api */
+$api;
+
+// Request payloads will be created as necessary by the transport mechanism
+// that will be sending the payload.
+$payload = $api->getRequestBody();
+
+// The payload should be populated with data necessary to make the call
+// using the SDK.
+
+// Payload interfaces expose methods to set data the data piecemeal.
+$payload->setCardNumber('11112222')
+    ->setPanIsToken(false)
+    ->setRequestId('1234567890')
+    ->setPin('5555')
+    ->setCurrencyCode('USD');
+
+// A serialized payload may also be deserialized to set all of the data
+// in the serialization on the payload.
+$payload->deserialize('<StoreValueBalanceRequest>...</StoreValueBalanceRequest>');
+
+// Once the payload has been populated, it can be given back to the
+// API and sent.
+$api->setRequestBody($payload)->send();
 ```
 
-Anyway, this whole interface thing is designed to limit what you have to worry about when you're implementing a thing. It's a scope-control mechanism, so if your class does a whole lot more than the interface promises, you might be doing too much.
+### Reply Payload
 
-## More Later
+Reply payloads represent sets of data retrieved from the SDK.
 
-I anticipate later additions to this document to include more specific interfaces for unidirectional apis such as feed and queues. We need to have a concrete Http implementation first, as a proof of concept.
+```php
+// Get the reply payload from the API object, in this case the
+// response from an HTTP API call. Assume $httpApi to be an
+// \eBayEnterprise\RetailOrderManagment\Api\HttpApi object.
+$payload = $httpApi->getResponseBody();
 
-*The examples assume some things about the implementation that may not make it into the real world. We need to try not to change the interface, but things like constructor argument order, or even the use of non-default constructors at all, may change.
+// If a payload was populated by the SDK, it will have been
+// validated automatically. Validation can still be done on demand
+// if desired.
+try {
+    $payload->validate();
+} catch (\eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload $e) {
+    // The payload is invalid. The exception message, $e->getMessage(),
+    // will contain details of the validation errors.
+}
+
+// Get methods will be present for any data in the payload.
+$payload->getOrderId();
+$payload->getCurrencyCode();
+```
+
+### Sub-Payloads
+
+The majority of payloads in the SDK are flat, all necessary data is set within a single payload object. In some cases, however, a payload will contain additional nested payloads.
+
+```php
+/** @var \eBayEnterprise\RetailOrderManagment\Payload\OrderEvents\OrderShipped $payload */
+$payload;
+
+// Some payloads will contain an iterable of sub-payloads. In this case,
+// $loyaltyPrograms will be an interable payload containing a collection
+// of loyalty program payloads.
+$loyaltyPrograms = $payload->getLoyaltyPrograms();
+
+// The iterable is a complete payload and can be serialized, deserialized and
+// validated like any other payload.
+$loyaltyPrograms->validate();
+$loyaltyPrograms->serialize();
+$loyaltyPrograms->deserialize('<LoyaltyPrograms><LoyaltyProgram>...<LoyaltyProgram><LoyaltyProgram>...<LoyaltyProgram></LoyaltyPrograms>');
+
+foreach ($loyaltyPrograms as $program) {
+    // The objects in the iterable area also complete payloads.
+    $program->validate();
+    $program->setAccount('ABCDEFG');
+}
+
+// Iterable payloads will always provide a way of getting empty payloads
+// that can be added to the iterable.
+$loyaltyProgram $loyaltyPrograms->getEmptyLoyaltyProgram();
+
+// Payload can now be filled out and added to the iterable.
+$loyaltyProgram->setAccount('XYZ')->setProgram('RewardProgram');
+$loyaltyPrograms->attach($loyaltyProgram);
+
+// Sub-payloads may also be used to create a separate container of data
+// within a payload or when a set of data cannot be trivially flattened
+// into a single payload.
+$destination = $payload->getShippingDestination();
+
+// The shipping destination may be a mailing address (shipped to a customer)
+// or a store front location (shipped to a retail store).
+if ($destination instanceof \eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IMailingAddress) {
+    $destination->getFistName();
+    $destination->getLastName();
+} elseif ($destination instanceof \eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails) {
+    $destination->getStoreName();
+    $destination->getHours();
+}
+
+// In both cases, the object returned will still be a complete payload and
+// can be treated as such.
+$destination->validate();
+$destination->deserialize();
+```
+
+## HTTP API
+
+TBD
+
+## AMQP API
+
+TBD
+
+## Tests
+
+### Using [Docker]
+
+A [fig file](fig.yml) is included to automate creating and coordinating [Docker] containers to install and run tests.
+
+To install and run tests using [Fig]:
+
+```sh
+# setup and install
+fig run --rm setup
+fig run --rm composer install
+# run tests
+fig run --rm phpunit
+```
+
+See [fig.yml](fig.yml) for additional commands for automated tests and static analysis.
+
+See [Docker] and [Fig] for additional installation and usage information.
+
+### Local with [Composer]
+
+TBD
+
+[Composer]: https://getcomposer.org/
+[Docker]: https://www.docker.com/
+[Fig]: http://www.fig.sh/
