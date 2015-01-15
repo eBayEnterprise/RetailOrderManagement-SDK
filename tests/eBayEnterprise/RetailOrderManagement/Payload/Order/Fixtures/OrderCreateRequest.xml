@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderCreateRequest orderType="SALES" requestId="UNIQUE_REQUEST_ID" testType="TEST_WEBONLY" xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Order customerOrderId="CUSTOMER_ORDER_ID" levelOfService="REGULAR">
+        <Customer customerId="CUSTOMER_ID">
+            <Name>
+                <Honorific>Mrs.</Honorific> <!-- [0..1] -->
+                <LastName>Last</LastName>
+                <MiddleName>Middle</MiddleName> <!-- [0..1] -->
+                <FirstName>First</FirstName>
+            </Name>
+            <Gender>F</Gender> <!-- [0..1] -->
+            <DateOfBirth>1925-04-12</DateOfBirth> <!-- [0..1] -->
+            <EmailAddress>email@example.com</EmailAddress> <!-- [0..1] -->
+            <CustomerTaxId>CUSTOMER_TAX_ID</CustomerTaxId> <!-- [0..1] -->
+            <TaxExemptFlag>true</TaxExemptFlag> <!-- [0..1] -->
+            <LoyaltyPrograms>
+                <LoyaltyProgram>
+                    <Account>LOYALTY_ACCT</Account>
+                    <Program>LOYALTY_PROGRAM</Program>
+                    <CustomAttributes>
+                        <Attribute><Key>LOYALTY_CUSTOM_KEY</Key><Value>LOYALTY_CUSTOM_VALUE</Value></Attribute> <!-- [1..*] -->
+                        <Attribute><Key>LOYALTY_CUSTOM_KEY</Key><Value>LOYALTY_CUSTOM_VALUE</Value></Attribute> <!-- [1..*] -->
+                    </CustomAttributes> <!-- [0..1] -->
+                </LoyaltyProgram>
+            </LoyaltyPrograms> <!-- [0..1] -->
+        </Customer>
+        <CreateTime>2015-01-15T16:41:55-05:00</CreateTime>
+        <OrderItems>
+            <OrderItem id="item_0_id" webLineId="1" isHiddenGift="false" taxAndDutyDisplay="Consolidated Taxes Only" subscriptionId="SUBSCRIPTION_ID">
+                <ItemId>ID-ITEM_ID</ItemId>
+                <Quantity>1</Quantity>
+                <Description>
+                    <Description>Item 1 Description</Description>
+                    <Color id="id-blue">Blue</Color> <!-- [0..1] -->
+                    <Size id="id-small">Small</Size> <!-- [0..1] -->
+                    <ScreenSize>680x400</ScreenSize> <!-- [0..1] -->
+                </Description> <!-- [0..1] -->
+                <Department>DEPARTMENTY</Department> <!-- [0..1] -->
+                <Pricing>
+                    <Merchandise>
+                        <Amount remainder="0.01">99.99</Amount>
+                        <PromotionalDiscounts>
+                            <Discount>
+                                <Id>DISCOUNT_0_ID</Id>
+                                <Code>DISCOUNT_0_CODE</Code> <!-- [0..1] -->
+                                <Amount>5.00</Amount>
+                                <Description>Five dollars off</Description> <!-- [0..1] -->
+                                <EffectType>Flat Rate</EffectType> <!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>PROMO_TAX_CLASS</TaxClass> <!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="PROMO_TAX" taxability="TAXABLE">
+                                            <Situs>Duty_DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                            <Imposition impositionType="imp">duty tax imposition</Imposition>
+                                            <EffectiveRate>0.02</EffectiveRate>
+                                            <TaxableAmount>9.99</TaxableAmount>
+                                            <CalculatedTax>2.99</CalculatedTax>
+                                            <SellerRegistrationId>PROMO_TAX_SELLER_REGISTRATION_ID</SellerRegistrationId> <!-- [0..1] -->
+                                        </Tax> <!-- [1..*] -->
+                                    </Taxes> <!-- [0..1] -->
+                                </TaxData> <!-- [0..1] -->
+                            </Discount> <!-- [1..*] -->
+                        </PromotionalDiscounts> <!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>890000</TaxClass>
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                    <Imposition impositionType="imp">imposition</Imposition>
+                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <TaxableAmount>99.99</TaxableAmount>
+                                    <CalculatedTax>5.99</CalculatedTax>
+                                    <SellerRegistrationId>suresh123</SellerRegistrationId>
+                                </Tax>
+                                <Tax taxType="VAT" taxability="NONTAXABLE">
+                                    <Situs>DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                    <Imposition impositionType="imp">imposition</Imposition>
+                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <TaxableAmount>30.00</TaxableAmount>
+                                    <CalculatedTax>1.80</CalculatedTax>
+                                </Tax>
+                            </Taxes>
+                        </TaxData>
+                        <UnitPrice>99.99</UnitPrice>
+                    </Merchandise>
+                    <Shipping>
+                        <Amount remainder="0.01">9.99</Amount>
+                        <PromotionalDiscounts>
+                            <Discount>
+                                <Id>SHIPPING_PROMO_ID</Id>
+                                <Code>SHIP_PROMO_CODE</Code> <!-- [0..1] -->
+                                <Amount>5.01</Amount>
+                                <Description>9.99 Shipping</Description> <!-- [0..1] -->
+                                <EffectType>Value</EffectType> <!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>SHIP_PROMO_TAX_CLASS</TaxClass> <!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="SHIP_PROMO_TYPE" taxability="DPPAPPLIED">
+                                            <Situs>DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
+                                            <Imposition impositionType="imp">SHIP_PROMO_IMP</Imposition> <!-- [0..1] -->
+                                            <EffectiveRate>0.02</EffectiveRate>
+                                            <TaxableAmount>4.01</TaxableAmount> <!-- [0..1] -->
+                                            <CalculatedTax>0.08</CalculatedTax>
+                                            <SellerRegistrationId>SELLER_PROMO_TAX_REG_ID</SellerRegistrationId> <!-- [0..1] -->
+                                        </Tax> <!-- [1..*] -->
+                                    </Taxes> <!-- [0..1] -->
+                                </TaxData> <!-- [0..1] -->
+                            </Discount> <!-- [1..*] -->
+                        </PromotionalDiscounts> <!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>SHIPPING_TAX_CLASS</TaxClass> <!-- [0..1] -->
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="EXEMPT">
+                                    <Situs>SHIP_DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
+                                    <Imposition impositionType="imp">SHIP TAX</Imposition> <!-- [0..1] -->
+                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <TaxableAmount>9.99</TaxableAmount> <!-- [0..1] -->
+                                    <CalculatedTax>0.60</CalculatedTax>
+                                    <SellerRegistrationId>SHIP_TAX_REG_ID</SellerRegistrationId> <!-- [0..1] -->
+                                </Tax> <!-- [1..*] -->
+                            </Taxes> <!-- [0..1] -->
+                        </TaxData> <!-- [0..1] -->
+                        <UnitPrice>9.99</UnitPrice> <!-- [0..1] -->
+                    </Shipping> <!-- [0..1] -->
+                    <Duty>
+                        <Amount remainder="0.02">1.99</Amount>
+                        <PromotionalDiscounts>
+                            <Discount>
+                                <Id>DUTY_DISCOUNT_ID</Id>
+                                <Code>WE_PAY_DUTY</Code> <!-- [0..1] -->
+                                <Amount>1.99</Amount>
+                                <Description>Duty discount description</Description> <!-- [0..1] -->
+                                <EffectType>Value</EffectType> <!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>Duty_Discount_Tax_Class</TaxClass> <!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="SALES" taxability="DEFERRED">
+                                            <Situs>Duty_DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
+                                            <Imposition impositionType="imp">DUTY_DISCOUNT_IMP</Imposition> <!-- [0..1] -->
+                                            <EffectiveRate>0.10</EffectiveRate>
+                                            <TaxableAmount>1.00</TaxableAmount> <!-- [0..1] -->
+                                            <CalculatedTax>0.10</CalculatedTax>
+                                            <SellerRegistrationId>DUTY_DIS_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
+                                        </Tax> <!-- [1..*] -->
+                                    </Taxes> <!-- [0..1] -->
+                                </TaxData> <!-- [0..1] -->
+                            </Discount> <!-- [1..*] -->
+                        </PromotionalDiscounts> <!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>890000</TaxClass> <!-- [0..1] -->
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="EXEMPT">
+                                    <Situs>Duty_DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
+                                    <Imposition impositionType="imp">duty tax imposition</Imposition> <!-- [0..1] -->
+                                    <EffectiveRate>0.02</EffectiveRate>
+                                    <TaxableAmount>9.99</TaxableAmount> <!-- [0..1] -->
+                                    <CalculatedTax>2.99</CalculatedTax>
+                                    <SellerRegistrationId>DUTY_TAX_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
+                                </Tax> <!-- [1..*] -->
+                            </Taxes> <!-- [0..1] -->
+                        </TaxData> <!-- [0..1] -->
+                        <UnitPrice>1.98</UnitPrice> <!-- [0..1] -->
+                    </Duty> <!-- [0..1] -->
+                    <Fees>
+                        <Fee>
+                            <FeeType>Packing Fee</FeeType>
+                            <Description>Packing fee</Description> <!-- [0..1] -->
+                            <Amount>1.95</Amount>
+                            <ItemId>FEE_ITEM_ID</ItemId>
+                            <TaxData>
+                                <TaxClass>FEE_TAX_CLASS</TaxClass> <!-- [0..1] -->
+                                <Taxes>
+                                    <Tax taxType="CONSUMERS_USE" taxability="NONTAXABLE">
+                                        <Situs>Fee_Duty_DESTINATION</Situs> <!-- [0..1] -->
+                                        <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
+                                        <Imposition impositionType="imp">fee tax imposition</Imposition> <!-- [0..1] -->
+                                        <EffectiveRate>0.02</EffectiveRate> <!-- [0..1] -->
+                                        <TaxableAmount>1.95</TaxableAmount> <!-- [0..1] -->
+                                        <ExemptAmount>1.00</ExemptAmount> <!-- [0..1] -->
+                                        <NonTaxableAmount>0.50</NonTaxableAmount> <!-- [0..1] -->
+                                        <CalculatedTax>0.01</CalculatedTax> <!-- [0..1] -->
+                                        <SellerRegistrationId>FEE_TAX_SELLER_REG_ID</SellerRegistrationId> <!-- [0..1] -->
+                                        <InvoiceTextCodes>
+                                            <InvoiceTextCode>FEE_TAX_INVOICE_CODE</InvoiceTextCode> <!-- [1..*] -->
+                                        </InvoiceTextCodes> <!-- [0..1] -->
+                                    </Tax> <!-- [1..*] -->
+                                </Taxes> <!-- [0..1] -->
+                            </TaxData> <!-- [0..1] -->
+                        </Fee> <!-- [1..*] -->
+                    </Fees> <!-- [0..1] -->
+                </Pricing>
+                <ShippingProgram authToken="SHOPRUNNER_AUTH_TOKEN">SHOPRUNNER_PROGRAM</ShippingProgram> <!-- [0..1] -->
+                <ShippingMethod displayText="Standard">FLAT_RATE</ShippingMethod> <!-- [0..1] -->
+                <StoreFrontDetails>
+                    <StoreCode>STORE_CODE</StoreCode> <!-- [0..1] -->
+                    <StoreName>Store Name</StoreName> <!-- [0..1] -->
+                    <StoreEmail>store@example.com</StoreEmail> <!-- [0..1] -->
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <Line2>Bldg. 4</Line2> <!-- [0..1] -->
+                        <Line3>STE 2</Line3> <!-- [0..1] -->
+                        <Line4>RM 15</Line4> <!-- [0..1] -->
+                        <City>King of Prussia</City>
+                        <MainDivision>PA</MainDivision> <!-- [0..1] -->
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>19460</PostalCode> <!-- [0..1] -->
+                    </Address>
+                    <StoreDirections>Directions to store</StoreDirections> <!-- [0..1] -->
+                    <StoreHours>8 A.M. - 9 P.M.</StoreHours> <!-- [0..1] -->
+                    <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber> <!-- [0..1] -->
+                </StoreFrontDetails> <!-- [0..1] -->
+                <FulfillmentChannel>SHIP_TO_HOME</FulfillmentChannel> <!-- [0..1] -->
+                <ProxyPickupDetails>
+                    <PersonName>Proxy Person Name</PersonName> <!-- [0..1] -->
+                    <FirstName>First</FirstName> <!-- [0..1] -->
+                    <LastName>Last</LastName> <!-- [0..1] -->
+                    <Email>proxy_pickup@example.com</Email> <!-- [0..1] -->
+                    <Phone>555-555-1234</Phone> <!-- [0..1] -->
+                    <Address>
+                        <Line1>935 1st Ave</Line1>
+                        <City>King of Prussia</City>
+                        <MainDivision>PA</MainDivision> <!-- [0..1] -->
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>19460</PostalCode> <!-- [0..1] -->
+                    </Address> <!-- [0..1] -->
+                    <Relationship>Sibling</Relationship> <!-- [0..1] -->
+                </ProxyPickupDetails> <!-- [0..1] -->
+                <EstimatedDeliveryDate>
+                    <DeliveryWindow>
+                        <From>2015-01-20T00:00:00-05:00</From>
+                        <To>2015-01-22T00:00:00-05:00</To>
+                    </DeliveryWindow> <!-- [0..1] -->
+                    <ShippingWindow>
+                        <From>2015-01-16T00:00:00-05:00</From>
+                        <To>2015-01-17T00:00:00-05:00</To>
+                    </ShippingWindow> <!-- [0..1] -->
+                    <Mode>ENABLED</Mode> <!-- [0..1] -->
+                    <MessageType>DeliveryDate</MessageType>
+                    <Template>Expected Delivery Date: {{DeliveryWindow/From}} - {{DeliveryWindow/To}}</Template> <!-- [0..1] -->
+                </EstimatedDeliveryDate> <!-- [0..1] -->
+                <NamedDeliveryDate>
+                    <DeliveryDate>2015-01-21</DeliveryDate> <!-- [0..1] -->
+                    <TimeWindowStart>08:00:00-05:00</TimeWindowStart> <!-- [0..1] -->
+                    <TimeWindowEnd>12:00:00-05:00</TimeWindowEnd> <!-- [0..1] -->
+                    <Message>Named Delivery Date Message</Message>
+                </NamedDeliveryDate> <!-- [0..1] -->
+                <DeliveryInstructions>Instructions for delivery</DeliveryInstructions> <!-- [0..1] -->
+                <VendorId>VENDOR_ID</VendorId> <!-- [0..1] -->
+                <VendorName>VENDOR NAME</VendorName> <!-- [0..1] -->
+                <Gifting>
+                    <Gift>
+                        <ItemId>GIFT_ITEM_ID</ItemId>
+                        <Pricing>
+                            <Amount remainder="0.03">4.57</Amount>
+                            <PromotionalDiscounts>
+                                <Discount appliedCount="1">
+                                    <Id>GIFT_PROMO_ID</Id>
+                                    <Code>GIFT_PROMO_CODE</Code> <!-- [0..1] -->
+                                    <Amount>3.03</Amount>
+                                    <Description>Promo for gift</Description> <!-- [0..1] -->
+                                    <EffectType>ITEM</EffectType> <!-- [0..1] -->
+                                    <TaxData>
+                                        <TaxClass>GIFT_PROMO_TAX_CLASS</TaxClass> <!-- [0..1] -->
+                                        <Taxes>
+                                            <Tax taxType="PROMO_TYPE" taxability="DPPAPPLIED">
+                                                <Situs>Tax_DESTINATION</Situs>
+                                                <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                                <Imposition impositionType="imp">gift promo imposition</Imposition> <!-- [0..1] -->
+                                                <EffectiveRate>0.05</EffectiveRate>
+                                                <TaxableAmount>1.00</TaxableAmount> <!-- [0..1] -->
+                                                <CalculatedTax>0.05</CalculatedTax>
+                                                <SellerRegistrationId>GIFT_PROMO_TAX_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
+                                            </Tax> <!-- [1..*] -->
+                                        </Taxes> <!-- [0..1] -->
+                                    </TaxData> <!-- [0..1] -->
+                                </Discount> <!-- [0..1] -->
+                            </PromotionalDiscounts> <!-- [0..1] -->
+                            <TaxData>
+                                <TaxClass>GIFT_TAX_CLASS</TaxClass> <!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="GIFT_TAX" taxability="TAXABLE">
+                                            <Situs>Tax_DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                            <Imposition impositionType="imp">gift tax imposition</Imposition> <!-- [0..1] -->
+                                            <EffectiveRate>0.06</EffectiveRate>
+                                            <TaxableAmount>3.03</TaxableAmount> <!-- [0..1] -->
+                                            <CalculatedTax>0.18</CalculatedTax>
+                                            <SellerRegistrationId>GIFT_TAX_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
+                                        </Tax> <!-- [1..*] -->
+                                    </Taxes> <!-- [0..1] -->
+                            </TaxData> <!-- [0..1] -->
+                            <UnitPrice>3.03</UnitPrice> <!-- [0..1] -->
+                        </Pricing>
+                        <Message>
+                            <To localizedDisplayText="Para">World</To>
+                            <From localizedDisplayText="De">Me</From>
+                            <Message>Hello</Message> <!-- [0..1] -->
+                        </Message> <!-- [0..1] -->
+                    </Gift> <!-- [0..1] -->
+                    <GiftCard>
+                        <Message>
+                           <To localizedDisplayText="Para">Me</To>
+                            <From localizedDisplayText="De">World</From>
+                            <Message>Goodbye</Message> <!-- [0..1] -->
+                        </Message>
+                    </GiftCard> <!-- [0..1] -->
+                    <Packslip>
+                        <Message>
+                           <To localizedDisplayText="Para">There</To>
+                            <From localizedDisplayText="De">Here</From>
+                            <Message>Happy Day</Message> <!-- [0..1] -->
+                        </Message>
+                    </Packslip> <!-- [0..1] -->
+                </Gifting> <!-- [0..1] -->
+                <ShopRunnerMessage>ShopRunner Message</ShopRunnerMessage> <!-- [0..1] -->
+                <Customization>
+                    <Customizations>
+                        <Customization>
+                            <CustomizationId>111</CustomizationId> <!-- [0..1] -->
+                            <Instructions>
+                                <Instructions>
+                                    <Key>INSTRUCT_KEY</Key>
+                                    <Value>Instruction Value</Value>
+                                    <DisplayTitle>Instruction display title</DisplayTitle> <!-- [0..1] -->
+                                    <DisplayValue>instruction display value</DisplayValue> <!-- [0..1] -->
+                                </Instructions> <!-- [0..*] -->
+                            </Instructions>
+                            <ExtendedPrice>
+                                <Amount remainder="0.01">12.00</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount appliedCount="1">
+                                        <Id>CUST_PROMO_ID</Id>
+                                        <Code>CUST_PROMO_CODE</Code> <!-- [0..1] -->
+                                        <Amount>1.00</Amount>
+                                        <Description>Customization discount</Description> <!-- [0..1] -->
+                                        <EffectType>VALUE</EffectType> <!-- [0..1] -->
+                                        <TaxData>
+                                            <TaxClass>CUST_DIS_TAX</TaxClass> <!-- [0..1] -->
+                                            <Taxes>
+                                                <Tax taxType="TAX_CUSTOM_TAX" taxability="EXEMPT">
+                                                    <Situs>Tax_DESTINATION</Situs>
+                                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                                    <Imposition impositionType="imp">custom tax imposition</Imposition> <!-- [0..1] -->
+                                                    <EffectiveRate>0.01</EffectiveRate>
+                                                    <TaxableAmount>1.00</TaxableAmount> <!-- [0..1] -->
+                                                    <CalculatedTax>0.01</CalculatedTax>
+                                                    <SellerRegistrationId>CUST_TAX_REG</SellerRegistrationId> <!-- [0..1] -->
+                                                </Tax> <!-- [1..*] -->
+                                            </Taxes> <!-- [0..1] -->
+                                        </TaxData> <!-- [0..1] -->
+                                    </Discount> <!-- [0..1] -->
+                                </PromotionalDiscounts> <!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>CUSTOM_TAX_CLASS</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="Tax_CUSTOMIZATION" taxability="TAXABLE">
+                                            <Situs>Tax_DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                            <Imposition impositionType="imp">tax customization imposition</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>0.06</EffectiveRate>
+                                            <TaxableAmount>10.00</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>0.60</CalculatedTax>
+                                            <SellerRegistrationId>CUSTOMIZE_TAX_SELLER_REG</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                                <UnitPrice>12.00</UnitPrice> <!-- [0..1] -->
+                            </ExtendedPrice> <!-- [0..1] -->
+                            <ItemId>CUSTOMIZE_ITEM_ID</ItemId>
+                            <Item ref="item_0_id"/> <!-- [0..1] -->
+                        </Customization> <!-- [1..*] -->
+                    </Customizations>
+                    <BasePrice>
+                        <Amount remainder="0.01">25.00</Amount>
+                        <PromotionalDiscounts>
+                            <Discount appliedCount="2">
+                                <Id>BASE_PRICE_PROMO</Id>
+                                <Code>PROMO_CODE</Code> <!-- [0..1] -->
+                                <Amount>2.00</Amount>
+                                <Description>Discount Description</Description> <!-- [0..1] -->
+                                <EffectType>VALUE</EffectType> <!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>PRICE_DISCOUNT_TAX</TaxClass> <!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="TAX_DISCOUNT" taxability="NONTAXABLE">
+                                            <Situs>Tax_DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                            <Imposition impositionType="imp">tax imposition</Imposition> <!-- [0..1] -->
+                                            <EffectiveRate>0.06</EffectiveRate>
+                                            <TaxableAmount>4.00</TaxableAmount> <!-- [0..1] -->
+                                            <CalculatedTax>0.24</CalculatedTax>
+                                            <SellerRegistrationId>TAX_SELLER_REGISTRATION_ID</SellerRegistrationId> <!-- [0..1] -->
+                                        </Tax> <!-- [1..*] -->
+                                    </Taxes> <!-- [0..1] -->
+                                </TaxData> <!-- [0..1] -->
+                            </Discount> <!-- [0..1] -->
+                        </PromotionalDiscounts> <!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>TAX_CLASS</TaxClass><!-- [0..1] -->
+                            <Taxes>
+                                <Tax taxType="ITEM_TAX" taxability="TAXABLE">
+                                    <Situs>TAX_ITEMS</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                    <Imposition impositionType="imp">tax imposition</Imposition><!-- [0..1] -->
+                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <TaxableAmount>25.00</TaxableAmount><!-- [0..1] -->
+                                    <CalculatedTax>1.50</CalculatedTax>
+                                    <SellerRegistrationId>SELLER_REGISTRATION_ID</SellerRegistrationId><!-- [0..1] -->
+                                </Tax><!-- [1..*] -->
+                            </Taxes><!-- [0..1] -->
+                        </TaxData><!-- [0..1] -->
+                        <UnitPrice>25.00</UnitPrice> <!-- [0..1] -->
+                    </BasePrice> <!-- [0..1] -->
+                    <DisplayUrl>http://example.com/customdisplayurl</DisplayUrl> <!-- [0..1] -->
+                </Customization> <!-- [0..1] -->
+                <SerialNumber>SERIAL_NUMBER</SerialNumber> <!-- [0..1] -->
+                <CustomAttributes>
+                    <Attribute><Key>AttrKey</Key><Value>Attr Key Value</Value></Attribute> <!-- [1..*] -->
+                </CustomAttributes> <!-- [0..1] -->
+                <GiftRegistryCancelUrl>http://example.com/giftreg/cancel</GiftRegistryCancelUrl> <!-- [0..1] -->
+                <ReservationId>RESERVATION_ID</ReservationId> <!-- [0..1] -->
+            </OrderItem> <!-- [1..*] -->
+            <OrderItem id="item_1_id" webLineId="1" isHiddenGift="false" taxAndDutyDisplay="Consolidated Taxes Only" subscriptionId="SUBSCRIPTION_ID">
+                <ItemId>ID-2-ITEM_ID</ItemId>
+                <Quantity>1</Quantity>
+                <Pricing>
+                    <Merchandise>
+                        <Amount remainder="0.01">99.99</Amount>
+                        <TaxData>
+                            <TaxClass>890000</TaxClass>
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                    <Imposition impositionType="imp">imposition</Imposition>
+                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <TaxableAmount>99.99</TaxableAmount>
+                                    <CalculatedTax>5.99</CalculatedTax>
+                                    <SellerRegistrationId>suresh123</SellerRegistrationId>
+                                </Tax>
+                                <Tax taxType="VAT" taxability="NONTAXABLE">
+                                    <Situs>DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
+                                    <Imposition impositionType="imp">imposition</Imposition>
+                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <TaxableAmount>30.00</TaxableAmount>
+                                    <CalculatedTax>1.80</CalculatedTax>
+                                </Tax>
+                            </Taxes>
+                        </TaxData>
+                        <UnitPrice>99.99</UnitPrice>
+                    </Merchandise>
+                </Pricing>
+                <ReservationId>RESERVATION_ID</ReservationId> <!-- [0..1] -->
+            </OrderItem> <!-- [1..*] -->
+        </OrderItems>
+        <Shipping>
+            <ShipGroups>
+                <ShipGroup id="SHIP_GROUP_ID" chargeType="FLAT">
+                    <DestinationTarget ref="MAILING_AD_0_ID"/>
+                    <OrderItems>
+                        <Item ref="item_0_id"/> <!-- [1..*] -->
+                        <Item ref="item_1_id"/> <!-- [1..*] -->
+                    </OrderItems>
+                    <Gifting>
+                        <Gift>
+                            <ItemId>SHIP_0_ITEM_ID</ItemId>
+                            <Pricing>
+                                <Amount remainder="0.01">5.98</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount appliedCount="1">
+                                        <Id>SHIP_GIFT_ID</Id>
+                                        <Code>SHIP_GIFT_CODE</Code><!-- [0..1] -->
+                                        <Amount>1.00</Amount>
+                                        <Description>Shipping gift promo description</Description><!-- [0..1] -->
+                                        <EffectType>VALUE</EffectType><!-- [0..1] -->
+                                        <TaxData>
+                                            <TaxClass>SHIP_GIFT_PROMO_TAX_CLASS</TaxClass><!-- [0..1] -->
+                                            <Taxes>
+                                                <Tax taxType="Tax_GIFT_PROMO" taxability="TAXABLE">
+                                                    <Situs>Tax_DESTINATION</Situs>
+                                                    <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
+                                                    <Imposition impositionType="imp">gift promo imposition</Imposition><!-- [0..1] -->
+                                                    <EffectiveRate>0.02</EffectiveRate>
+                                                    <TaxableAmount>1.00</TaxableAmount><!-- [0..1] -->
+                                                    <CalculatedTax>0.02</CalculatedTax>
+                                                    <SellerRegistrationId>GIFT_PROMO_TAX_SELLER_REG</SellerRegistrationId><!-- [0..1] -->
+                                                </Tax><!-- [1..*] -->
+                                            </Taxes><!-- [0..1] -->
+                                        </TaxData><!-- [0..1] -->
+                                    </Discount><!-- [0..1] -->
+                                </PromotionalDiscounts><!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>SHIP_GIFT_TAX_CLASS</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="Tax_SHIPPING_GIFT" taxability="DEFERRED">
+                                            <Situs>Tax_DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
+                                            <Imposition impositionType="imp">tax shipping gift imposition</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>0.05</EffectiveRate>
+                                            <TaxableAmount>5.98</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>0.30</CalculatedTax>
+                                            <SellerRegistrationId>TAX_SHIP_GIFT_SELL_REG</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                                <UnitPrice>5.99</UnitPrice><!-- [0..1] -->
+                            </Pricing>
+                            <Message>
+                                <To localizedDisplayText="Para">World</To>
+                                <From localizedDisplayText="De">Me</From>
+                                <Message>Hello</Message> <!-- [0..1] -->
+                            </Message> <!-- [0..1] -->
+                        </Gift> <!-- [0..1] -->
+                        <GiftCard>
+                            <Message>
+                               <To localizedDisplayText="Para">Me</To>
+                                <From localizedDisplayText="De">World</From>
+                                <Message>Goodbye</Message> <!-- [0..1] -->
+                            </Message>
+                        </GiftCard> <!-- [0..1] -->
+                        <Packslip>
+                            <Message>
+                               <To localizedDisplayText="Para">There</To>
+                                <From localizedDisplayText="De">Here</From>
+                                <Message>Happy Day</Message> <!-- [0..1] -->
+                            </Message>
+                        </Packslip> <!-- [0..1] -->
+                    </Gifting> <!-- [0..1] -->
+                </ShipGroup><!-- [1..*] -->
+            </ShipGroups>
+            <Destinations>
+                <MailingAddress id="MAILING_AD_0_ID">
+                    <PersonName>
+                        <Honorific>Mrs.</Honorific> <!-- [0..1] -->
+                        <LastName>Last</LastName>
+                        <MiddleName>Middle</MiddleName> <!-- [0..1] -->
+                        <FirstName>First</FirstName>
+                    </PersonName>
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <Line2>Extra 1</Line2> <!-- [0..1] -->
+                        <Line3>Extra 2</Line3> <!-- [0..1] -->
+                        <Line4>Extra 3</Line4> <!-- [0..1] -->
+                        <City>City</City>
+                        <MainDivision>MD</MainDivision> <!-- [0..1] -->
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>21133</PostalCode> <!-- [0..1] -->
+                    </Address>
+                    <Phone>555-555-9876</Phone>
+                </MailingAddress> <!-- [0..*] -->
+                <StoreLocation id="STORE_LOC_0_ID">
+                    <StoreCode>LOC 0 CODE</StoreCode> <!-- [0..1] -->
+                    <StoreName>Location Zero</StoreName> <!-- [0..1] -->
+                    <StoreEmail>store@example.com</StoreEmail> <!-- [0..1] -->
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <Line2>Extra 1</Line2> <!-- [0..1] -->
+                        <Line3>Extra 2</Line3> <!-- [0..1] -->
+                        <Line4>Extra 3</Line4> <!-- [0..1] -->
+                        <City>City</City>
+                        <MainDivision>MD</MainDivision> <!-- [0..1] -->
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>21133</PostalCode> <!-- [0..1] -->
+                    </Address>
+                </StoreLocation> <!-- [0..*] -->
+                <Email id="EMAIL_0_ID">
+                    <EmailAddress>email@example.com</EmailAddress>
+                    <PersonName>
+                        <Honorific>Mrs.</Honorific> <!-- [0..1] -->
+                        <LastName>Last</LastName>
+                        <MiddleName>Middle</MiddleName> <!-- [0..1] -->
+                        <FirstName>First</FirstName>
+                    </PersonName> <!-- [0..1] -->
+                </Email> <!-- [0..*]] -->
+            </Destinations>
+        </Shipping>
+        <Payment>
+            <BillingAddress ref="MAILING_AD_0_ID"/>
+            <Payments>
+                <CreditCard isMockPayment="true">
+                    <PaymentContext>
+                        <PaymentSessionId>CUSTOMER_ORDER_ID</PaymentSessionId>
+                        <TenderType>DC</TenderType>
+                        <PaymentAccountUniqueId isToken="true">41123sdafaw3rfagae1111</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <PaymentRequestId>PAYMENT_REQUEST_ID</PaymentRequestId><!-- [0..1] -->
+                    <CreateTimeStamp>2015-01-16T10:33:02-05:00</CreateTimeStamp>
+                    <Amount>15.03</Amount><!-- [0..1] -->
+                    <Authorization>
+                        <ResponseCode>V</ResponseCode>
+                        <BankAuthorizationCode>BANK_AUTH_CODE</BankAuthorizationCode>
+                        <CVV2ResponseCode>CVV2_RESP_CODE</CVV2ResponseCode>
+                        <AVSResponseCode>AVS_RESP_CODE</AVSResponseCode>
+                        <PhoneResponseCode>PHONE_RESP_CODE</PhoneResponseCode> <!-- [0..1] -->
+                        <NameResponseCode>NAME_RESP_CODE</NameResponseCode> <!-- [0..1] -->
+                        <EmailResponseCode>EMAIL_RESP_CODE</EmailResponseCode> <!-- [0..1] -->
+                        <ExtendedAuthorizationResponseCodes>
+                            <ResponseCodeDescription>EXT_RESP_CODE_DESC</ResponseCodeDescription>
+                            <ReasonCode>REASON_CODE</ReasonCode>
+                        </ExtendedAuthorizationResponseCodes> <!-- [0..1] -->
+                        <AmountAuthorized>15.03</AmountAuthorized> <!-- [0..1] -->
+                    </Authorization>
+                    <ExpirationDate>2016-01</ExpirationDate>
+                    <StartDate>2010-01</StartDate><!-- [0..1] -->
+                    <IssueNumber>ISSUE_NO</IssueNumber><!-- [0..1] -->
+                    <SecureVerificationData>
+                        <AuthenticationAvailable>AUTH_AVAIL</AuthenticationAvailable> <!-- [0..1] -->
+                        <AuthenticationStatus>Y</AuthenticationStatus> <!-- [0..1] -->
+                        <CavvUcaf>CAVV_UCAF</CavvUcaf> <!-- [0..1] -->
+                        <TransactionId>TRANSACTION_ID</TransactionId> <!-- [0..1] -->
+                        <ECI>CC_ECI</ECI> <!-- [0..1] -->
+                        <PayerAuthenticationResponse>PAYER_AUTH_RESPONSE</PayerAuthenticationResponse>
+                    </SecureVerificationData><!-- [0..1] -->
+                    <PurchasePlanCode>PURCHASE_PLAN_CODE</PurchasePlanCode><!-- [0..1] -->
+                    <PurchasePlanDescription>PURCHASE_PLAN_DESC</PurchasePlanDescription><!-- [0..1] -->
+                    <CustomAttributes>
+                        <Attribute><Key>KEY</Key><Value>VALUE</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </CreditCard>
+                <PrepaidCreditCard>
+                    <Amount>5.12</Amount>
+                    <Brand>PREPAID_CARD_BRAND</Brand><!-- [0..1] -->
+                    <CustomAttributes>
+                        <Attribute><Key>PCC-Key</Key><Value>PCC-Value</Value></Attribute><!-- [1..*] -->
+                        <Attribute><Key>PCC-Key2</Key><Value>PCC-Value2</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </PrepaidCreditCard>
+                <Points>
+                    <Amount>25.00</Amount>
+                    <CustomAttributes>
+                        <Attribute><Key>PointsKey</Key><Value>PointsValue</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </Points>
+                <StoredValueCard isMockPayment="true">
+                    <PaymentContext>
+                        <PaymentSessionId>CUSTOMER_ORDER_ID</PaymentSessionId>
+                        <TenderType>SVC</TenderType>
+                        <PaymentAccountUniqueId isToken="true">1122abcdef3344</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <PaymentRequestId>PAYMENT_REQUEST_ID</PaymentRequestId><!-- [0..1] -->
+                    <CreateTimeStamp>2015-01-16T10:33:02-05:00</CreateTimeStamp>
+                    <Pin>123456</Pin><!-- [0..1] -->
+                    <Amount>15.00</Amount>
+                    <CustomAttributes>
+                        <Attribute><Key>SVCCustomKey</Key><Value>SVCCustomerValue</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </StoredValueCard>
+                <PayPal>
+                    <Amount>19.93</Amount><!-- [0..1] -->
+                    <AmountAuthorized>19.93</AmountAuthorized><!-- [0..1] -->
+                    <PaymentContext>
+                        <PaymentSessionId>CUSTOMER_ORDER_ID</PaymentSessionId>
+                        <TenderType>PP_TENDER_TYPE</TenderType>
+                        <PaymentAccountUniqueId isToken="true">PP_ACCT_TOKEN</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <CreateTimeStamp>2015-01-16T10:33:03-05:00</CreateTimeStamp>
+                    <PaymentRequestId>PP_REQUEST_ID</PaymentRequestId> <!-- [0..1] -->
+                    <Authorization>
+                        <ResponseCode>PP_AUTH_RESP_CODE</ResponseCode>
+                    </Authorization>
+                    <CustomAttributes>
+                        <Attribute><Key>PPCustomKey</Key><Value>PPCustomValue</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </PayPal>
+                <PrepaidCashOnDelivery>
+                    <Amount>27.28</Amount>
+                    <CustomAttributes>
+                        <Attribute><Key>CODCustomKey</Key><Value>CODCustomValue</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </PrepaidCashOnDelivery>
+                <ReservationPayment>NO_PAYMENT</ReservationPayment>
+            </Payments><!-- [0..1] -->
+        </Payment>
+        <ShopRunnerMessage>ShopRunner Message</ShopRunnerMessage> <!-- [0..1] -->
+        <Currency>USD</Currency>
+        <Associate>
+            <Name>Store Asociate Name</Name>
+            <Number>9876</Number>
+            <Store>Associate Store</Store>
+        </Associate> <!-- [0..1] -->
+        <TaxHeader><Error>false</Error></TaxHeader> <!-- [0..1] -->
+        <PrintedCatalogCode>PRINT_CATALOG_CODE</PrintedCatalogCode> <!-- [0..1] -->
+        <Locale>en-US</Locale>
+        <Relationships>
+            <Relationship parent="item_0_id">
+                <Members>
+                    <Item ref="item_0_id"/> <!-- [1..*] -->
+                </Members>
+                <Type>SELF</Type>
+                <Name>SELF_RELATIONSHIP</Name> <!-- [0..1] -->
+            </Relationship> <!-- [1..*] -->
+        </Relationships> <!-- [0..1] -->
+        <DashboardRepId>DASHBOARD_REP_ID</DashboardRepId> <!-- [0..1] -->
+        <OrderSource type="ORSO_TYPE">ORSO_CODE</OrderSource> <!-- [0..1] -->
+        <Holds>
+            <Hold>
+                <HoldType>HOLD_TYPE</HoldType>
+                <LastHoldTypeDate>2015-01-13T01:01:00-05:00</LastHoldTypeDate>
+                <ReasonText>HOLD_REASON</ReasonText>
+                <ResolverUserId>RESOLVER_USER_ID</ResolverUserId> <!-- [0..1] -->
+                <StatusDescription>Hold status description</StatusDescription>
+            </Hold> <!-- [1..*] -->
+        </Holds> <!-- [0..1] -->
+        <CustomAttributes>
+            <Attribute><Key>OrderCustomAttributeKey-1</Key><Value>OrderCustomAttributeValue-1</Value></Attribute> <!-- [1..*] -->
+            <Attribute><Key>OrderCustomAttributeKey-2</Key><Value>OrderCustomAttributeValue-2</Value></Attribute> <!-- [1..*] -->
+        </CustomAttributes> <!-- [0..1] -->
+        <Templates>
+            <Template id="TEMPLATE_ID">
+                <Key>TEMPLATE_KEY</Key>
+                <Value>Template value</Value>
+            </Template> <!-- [1..*] -->
+        </Templates> <!-- [0..1] -->
+        <OrderHistoryUrl>http://example.com/order/history/CUSTOMER_ORDER_ID</OrderHistoryUrl> <!-- [0..1] -->
+        <VATInclusivePricing>true</VATInclusivePricing> <!-- [0..1] -->
+        <OrderTotal>91.25</OrderTotal> <!-- [0..1] -->
+    </Order>
+    <Context>
+        <BrowserData>
+            <HostName>host.example.com</HostName>
+            <IPAddress>127.0.0.1</IPAddress>
+            <SessionId>USER_SESSION_ID</SessionId>
+            <UserAgent>UA-STRING</UserAgent>
+            <Connection>BROWSER_CONNECTION</Connection> <!-- [0..1] -->
+            <Cookies>COOKIES</Cookies> <!-- [0..1] -->
+            <UserCookie>USER_COOKIE</UserCookie> <!-- [0..1] -->
+            <UserAgentOS>UA-OS</UserAgentOS> <!-- [0..1] -->
+            <UserAgentCPU>UA-CPU</UserAgentCPU> <!-- [0..1] -->
+            <HeaderFrom>HEADER_FROM</HeaderFrom> <!-- [0..1] -->
+            <EmbeddedWebBrowserFrom>EMBEDDED_WEB_BROWSER_FROM</EmbeddedWebBrowserFrom> <!-- [0..1] -->
+            <JavascriptData>JS_DATA</JavascriptData>
+            <Referrer>referrer.exmample.com</Referrer>
+            <HTTPAcceptData>
+                <ContentTypes>ACCEPT_CONTENT_TYPE</ContentTypes>
+                <Encoding>ACCEPT_ENCODING</Encoding>
+                <Language>ACCEPT_LANG</Language>
+                <CharSet>ACCEPT_CHAR_SET</CharSet>
+            </HTTPAcceptData>
+        </BrowserData> <!-- [0..1] -->
+        <TdlOrderTimestamp>2015-01-16T10:33:06-05:00</TdlOrderTimestamp> <!-- [0..1] -->
+        <SessionInfo>
+            <TimeSpentOnSite>11:11:11</TimeSpentOnSite> <!-- [0..1] -->
+            <LastLogin>2015-01-01T04:44:32-05:00</LastLogin> <!-- [0..1] -->
+            <UserPassword>SECRET</UserPassword> <!-- [0..1] -->
+            <TimeOnFile>600000</TimeOnFile> <!-- [0..1] -->
+            <RTCTransactionResponseCode>RTC_TRANSACTION_RESP_CODE</RTCTransactionResponseCode> <!-- [0..1] -->
+            <RTCReasonCodes>RTC_REASON_CODE</RTCReasonCodes> <!-- [0..1] -->
+            <AuthorizationAttempts>1</AuthorizationAttempts> <!-- [0..1] -->
+        </SessionInfo> <!-- [0..1] -->
+        <PayPalPayerInfo>
+            <PayPalPayerID>PAYPAL_PAYER_ID</PayPalPayerID> <!-- [0..1] -->
+            <PayPalPayerStatus>PAYPAL_PAYER_STATUS</PayPalPayerStatus> <!-- [0..1] -->
+            <PayPalAddressStatus>PAY_PAL_ADDRESS_STATUS</PayPalAddressStatus> <!-- [0..1] -->
+        </PayPalPayerInfo> <!-- [0..1] -->
+        <CustomAttributes>
+            <Attribute><Key>ContextCustomAttrKey-1</Key><Value>ContextCustomAttrValue-1</Value></Attribute> <!-- [1..*] -->
+            <Attribute><Key>ContextCustomAttrKey-2</Key><Value>ContextCustomAttrValue-2</Value></Attribute> <!-- [1..*] -->
+        </CustomAttributes> <!-- [0..1] -->
+    </Context>
+</OrderCreateRequest>

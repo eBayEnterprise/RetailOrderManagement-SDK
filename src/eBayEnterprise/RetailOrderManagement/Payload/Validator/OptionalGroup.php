@@ -13,7 +13,6 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 namespace eBayEnterprise\RetailOrderManagement\Payload\Validator;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
@@ -62,7 +61,7 @@ class OptionalGroup implements Payload\IValidator
         // make sure either all required accessors were null or all accessors where non-null
         if ($invalidDataAccessors && (count($invalidDataAccessors) !== count($this->requiredDataAccessors))) {
             throw new Payload\Exception\InvalidPayload(
-                sprintf('Payload optional group missing required data: %s.', implode(', ', $invalidDataAccessors))
+                sprintf('%s Payload optional group missing required data: %s.', get_class($payload), implode(', ', $invalidDataAccessors))
             );
         }
 

@@ -49,7 +49,26 @@ trait TStrings
             return null;
         }
         $string = strtolower($string);
-        return (($string === 'true') || ($string === '1'));
+        switch ($string) {
+            case 'true':
+            case '1':
+                return true;
+            case 'false':
+            case '0':
+                return false;
+        }
+        return null;
+    }
+
+    /**
+     * Convert a boolean value to an xml:boolean compatible serialization.
+     *
+     * @param bool
+     * @return string
+     */
+    protected function convertBooleanToString($value)
+    {
+        return ((bool) $value) ? 'true' : 'false';
     }
 
     /**

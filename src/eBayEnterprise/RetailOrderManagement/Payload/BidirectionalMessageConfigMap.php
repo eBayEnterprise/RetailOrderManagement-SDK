@@ -19,6 +19,10 @@
  */
 return call_user_func(function () {
     $map = [];
+    $map['orders/create'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateReply',
+    ];
     $map['payments/creditcard/auth'] = [
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthReply',

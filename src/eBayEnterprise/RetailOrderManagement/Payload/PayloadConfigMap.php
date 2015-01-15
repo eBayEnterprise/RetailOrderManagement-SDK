@@ -19,32 +19,43 @@
  */
 return call_user_func(function () {
     $map = []; // This is what we eventually return
-    $paymentAccountUniqueIdParams = ['getCardNumber', 'getPanIsToken'];
-    $paymentContextParams = array_merge($paymentAccountUniqueIdParams, ['getOrderId']);
-    $validatorIterator = '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator';
-    $xsdSchemaValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator';
-    $xmlValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XmlValidator';
-    $requiredFieldsValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields';
-    $optionalGroupValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup';
-    $subpayloadValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\Subpayloads';
-    $optionalSubpayloadValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalSubpayloads';
+
+    // Common types injected into payloads, referenced in payload mappings.
+
+    // validator types
     $iterableValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\IterablePayload';
+    $optionalGroupValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalGroup';
+    $optionalSubpayloadValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\OptionalSubpayloads';
+    $requiredFieldsValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\RequiredFields';
+    $subpayloadValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\Subpayloads';
+    // payload validator iterables - contain validator types
+    $validatorIterator = '\eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator';
+    // xsd, xml or other schema validator types
+    $xmlValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XmlValidator';
+    $xsdSchemaValidator = '\eBayEnterprise\RetailOrderManagement\Payload\Validator\XsdSchemaValidator';
+    // payload map types
     $payloadMap = '\eBayEnterprise\RetailOrderManagement\Payload\PayloadMap';
+
+    // Common sets of required fields, typically consiting of required fields
+    // implemented by a common trait and reused by multiple payloads.
+    $paymentAccountUniqueIdParams = ['getCardNumber'];
+    $paymentContextParams = array_merge($paymentAccountUniqueIdParams, ['getOrderId']);
     $shippingAddressParams = ['getShipToLines', 'getShipToCity', 'getShipToCountryCode'];
     $physicalAddressParams = ['getLines', 'getCity', 'getCountryCode'];
     $personNameParams = ['getLastName', 'getFirstName'];
-    $orderItemParams = ['getLineNumber', 'getItemId', 'getQuantity', 'getTitle'];
-    $shippedItemParams = ['getShippedQuantity'];
-    $creditItemParams = ['getRemainingQuantity'];
-    $noChildPayloads = [
-        'payloadMap' => $payloadMap,
-        'types' => [],
+    $orderEventItemParams = ['getLineNumber', 'getItemId', 'getQuantity', 'getTitle'];
+    $orderPaymentContextParams = ['getOrderId', 'getTenderType', 'getPanIsToken', 'getAccountUniqueId', 'getPaymentRequestId'];
+    $customAttributeParams = ['getKey', 'getValue'];
+    $iLineItemContainerParams = ['getLineItemsTotal', 'getShippingTotal', 'getTaxTotal',];
+    $taxDataParams = ['getType', 'getTaxability', 'getSitus', 'getEffectiveRate', 'getCalculatedTax'];
+
+    // Payload validators shared by multiple payloads.
+    $prepaidPaymentValidators = [
+        ['validator' => $requiredFieldsValidator, 'params' => ['getAmount']],
+        ['validator' => $optionalSubpayloadValidator, 'params' => ['getCustomAttributes']],
     ];
-    $iLineItemContainerParams = [
-        'getLineItemsTotal',
-        'getShippingTotal',
-        'getTaxTotal',
-    ];
+
+    // Child payload configuration for payment payloads with payment line items.
     $iLineItemIterableChildPayloads = [
         'payloadMap' => $payloadMap,
         'types' => [
@@ -52,6 +63,12 @@ return call_user_func(function () {
                 '\eBayEnterprise\RetailOrderManagement\Payload\Payment\LineItemIterable'
         ]
     ];
+    // Common configuration for a payload that does not include child payloads.
+    $noChildPayloads = [
+        'payloadMap' => $payloadMap,
+        'types' => [],
+    ];
+
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest'] = [
         'validators' => [
             [
@@ -251,7 +268,7 @@ return call_user_func(function () {
                     'getDutyAmount',
                     'getFeesAmount',
                     'getDiscountAmount',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -267,7 +284,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\AcceptedOrderItemIterable',
@@ -296,7 +313,7 @@ return call_user_func(function () {
                     'getFeesAmount',
                     'getDiscountAmount',
                     'getShippedAmount',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -318,7 +335,7 @@ return call_user_func(function () {
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\MailingAddress',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\StoreFrontDetails',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ShippedOrderItemIterable',
@@ -342,7 +359,7 @@ return call_user_func(function () {
                     'getCustomerOrderId',
                     'getCurrencyCode',
                     'getCurrencySymbol',
-               ],
+                ],
             ],
             [
                 'validator' => $optionalSubpayloadValidator,
@@ -354,7 +371,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
             ],
         ],
@@ -370,7 +387,7 @@ return call_user_func(function () {
                     'getCustomerOrderId',
                     'getCancelReason',
                     'getCancelReasonCode',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -385,7 +402,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CancelledOrderItemIterable',
@@ -406,7 +423,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgram' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgram' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgram',
             ],
         ],
@@ -418,7 +435,7 @@ return call_user_func(function () {
                 'params' => [
                     'getAccount',
                     'getProgram',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -432,7 +449,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttributeIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CustomAttributeIterable',
             ],
         ],
@@ -449,7 +466,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttribute' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttribute' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CustomAttribute',
             ],
         ],
@@ -461,7 +478,7 @@ return call_user_func(function () {
                 'params' => [
                     'getKey',
                     'getValue',
-               ],
+                ],
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -492,7 +509,7 @@ return call_user_func(function () {
                 'params' => [
                     'getTrackingNumber',
                     'getUrl',
-               ],
+                ],
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -549,7 +566,7 @@ return call_user_func(function () {
                     'getTenderType',
                     'getMaskedAccount',
                     'getAmount',
-               ],
+                ],
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -580,7 +597,7 @@ return call_user_func(function () {
                 'params' => [
                     'getDescription',
                     'getAmount',
-              ],
+                ],
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -614,7 +631,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => $orderItemParams,
+                'params' => $orderEventItemParams,
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -625,7 +642,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => $orderItemParams,
+                'params' => $orderEventItemParams,
             ],
             [
                 'validator' => $optionalGroupValidator,
@@ -652,7 +669,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => array_merge($orderItemParams, $shippedItemParams),
+                'params' => array_merge($orderEventItemParams, ['getShippedQuantity']),
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -675,7 +692,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => $orderItemParams,
+                'params' => $orderEventItemParams,
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -918,7 +935,7 @@ return call_user_func(function () {
                     'getCustomerOrderId',
                     'getCurrencyCode',
                     'getCurrencySymbol',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -937,7 +954,7 @@ return call_user_func(function () {
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\MailingAddress',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\StoreFrontDetails',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\BackOrderItemIterable',
@@ -958,7 +975,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => $orderItemParams,
+                'params' => $orderEventItemParams,
             ]
         ],
         'validatorIterator' => $validatorIterator,
@@ -1015,7 +1032,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CreditOrderItemIterable',
@@ -1030,7 +1047,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => array_merge($orderItemParams, $creditItemParams),
+                'params' => array_merge($orderEventItemParams, ['getRemainingQuantity']),
             ]
         ],
         'validatorIterator' => $validatorIterator,
@@ -1048,7 +1065,7 @@ return call_user_func(function () {
                     'getCustomerOrderId',
                     'getCurrencyCode',
                     'getCurrencySymbol',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -1068,7 +1085,7 @@ return call_user_func(function () {
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\MailingAddress',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\StoreFrontDetails',
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IOrderItemIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderConfirmedOrderItemIterable',
@@ -1156,7 +1173,7 @@ return call_user_func(function () {
                     'getFeesAmount',
                     'getDiscountAmount',
                     'getShippedAmount',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -1287,7 +1304,7 @@ return call_user_func(function () {
                     'getCustomerLastName',
                     'getStoreId',
                     'getCustomerOrderId',
-               ],
+                ],
             ],
             [
                 'validator' => $subpayloadValidator,
@@ -1303,7 +1320,7 @@ return call_user_func(function () {
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable' =>
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgramIterable',
                 '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IGiftCardActivationIterable' =>
                     '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\GiftCardActivationIterable',
@@ -1329,6 +1346,890 @@ return call_user_func(function () {
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateReply'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getStatus',
+                ]
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $personNameParams,
+                    [
+                        'getRequestId',
+                        'getOrderId',
+                        'getCreateTime',
+                        'getBillingAddress',
+                        'getCurrency',
+                        'getLocale',
+                        'getOrderTotal',
+                        'getHostname',
+                        'getIpAddress',
+                        'getSessionId',
+                        'getUserAgent',
+                        'getJavascriptData',
+                        'getReferrer',
+                        'getContentTypes',
+                        'getEncoding',
+                        'getLanguage',
+                        'getCharSet',
+                    ]
+                )
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => ['getAssociateName', 'getAssociateNumber', 'getAssociateStore']
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => ['getOrderSource', 'getOrderSourceType']
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => [
+                    'getOrderItems',
+                    'getShipGroups',
+                    'getDestinations',
+                ],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => [
+                    'getLoyaltyPrograms',
+                    'getPayments',
+                    'getItemRelationships',
+                    'getHolds',
+                    'getCustomAttributes',
+                    'getTemplates',
+                    'getOrderContextCustomAttributes',
+                ],
+            ],
+            [
+                'validator' => '\eBayEnterprise\RetailOrderManagement\Payload\Validator\Order\OrderCreateReferences',
+                'params' => [],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\LoyaltyProgramIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IShipGroupIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\ShipGroupIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestinationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderDestinationIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPaymentIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PaymentIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IItemRelationshipIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\ItemRelationshipIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderHoldIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderHoldIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ITemplateIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\TemplateIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Checkout\MailingAddress'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $personNameParams,
+                    $physicalAddressParams
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Checkout\InvoiceTextCode'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getCode'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Checkout\InvoiceTextCodeIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\IInvoiceTextCode' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\InvoiceTextCode',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Checkout\Tax'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $taxDataParams,
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getInvoiceTextCodes'],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\IInvoiceTextCodeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\InvoiceTextCodeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\CreditCardPayment'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $orderPaymentContextParams,
+                    [
+                        'getResponseCode',
+                        'getBankAuthorizationCode',
+                        'getCvv2ResponseCode',
+                        'getAvsResponseCode',
+                    ]
+                ),
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getCustomAttributes'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttribute'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getKey', 'getValue'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttribute' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttribute',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\Customization'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getCustomizedItemId'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getCustomizationInstructions', 'getExtendedPrice'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomizationInstructionIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomizationInstructionIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PriceGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomizationInstruction'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $customAttributeParams,
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomizationInstructionIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomizationInstruction' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomizationInstruction',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomizationIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomization' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\Customization',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\Discount'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getAmount'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getTaxes'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ITaxIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\TaxIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\DiscountIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IDiscount' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\Discount'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\EmailAddressDestination'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getEmailAddress'],
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => ['getFirstName', 'getLastName'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\Fee'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getType', 'getAmount', 'getItemId'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getTaxes'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ITaxIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\TaxIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ITax' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\Tax',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\FeeIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IFee' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\Fee',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\ItemRelationship'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getParentItemId', 'getType'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getItemReferences'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderItemReferenceIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItemReferenceIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\ItemRelationshipIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IItemRelationship' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\ItemRelationship',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\LoyaltyProgram'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getAccount', 'getProgram'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getCustomAttributes'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\LoyaltyProgramIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgram' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\LoyaltyProgram',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\MailingAddress'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $personNameParams,
+                    $physicalAddressParams,
+                    ['getId']
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderDestinationIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IMailingAddress' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\MailingAddress',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IStoreLocation' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\StoreLocation',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IEmailAddressDestination' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\EmailAddressDestination',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderHold'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getType', 'getHoldDate', 'getReason', 'getStatusDescription'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderHoldIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderHold' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderHold'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getId',
+                    'getLineNumber',
+                    'getItemId',
+                    'getQuantity',
+                ],
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => ['getEstimatedDeliveryWindowFrom', 'getEstimatedDeliveryWindowTo']
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => ['getEstimatedShippingWindowFrom', 'getEstimatedShippingWindowTo']
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getMerchandisePricing'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => [
+                    'getShippingPricing',
+                    'getDutyPricing',
+                    'getFees',
+                    'getStoreFrontDetails',
+                    'getProxyPickupDetails',
+                    'getGiftPricing',
+                    'getCustomizationBasePrice',
+                    'getCustomizations',
+                    'getCustomAttributes',
+                ],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PriceGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IStoreFrontDetails' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\StoreFrontDetails',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IProxyPickupDetails' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\ProxyPickupDetails',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IFeeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\FeeIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomizationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomizationIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItemIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItem'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItemReference'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getReferencedItemId'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItemReferenceIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderItemReference' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItemReference'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\PaymentIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICreditCardPayment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CreditCardPayment',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPrepaidCreditCardPayment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PrepaidCreditCardPayment',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPointsPayment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PointsPayment',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IStoredValueCardPayment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\StoredValueCardPayment',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPayPalPayment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PayPalPayment',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPrepaidCashOnDeliveryPayment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PrepaidCashOnDeliveryPayment',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IReservationPayment' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\ReservationPayment',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\PayPalPayment'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $orderPaymentContextParams,
+                    [
+                        'getAmount',
+                        'getAmountAuthorized',
+                        'getAuthorizationResponseCode',
+                    ]
+                ),
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getCustomAttributes'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\PointsPayment'] = [
+        'validators' => $prepaidPaymentValidators,
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\PrepaidCashOnDeliveryPayment'] = [
+        'validators' => $prepaidPaymentValidators,
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\PrepaidCreditCardPayment'] = [
+        'validators' => $prepaidPaymentValidators,
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\PriceGroup'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getAmount'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getTaxes', 'getDiscounts'],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IDiscountIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\DiscountIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ITaxIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\TaxIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\ProxyPickupDetails'] = [
+        'validators' => [
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => $physicalAddressParams,
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\ReservationPayment'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\ShipGroup'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getChargeType', 'getId'],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getItemReferences'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getGiftPricing'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderItemReferenceIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderItemReferenceIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\PriceGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\ShipGroupIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\IShipGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\ShipGroup'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\StoredValueCardPayment'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $orderPaymentContextParams,
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getCustomAttributes'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\StoreFrontDetails'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $physicalAddressParams,
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\StoreLocation'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $physicalAddressParams,
+                    ['getId']
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\Tax'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $taxDataParams,
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\TaxIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ITax' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\Tax'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\Template'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge($customAttributeParams, ['getId']),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\TemplateIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Order\ITemplate' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Order\Template'
+            ],
+        ],
     ];
     return $map;
 });

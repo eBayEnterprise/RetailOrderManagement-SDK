@@ -15,59 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
-use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
-use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
-use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
-use SPLObjectStorage;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\LoyaltyProgramIterable as OrderLoyaltyProgramIterable;
 
-class LoyaltyProgramIterable extends SPLObjectStorage implements ILoyaltyProgramIterable
+class LoyaltyProgramIterable extends OrderLoyaltyProgramIterable implements ILoyaltyProgramIterable
 {
-    use TIterablePayload;
-
-    /**
-     * @param IValidatorIterator
-     * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
-     * @param IPayloadMap
-     * @param IPayload
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function __construct(
-        IValidatorIterator $validators,
-        ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap,
-        IPayload $parentPayload = null
-    ) {
-        $this->validators = $validators;
-        $this->payloadMap = $payloadMap;
-        $this->payloadFactory = new PayloadFactory();
-        $this->parentPayload = $parentPayload;
-    }
-
-    public function getEmptyLoyaltyProgram()
-    {
-        return $this->buildPayloadForInterface(static::LOYALTY_PROGRAM_INTERFACE);
-    }
-
-    protected function getNewSubpayload()
-    {
-        return $this->getEmptyLoyaltyProgram();
-    }
-
-    protected function getSubpayloadXPath()
-    {
-        return static::SUBPAYLOAD_XPATH;
-    }
-
-    protected function getRootNodeName()
-    {
-        return static::ROOT_NODE;
-    }
-
-    protected function getXmlNamespace()
-    {
-        return self::XML_NS;
-    }
 }

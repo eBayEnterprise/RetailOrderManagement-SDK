@@ -15,6 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
+use DateTime;
 use DOMDocument;
 use DOMXPath;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TStrings;
@@ -129,7 +130,11 @@ trait TPayload
     protected function getPayloadAsDoc($xmlString)
     {
         $d = new DOMDocument();
-        $d->loadXML($xmlString);
+        try {
+            $d->loadXML($xmlString);
+        } catch (\Exception $e) {
+            throw $e;
+        }
         return $d;
     }
 
@@ -236,6 +241,17 @@ trait TPayload
         return $this->parentPayload;
     }
 
+    protected function getAncestorPayloadOfType($type)
+    {
+        $pl = $this;
+        while ($pl = $pl->getParentPayload()) {
+            if ($pl instanceof $type) {
+                return $pl;
+            }
+        }
+        return null;
+    }
+
     /**
      * Return the name of the xml root node.
      *
@@ -279,4 +295,60 @@ trait TPayload
      * @return string
      */
     abstract protected function serializeContents();
+
+    /**
+     * Serialize the value as an xml element with the given node name. When
+     * given an empty value, returns an empty string instead of an empty
+     * element.
+     *
+     * @param string
+     * @param mixed
+     * @return string
+     */
+    protected function serializeOptionalValue($nodeName, $value)
+    {
+        return !is_null($value) ? sprintf('<%s>%s</%1$s>', $nodeName, $value) : '';
+    }
+
+    /**
+     * Serialize the value as an XML attribute with the given name. When
+     * given an empty value, returns an empty string.
+     *
+     * @param string
+     * @param mixed
+     * @return string
+     */
+    protected function serializeOptionalAttribute($attributeName, $value)
+    {
+        return !is_null($value) ? " $attributeName='$value' " : '';
+    }
+
+    /**
+     * Serialize the currency amount as an XML node with the provided name.
+     * When the amount is not set, returns an empty string.
+     *
+     * @param string
+     * @param float
+     * @return string
+     */
+    protected function serializeOptionalAmount($nodeName, $amount)
+    {
+        return !is_null($amount) ? "<$nodeName>{$this->formatAmount($amount)}</$nodeName>" : '';
+    }
+
+    /**
+     * Serialize an optional date time value. When a DateTime value is given,
+     * serialize the DateTime object as an XML node containing the DateTime
+     * formatted with the given format. When no DateTime is given, return
+     * an empty string.
+     *
+     * @param string
+     * @param string
+     * @param DateTime
+     * @return string
+     */
+    protected function serializeOptionalDateValue($nodeName, $format, DateTime $date = null)
+    {
+        return $date ? "<$nodeName>{$date->format($format)}</$nodeName>" : '';
+    }
 }

@@ -15,19 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\Order\TLoyaltyProgramContainer as TOrderLoyaltyProgramContainer;
+
 trait TLoyaltyProgramContainer
 {
-    /** @var ILoyaltyProgramIterable */
-    protected $loyaltyPrograms;
-
-    public function getLoyaltyPrograms()
-    {
-        return $this->loyaltyPrograms;
-    }
-
-    public function setLoyaltyPrograms(ILoyaltyProgramIterable $loyaltyPrograms)
-    {
-        $this->loyaltyPrograms = $loyaltyPrograms;
-        return $this;
-    }
+    use TOrderLoyaltyProgramContainer;
 }

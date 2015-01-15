@@ -34,8 +34,16 @@ class XmlValidator implements ISchemaValidator
         $doc = new DOMDocument();
         $doc->loadXML($serializedData);
         $errors = libxml_get_errors();
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
         if ($errors) {
-            throw new Exception\InvalidPayload('Serialized data is invalid XML: ' . implode(', ', $errors));
+            $messages = implode(', ', array_filter(array_map(
+                function ($libxmlError) {
+                    return trim($libxmlError->message);
+                },
+                $errors
+            )));
+            throw new Exception\InvalidPayload("Serialized data is invalid XML: $messages");
         }
         return $this;
     }

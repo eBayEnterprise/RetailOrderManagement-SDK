@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 
@@ -30,14 +30,7 @@ class CustomAttributeIterableTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        // use stub to allow validation success/failure to be scripted.
-        $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
-        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->payloadMap = new PayloadMap([
-            '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttribute' =>
-                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CustomAttribute'
-        ]);
+        $this->payloadFactory = new PayloadFactory();
 
         $this->fullPayload = $this->buildPayload();
         $subpayload = $this->fullPayload->getEmptyCustomAttribute();
@@ -57,7 +50,8 @@ class CustomAttributeIterableTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return new CustomAttributeIterable($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
+        return $this->payloadFactory
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CustomAttributeIterable');
     }
 
     /**

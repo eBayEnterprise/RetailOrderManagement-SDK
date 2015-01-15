@@ -15,33 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttribute as IOrderCustomAttribute;
 
-interface ICustomAttribute extends IPayload
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttribute instead.
+ */
+interface ICustomAttribute extends IOrderCustomAttribute
 {
-    const ROOT_NODE = 'Attribute';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    /**
-     * Unique key for the attribute
-     * @return string
-     */
-    public function getKey();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setKey($key);
-    /**
-     * Value of the attribute. Value will have all whitespaces normalized
-     * to a single whitespace character.
-     *
-     * xsd restrictions: whitespace normalized string
-     * @return string
-     */
-    public function getValue();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setValue($value);
 }

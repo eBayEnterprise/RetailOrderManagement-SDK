@@ -15,30 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgram as IOrderLoyaltyProgram;
 
-interface ILoyaltyProgram extends IPayload, ICustomAttributeContainer
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgram instead.
+ */
+interface ILoyaltyProgram extends IOrderLoyaltyProgram, ICustomAttributeContainer
 {
-    const ROOT_NODE = 'LoyaltyProgram';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    /**
-     * The customer account with which the loyalty program is linked.
-     * @return string
-     */
-    public function getAccount();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setAccount($account);
-    /**
-     * The name of the loyalty program, for example "Smart Shopper" or "Buyer's Club"
-     * @return string
-     */
-    public function getProgram();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setProgram($program);
 }

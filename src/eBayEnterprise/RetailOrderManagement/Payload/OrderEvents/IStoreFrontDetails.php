@@ -15,79 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface IStoreFrontDetails extends IDestination, IPhysicalAddress
-{
-    const ROOT_NODE = 'StoreFrontAddress';
-    const PHYSICAL_ADDRESS_ROOT_NODE = 'Address';
-    const STORE_CODE_MAX_LENGTH = 40;
-    const STORE_NAME_MAX_LENGTH = 100;
-    const EMAIL_ADDRESS_MAX_LENGTH = 70;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\IStoreFrontDetails as IOrderStoreFrontDetails;
 
-    /**
-     * The unique string that identifies a specific store.
-     *
-     * xsd restrictions: max length 40 characters
-     * @return string
-     */
-    public function getStoreCode();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setStoreCode($storeCode);
-    /**
-     * The way the store is referrred to, for example "Springfield" or "Eastview Mall".
-     *
-     * xsd restrictions: max length 100 characters
-     * @return string
-     */
-    public function getStoreName();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setStoreName($storeName);
-    /**
-     * Email address associated with the store location.
-     *
-     * xsd restrictions: 1-70 characters
-     * @return string
-     */
-    public function getEmailAddress();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setEmailAddress($emailAddress);
-    /**
-     * @return string
-     */
-    public function getDirections();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setDirections($directions);
-    /**
-     * Store hours of operation.
-     *
-     * @return string
-     */
-    public function getHours();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setHours($hours);
-    /**
-     * Store location phone number.
-     *
-     * @return string
-     */
-    public function getPhoneNumber();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPhoneNumber($phoneNumber);
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Order\IStoreFrontDetails instead.
+ */
+interface IStoreFrontDetails extends IOrderStoreFrontDetails, IDestination
+{
 }

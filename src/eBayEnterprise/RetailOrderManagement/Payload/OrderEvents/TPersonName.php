@@ -15,76 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout;
+
 trait TPersonName
 {
-    /** @var string */
-    protected $firstName;
-    /** @var string */
-    protected $lastName;
-    /** @var string */
-    protected $middleName;
-    /** @var string */
-    protected $honorificName;
-
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $this->cleanString($firstName, 64);
-        return $this;
-    }
-
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName($lastName)
-    {
-        $this->lastName = $this->cleanString($lastName, 64);
-        return $this;
-    }
-
-    public function getMiddleName()
-    {
-        return $this->middleName;
-    }
-
-    public function setMiddleName($middleName)
-    {
-        $this->middleName = $this->cleanString($middleName, 40);
-        return $this;
-    }
-
-    public function getHonorificName()
-    {
-        return $this->honorificName;
-    }
-
-    public function setHonorificName($honorificName)
-    {
-        $this->honorificName = $this->cleanString($honorificName, 10);
-        return $this;
-    }
-
-    protected function serializePersonName()
-    {
-        $rootNode = $this->getPersonNameRootNodeName();
-        return "<$rootNode>"
-            . ($this->getHonorificName() ? "<Honorific>{$this->getHonorificName()}</Honorific>" : '')
-            . "<LastName>{$this->getLastName()}</LastName>"
-            . ($this->getMiddleName() ? "<MiddleName>{$this->getMiddleName()}</MiddleName>" : '')
-            . "<FirstName>{$this->getFirstName()}</FirstName>"
-            . "</$rootNode>";
-    }
-
-    /**
-     * XML element node name wrapping the person name elements.
-     *
-     * @return string
-     */
-    abstract protected function getPersonNameRootNodeName();
+    use Checkout\TPersonName;
 }

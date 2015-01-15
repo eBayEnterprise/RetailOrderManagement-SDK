@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderCreateRequest
+    orderType="{SALES|RETURN|PURCHASE|TRASFER} [0..1]"
+    requestId="xsd:string GTE 1"
+    testType="{TEST_WEBONLY|TEST_AUTOCANCEL|TEST_NORELEASE|TEST_AUTOSHIP} [0..1]"
+    xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Order customerOrderId="xsd:string GTE 1" levelOfService="{REGULAR|RUSH} [0..1]">
+        <Customer customerId="xsd:string GTE 1 [0..1]">
+            <Name>
+                <Honorific>xsd:string LTE 10</Honorific><!-- [0..1] -->
+                <LastName>xsd:string LTE 64</LastName>
+                <MiddleName>xsd:string LTE 40</MiddleName><!-- [0..1] -->
+                <FirstName>xsd:string LTE 64</FirstName>
+            </Name>
+            <Gender>xml:string EQ 1</Gender><!-- [0..1] -->
+            <DateOfBirth>xsd:date</DateOfBirth><!-- [0..1] -->
+            <EmailAddress>xsd:string LTE 150</EmailAddress><!-- [0..1] -->
+            <CustomerTaxId>xsd: string LTE 40</CustomerTaxId><!-- [0..1] -->
+            <TaxExemptFlag>xsd:bool</TaxExemptFlag><!-- [0..1] -->
+            <LoyaltyPrograms>
+                <LoyaltyProgram>
+                    <Account>xsd:string</Account>
+                    <Program>xsd:string</Program>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>xsd:string</Key>
+                            <Value>xsd:string</Value>
+                        </Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </LoyaltyProgram>
+            </LoyaltyPrograms><!-- [0..1] -->
+        </Customer>
+        <CreateTime>xsd:dateTime</CreateTime>
+        <OrderItems>
+            <OrderItem id="xsd:ID" isHiddenGift="xsd:bool [0..1]" subscriptionId="xsd:string [0..1]" taxAndDutyDisplay="{Consolidated Taxes Only|Individual Taxes Only|No Taxes or Duties|Taxes and Duties Consolidated in a Single Amount|International Handling Fee} [0..1]" webLineId="xsd:positiveInt LEN EQ 3 GTE 1 AND LTE 999">
+                <ItemId>xsd:sting GTE 1 AND LTE 20</ItemId>
+                <Quantity>xsd:decimal</Quantity>
+                <Description>
+                    <Description>xsd:string</Description>
+                    <Color id="anySimpleType">xsd:string</Color><!-- [0..1] -->
+                    <Size id="anySimpleType">xsd:string</Size><!-- [0..1] -->
+                    <ScreenSize>xsd:string</ScreenSize><!-- [0..1] -->
+                </Description><!-- [0..1] -->
+                <Department>xsd:string</Department><!-- [0..1] -->
+                <Pricing>
+                    <Merchandise>
+                        <Amount remainder="xsd:decimal 2 DECIMAL GTE 0 [0..1]">xsd:decimal 2 DECIMAL GTE 0</Amount>
+                        <PromotionalDiscounts>
+                            <Discount>
+                                <Id>xsd:string</Id>
+                                <Code>xsd:string</Code><!-- [0..1] -->
+                                <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                <Description>xsd:string</Description><!-- [0..1] -->
+                                <EffectType>xsd:string</EffectType><!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|NO_TAX|DEFERRED}">
+                                            <Situs>xsd:string</Situs>
+                                            <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction><!-- [0..1] -->
+                                            <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>xsd:decimal</EffectiveRate>
+                                            <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                            <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                            </Discount><!-- [1..*] -->
+                        </PromotionalDiscounts><!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                            <Taxes>
+                                <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|NO_TAX|DEFERRED}">
+                                    <Situs>xsd:string</Situs>
+                                    <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction><!-- [0..1] -->
+                                    <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                    <EffectiveRate>xsd:decimal</EffectiveRate>
+                                    <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                    <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                    <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                </Tax><!-- [1..*] -->
+                            </Taxes><!-- [0..1] -->
+                        </TaxData><!-- [0..1] -->
+                        <UnitPrice>xsd:decimal 2 DECIMAL GTE 0</UnitPrice><!-- [0..1] -->
+                    </Merchandise>
+                    <Shipping>
+                        <Amount remainder="xsd:decimal 2 DECIMAL GTE 0 [0..1]">xsd:decimal 2 DECIMAL GTE 0</Amount>
+                        <PromotionalDiscounts>
+                            <Discount>
+                                <Id>xsd:string</Id>
+                                <Code>xsd:string</Code><!-- [0..1] -->
+                                <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                <Description>xsd:string</Description><!-- [0..1] -->
+                                <EffectType>xsd:string</EffectType><!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|NO_TAX|DEFERRED}">
+                                            <Situs>xsd:string</Situs>
+                                            <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction><!-- [0..1] -->
+                                            <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>xsd:decimal</EffectiveRate>
+                                            <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                            <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                            </Discount><!-- [1..*] -->
+                        </PromotionalDiscounts><!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                            <Taxes>
+                                <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|NO_TAX|DEFERRED}">
+                                    <Situs>xsd:string</Situs>
+                                    <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction><!-- [0..1] -->
+                                    <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                    <EffectiveRate>xsd:decimal</EffectiveRate>
+                                    <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                    <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                    <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                </Tax><!-- [1..*] -->
+                            </Taxes><!-- [0..1] -->
+                        </TaxData><!-- [0..1] -->
+                        <UnitPrice>xsd:decimal 2 DECIMAL GTE 0</UnitPrice><!-- [0..1] -->
+                    </Shipping><!-- [0..1] -->
+                    <Duty>
+                        <Amount remainder="xsd:decimal 2 DECIMAL GTE 0 [0..1]">xsd:decimal 2 DECIMAL GTE 0</Amount>
+                        <PromotionalDiscounts>
+                            <Discount>
+                                <Id>xsd:string</Id>
+                                <Code>xsd:string</Code><!-- [0..1] -->
+                                <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                <Description>xsd:string</Description><!-- [0..1] -->
+                                <EffectType>xsd:string</EffectType><!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|NO_TAX|DEFERRED}">
+                                            <Situs>xsd:string</Situs>
+                                            <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction><!-- [0..1] -->
+                                            <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>xsd:decimal</EffectiveRate>
+                                            <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                            <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                            </Discount><!-- [1..*] -->
+                        </PromotionalDiscounts><!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                            <Taxes>
+                                <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|NO_TAX|DEFERRED}">
+                                    <Situs>xsd:string</Situs>
+                                    <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction><!-- [0..1] -->
+                                    <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                    <EffectiveRate>xsd:decimal</EffectiveRate>
+                                    <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                    <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                    <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                </Tax><!-- [1..*] -->
+                            </Taxes><!-- [0..1] -->
+                        </TaxData><!-- [0..1] -->
+                        <UnitPrice>xsd:decimal 2 DECIMAL GTE 0</UnitPrice><!-- [0..1] -->
+                    </Duty><!-- [0..1] -->
+                    <Fees>
+                        <Fee>
+                            <FeeType>xsd:string</FeeType>
+                            <Description>xsd:string</Description><!-- [0..1] -->
+                            <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                            <ItemId>xsd:string GTE 1</ItemId>
+                            <TaxData>
+                                <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                <Taxes>
+                                    <Tax taxType="{SALES|SELLER_USE|CONSUMERS_USE|VAT|IMPORT_VAT|NONE} [0..1]" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|NO_TAX|DEFERRED} [0..1]">
+                                        <Situs>xsd:string </Situs><!-- [0..1] -->
+                                        <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction><!-- [0..1] -->
+                                        <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                        <EffectiveRate>xsd:decimal </EffectiveRate><!-- [0..1] -->
+                                        <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                        <ExemptAmount>xsd:decimal 2 DECIMAL GTE 0</ExemptAmount><!-- [0..1] -->
+                                        <NonTaxableAmount>xsd:decimal 2 DECIMAL GTE 0</NonTaxableAmount><!-- [0..1] -->
+                                        <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax><!-- [0..1] -->
+                                        <SellerRegistrationId>xsd:string </SellerRegistrationId><!-- [0..1] -->
+                                        <InvoiceTextCodes>
+                                            <InvoiceTextCode>xsd:string</InvoiceTextCode><!-- [1..*] -->
+                                        </InvoiceTextCodes><!-- [0..1] -->
+                                    </Tax><!-- [1..*] -->
+                                </Taxes><!-- [0..1] -->
+                            </TaxData><!-- [0..1] -->
+                        </Fee><!-- [1..*] -->
+                    </Fees><!-- [0..1] -->
+                </Pricing>
+                <ShippingProgram authToken="xsd:string [0..1]">xsd:string</ShippingProgram><!-- [0..1] -->
+                <ShippingMethod displayText="xsd:string [0..1]">xsd:string</ShippingMethod><!-- [0..1] -->
+                <StoreFrontDetails>
+                    <StoreCode>xsd:string</StoreCode><!-- [0..1] -->
+                    <StoreName>xsd:string</StoreName><!-- [0..1] -->
+                    <StoreEmail>xsd:string</StoreEmail><!-- [0..1] -->
+                    <Address>
+                        <Line1>xsd:string GTE 1</Line1>
+                        <Line2>xsd:string GTE 1</Line2><!-- [0..1] -->
+                        <Line3>xsd:string GTE 1</Line3><!-- [0..1] -->
+                        <Line4>xsd:string GTE 1</Line4><!-- [0..1] -->
+                        <City>xsd:string GTE 1</City>
+                        <MainDivision>xsd:string GTE 1</MainDivision><!-- [0..1] -->
+                        <CountryCode>xsd:string GTE 2</CountryCode>
+                        <PostalCode>xsd:string GTE 1</PostalCode><!-- [0..1] -->
+                    </Address>
+                    <StoreDirections>xsd:string</StoreDirections><!-- [0..1] -->
+                    <StoreHours>xsd:string</StoreHours><!-- [0..1] -->
+                    <StoreFrontPhoneNumber>xsd:string</StoreFrontPhoneNumber><!-- [0..1] -->
+                </StoreFrontDetails><!-- [0..1] -->
+                <FulfillmentChannel>{SHIP_TO_STORE|STORE_PICK_UP|SHIP_TO_HOME|STORE_RESERVATION}</FulfillmentChannel><!-- [0..1] -->
+                <ProxyPickupDetails>
+                    <PersonName>xsd:string</PersonName><!-- [0..1] -->
+                    <FirstName>xsd:string</FirstName><!-- [0..1] -->
+                    <LastName>xsd:string</LastName><!-- [0..1] -->
+                    <Email>xsd:string</Email><!-- [0..1] -->
+                    <Phone>xsd:string</Phone><!-- [0..1] -->
+                    <Address>
+                        <Line1>xsd:string GTE 1</Line1>
+                        <Line2>xsd:string GTE 1</Line2><!-- [0..1] -->
+                        <Line3>xsd:string GTE 1</Line3><!-- [0..1] -->
+                        <Line4>xsd:string GTE 1</Line4><!-- [0..1] -->
+                        <City>xsd:string GTE 1</City>
+                        <MainDivision>xsd:string GTE 1</MainDivision><!-- [0..1] -->
+                        <CountryCode>xsd:string GTE 2</CountryCode>
+                        <PostalCode>xsd:string GTE 1</PostalCode><!-- [0..1] -->
+                    </Address><!-- [0..1] -->
+                    <Relationship>xsd:string</Relationship><!-- [0..1] -->
+                </ProxyPickupDetails><!-- [0..1] -->
+                <EstimatedDeliveryDate>
+                    <DeliveryWindow>
+                        <From>xsd:dateTime</From>
+                        <To>xsd:dateTome</To>
+                    </DeliveryWindow><!-- [0..1] -->
+                    <ShippingWindow>
+                        <From>xsd:dateTime</From>
+                        <To>xsd:dateTome</To>
+                    </ShippingWindow><!-- [0..1] -->
+                    <Mode>{CALIBRATION|ENABLED|LEGACY}</Mode><!-- [0..1] -->
+                    <MessageType>{DeliveryDate|ShipDate|None}</MessageType>
+                    <Template>xsd:string</Template><!-- [0..1] -->
+                </EstimatedDeliveryDate><!-- [0..1] -->
+                <NamedDeliveryDate>
+                    <DeliveryDate>xsd:date</DeliveryDate><!-- [0..1] -->
+                    <TimeWindowStart>xsd:time</TimeWindowStart><!-- [0..1] -->
+                    <TimeWindowEnd>xsd:time</TimeWindowEnd><!-- [0..1] -->
+                    <Message>xsd:string</Message>
+                </NamedDeliveryDate><!-- [0..1] -->
+                <DeliveryInstructions>xsd:normalizedString</DeliveryInstructions><!-- [0..1] -->
+                <VendorId>xsd:string</VendorId><!-- [0..1] -->
+                <VendorName>xsd:string</VendorName><!-- [0..1] -->
+                <Gifting>
+                    <Gift>
+                        <ItemId>xsd:string GTE 1</ItemId>
+                        <Pricing>
+                            <Amount remainder="xsd:decimal 2 DECIMAL GTE 0">xsd:decimal 2 DECIMAL GTE 0</Amount>
+                            <PromotionalDiscounts>
+                                <Discount appliedCount="xsd:int [0..1]">
+                                    <Id>xsd:string</Id>
+                                    <Code>xsd:string</Code><!-- [0..1] -->
+                                    <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                    <Description>xsd:string</Description><!-- [0..1] -->
+                                    <EffectType>xsd:string</EffectType><!-- [0..1] -->
+                                    <TaxData>
+                                        <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                        <Taxes>
+                                            <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                                <Situs>xsd:string</Situs>
+                                                <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                                <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                                <EffectiveRate>xsd:decimal</EffectiveRate>
+                                                <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                                <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                                <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                            </Tax><!-- [1..*] -->
+                                        </Taxes><!-- [0..1] -->
+                                    </TaxData><!-- [0..1] -->
+                                </Discount><!-- [0..1] -->
+                            </PromotionalDiscounts><!-- [0..1] -->
+                            <TaxData>
+                                <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                <Taxes>
+                                    <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                        <Situs>xsd:string</Situs>
+                                        <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                        <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                        <EffectiveRate>xsd:decimal</EffectiveRate>
+                                        <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                        <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                        <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                    </Tax><!-- [1..*] -->
+                                </Taxes><!-- [0..1] -->
+                            </TaxData><!-- [0..1] -->
+                            <UnitPrice>xsd:decimal 2 DECIMAL GTE 0</UnitPrice><!-- [0..1] -->
+                        </Pricing>
+                        <Message>
+                            <Message>
+                                <To localizedDisplayText="xsd:string [0..1]">xsd:string</To>
+                                <From localizedDisplayText="xsd:string [0..1]">xsd:string</From>
+                                <Message>xsd:normalizedString</Message> <!-- [0..1] -->
+                            </Message>
+                        </Message> <!-- [0..1] -->
+                    </Gift> <!-- [0..1] -->
+                    <GiftCard>
+                        <Message>
+                            <To localizedDisplayText="xsd:string [0..1]">xsd:string</To>
+                            <From localizedDisplayText="xsd:string [0..1]">xsd:string</From>
+                            <Message>xsd:normalizedString</Message> <!-- [0..1] -->
+                        </Message>
+                    </GiftCard> <!-- [0..1] -->
+                    <Packslip>
+                        <Message>
+                            <To localizedDisplayText="xsd:string [0..1]">xsd:string</To>
+                            <From localizedDisplayText="xsd:string [0..1]">xsd:string</From>
+                            <Message>xsd:normalizedString</Message> <!-- [0..1] -->
+                        </Message>
+                    </Packslip> <!-- [0..1] -->
+                </Gifting> <!-- [0..1] -->
+                <ShopRunnerMessage>xsd:normalizedString</ShopRunnerMessage><!-- [0..1] -->
+                <Customization>
+                    <Customizations>
+                        <Customization>
+                            <CustomizationId>xsd:int</CustomizationId><!-- [0..1] -->
+                            <Instructions>
+                                <Instructions>
+                                    <Key>xsd:string LTE 20</Key>
+                                    <Value>xsd:string LTE 254</Value>
+                                    <DisplayTitle>xsd:string LTE 254</DisplayTitle><!-- [0..1] -->
+                                    <DisplayValue>xsd:string LTE 254</DisplayValue><!-- [0..1] -->
+                                </Instructions> <!-- [0..*] -->
+                            </Instructions>
+                            <ExtendedPrice>
+                                <Amount remainder="xsd:decimal 2 DECIMAL GTE 0">xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount appliedCount="xsd:int [0..1]">
+                                        <Id>xsd:string</Id>
+                                        <Code>xsd:string</Code><!-- [0..1] -->
+                                        <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                        <Description>xsd:string</Description><!-- [0..1] -->
+                                        <EffectType>xsd:string</EffectType><!-- [0..1] -->
+                                        <TaxData>
+                                            <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                            <Taxes>
+                                                <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                                    <Situs>xsd:string</Situs>
+                                                    <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                                    <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                                    <EffectiveRate>xsd:decimal</EffectiveRate>
+                                                    <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                                    <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                                    <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                                </Tax><!-- [1..*] -->
+                                            </Taxes><!-- [0..1] -->
+                                        </TaxData><!-- [0..1] -->
+                                    </Discount><!-- [0..1] -->
+                                </PromotionalDiscounts><!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                            <Situs>xsd:string</Situs>
+                                            <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                            <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>xsd:decimal</EffectiveRate>
+                                            <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                            <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                                <UnitPrice>xsd:decimal 2 DECIMAL GTE 0</UnitPrice><!-- [0..1] -->
+                            </ExtendedPrice><!-- [0..1] -->
+                            <ItemId>xsd:string GTE 1</ItemId>
+                            <Item ref="xsd:IDREF"/><!-- [0..1] -->
+                        </Customization><!-- [1..*] -->
+                    </Customizations>
+                    <BasePrice>
+                        <Amount remainder="xsd:decimal 2 DECIMAL GTE 0">xsd:decimal 2 DECIMAL GTE 0</Amount>
+                        <PromotionalDiscounts>
+                            <Discount appliedCount="xsd:int [0..1]">
+                                <Id>xsd:string</Id>
+                                <Code>xsd:string</Code><!-- [0..1] -->
+                                <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                <Description>xsd:string</Description><!-- [0..1] -->
+                                <EffectType>xsd:string</EffectType><!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                            <Situs>xsd:string</Situs>
+                                            <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                            <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>xsd:decimal</EffectiveRate>
+                                            <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                            <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                            </Discount><!-- [0..1] -->
+                        </PromotionalDiscounts><!-- [0..1] -->
+                        <TaxData>
+                            <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                            <Taxes>
+                                <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                    <Situs>xsd:string</Situs>
+                                    <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                    <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                    <EffectiveRate>xsd:decimal</EffectiveRate>
+                                    <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                    <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                    <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                </Tax><!-- [1..*] -->
+                            </Taxes><!-- [0..1] -->
+                        </TaxData><!-- [0..1] -->
+                        <UnitPrice>xsd:decimal 2 DECIMAL GTE 0</UnitPrice><!-- [0..1] -->
+                    </BasePrice><!-- [0..1] -->
+                    <DisplayUrl>xsd:anyURI</DisplayUrl><!-- [0..1] -->
+                </Customization><!-- [0..1] -->
+                <SerialNumber>xsd:string</SerialNumber><!-- [0..1] -->
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>xsd:string</Key>
+                        <Value>xsd:string</Value>
+                    </Attribute><!-- [1..*] -->
+                </CustomAttributes><!-- [0..1] -->
+                <GiftRegistryCancelUrl>xsd:string</GiftRegistryCancelUrl><!-- [0..1] -->
+                <ReservationId>xsd:string GTE 1</ReservationId><!-- [0..1] -->
+            </OrderItem><!-- [1..*] -->
+        </OrderItems>
+        <Shipping>
+            <ShipGroups>
+                <ShipGroup id="xsd:ID" chargeType="xsd:string">
+                    <DestinationTarget ref="xsd:IDREF"/>
+                    <OrderItems>
+                        <Item ref="xsd:IDREF"/> <!-- [1..*] -->
+                    </OrderItems>
+                    <Gifting>
+                        <Gift>
+                            <ItemId>ItemId</ItemId>
+                            <Pricing>
+                                <Amount remainder="xsd:decimal 2 DECIMAL GTE 0">xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount appliedCount="xsd:int [0..1]">
+                                        <Id>xsd:string</Id>
+                                        <Code>xsd:string</Code><!-- [0..1] -->
+                                        <Amount>xsd:decimal 2 DECIMAL GTE 0</Amount>
+                                        <Description>xsd:string</Description><!-- [0..1] -->
+                                        <EffectType>xsd:string</EffectType><!-- [0..1] -->
+                                        <TaxData>
+                                            <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                            <Taxes>
+                                                <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                                    <Situs>xsd:string</Situs>
+                                                    <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                                    <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                                    <EffectiveRate>xsd:decimal</EffectiveRate>
+                                                    <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                                    <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                                    <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                                </Tax><!-- [1..*] -->
+                                            </Taxes><!-- [0..1] -->
+                                        </TaxData><!-- [0..1] -->
+                                    </Discount><!-- [0..1] -->
+                                </PromotionalDiscounts><!-- [0..1] -->
+                                <TaxData>
+                                    <TaxClass>xsd:string</TaxClass><!-- [0..1] -->
+                                    <Taxes>
+                                        <Tax taxType="xsd:string" taxability="{TAXABLE|NONTAXABLE|EXEMPT|DPPAPPLIED|DEFERRED} [0..1]">
+                                            <Situs>xsd:string</Situs>
+                                            <Jurisdiction jurisdictionId="xsd:string [0..1]" jurisdictionLevel="xsd:string [0..1]">xsd:string</Jurisdiction>
+                                            <Imposition impositionType="xsd:string [0..1]">xsd:string</Imposition><!-- [0..1] -->
+                                            <EffectiveRate>xsd:decimal</EffectiveRate>
+                                            <TaxableAmount>xsd:decimal 2 DECIMAL GTE 0</TaxableAmount><!-- [0..1] -->
+                                            <CalculatedTax>xsd:decimal 2 DECIMAL GTE 0</CalculatedTax>
+                                            <SellerRegistrationId>xsd:string</SellerRegistrationId><!-- [0..1] -->
+                                        </Tax><!-- [1..*] -->
+                                    </Taxes><!-- [0..1] -->
+                                </TaxData><!-- [0..1] -->
+                                <UnitPrice>xsd:decimal 2 DECIMAL GTE 0</UnitPrice><!-- [0..1] -->
+                            </Pricing>
+                            <Message>
+                                <To localizedDisplayText="xsd:string [0..1]">xsd:string</To>
+                                <From localizedDisplayText="xsd:string [0..1]">xsd:string</From>
+                                <Message>xsd:normalizedString</Message> <!-- [0..1] -->
+                            </Message> <!-- [0..1] -->
+                        </Gift> <!-- [0..1] -->
+                        <GiftCard>
+                            <Message>
+                                <To localizedDisplayText="xsd:string [0..1]">xsd:string</To>
+                                <From localizedDisplayText="xsd:string [0..1]">xsd:string</From>
+                                <Message>xsd:normalizedString</Message> <!-- [0..1] -->
+                            </Message>
+                        </GiftCard> <!-- [0..1] -->
+                        <Packslip>
+                            <Message>
+                                <To localizedDisplayText="xsd:string [0..1]">xsd:string</To>
+                                <From localizedDisplayText="xsd:string [0..1]">xsd:string</From>
+                                <Message>xsd:normalizedString</Message> <!-- [0..1] -->
+                            </Message>
+                        </Packslip> <!-- [0..1] -->
+                    </Gifting> <!-- [0..1] -->
+                </ShipGroup><!-- [1..*] -->
+            </ShipGroups>
+            <Destinations>
+                <MailingAddress id="xsd:ID [0..1]">
+                    <PersonName>
+                        <Honorific>xsd:string LTE 10</Honorific> <!-- [0..1] -->
+                        <LastName>xsd:string LTE 64</LastName>
+                        <MiddleName>xsd:string LTE 40</MiddleName> <!-- [0..1] -->
+                        <FirstName>xsd:string LTE 64</FirstName>
+                    </PersonName>
+                    <Address>
+                        <Line1>xsd:string GTE 1</Line1>
+                        <Line2>xsd:string GTE 1</Line2> <!-- [0..1] -->
+                        <Line3>xsd:string GTE 1</Line3> <!-- [0..1] -->
+                        <Line4>xsd:string GTE 1</Line4> <!-- [0..1] -->
+                        <City>xsd:string GTE 1</City>
+                        <MainDivision>xsd:string GTE 1</MainDivision> <!-- [0..1] -->
+                        <CountryCode>xsd:string GTE 2</CountryCode>
+                        <PostalCode>xsd:string GTE 1</PostalCode> <!-- [0..1] -->
+                    </Address>
+                    <Phone>xsd:string</Phone>
+                </MailingAddress> <!-- [0..*] -->
+                <StoreLocation id="xsd:ID [0..1]">
+                    <StoreCode>xsd:string LTE 40</StoreCode> <!-- [0..1] -->
+                    <StoreName>xsd:string LTE 100</StoreName> <!-- [0..1] -->
+                    <StoreEmail>xsd:string LTE 70 GTE 1 (EMAIL ADDRESS)</StoreEmail> <!-- [0..1] -->
+                    <Address>
+                        <Line1>xsd:string GTE 1</Line1>
+                        <Line2>xsd:string GTE 1</Line2> <!-- [0..1] -->
+                        <Line3>xsd:string GTE 1</Line3> <!-- [0..1] -->
+                        <Line4>xsd:string GTE 1</Line4> <!-- [0..1] -->
+                        <City>xsd:string GTE 1</City>
+                        <MainDivision>xsd:string GTE 1</MainDivision> <!-- [0..1] -->
+                        <CountryCode>xsd:string GTE 2</CountryCode>
+                        <PostalCode>xsd:string GTE 1</PostalCode> <!-- [0..1] -->
+                    </Address>
+                </StoreLocation> <!-- [0..*] -->
+                <Email id="xsd:ID [0..1]">
+                    <EmailAddress>xsd:string LTE 70 GTE 1 (EMAIL ADDRESS)</EmailAddress>
+                    <PersonName>
+                        <Honorific>xsd:string LTE 10</Honorific> <!-- [0..1] -->
+                        <LastName>xsd:string LTE 64</LastName>
+                        <MiddleName>xsd:string LTE 40</MiddleName> <!-- [0..1] -->
+                        <FirstName>xsd:string LTE 64</FirstName>
+                    </PersonName> <!-- [0..1] -->
+                </Email> <!-- [0..*]] -->
+            </Destinations>
+        </Shipping>
+        <Payment>
+            <BillingAddress ref="xsd:IDREF [0..1]"/>
+            <Payments>
+                <CreditCard isMockPayment="xsd:bool [0..1]">
+                    <PaymentContext>
+                        <PaymentSessionId>xsd:string</PaymentSessionId>
+                        <TenderType>xsd:string</TenderType>
+                        <PaymentAccountUniqueId isToken="xsd:bool">xsd:string GTE 1 LTE 22</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <PaymentRequestId>xsd:string GTE 1</PaymentRequestId><!-- [0..1] -->
+                    <CreateTimeStamp>xsd:dateTime</CreateTimeStamp>
+                    <Amount>AmountBaseType</Amount><!-- [0..1] -->
+                    <Authorization>
+                        <ResponseCode>xsd:string</ResponseCode>
+                        <BankAuthorizationCode>xsd:string</BankAuthorizationCode>
+                        <CVV2ResponseCode>xsd:string</CVV2ResponseCode>
+                        <AVSResponseCode>xsd:string</AVSResponseCode>
+                        <PhoneResponseCode>xsd:string</PhoneResponseCode> <!-- [0..1] -->
+                        <NameResponseCode>xsd:string</NameResponseCode> <!-- [0..1] -->
+                        <EmailResponseCode>xsd:string</EmailResponseCode> <!-- [0..1] -->
+                        <ExtendedAuthorizationResponseCodes>
+                            <ResponseCodeDescription>xsd:string</ResponseCodeDescription>
+                            <ReasonCode>xsd:string</ReasonCode>
+                        </ExtendedAuthorizationResponseCodes> <!-- [0..1] -->
+                        <AmountAuthorized>AmountBaseType</AmountAuthorized> <!-- [0..1] -->
+                    </Authorization>
+                    <ExpirationDate>YYYY-MMDateType</ExpirationDate>
+                    <StartDate>YYYY-MMDateType</StartDate><!-- [0..1] -->
+                    <IssueNumber>xsd:string</IssueNumber><!-- [0..1] -->
+                    <SecureVerificationData>
+                        <AuthenticationAvailable>xsd:string</AuthenticationAvailable> <!-- [0..1] -->
+                        <AuthenticationStatus>{Y|A|U|N}</AuthenticationStatus> <!-- [0..1] -->
+                        <CavvUcaf>xsd:string LTE 64</CavvUcaf> <!-- [0..1] -->
+                        <TransactionId>xsd:string LTE 64</TransactionId> <!-- [0..1] -->
+                        <ECI>xsd:string</ECI> <!-- [0..1] -->
+                        <PayerAuthenticationResponse>xsd:string LTE 10000</PayerAuthenticationResponse>
+                    </SecureVerificationData><!-- [0..1] -->
+                    <PurchasePlanCode>xsd:string</PurchasePlanCode><!-- [0..1] -->
+                    <PurchasePlanDescription>xsd:string</PurchasePlanDescription><!-- [0..1] -->
+                    <CustomAttributes>
+                        <Attribute><Key>xsd:string</Key><Value>xsd:string</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </CreditCard>
+                <PrepaidCreditCard>
+                    <Amount>AmountBaseType</Amount>
+                    <Brand>xsd:string</Brand><!-- [0..1] -->
+                    <CustomAttributes>
+                        <Attribute><Key>xsd:string</Key><Value>xsd:string</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </PrepaidCreditCard>
+                <Points>
+                    <Amount>AmountBaseType</Amount>
+                    <CustomAttributes>
+                        <Attribute><Key>xsd:string</Key><Value>xsd:string</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </Points>
+                <StoredValueCard isMockPayment="xsd:bool [0..1]">
+                    <PaymentContext>
+                        <PaymentSessionId>xsd:string</PaymentSessionId>
+                        <TenderType>xsd:string</TenderType>
+                        <PaymentAccountUniqueId isToken="xsd:bool">xsd:string GTE 1 LTE 22</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <PaymentRequestId>xsd:string GTE 1</PaymentRequestId><!-- [0..1] -->
+                    <CreateTimeStamp>xsd:dateTime</CreateTimeStamp>
+                    <Pin>xsd:string GTE 1 LTE 22</Pin><!-- [0..1] -->
+                    <Amount>AmountBaseType</Amount>
+                    <CustomAttributes>
+                        <Attribute><Key>xsd:string</Key><Value>xsd:string</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </StoredValueCard>
+                <PayPal>
+                    <Amount>AmountBaseType</Amount><!-- [0..1] -->
+                    <AmountAuthorized>AmountBaseType</AmountAuthorized><!-- [0..1] -->
+                    <PaymentContext>
+                        <PaymentSessionId>xsd:string</PaymentSessionId>
+                        <TenderType>xsd:string</TenderType>
+                        <PaymentAccountUniqueId isToken="xsd:bool">xsd:string GTE 1 LTE 22</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <CreateTimeStamp>xsd:dateTime</CreateTimeStamp>
+                    <PaymentRequestId>xsd:string GTE 1</PaymentRequestId> <!-- [0..1] -->
+                    <Authorization>
+                        <ResponseCode>xsd:string</ResponseCode>
+                    </Authorization>
+                    <CustomAttributes>
+                        <Attribute><Key>xsd:string</Key><Value>xsd:string</Value></Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </PayPal>
+                <PrepaidCashOnDelivery>
+                    <Amount>AmountBaseType</Amount>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>xsd:string</Key>
+                            <Value>xsd:string</Value>
+                        </Attribute><!-- [1..*] -->
+                    </CustomAttributes><!-- [0..1] -->
+                </PrepaidCashOnDelivery>
+                <ReservationPayment>{NO_PAYMENT}</ReservationPayment>
+            </Payments><!-- [0..1] -->
+        </Payment>
+        <ShopRunnerMessage>xsd:normalizedString</ShopRunnerMessage><!-- [0..1] -->
+        <Currency>ISOCurrencyCodeType</Currency>
+        <Associate>
+            <Name>xsd:string</Name>
+            <Number>xsd:string</Number>
+            <Store>xsd:string</Store>
+        </Associate><!-- [0..1] -->
+        <TaxHeader>
+            <Error>xsd:bool</Error>
+        </TaxHeader><!-- [0..1] -->
+        <PrintedCatalogCode>xsd:string</PrintedCatalogCode><!-- [0..1] -->
+        <Locale>LocaleCode</Locale>
+        <Relationships>
+            <Relationship parent="xsd:IDREF [0..1]">
+                <Members>
+                    <Item ref="xsd:IDREF"/><!-- [1..*] -->
+                </Members>
+                <Type>xsd:string</Type>
+                <Name>xsd:string</Name><!-- [0..1] -->
+            </Relationship><!-- [1..*] -->
+        </Relationships><!-- [0..1] -->
+        <DashboardRepId>xsd:string</DashboardRepId><!-- [0..1] -->
+        <OrderSource type="xsd:string ">xsd:string</OrderSource><!-- [0..1] -->
+        <Holds>
+            <Hold>
+                <HoldType>xsd:string</HoldType>
+                <LastHoldTypeDate>xsd:dateTime</LastHoldTypeDate>
+                <ReasonText>xsd:string</ReasonText>
+                <ResolverUserId>xsd:string</ResolverUserId><!-- [0..1] -->
+                <StatusDescription>xsd:string</StatusDescription>
+            </Hold><!-- [1..*] -->
+        </Holds><!-- [0..1] -->
+        <CustomAttributes>
+            <Attribute>
+                <Key>xsd:string</Key>
+                <Value>xsd:string</Value>
+            </Attribute><!-- [1..*] -->
+        </CustomAttributes><!-- [0..1] -->
+        <Templates>
+            <Template id="xsd:ID">
+                <Key>xsd:string</Key>
+                <Value>xsd:normalizedString</Value>
+            </Template><!-- [1..*] -->
+        </Templates><!-- [0..1] -->
+        <OrderHistoryUrl>xsd:string</OrderHistoryUrl><!-- [0..1] -->
+        <VATInclusivePricing>xsd:bool</VATInclusivePricing><!-- [0..1] -->
+        <OrderTotal>AmountBaseType</OrderTotal><!-- [0..1] -->
+    </Order>
+    <Context>
+        <BrowserData>
+            <HostName>xsd:string LTE 50</HostName>
+            <IPAddress>xsd:string</IPAddress>
+            <SessionId>xsd:string LTE 255</SessionId>
+            <UserAgent>xsd:string LTE 4096</UserAgent>
+            <Connection>xsd:string LTE 25</Connection><!-- [0..1] -->
+            <Cookies>xsd:normalizedString</Cookies><!-- [0..1] -->
+            <UserCookie>xsd:string LTE 50</UserCookie><!-- [0..1] -->
+            <UserAgentOS>xsd:string LTE 100</UserAgentOS><!-- [0..1] -->
+            <UserAgentCPU>xsd:string LTE 100</UserAgentCPU><!-- [0..1] -->
+            <HeaderFrom>xsd:string LTE 100</HeaderFrom><!-- [0..1] -->
+            <EmbeddedWebBrowserFrom>xsd:string LTE 100</EmbeddedWebBrowserFrom><!-- [0..1] -->
+            <JavascriptData>xsd:normalizedString</JavascriptData>
+            <Referrer>xsd:string LTE 1024</Referrer>
+            <HTTPAcceptData>
+                <ContentTypes>xsd:string LTE 1024</ContentTypes>
+                <Encoding>xsd:string LTE 50</Encoding>
+                <Language>xsd:string LTE 255</Language>
+                <CharSet>xsd:string LTE 50</CharSet>
+            </HTTPAcceptData>
+        </BrowserData><!-- [0..1] -->
+        <TdlOrderTimestamp>xsd:dateTime</TdlOrderTimestamp><!-- [0..1] -->
+        <SessionInfo>
+            <TimeSpentOnSite>xsd:string PATTERN=([0-9]?[0-9]:[0-9][0-9]:[0-9][0-9])</TimeSpentOnSite><!-- [0..1] -->
+            <LastLogin>xsd:dateTime</LastLogin><!-- [0..1] -->
+            <UserPassword>xsd:string LTE 50</UserPassword><!-- [0..1] -->
+            <TimeOnFile>xsd:int</TimeOnFile><!-- [0..1] -->
+            <RTCTransactionResponseCode>xsd:string</RTCTransactionResponseCode><!-- [0..1] -->
+            <RTCReasonCodes>xsd:string</RTCReasonCodes><!-- [0..1] -->
+            <AuthorizationAttempts>xsd:int</AuthorizationAttempts><!-- [0..1] -->
+        </SessionInfo><!-- [0..1] -->
+        <PayPalPayerInfo>
+            <PayPalPayerID>xsd:string LTE 50</PayPalPayerID><!-- [0..1] -->
+            <PayPalPayerStatus>xsd:string LTE 50</PayPalPayerStatus><!-- [0..1] -->
+            <PayPalAddressStatus>xsd:string LTE 50</PayPalAddressStatus><!-- [0..1] -->
+        </PayPalPayerInfo><!-- [0..1] -->
+        <CustomAttributes>
+            <Attribute>
+                <Key>xsd:string</Key>
+                <Value>xsd:string</Value>
+            </Attribute><!-- [1..*] -->
+        </CustomAttributes><!-- [0..1] -->
+    </Context>
+</OrderCreateRequest>

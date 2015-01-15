@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderItem id="ITEM_0_ID" isHiddenGift="false" subscriptionId="SUBSCRIPTION_ID" taxAndDutyDisplay="Consolidated Taxes Only" webLineId="1" xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <ItemId>ID-ITEM_ID</ItemId>
+    <Quantity>1</Quantity>
+    <Description>
+        <Description>Item 1 Description</Description>
+        <Color id="id-blue">Blue</Color>
+        <Size id="id-small">Small</Size>
+        <ScreenSize>680x400</ScreenSize>
+    </Description>
+    <Department>DEPARTMENTY</Department>
+    <Pricing>
+        <Merchandise>
+            <Amount remainder="0.01">99.99</Amount>
+            <PromotionalDiscounts>
+                <Discount>
+                    <Id>DISCOUNT_0_ID</Id>
+                    <Code>DISCOUNT_0_CODE</Code>
+                    <Amount>5.00</Amount>
+                    <Description>Five dollars off</Description>
+                    <EffectType>Flat Rate</EffectType>
+                    <TaxData>
+                        <TaxClass>PROMO_TAX_CLASS</TaxClass>
+                        <Taxes>
+                            <Tax taxType="PROMO_TAX" taxability="TAXABLE">
+                                <Situs>Duty_DESTINATION</Situs>
+                                <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                                <Imposition impositionType="imp">duty tax imposition</Imposition>
+                                <EffectiveRate>0.02</EffectiveRate>
+                                <TaxableAmount>9.99</TaxableAmount>
+                                <CalculatedTax>2.99</CalculatedTax>
+                                <SellerRegistrationId>PROMO_TAX_SELLER_REGISTRATION_ID</SellerRegistrationId>
+                            </Tax>
+                        </Taxes>
+                    </TaxData>
+                </Discount>
+            </PromotionalDiscounts>
+            <TaxData>
+                <TaxClass>890000</TaxClass>
+                <Taxes>
+                    <Tax taxType="SALES" taxability="TAXABLE">
+                        <Situs>DESTINATION</Situs>
+                        <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                        <Imposition impositionType="imp">imposition</Imposition>
+                        <EffectiveRate>0.06</EffectiveRate>
+                        <TaxableAmount>99.99</TaxableAmount>
+                        <CalculatedTax>5.99</CalculatedTax>
+                        <SellerRegistrationId>suresh123</SellerRegistrationId>
+                    </Tax>
+                    <Tax taxType="VAT" taxability="NONTAXABLE">
+                        <Situs>DESTINATION</Situs>
+                        <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                        <Imposition impositionType="imp">imposition</Imposition>
+                        <EffectiveRate>0.06</EffectiveRate>
+                        <TaxableAmount>30.00</TaxableAmount>
+                        <CalculatedTax>1.80</CalculatedTax>
+                    </Tax>
+                </Taxes>
+            </TaxData>
+            <UnitPrice>99.99</UnitPrice>
+        </Merchandise>
+        <Shipping>
+            <Amount remainder="0.01">9.99</Amount>
+            <PromotionalDiscounts>
+                <Discount>
+                    <Id>SHIPPING_PROMO_ID</Id>
+                    <Code>SHIP_PROMO_CODE</Code>
+                    <Amount>5.01</Amount>
+                    <Description>9.99 Shipping</Description>
+                    <EffectType>Value</EffectType>
+                    <TaxData>
+                        <TaxClass>SHIP_PROMO_TAX_CLASS</TaxClass>
+                        <Taxes>
+                            <Tax taxType="SHIP_PROMO_TYPE" taxability="DPPAPPLIED">
+                                <Situs>DESTINATION</Situs>
+                                <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                                <Imposition impositionType="imp">SHIP_PROMO_IMP</Imposition>
+                                <EffectiveRate>0.02</EffectiveRate>
+                                <TaxableAmount>4.01</TaxableAmount>
+                                <CalculatedTax>0.08</CalculatedTax>
+                                <SellerRegistrationId>SELLER_PROMO_TAX_REG_ID</SellerRegistrationId>
+                            </Tax>
+                        </Taxes>
+                    </TaxData>
+                </Discount>
+            </PromotionalDiscounts>
+            <TaxData>
+                <TaxClass>SHIPPING_TAX_CLASS</TaxClass>
+                <Taxes>
+                    <Tax taxType="SALES" taxability="EXEMPT">
+                        <Situs>SHIP_DESTINATION</Situs>
+                        <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                        <Imposition impositionType="imp">SHIP TAX</Imposition>
+                        <EffectiveRate>0.06</EffectiveRate>
+                        <TaxableAmount>9.99</TaxableAmount>
+                        <CalculatedTax>0.60</CalculatedTax>
+                        <SellerRegistrationId>SHIP_TAX_REG_ID</SellerRegistrationId>
+                    </Tax>
+                </Taxes>
+            </TaxData>
+            <UnitPrice>9.99</UnitPrice>
+        </Shipping>
+        <Duty>
+            <Amount remainder="0.02">1.99</Amount>
+            <PromotionalDiscounts>
+                <Discount>
+                    <Id>DUTY_DISCOUNT_ID</Id>
+                    <Code>WE_PAY_DUTY</Code>
+                    <Amount>1.99</Amount>
+                    <Description>Duty discount description</Description>
+                    <EffectType>Value</EffectType>
+                    <TaxData>
+                        <TaxClass>Duty_Discount_Tax_Class</TaxClass>
+                        <Taxes>
+                            <Tax taxType="SALES" taxability="DEFERRED">
+                                <Situs>Duty_DESTINATION</Situs>
+                                <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                                <Imposition impositionType="imp">DUTY_DISCOUNT_IMP</Imposition>
+                                <EffectiveRate>0.10</EffectiveRate>
+                                <TaxableAmount>1.00</TaxableAmount>
+                                <CalculatedTax>0.10</CalculatedTax>
+                                <SellerRegistrationId>DUTY_DIS_SELLER_REG</SellerRegistrationId>
+                            </Tax>
+                        </Taxes>
+                    </TaxData>
+                </Discount>
+            </PromotionalDiscounts>
+            <TaxData>
+                <TaxClass>890000</TaxClass>
+                <Taxes>
+                    <Tax taxType="SALES" taxability="EXEMPT">
+                        <Situs>Duty_DESTINATION</Situs>
+                        <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                        <Imposition impositionType="imp">duty tax imposition</Imposition>
+                        <EffectiveRate>0.02</EffectiveRate>
+                        <TaxableAmount>9.99</TaxableAmount>
+                        <CalculatedTax>2.99</CalculatedTax>
+                        <SellerRegistrationId>DUTY_TAX_SELLER_REG</SellerRegistrationId>
+                    </Tax>
+                </Taxes>
+            </TaxData>
+            <UnitPrice>1.98</UnitPrice>
+        </Duty>
+        <Fees>
+            <Fee>
+                <FeeType>Packing Fee</FeeType>
+                <Description>Packing fee</Description>
+                <Amount>1.95</Amount>
+                <ItemId>FEE_ITEM_ID</ItemId>
+                <TaxData>
+                    <TaxClass>FEE_TAX_CLASS</TaxClass>
+                    <Taxes>
+                        <Tax taxType="CONSUMERS_USE" taxability="NONTAXABLE">
+                            <Situs>Fee_Duty_DESTINATION</Situs>
+                            <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                            <Imposition impositionType="imp">fee tax imposition</Imposition>
+                            <EffectiveRate>0.02</EffectiveRate>
+                            <TaxableAmount>1.95</TaxableAmount>
+                            <ExemptAmount>1.00</ExemptAmount>
+                            <NonTaxableAmount>0.50</NonTaxableAmount>
+                            <CalculatedTax>0.01</CalculatedTax>
+                            <SellerRegistrationId>FEE_TAX_SELLER_REG_ID</SellerRegistrationId>
+                            <InvoiceTextCodes>
+                                <InvoiceTextCode>FEE_TAX_INVOICE_CODE</InvoiceTextCode>
+                            </InvoiceTextCodes>
+                        </Tax>
+                    </Taxes>
+                </TaxData>
+            </Fee>
+        </Fees>
+    </Pricing>
+    <ShippingProgram authToken="SHOPRUNNER_AUTH_TOKEN">SHOPRUNNER_PROGRAM</ShippingProgram>
+    <ShippingMethod displayText="Standard">FLAT_RATE</ShippingMethod>
+    <StoreFrontDetails>
+        <StoreCode>STORE_CODE</StoreCode>
+        <StoreName>Store Name</StoreName>
+        <StoreEmail>store@example.com</StoreEmail>
+        <Address>
+            <Line1>123 Main St</Line1>
+            <Line2>Bldg. 4</Line2>
+            <Line3>STE 2</Line3>
+            <Line4>RM 15</Line4>
+            <City>King of Prussia</City>
+            <MainDivision>PA</MainDivision>
+            <CountryCode>US</CountryCode>
+            <PostalCode>19460</PostalCode>
+        </Address>
+        <StoreDirections>Directions to store</StoreDirections>
+        <StoreHours>8 A.M. - 9 P.M.</StoreHours>
+        <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>
+    </StoreFrontDetails>
+    <FulfillmentChannel>SHIP_TO_HOME</FulfillmentChannel>
+    <ProxyPickupDetails>
+        <PersonName>Proxy Person Name</PersonName>
+        <FirstName>First</FirstName>
+        <LastName>Last</LastName>
+        <Email>proxy_pickup@example.com</Email>
+        <Phone>555-555-1234</Phone>
+        <Address>
+            <Line1>935 1st Ave</Line1>
+            <City>King of Prussia</City>
+            <MainDivision>PA</MainDivision>
+            <CountryCode>US</CountryCode>
+            <PostalCode>19460</PostalCode>
+        </Address>
+        <Relationship>Sibling</Relationship>
+    </ProxyPickupDetails>
+    <EstimatedDeliveryDate>
+        <DeliveryWindow>
+            <From>2015-01-20T00:00:00-05:00</From>
+            <To>2015-01-22T00:00:00-05:00</To>
+        </DeliveryWindow>
+        <ShippingWindow>
+            <From>2015-01-16T00:00:00-05:00</From>
+            <To>2015-01-17T00:00:00-05:00</To>
+        </ShippingWindow>
+        <Mode>ENABLED</Mode>
+        <MessageType>DeliveryDate</MessageType>
+        <Template>Expected Delivery Date: {{DeliveryWindow/From}} - {{DeliveryWindow/To}}</Template>
+    </EstimatedDeliveryDate>
+    <NamedDeliveryDate>
+        <DeliveryDate>2015-01-21</DeliveryDate>
+        <TimeWindowStart>08:00:00-05:00</TimeWindowStart>
+        <TimeWindowEnd>12:00:00-05:00</TimeWindowEnd>
+        <Message>Named Delivery Date Message</Message>
+    </NamedDeliveryDate>
+    <DeliveryInstructions>Instructions for delivery</DeliveryInstructions>
+    <VendorId>VENDOR_ID</VendorId>
+    <VendorName>VENDOR NAME</VendorName>
+    <Gifting>
+        <Gift>
+            <ItemId>GIFT_ITEM_ID</ItemId>
+            <Pricing>
+                <Amount remainder="0.03">4.57</Amount>
+                <PromotionalDiscounts>
+                    <Discount appliedCount="1">
+                        <Id>GIFT_PROMO_ID</Id>
+                        <Code>GIFT_PROMO_CODE</Code>
+                        <Amount>3.03</Amount>
+                        <Description>Promo for gift</Description>
+                        <EffectType>ITEM</EffectType>
+                        <TaxData>
+                            <TaxClass>GIFT_PROMO_TAX_CLASS</TaxClass>
+                            <Taxes>
+                                <Tax taxType="PROMO_TYPE" taxability="DPPAPPLIED">
+                                    <Situs>Tax_DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                                    <Imposition impositionType="imp">gift promo imposition</Imposition>
+                                    <EffectiveRate>0.05</EffectiveRate>
+                                    <TaxableAmount>1.00</TaxableAmount>
+                                    <CalculatedTax>0.05</CalculatedTax>
+                                    <SellerRegistrationId>GIFT_PROMO_TAX_SELLER_REG</SellerRegistrationId>
+                                </Tax>
+                            </Taxes>
+                        </TaxData>
+                    </Discount>
+                </PromotionalDiscounts>
+                <TaxData>
+                    <TaxClass>GIFT_TAX_CLASS</TaxClass>
+                    <Taxes>
+                        <Tax taxType="GIFT_TAX" taxability="TAXABLE">
+                            <Situs>Tax_DESTINATION</Situs>
+                            <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                            <Imposition impositionType="imp">gift tax imposition</Imposition>
+                            <EffectiveRate>0.06</EffectiveRate>
+                            <TaxableAmount>3.03</TaxableAmount>
+                            <CalculatedTax>0.18</CalculatedTax>
+                            <SellerRegistrationId>GIFT_TAX_SELLER_REG</SellerRegistrationId>
+                        </Tax>
+                    </Taxes>
+                </TaxData>
+                <UnitPrice>3.03</UnitPrice>
+            </Pricing>
+            <Message>
+                <To localizedDisplayText="To">You</To>
+                <From localizedDisplayText="From">Me</From>
+                <Message>Hello</Message>
+            </Message>
+        </Gift>
+        <GiftCard>
+            <Message>
+                <To localizedDisplayText="To">There</To>
+                <From localizedDisplayText="From">Here</From>
+                <Message>World</Message>
+            </Message>
+        </GiftCard>
+        <Packslip>
+            <Message>
+                <To localizedDisplayText="To">Here</To>
+                <From localizedDisplayText="From">There</From>
+                <Message>!</Message>
+            </Message>
+        </Packslip>
+    </Gifting>
+    <ShopRunnerMessage>ShopRunner Message</ShopRunnerMessage>
+    <Customization>
+        <Customizations>
+            <Customization>
+                <CustomizationId>111</CustomizationId>
+                <Instructions>
+                    <Instructions>
+                        <Key>INSTRUCT_KEY</Key>
+                        <Value>Instruction Value</Value>
+                        <DisplayTitle>Instruction display title</DisplayTitle>
+                        <DisplayValue>instruction display value</DisplayValue>
+                    </Instructions>
+                </Instructions>
+                <ExtendedPrice>
+                    <Amount remainder="0.01">12.00</Amount>
+                    <PromotionalDiscounts>
+                        <Discount appliedCount="1">
+                            <Id>CUST_PROMO_ID</Id>
+                            <Code>CUST_PROMO_CODE</Code>
+                            <Amount>1.00</Amount>
+                            <Description>Customization discount</Description>
+                            <EffectType>VALUE</EffectType>
+                            <TaxData>
+                                <TaxClass>CUST_DIS_TAX</TaxClass>
+                                <Taxes>
+                                    <Tax taxType="TAX_CUSTOM_TAX" taxability="EXEMPT">
+                                        <Situs>Tax_DESTINATION</Situs>
+                                        <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                                        <Imposition impositionType="imp">custom tax imposition</Imposition>
+                                        <EffectiveRate>0.01</EffectiveRate>
+                                        <TaxableAmount>1.00</TaxableAmount>
+                                        <CalculatedTax>0.01</CalculatedTax>
+                                        <SellerRegistrationId>CUST_TAX_REG</SellerRegistrationId>
+                                    </Tax>
+                                </Taxes>
+                            </TaxData>
+                        </Discount>
+                    </PromotionalDiscounts>
+                    <TaxData>
+                        <TaxClass>CUSTOM_TAX_CLASS</TaxClass>
+                        <Taxes>
+                            <Tax taxType="Tax_CUSTOMIZATION" taxability="TAXABLE">
+                                <Situs>Tax_DESTINATION</Situs>
+                                <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                                <Imposition impositionType="imp">tax customization imposition</Imposition>
+                                <EffectiveRate>0.06</EffectiveRate>
+                                <TaxableAmount>10.00</TaxableAmount>
+                                <CalculatedTax>0.60</CalculatedTax>
+                                <SellerRegistrationId>CUSTOMIZE_TAX_SELLER_REG</SellerRegistrationId>
+                            </Tax>
+                        </Taxes>
+                    </TaxData>
+                    <UnitPrice>12.00</UnitPrice>
+                </ExtendedPrice>
+                <ItemId>CUSTOMIZE_ITEM_ID</ItemId>
+                <Item ref="ITEM_0_ID"/>
+            </Customization>
+        </Customizations>
+        <BasePrice>
+            <Amount remainder="0.01">25.00</Amount>
+            <PromotionalDiscounts>
+                <Discount appliedCount="2">
+                    <Id>BASE_PRICE_PROMO</Id>
+                    <Code>PROMO_CODE</Code>
+                    <Amount>2.00</Amount>
+                    <Description>Discount Description</Description>
+                    <EffectType>VALUE</EffectType>
+                    <TaxData>
+                        <TaxClass>PRICE_DISCOUNT_TAX</TaxClass>
+                        <Taxes>
+                            <Tax taxType="TAX_DISCOUNT" taxability="NONTAXABLE">
+                                <Situs>Tax_DESTINATION</Situs>
+                                <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                                <Imposition impositionType="imp">tax imposition</Imposition>
+                                <EffectiveRate>0.06</EffectiveRate>
+                                <TaxableAmount>4.00</TaxableAmount>
+                                <CalculatedTax>0.24</CalculatedTax>
+                                <SellerRegistrationId>TAX_SELLER_REGISTRATION_ID</SellerRegistrationId>
+                            </Tax>
+                        </Taxes>
+                    </TaxData>
+                </Discount>
+            </PromotionalDiscounts>
+            <TaxData>
+                <TaxClass>TAX_CLASS</TaxClass>
+                <Taxes>
+                    <Tax taxType="ITEM_TAX" taxability="TAXABLE">
+                        <Situs>TAX_ITEMS</Situs>
+                        <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
+                        <Imposition impositionType="imp">tax imposition</Imposition>
+                        <EffectiveRate>0.06</EffectiveRate>
+                        <TaxableAmount>25.00</TaxableAmount>
+                        <CalculatedTax>1.50</CalculatedTax>
+                        <SellerRegistrationId>SELLER_REGISTRATION_ID</SellerRegistrationId>
+                    </Tax>
+                </Taxes>
+            </TaxData>
+            <UnitPrice>25.00</UnitPrice>
+        </BasePrice>
+        <DisplayUrl>http://example.com/customdisplayurl</DisplayUrl>
+    </Customization>
+    <SerialNumber>SERIAL_NUMBER</SerialNumber>
+    <CustomAttributes>
+        <Attribute>
+            <Key>AttrKey</Key>
+            <Value>Attr Key Value</Value>
+        </Attribute>
+    </CustomAttributes>
+    <GiftRegistryCancelUrl>http://example.com/giftreg/cancel</GiftRegistryCancelUrl>
+    <ReservationId>RESERVATION_ID</ReservationId>
+</OrderItem>

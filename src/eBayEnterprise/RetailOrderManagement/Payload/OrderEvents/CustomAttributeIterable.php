@@ -15,59 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
-use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
-use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
-use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
-use SPLObjectStorage;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttributeIterable as OrderCustomAttributeIterable;
 
-class CustomAttributeIterable extends SPLObjectStorage implements ICustomAttributeIterable
+class CustomAttributeIterable extends OrderCustomAttributeIterable implements ICustomAttributeIterable
 {
-    use TIterablePayload;
-
-    /**
-     * @param IValidatorIterator
-     * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
-     * @param IPayloadMap
-     * @param IPayload
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function __construct(
-        IValidatorIterator $validators,
-        ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap,
-        IPayload $parentPayload = null
-    ) {
-        $this->validators = $validators;
-        $this->payloadMap = $payloadMap;
-        $this->parentPayload = $parentPayload;
-        $this->payloadFactory = new PayloadFactory();
-    }
-
-    public function getEmptyCustomAttribute()
-    {
-        return $this->buildPayloadForInterface(static::CUSTOM_ATTRIBUTE_INTERFACE);
-    }
-
-    protected function getNewSubpayload()
-    {
-        return $this->getEmptyCustomAttribute();
-    }
-
-    protected function getSubpayloadXPath()
-    {
-        return static::SUBPAYLOAD_XPATH;
-    }
-
-    protected function getRootNodeName()
-    {
-        return static::ROOT_NODE;
-    }
-
-    protected function getXmlNamespace()
-    {
-        return self::XML_NS;
-    }
 }

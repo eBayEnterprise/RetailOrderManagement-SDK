@@ -15,27 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\Order\TCustomAttributeContainer as TOrderCustomAttributeContainer;
+
 trait TCustomAttributeContainer
 {
-    /** @var ICustomAttributeIterable */
-    protected $customAttributes;
-
-    /**
-     * Get all custom attributes within the container.
-     * @return ICustomAttributeIterable
-     */
-    public function getCustomAttributes()
-    {
-        return $this->customAttributes;
-    }
-
-    /**
-     * @param ICustomAttributeIterable
-     * @return self
-     */
-    public function setCustomAttributes(ICustomAttributeIterable $customAttributes)
-    {
-        $this->customAttributes = $customAttributes;
-        return $this;
-    }
+    use TOrderCustomAttributeContainer;
 }

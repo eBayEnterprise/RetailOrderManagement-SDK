@@ -15,19 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface ILoyaltyProgramContainer
+use eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramContainer as IOrderLoyaltyProgramContainer;
+
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramContainer instead.
+ */
+interface ILoyaltyProgramContainer extends IOrderLoyaltyProgramContainer
 {
-    const LOYALTY_PROGRAM_ITERABLE_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgramIterable';
-    /**
-     * Any loyalty programs within the container
-     *
-     * @return ILoyaltyProgramIterable
-     */
-    public function getLoyaltyPrograms();
-    /**
-     * @param ILoyaltyProgramIterable
-     * @return self
-     */
-    public function setLoyaltyPrograms(ILoyaltyProgramIterable $loyaltyPrograms);
 }

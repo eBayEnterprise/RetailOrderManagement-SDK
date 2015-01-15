@@ -26,7 +26,7 @@ class IterablePayload implements IValidator
         // Payload must also be an Iterator to be valid - impossible to be
         // a valid iterable payload if the payload is not iterable.
         if (!$payload instanceof \Iterator) {
-            throw new Exception\InvalidPayload('Payload is not iterable.');
+            throw new Exception\InvalidPayload(sprintf('%s Payload is not iterable.', get_class($payload)));
         }
         foreach ($payload as $innerPayload) {
             $innerPayload->validate();

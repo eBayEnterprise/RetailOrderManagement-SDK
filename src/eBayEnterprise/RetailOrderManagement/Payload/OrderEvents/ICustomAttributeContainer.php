@@ -15,18 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface ICustomAttributeContainer
+use eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeContainer as IOrderCustomAttributeContainer;
+
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Order\ICustomAttributeContainer instead.
+ */
+interface ICustomAttributeContainer extends IOrderCustomAttributeContainer
 {
-    const CUSTOM_ATTRIBUTE_ITERABLE_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ICustomAttributeIterable';
-    /**
-     * Get all custom attributes within the container.
-     * @return ICustomAttributeIterable
-     */
-    public function getCustomAttributes();
-    /**
-     * @param ICustomAttributeIterable
-     * @return self
-     */
-    public function setCustomAttributes(ICustomAttributeIterable $customAttributes);
 }

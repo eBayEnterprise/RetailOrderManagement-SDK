@@ -22,7 +22,9 @@ trait TIterablePayload
 {
     use TPayload;
 
+    /** @var bool */
     protected $includeIfEmpty = false;
+    /** @var bool */
     protected $buildRootNode = true;
 
     public function serialize()
@@ -45,14 +47,6 @@ trait TIterablePayload
         return $this;
     }
 
-    public function validate()
-    {
-        foreach ($this->validators as $validator) {
-            $validator->validate($this);
-        }
-        return $this;
-    }
-
     protected function serializeContents()
     {
         $serializedSubpayloads = '';
@@ -69,29 +63,4 @@ trait TIterablePayload
      * @return string
      */
     abstract protected function getSubpayloadXPath();
-
-    /**
-     * Load the payload XML into a DOMXPath for querying.
-     * @param string $xmlString
-     * @return \DOMXPath
-     */
-    protected function getPayloadAsXPath($xmlString)
-    {
-        $xpath = new DOMXPath($this->getPayloadAsDoc($xmlString));
-        $xpath->registerNamespace('x', $this->getXmlNamespace());
-        return $xpath;
-    }
-
-    /**
-     * Load the payload XML into a DOMDocument
-     *
-     * @param  string
-     * @return DOMDocument
-     */
-    protected function getPayloadAsDoc($xmlString)
-    {
-        $d = new DOMDocument();
-        $d->loadXML($xmlString);
-        return $d;
-    }
 }

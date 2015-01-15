@@ -15,72 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IPhysicalAddress as ICheckoutPhysicalAddress;
 
-interface IPhysicalAddress
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Checkout\IPhysicalAddress instead.
+ */
+interface IPhysicalAddress extends ICheckoutPhysicalAddress
 {
-    /**
-     * The street address and/or suite and building
-     *
-     * Newline-delimited string, at most four lines
-     * xsd restriction: 1-70 characters per line
-     * @return string
-     */
-    public function getLines();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setLines($lines);
-    /**
-     * Name of the city
-     *
-     * xsd restriction: 1-35 characters
-     * @return string
-     */
-    public function getCity();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setCity($city);
-    /**
-     * Typically a two- or three-digit postal abbreviation for the state or province.
-     * ISO 3166-2 code is recommended, but not required
-     *
-     * xsd restriction: 1-35 characters
-     * @return string
-     */
-    public function getMainDivision();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setMainDivision($div);
-    /**
-     * Two character country code.
-     *
-     * xsd restriction: 2-40 characters
-     * @return string
-     */
-    public function getCountryCode();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setCountryCode($code);
-    /**
-     * Typically, the string of letters and/or numbers that more closely
-     * specifies the delivery area than just the City component alone,
-     * for example, the Zip Code in the U.S.
-     *
-     * xsd restriction: 1-15 characters
-     * @return string
-     */
-    public function getPostalCode();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setPostalCode($code);
 }

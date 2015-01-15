@@ -15,46 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface IPersonName
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IPersonName as ICheckoutPersonName;
+
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Checkout\IPersonName instead.
+ */
+interface IPersonName extends ICheckoutPersonName
 {
-    /**
-     * xsd restrictions: max length 64 characters
-     * @return string
-     */
-    public function getFirstName();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setFirstName($firstName);
-    /**
-     * xsd restrictions: max length 64 characters
-     * @return string
-     */
-    public function getLastName();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setLastName($lastName);
-    /**
-     * xsd restrictions: max length 40 characters
-     * @return string
-     */
-    public function getMiddleName();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setMiddleName($middleName);
-    /**
-     * xsd restrictions: max length 10 characters
-     * @return string
-     */
-    public function getHonorificName();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setHonorificName($honorificName);
 }

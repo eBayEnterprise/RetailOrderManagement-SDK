@@ -15,7 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface IOrderItemDescription extends IProductDescription
+use eBayEnterprise\RetailOrderManagement\Payload\Order\IOrderItemDescription as IBaseOrderItemDescription;
+
+interface IOrderItemDescription extends IBaseOrderItemDescription, IProductDescription
 {
     /**
      * Item title
@@ -28,48 +30,4 @@ interface IOrderItemDescription extends IProductDescription
      * @return self
      */
     public function setTitle($title);
-    /**
-     * Color of the item
-     *
-     * @return string
-     */
-    public function getColor();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setColor($color);
-    /**
-     * Unique code for the color
-     *
-     * @return string
-     */
-    public function getColorId();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setColorId($colorId);
-    /**
-     * Size of the item
-     *
-     * @return string
-     */
-    public function getSize();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setSize($size);
-    /**
-     * Unique code for the size
-     *
-     * @return string
-     */
-    public function getSizeId();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setSizeId($sizeId);
 }

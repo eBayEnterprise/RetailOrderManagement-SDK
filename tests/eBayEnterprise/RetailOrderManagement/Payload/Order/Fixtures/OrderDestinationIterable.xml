@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Destinations xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <MailingAddress id="MAILING_AD_0_ID">
+        <PersonName>
+            <Honorific>Mrs.</Honorific>
+            <LastName>Last</LastName>
+            <MiddleName>Middle</MiddleName>
+            <FirstName>First</FirstName>
+        </PersonName>
+        <Address>
+            <Line1>123 Main St</Line1>
+            <Line2>Extra 1</Line2>
+            <Line3>Extra 2</Line3>
+            <Line4>Extra 3</Line4>
+            <City>City</City>
+            <MainDivision>MD</MainDivision>
+            <CountryCode>US</CountryCode>
+            <PostalCode>21133</PostalCode>
+        </Address>
+        <Phone>555-555-9876</Phone>
+    </MailingAddress>
+    <StoreLocation id="STORE_LOC_0_ID">
+        <StoreCode>LOC 0 CODE</StoreCode>
+        <StoreName>Location Zero</StoreName>
+        <StoreEmail>store@example.com</StoreEmail>
+        <Address>
+            <Line1>123 Main St</Line1>
+            <Line2>Extra 1</Line2>
+            <Line3>Extra 2</Line3>
+            <Line4>Extra 3</Line4>
+            <City>City</City>
+            <MainDivision>MD</MainDivision>
+            <CountryCode>US</CountryCode>
+            <PostalCode>21133</PostalCode>
+        </Address>
+    </StoreLocation>
+    <Email id="EMAIL_0_ID">
+        <EmailAddress>email@example.com</EmailAddress>
+        <PersonName>
+            <Honorific>Mrs.</Honorific>
+            <LastName>Last</LastName>
+            <MiddleName>Middle</MiddleName>
+            <FirstName>First</FirstName>
+        </PersonName>
+    </Email>
+</Destinations>

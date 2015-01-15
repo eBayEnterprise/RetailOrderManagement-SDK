@@ -492,8 +492,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         // make sure we have all of the required fields for this node
         // if we don't then don't serialize it at all
-        if (
-            $this->getAuthenticationAvailable() &&
+        if ($this->getAuthenticationAvailable() &&
             $this->getAuthenticationStatus() &&
             $this->getCavvUcaf() &&
             $this->getTransactionId() &&

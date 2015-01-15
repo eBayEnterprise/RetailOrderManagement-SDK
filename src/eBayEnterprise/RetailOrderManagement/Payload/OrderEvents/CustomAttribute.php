@@ -15,81 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
-use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
-use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\CustomAttribute as OrderCustomAttribute;
 
-class CustomAttribute implements ICustomAttribute
+class CustomAttribute extends OrderCustomAttribute implements ICustomAttribute
 {
-    use TPayload;
-
-    /** @var string */
-    protected $key;
-    /** @var string */
-    protected $value;
-
-    /**
-     * @param IValidatorIterator
-     * @param ISchemaValidator unused, kept to allow parent payload to be passed
-     * @param IPayloadMap unused, kept to allow parent payload to be passed
-     * @param IPayload
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function __construct(
-        IValidatorIterator $validators,
-        ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap,
-        IPayload $parentPayload = null
-    ) {
-        $this->validators = $validators;
-        $this->parentPayload = $parentPayload;
-
-        $this->extractionPaths = [
-            'key' => 'string(x:Key)',
-            'value' => 'string(x:Value)',
-        ];
-    }
-
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    public function setKey($key)
-    {
-        $this->key = $key;
-        return $this;
-    }
-
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    public function setValue($value)
-    {
-        $this->value = $this->normalizeWhitespace($value);
-        return $this;
-    }
-
-    protected function getRootNodeName()
-    {
-        return static::ROOT_NODE;
-    }
-
-    protected function serializeContents()
-    {
-        return sprintf(
-            '<Key>%s</Key><Value>%s</Value>',
-            $this->getKey(),
-            $this->getValue()
-        );
-    }
-
-    protected function getXmlNamespace()
-    {
-        return self::XML_NS;
-    }
 }

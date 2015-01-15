@@ -15,17 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-interface IProductDescription
+use eBayEnterprise\RetailOrderManagement\Payload\Order\IProductDescription as IOrderProductDescription;
+
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Order\IProductDescription instead.
+ */
+interface IProductDescription extends IOrderProductDescription
 {
-    /**
-     * Product description in the locale in which the order was placed.
-     *
-     * @return string
-     */
-    public function getDescription();
-    /**
-     * @param string
-     * @return self
-     */
-    public function setDescription($description);
 }

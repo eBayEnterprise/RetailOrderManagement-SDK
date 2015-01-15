@@ -15,9 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestination as ICheckoutDestination;
 
-interface IDestination extends IPayload
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestination instead.
+ */
+interface IDestination extends ICheckoutDestination
 {
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
 }

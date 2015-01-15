@@ -15,18 +15,14 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable as IOrderLoyaltyProgramIterable;
 
-interface ILoyaltyProgramIterable extends \Countable, \Iterator, \ArrayAccess, IPayload
+/**
+ * Interface consolidated with general checkout interface. Maintaining
+ * this interface to keep backwards compability.
+ *
+ * @deprecated Use \eBayEnterprise\RetailOrderManagement\Payload\Order\ILoyaltyProgramIterable instead.
+ */
+interface ILoyaltyProgramIterable extends IOrderLoyaltyProgramIterable
 {
-    const LOYALTY_PROGRAM_INTERFACE =
-        '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\ILoyaltyProgram';
-    const ROOT_NODE = 'LoyaltyPrograms';
-    const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
-    const SUBPAYLOAD_XPATH = 'x:LoyaltyProgram';
-    /**
-     * Get a new, empty loyalty program object.
-     * @return ILoyaltyProgram
-     */
-    public function getEmptyLoyaltyProgram();
 }

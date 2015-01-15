@@ -13,26 +13,21 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
+namespace eBayEnterprise\RetailOrderManagement\Payload\Order;
 
-trait TProductDescription
+trait TLoyaltyProgramContainer
 {
-    /** @var string */
-    protected $description;
+    /** @var ILoyaltyProgramIterable */
+    protected $loyaltyPrograms;
 
-    public function getDescription()
+    public function getLoyaltyPrograms()
     {
-        return $this->description;
+        return $this->loyaltyPrograms;
     }
 
-    public function setDescription($description)
+    public function setLoyaltyPrograms(ILoyaltyProgramIterable $loyaltyPrograms)
     {
-        $this->description = $description;
+        $this->loyaltyPrograms = $loyaltyPrograms;
         return $this;
-    }
-
-    protected function serializeProductDescription()
-    {
-        return "<Description>{$this->getDescription()}</Description>";
     }
 }
