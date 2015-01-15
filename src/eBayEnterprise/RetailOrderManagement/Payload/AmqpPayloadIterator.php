@@ -70,8 +70,8 @@ class AmqpPayloadIterator implements IPayloadIterator
     }
 
     /**
-     * Test if there is a payload at the current index. Called after self::rewing
-     * and self::next wile iterating over the messages.
+     * Test if there is a payload at the current index. Called after self::rewind
+     * and self::next while iterating over the messages.
      * @return bool
      */
     public function valid()
