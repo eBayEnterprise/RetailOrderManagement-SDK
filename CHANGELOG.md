@@ -1,11 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased][unreleased]
+## [1.1.0-alpha-1][1.1.0-alpha-1] - 2015-01-29
 ### Added
-- Documentation
-  - AMQP and HTTP API
-  - Running tests
+- Documentation for AMQP and HTTP API
+- Documentation for running tests
 
 ## 1.0.0 - 2015-01-15
 ### Added
@@ -36,4 +35,4 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
-[unreleased]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.0.0
+[1.1.0-alpha-1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.0.0...1.1.0-alpha-1
