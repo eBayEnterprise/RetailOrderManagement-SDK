@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased][unreleased]
+### Added
+- Documentation
+  - AMQP and HTTP API
+  - Running tests
 
 ## 1.0.0 - 2015-01-15
 ### Added
