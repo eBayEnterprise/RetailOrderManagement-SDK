@@ -143,12 +143,21 @@ trait TLineItemContainer
      */
     protected function serializeLineItemsContainer()
     {
+        return count($this->getLineItems()) ? $this->getLineItemContents() : '';
+    }
+
+    /**
+     * Serialize Line Items contents in XML.
+     * @return string
+     */
+    protected function getLineItemContents()
+    {
         return '<LineItems>'
-        . $this->serializeLineItemsTotal()
-        . $this->serializeShippingTotal()
-        . $this->serializeTaxTotal()
-        . $this->serializeLineItems()
-        . '</LineItems>';
+            . $this->serializeLineItemsTotal()
+            . $this->serializeShippingTotal()
+            . $this->serializeTaxTotal()
+            . $this->serializeLineItems()
+            . '</LineItems>';
     }
 
     /**
@@ -158,7 +167,7 @@ trait TLineItemContainer
      */
     protected function serializeLineItems()
     {
-        return count($this->getLineItems()) ? $this->getLineItems()->serialize() :'';
+        return $this->getLineItems()->serialize();
     }
 
     /**

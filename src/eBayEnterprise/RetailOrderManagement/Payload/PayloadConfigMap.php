@@ -44,7 +44,6 @@ return call_user_func(function () {
         'getLineItemsTotal',
         'getShippingTotal',
         'getTaxTotal',
-        'getCurrencyCode',
     ];
     $iLineItemIterableChildPayloads = [
         'payloadMap' => $payloadMap,
@@ -732,21 +731,22 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => array_merge(
-                    $iLineItemContainerParams,
-                    [
-                        'getReturnUrl',
-                        'getCancelUrl',
-                        'getLocaleCode',
-                        'getAmount',
-                        'getAddressOverride',
-                        'getCurrencyCode',
-                    ]
-                )
+                'params' => [
+                    'getReturnUrl',
+                    'getCancelUrl',
+                    'getLocaleCode',
+                    'getAmount',
+                    'getAddressOverride',
+                    'getCurrencyCode',
+                ]
             ],
             [
                 'validator' => $optionalGroupValidator,
                 'params' => $shippingAddressParams
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => $iLineItemContainerParams
             ]
         ],
         'validatorIterator' => $validatorIterator,
@@ -795,7 +795,6 @@ return call_user_func(function () {
                 'validator' => $requiredFieldsValidator,
                 'params' => array_merge(
                     $shippingAddressParams,
-                    $iLineItemContainerParams,
                     [
                         'getRequestId',
                         'getOrderId',
@@ -807,6 +806,10 @@ return call_user_func(function () {
             [
                 'validator' => $optionalGroupValidator,
                 'params' => $shippingAddressParams,
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => $iLineItemContainerParams
             ]
         ],
         'validatorIterator' => $validatorIterator,

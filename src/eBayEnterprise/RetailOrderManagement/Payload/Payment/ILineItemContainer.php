@@ -41,7 +41,7 @@ interface ILineItemContainer
      * Total amount for all line items excluding shipping and tax; calculation works as follows
      * LineItemsTotal = First-LineItem-Quantity * First-LineItem--Amount + next one;
      * PayPal validates above calculation and throws error message for incorrect line items total;
-     * LineItemsTotal must always be greater than 0.
+     * Value must be >= 0 when there are line items in the container
      *
      * @return float
      */
@@ -55,6 +55,7 @@ interface ILineItemContainer
 
     /**
      * Total shipping amount for all line items.
+     * Value must be >= 0 when there are line items in the container
      *
      * @return float
      */
@@ -68,6 +69,7 @@ interface ILineItemContainer
 
     /**
      * Total tax amount for all line items.
+     * Value must be >= 0 when there are line items in the container
      *
      * @return float
      */
@@ -80,6 +82,7 @@ interface ILineItemContainer
     public function setTaxTotal($amount);
 
     /**
+     * This field requires a valid currency code when there are line items.
      * @return string
      */
     public function getCurrencyCode();
