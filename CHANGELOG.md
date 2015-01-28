@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.1.0-alpha-1][1.1.0-alpha-1] - 2015-01-29
+### Fixed
+- Make PayPal Express Checkout functional when `Transfer Cart Line Items` is turn off in the backend.
+
 ### Added
 - Documentation for AMQP and HTTP API
 - Documentation for running tests
