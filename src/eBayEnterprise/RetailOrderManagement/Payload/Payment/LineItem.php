@@ -15,11 +15,15 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class LineItem implements ILineItem
 {
-    use Payload\TPayload, TAmount;
+    use TPayload, TAmount;
 
     /** @var string */
     protected $name;
@@ -32,8 +36,22 @@ class LineItem implements ILineItem
     /** @var float */
     protected $currencyCode;
 
-    public function __construct(Payload\IValidatorIterator $validators)
-    {
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'name' => 'string(x:Name)',
             'quantity' => 'number(x:Quantity)',
@@ -43,7 +61,6 @@ class LineItem implements ILineItem
             'currencyCode' => 'x:UnitAmount/@currencyCode',
             'sequenceNumber' => 'x:SequenceNumber',
         ];
-        $this->validators = $validators;
     }
 
     /**

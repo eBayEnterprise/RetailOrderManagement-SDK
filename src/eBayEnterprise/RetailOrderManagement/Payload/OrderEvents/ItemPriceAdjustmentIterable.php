@@ -15,6 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -30,25 +31,26 @@ class ItemPriceAdjustmentIterable extends SPLObjectStorage implements IItemPrice
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
      * @param IPayloadMap
+     * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
+        $this->parentPayload = $parentPayload;
+
         $this->includeIfEmpty = true;
     }
 
     public function getEmptyAdjustment()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::ITEM_ADJUSTMENT_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::ITEM_ADJUSTMENT_INTERFACE);
     }
 
     protected function getNewSubpayload()

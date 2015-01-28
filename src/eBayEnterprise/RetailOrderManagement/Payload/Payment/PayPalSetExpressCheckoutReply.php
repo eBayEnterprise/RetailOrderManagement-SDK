@@ -15,12 +15,15 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
 {
-    use TOrderId, TToken, Payload\TTopLevelPayload;
+    use TOrderId, TToken, TTopLevelPayload;
 
     const SUCCESS_MESSAGE = 'Success';
 
@@ -29,8 +32,23 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
     /** @var string * */
     protected $errorMessage;
 
-    public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
-    {
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'orderId' => 'string(x:OrderId)',
             'responseCode' => 'string(x:ResponseCode)',
@@ -39,8 +57,6 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
         $this->optionalExtractionPaths = [
             'errorMessage' => 'x:ErrorMessage',
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
     }
 
     /**

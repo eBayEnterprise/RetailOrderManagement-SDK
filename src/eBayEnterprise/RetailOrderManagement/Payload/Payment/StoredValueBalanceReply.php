@@ -15,7 +15,8 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
@@ -36,8 +37,23 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     /** @var array response codes that are considered a success */
     protected $successResponseCodes = ['Success'];
 
-    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
-    {
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'cardNumber' => 'string(x:EncryptedPaymentAccountUniqueId|x:PaymentAccountUniqueId)',
             'balanceAmount' => 'number(x:BalanceAmount)',
@@ -48,8 +64,6 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
         $this->booleanExtractionPaths = [
             'panIsToken' => 'string(x:PaymentAccountUniqueId/@isToken)'
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
     }
 
     /**

@@ -29,12 +29,14 @@ class StoredValueRedeemReplyTest extends \PHPUnit_Framework_TestCase
 {
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
 
-    /** @var  Payload\IValidator */
+    /** @var Payload\IValidator */
     protected $validatorStub;
     /** @var Payload\IValidatorIterator */
     protected $validatorIterator;
     /** @var  Payload\ISchemaValidator */
     protected $schemaValidatorStub;
+    /** @var Payload\IPayloadMap */
+    protected $payloadMap;
     /** @var string */
     protected $testXML = <<<'XML'
 <Root xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
@@ -148,7 +150,7 @@ XML;
      */
     protected function buildPayload(array $properties)
     {
-        $payload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub);
+        $payload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
 
         foreach ($properties as $property => $value) {
             $payload->$property($value);
@@ -208,7 +210,7 @@ XML;
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $xml = $this->xmlInvalidTestString();
 
-        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub);
+        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $newPayload->deserialize($xml);
     }
 
@@ -236,7 +238,7 @@ XML;
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $xml = $this->xmlInvalidTestString();
 
-        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub);
+        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $newPayload->deserialize($xml);
     }
 
@@ -249,7 +251,7 @@ XML;
         $payload = $this->buildPayload($payloadData);
         $xml = $this->xmlTestString();
 
-        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub);
+        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);
@@ -289,5 +291,6 @@ XML;
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadMap = new Payload\PayloadMap;
     }
 }

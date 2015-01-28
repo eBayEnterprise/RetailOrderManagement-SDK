@@ -16,18 +16,26 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DateTime;
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class OrderRejectedTest extends \PHPUnit_Framework_TestCase
 {
     use TTestReflection;
-    /** @var Payload\IValidator (stub) */
+
+    /** @var IValidator (stub) */
     protected $stubValidator;
-    /** @var Payload\IValidatorIterator */
+    /** @var IValidatorIterator */
     protected $validatorIterator;
-    /** @var Payload\ISchemaValidator (stub) */
+    /** @var ISchemaValidator (stub) */
     protected $stubSchemaValidator;
+    /** @var IPayloadMap */
+    protected $payloadMap;
 
     /**
      * Setup a stub validator and validator iterator for each payload to use
@@ -36,8 +44,9 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
     {
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new Payload\ValidatorIterator([$this->stubValidator]);
+        $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadMap = new PayloadMap;
     }
 
     /**
@@ -125,7 +134,7 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return new OrderRejected($this->validatorIterator, $this->stubSchemaValidator);
+        return new OrderRejected($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
     }
 
     /**

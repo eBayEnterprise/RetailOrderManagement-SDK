@@ -15,26 +15,42 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalDoVoidReply implements IPayPalDoVoidReply
 {
     const SUCCESS = 'Success';
 
-    use Payload\TTopLevelPayload, TOrderId;
+    use TTopLevelPayload, TOrderId;
 
     /** @var string */
     protected $responseCode;
 
-    public function __construct(Payload\IValidatorIterator $validators, Payload\ISchemaValidator $schemaValidator)
-    {
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'responseCode' => 'string(x:ResponseCode)',
             'orderId' => 'string(x:OrderId)',
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
     }
 
     /**

@@ -37,6 +37,8 @@ trait TPayload
     protected $schemaValidator;
     /** @var IValidatorIterator */
     protected $validators;
+    /** @var IPayload */
+    protected $parentPayload;
     /** @var array XPath expressions to extract required data from the serialized payload (XML) */
     protected $extractionPaths = [];
     /** @var array */
@@ -187,7 +189,8 @@ trait TPayload
     {
         return $this->payloadFactory->buildPayload(
             $this->payloadMap->getConcreteType($interface),
-            $this->payloadMap
+            $this->payloadMap,
+            $this
         );
     }
 
@@ -226,6 +229,11 @@ trait TPayload
         $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
         $this->schemaValidate($canonicalXml);
         return $canonicalXml;
+    }
+
+    public function getParentPayload()
+    {
+        return $this->parentPayload;
     }
 
     /**

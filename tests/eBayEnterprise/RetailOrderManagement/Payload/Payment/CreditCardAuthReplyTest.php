@@ -18,7 +18,6 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
-use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
@@ -31,10 +30,6 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->payloadFactory = new PayloadFactory();
-        // use stub to allow validation success/failure to be scripted.
-        $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
-        $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
-        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
     }
 
     /**
@@ -254,7 +249,7 @@ class CreditCardAuthReplyTest extends \PHPUnit_Framework_TestCase
      */
     public function testBooleanFromString($value, $expected)
     {
-        $payload = new CreditCardAuthReply($this->validatorIterator, $this->stubSchemaValidator);
+        $payload = $this->createNewPayload();
         $actual = $this->invokeRestrictedMethod($payload, 'convertStringToBoolean', [$value]);
         $this->assertEquals($expected, $actual);
     }

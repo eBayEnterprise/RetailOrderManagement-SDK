@@ -15,11 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
 use SPLObjectStorage;
 
@@ -29,19 +29,21 @@ class PerformedAdjustmentIterable extends SPLObjectStorage implements IPerformed
 
     /**
      * @param IValidatorIterator
-     * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
+     * @param ISchemaValidator
      * @param IPayloadMap
+     * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
         $this->payloadFactory = new PayloadFactory();
-
         $this->includeIfEmpty = true;
     }
 
@@ -51,10 +53,7 @@ class PerformedAdjustmentIterable extends SPLObjectStorage implements IPerformed
      */
     public function getEmptyPerformedAdjustment()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::PERFORMED_ADJUSTMENT_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::PERFORMED_ADJUSTMENT_INTERFACE);
     }
 
     protected function getNewSubpayload()

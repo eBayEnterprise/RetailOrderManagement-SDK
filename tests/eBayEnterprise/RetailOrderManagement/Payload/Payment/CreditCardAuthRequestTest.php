@@ -18,8 +18,9 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use DateTimeZone;
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
 
 class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
@@ -200,7 +201,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializeAddressHandlesMissingData(array $properties, $billingExpected, $shippingExpected)
     {
-        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $this->setRestrictedPropertyValues($request, $properties);
         $billingActual = $this->invokeRestrictedMethod($request, 'serializeBillingAddress');
         $shippingActual = $this->invokeRestrictedMethod($request, 'serializeShippingAddress');
@@ -240,7 +241,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testCleanString($value, $maxLength, $expected)
     {
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $cleaned = $this->invokeRestrictedMethod($payload, 'cleanString', [$value, $maxLength]);
         $this->assertSame($expected, $cleaned);
     }
@@ -252,7 +253,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testCleanAddressLines($lines, $expected)
     {
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $cleaned = $this->invokeRestrictedMethod($payload, 'cleanAddressLines', [$lines]);
         $this->assertSame($expected, $cleaned);
     }
@@ -264,7 +265,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testBooleanFromString($value, $expected)
     {
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $actual = $this->invokeRestrictedMethod($payload, 'convertStringToBoolean', [$value]);
         $this->assertEquals($expected, $actual);
     }
@@ -278,7 +279,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAddressLines($shipToLines, $billingLines)
     {
-        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $payload = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $payload->setShipToLines($shipToLines)->setBillingLines($billingLines);
         $this->assertSame($shipToLines, $payload->getShipToLines());
         $this->assertSame($billingLines, $payload->getBillingLines());
@@ -291,7 +292,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializeVerificationDataHandlesMissingData($properties, $expected)
     {
-        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub);
+        $request = new CreditCardAuthRequest($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
         $this->setRestrictedPropertyValues($request, $properties);
         $actual = $this->invokeRestrictedMethod($request, 'serializeSecureVerificationData');
         $this->assertSame($expected, $actual);
@@ -316,6 +317,7 @@ class CreditCardAuthRequestTest extends \PHPUnit_Framework_TestCase
         $this->validatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new Payload\ValidatorIterator([$this->validatorStub]);
         $this->schemaValidatorStub = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadMap = new PayloadMap;
     }
 
     /**

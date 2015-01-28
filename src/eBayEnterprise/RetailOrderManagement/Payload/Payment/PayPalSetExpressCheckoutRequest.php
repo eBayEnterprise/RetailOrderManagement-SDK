@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -37,12 +37,25 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     /** @var boolean * */
     protected $addressOverride;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
-        ILineItemIterable $lineItems = null
+        IPayload $parentPayload = null
     ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
+        $this->payloadFactory = new PayloadFactory();
+
         $this->extractionPaths = [
             'orderId' => 'string(x:OrderId)',
             'amount' => 'number(x:Amount)',
@@ -71,17 +84,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         $this->subpayloadExtractionPaths = [
             'lineItems' => "x:LineItems",
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
-        $this->payloadMap = $payloadMap;
-        $this->lineItems = $lineItems;
-        if (is_null($this->lineItems)) {
-            $payloadFactory = new PayloadFactory();
-            $this->lineItems = $payloadFactory->buildPayload(
-                $this->payloadMap->getConcreteType(static::ITERABLE_INTERFACE),
-                $this->payloadMap
-            );
-        }
+        $this->lineItems = $this->buildPayloadForInterface(static::ITERABLE_INTERFACE);
     }
 
     /**

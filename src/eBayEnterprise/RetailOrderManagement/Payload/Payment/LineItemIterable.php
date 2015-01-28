@@ -15,24 +15,37 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
 use SPLObjectStorage;
 
 class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
 {
-    use Payload\TIterablePayload;
+    use TIterablePayload;
 
     const LINE_ITEM_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ILineItem';
-
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
-        Payload\IValidatorIterator $validators,
-        Payload\ISchemaValidator $schemaValidator,
-        Payload\IPayloadMap $payloadMap
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
-        $this->payloadFactory = new Payload\PayloadFactory();
+        $this->parentPayload = $parentPayload;
+        $this->payloadFactory = new PayloadFactory();
         $this->includeIfEmpty = false;
         $this->buildRootNode = false;
     }
@@ -65,10 +78,7 @@ class LineItemIterable extends SPLObjectStorage implements ILineItemIterable
      */
     public function getEmptyLineItem()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::LINE_ITEM_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::LINE_ITEM_INTERFACE);
     }
 
     /**

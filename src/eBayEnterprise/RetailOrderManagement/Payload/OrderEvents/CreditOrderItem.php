@@ -16,9 +16,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
 class CreditOrderItem extends OrderItem implements ICreditOrderItem
@@ -34,12 +35,20 @@ class CreditOrderItem extends OrderItem implements ICreditOrderItem
     /** @var float */
     protected $remainingQuantity;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
-        parent::__construct($validators);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
 
         // extract parent data as well as additional data needed
         // for the subclass

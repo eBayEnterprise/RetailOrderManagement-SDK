@@ -17,6 +17,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DateTime;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
@@ -29,10 +31,22 @@ class TestMessage implements ITestMessage
     /** @var DateTime */
     protected $timestamp;
 
-    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
-    {
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
+        $this->parentPayload = $parentPayload;
     }
 
     public function getEventType()

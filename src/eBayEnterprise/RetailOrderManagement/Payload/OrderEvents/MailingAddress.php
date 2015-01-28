@@ -15,6 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
@@ -24,9 +27,20 @@ class MailingAddress implements IMailingAddress
 
     /**
      * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function __construct(IValidatorIterator $validators)
-    {
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'firstName' => 'string(x:PersonName/x:FirstName)',
             'lastName' => 'string(x:PersonName/x:LastName)',
@@ -45,7 +59,6 @@ class MailingAddress implements IMailingAddress
                 'xPath' => 'x:Address/*[starts-with(name(), "Line")]'
             ],
         ];
-        $this->validators = $validators;
     }
 
     protected function serializeContents()

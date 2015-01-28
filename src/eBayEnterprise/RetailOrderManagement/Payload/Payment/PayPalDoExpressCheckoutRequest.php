@@ -15,7 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -39,11 +39,25 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
     /** @var mixed * */
     protected $shippingAddress;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
+        $this->payloadFactory = new PayloadFactory();
+
         $this->extractionPaths = [
             'requestId' => 'string(@requestId)',
             'orderId' => 'string(x:OrderId)',
@@ -70,14 +84,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         $this->subpayloadExtractionPaths = [
             'lineItems' => "x:LineItems",
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
-        $this->payloadMap = $payloadMap;
-        $payloadFactory = new PayloadFactory();
-        $this->lineItems = $payloadFactory->buildPayload(
-            $payloadMap->getConcreteType(static::ITERABLE_INTERFACE),
-            $payloadMap
-        );
+        $this->lineItems = $this->buildPayloadForInterface(static::ITERABLE_INTERFACE);
     }
 
     /**

@@ -15,10 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
 class ShippedOrderItem extends OrderItem implements IShippedOrderItem
@@ -31,17 +32,15 @@ class ShippedOrderItem extends OrderItem implements IShippedOrderItem
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
-        parent::__construct($validators);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
 
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
 
-        $this->trackingNumbers = $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::TRACKING_NUMBER_ITERABLE_INTERFACE),
-            $this->payloadMap
-        );
+        $this->trackingNumbers = $this->buildPayloadForInterface(static::TRACKING_NUMBER_ITERABLE_INTERFACE);
 
         // extract parent data as well as additional data needed
         // for the subclass

@@ -15,6 +15,9 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
@@ -34,11 +37,23 @@ class StoreFrontDetails implements IStoreFrontDetails
     protected $hours;
     /** @var string */
     protected $phoneNumber;
+
     /**
      * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function __construct(IValidatorIterator $validators)
-    {
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'city' => 'string(x:Address/x:City)',
             'countryCode' => 'string(x:Address/x:CountryCode)',
@@ -59,7 +74,6 @@ class StoreFrontDetails implements IStoreFrontDetails
                 'xPath' => 'x:Address/*[starts-with(name(), "Line")]'
             ],
         ];
-        $this->validators = $validators;
     }
 
     public function getStoreCode()

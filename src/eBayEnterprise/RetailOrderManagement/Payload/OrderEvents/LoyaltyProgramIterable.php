@@ -15,6 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -30,24 +31,24 @@ class LoyaltyProgramIterable extends SPLObjectStorage implements ILoyaltyProgram
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
      * @param IPayloadMap
+     * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
+        $this->parentPayload = $parentPayload;
     }
 
     public function getEmptyLoyaltyProgram()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::LOYALTY_PROGRAM_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::LOYALTY_PROGRAM_INTERFACE);
     }
 
     protected function getNewSubpayload()

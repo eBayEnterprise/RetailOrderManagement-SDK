@@ -15,9 +15,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
 use SPLObjectStorage;
@@ -30,24 +31,24 @@ class PaymentIterable extends SPLObjectStorage implements IPaymentIterable
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
      * @param IPayloadMap
+     * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
         $this->payloadFactory = new PayloadFactory();
     }
 
     public function getEmptyPayment()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::PAYMENT_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::PAYMENT_INTERFACE);
     }
 
     protected function getNewSubpayload()

@@ -29,11 +29,13 @@ class OrderConfirmed implements IOrderConfirmed
     public function __construct(
         Payload\IValidatorIterator $validators,
         Payload\ISchemaValidator $schemaValidator,
-        Payload\IPayloadMap $payloadMap
+        Payload\IPayloadMap $payloadMap,
+        Payload\IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
         $this->payloadFactory = new Payload\PayloadFactory();
 
         $this->loyaltyPrograms =

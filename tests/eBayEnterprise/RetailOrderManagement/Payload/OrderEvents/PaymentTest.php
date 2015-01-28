@@ -15,6 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 
@@ -24,6 +29,15 @@ class PaymentTest extends \PHPUnit_Framework_TestCase
 
     const FULL_FIXTURE_FILE = 'Payment.xml';
 
+    /** @var IValidator (stub) */
+    protected $stubValidator;
+    /** @var IValidatorIterator */
+    protected $validatorIterator;
+    /** @var ISchemaValidator (stub) */
+    protected $stubSchemaValidator;
+    /** @var IPayloadMap */
+    protected $payloadMap;
+
     /**
      * Setup a stub validator and validator iterator for each payload to use
      */
@@ -32,6 +46,8 @@ class PaymentTest extends \PHPUnit_Framework_TestCase
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
+        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadMap = new PayloadMap;
 
         $this->fullPayload = $this->buildPayload([
             'setDescription' => 'Visa',
@@ -43,7 +59,7 @@ class PaymentTest extends \PHPUnit_Framework_TestCase
 
     protected function createNewPayload()
     {
-        return new Payment($this->validatorIterator);
+        return new Payment($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
     }
 
     protected function getCompleteFixtureFile()

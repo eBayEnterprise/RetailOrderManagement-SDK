@@ -15,6 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -30,26 +31,26 @@ class TaxDescriptionIterable extends SPLObjectStorage implements ITaxDescription
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
      * @param IPayloadMap
+     * @prarm IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
+        $this->parentPayload = $parentPayload;
 
         $this->includeIfEmpty = true;
     }
 
     public function getEmptyTaxDescription()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::TAX_DESCRIPTION_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::TAX_DESCRIPTION_INTERFACE);
     }
 
     protected function getNewSubpayload()

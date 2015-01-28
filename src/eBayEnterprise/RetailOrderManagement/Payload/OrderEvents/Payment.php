@@ -15,9 +15,12 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class Payment implements IPayment
 {
@@ -34,17 +37,26 @@ class Payment implements IPayment
 
     /**
      * @param IValidatorIterator
+     * @param ISchemaValidator unused, kept to allow parent payload to be passed
+     * @param IPayloadMap unused, kept to allow parent payload to be passed
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function __construct(IValidatorIterator $validators)
-    {
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'description' => 'string(x:PaymentDescription)',
             'tenderType' => 'string(x:PaymentTenderType)',
             'maskedAccount' => 'string(x:PaymentMaskedAccount)',
             'amount' => 'number(x:PaymentAmount)',
         ];
-
-        $this->validators = $validators;
     }
 
     public function getDescription()

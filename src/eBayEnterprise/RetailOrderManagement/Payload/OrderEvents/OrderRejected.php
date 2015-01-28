@@ -18,11 +18,19 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use DateTime;
 use DOMDocument;
 use DOMXPath;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 
 class OrderRejected implements IOrderRejected
 {
+    /** @var ISchemaValidator */
+    protected $schemaValidator;
+    /** @var IValidatorIterator */
+    protected $validators;
+    /** @var IPayload */
+    protected $parentPayload;
     /** @var string $customerOrderId */
     protected $customerOrderId;
     /** @var string $storeId */
@@ -42,10 +50,22 @@ class OrderRejected implements IOrderRejected
         'code' => 'string(//x:OrderRejected/x:Reason/@code)',
     ];
 
-    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
-    {
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
+        $this->parentPayload = $parentPayload;
     }
 
     public function getEventType()
@@ -194,5 +214,10 @@ class OrderRejected implements IOrderRejected
         $d = new DOMDocument();
         $d->loadXML($xmlString);
         return $d;
+    }
+
+    public function getParentPayload()
+    {
+        return $this->parentPayload;
     }
 }

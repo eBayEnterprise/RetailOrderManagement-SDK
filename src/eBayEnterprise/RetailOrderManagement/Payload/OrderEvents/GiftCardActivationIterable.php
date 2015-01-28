@@ -15,6 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -30,26 +31,26 @@ class GiftCardActivationIterable extends SPLObjectStorage implements IGiftCardAc
 
     /**
      * @param IValidatorIterator
-     * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
+     * @param ISchemaValidator
      * @param IPayloadMap
+     * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
         $this->payloadFactory = new PayloadFactory();
     }
 
     public function getEmptyGiftCardActivation()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::GIFT_CARD_ACTIVATION_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::GIFT_CARD_ACTIVATION_INTERFACE);
     }
 
     protected function getNewSubpayload()

@@ -15,9 +15,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class CreditCardAuthRequest implements ICreditCardAuthRequest
@@ -65,8 +66,23 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     /** @var string */
     protected $payerAuthenticationResponse;
 
-    public function __construct(IValidatorIterator $validators, ISchemaValidator $schemaValidator)
-    {
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __construct(
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
+    ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'requestId' => 'string(@requestId)',
             'orderId' => 'string(x:PaymentContext/x:OrderId)',
@@ -117,8 +133,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             'panIsToken' => 'string(x:PaymentContext/x:PaymentAccountUniqueId/@isToken)',
             'isRequestToCorrectCVVOrAVSError' => 'string(x:isRequestToCorrectCVVOrAVSError)'
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
     }
 
     public function setEmail($email)

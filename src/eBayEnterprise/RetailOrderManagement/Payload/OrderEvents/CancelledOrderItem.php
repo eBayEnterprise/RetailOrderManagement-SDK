@@ -15,9 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
-use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 
 class CancelledOrderItem extends OrderItem implements ICancelledOrderItem
 {
@@ -26,11 +28,20 @@ class CancelledOrderItem extends OrderItem implements ICancelledOrderItem
         TAmount::sanitizeAmount insteadof TProductPrice;
     }
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         IValidatorIterator $validators,
-        ISchemaValidator $schemaValidator
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
-        parent::__construct($validators);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
 
         $this->optionalExtractionPaths = array_merge(
             $this->optionalExtractionPaths,

@@ -15,6 +15,10 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 
@@ -32,6 +36,8 @@ class TaxDescriptionTest extends \PHPUnit_Framework_TestCase
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
+        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadMap = new PayloadMap;
 
         $this->fullPayload = $this->buildPayload([
             'setDescription' => 'PA-SalesTax',
@@ -41,7 +47,7 @@ class TaxDescriptionTest extends \PHPUnit_Framework_TestCase
 
     protected function createNewPayload()
     {
-        return new TaxDescription($this->validatorIterator);
+        return new TaxDescription($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
     }
 
     protected function getCompleteFixtureFile()

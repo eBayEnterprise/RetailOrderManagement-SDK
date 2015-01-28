@@ -50,4 +50,12 @@ interface IPayload
      * @return self
      */
     public function deserialize($string);
+
+    /**
+     * Get the parent payload of this payload. When there is no parent payload,
+     * will return null.
+     *
+     * @return IPayload|null
+     */
+    public function getParentPayload();
 }

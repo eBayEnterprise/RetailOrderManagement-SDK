@@ -15,6 +15,7 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -28,28 +29,27 @@ class OrderItemIterable extends SPLObjectStorage implements IOrderItemIterable
 
     /**
      * @param IValidatorIterator
-     * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
+     * @param ISchemaValidator
      * @param IPayloadMap
+     * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
         $this->payloadFactory = new PayloadFactory();
-
         $this->includeIfEmpty = true;
     }
 
     public function getEmptyOrderItem()
     {
-        return $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::ORDER_ITEM_INTERFACE),
-            $this->payloadMap
-        );
+        return $this->buildPayloadForInterface(static::ORDER_ITEM_INTERFACE);
     }
 
     protected function getNewSubpayload()

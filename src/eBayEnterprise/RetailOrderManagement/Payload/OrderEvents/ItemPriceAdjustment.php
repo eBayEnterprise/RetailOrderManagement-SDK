@@ -15,10 +15,12 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
-use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 
 class ItemPriceAdjustment implements IItemPriceAdjustment
 {
@@ -33,12 +35,23 @@ class ItemPriceAdjustment implements IItemPriceAdjustment
     /** @var float */
     protected $amount;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         IValidatorIterator $validators,
-        ISchemaValidator $schemaValidator
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
+        $this->parentPayload = $parentPayload;
+
         $this->extractionPaths = [
             'modificationType' => 'string(@ModificationType)',
             'adjustmentCategory' => 'string(@AdjustmentCategory)',

@@ -20,16 +20,15 @@ use DOMXPath;
 
 trait TIterablePayload
 {
+    use TPayload;
+
     protected $includeIfEmpty = false;
     protected $buildRootNode = true;
 
     public function serialize()
     {
         $format = $this->buildRootNode ? '<%1$s>%2$s</%1$s>' : '%2$s';
-        $serializedSubpayloads = '';
-        foreach ($this as $subpayload) {
-            $serializedSubpayloads .= $subpayload->serialize();
-        }
+        $serializedSubpayloads = $this->serializeContents();
         return ($this->includeIfEmpty || $serializedSubpayloads)
             ? sprintf($format, $this->getRootNodeName(), $serializedSubpayloads)
             : '';
@@ -54,12 +53,14 @@ trait TIterablePayload
         return $this;
     }
 
-    /**
-     * Get a new payload that can be put into the iterable.
-     *
-     * @return IPayload
-     */
-    abstract protected function getNewSubpayload();
+    protected function serializeContents()
+    {
+        $serializedSubpayloads = '';
+        foreach ($this as $subpayload) {
+            $serializedSubpayloads .= $subpayload->serialize();
+        }
+        return $serializedSubpayloads;
+    }
 
     /**
      * Get an XPath expression that will separate the serialized data into
@@ -68,13 +69,6 @@ trait TIterablePayload
      * @return string
      */
     abstract protected function getSubpayloadXPath();
-
-    /**
-     * Name of the root node of the XML serialize payload data.
-     *
-     * @return string
-     */
-    abstract protected function getRootNodeName();
 
     /**
      * Load the payload XML into a DOMXPath for querying.

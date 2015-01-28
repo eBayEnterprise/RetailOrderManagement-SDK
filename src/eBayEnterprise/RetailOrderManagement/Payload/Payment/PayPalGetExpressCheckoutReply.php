@@ -15,15 +15,19 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
 {
+    use TTopLevelPayload, TOrderId, TBillingAddress, TShippingAddress;
+
     const ADDRESS_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress';
     const SUCCESS = 'Success';
-
-    use Payload\TTopLevelPayload, TOrderId, TBillingAddress, TShippingAddress;
 
     /** @var string * */
     protected $responseCode;
@@ -46,11 +50,25 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     /** @var string * */
     protected $payerPhone;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
-        Payload\IValidatorIterator $validators,
-        Payload\ISchemaValidator $schemaValidator,
-        Payload\IPayloadMap $payloadMap
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
+        $this->payloadFactory = new PayloadFactory();
+
         $this->extractionPaths = [
             'orderId' => 'string(x:OrderId)',
             'responseCode' => 'string(x:ResponseCode)',
@@ -84,10 +102,6 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
                 'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]"
             ]
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
-        $this->payloadMap = $payloadMap;
-        $this->payloadFactory = new Payload\PayloadFactory();
     }
 
     /**

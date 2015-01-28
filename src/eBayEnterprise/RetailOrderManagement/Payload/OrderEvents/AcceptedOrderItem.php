@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DateTime;
 use DOMXPath;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -33,9 +34,10 @@ class AcceptedOrderItem extends OrderItem implements IAcceptedOrderItem
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
-        parent::__construct($validators);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
 
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();

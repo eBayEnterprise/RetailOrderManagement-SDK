@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload\ICustomAttributesIterable;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
@@ -35,12 +36,21 @@ class LoyaltyProgram implements ILoyaltyProgram
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
-        IPayloadMap $payloadMap
+        IPayloadMap $payloadMap,
+        IPayload $parentPayload = null
     ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->payloadMap = $payloadMap;
+        $this->parentPayload = $parentPayload;
+        $this->payloadFactory = new PayloadFactory;
+
         $this->extractionPaths = [
             'account' => 'string(x:Account)',
             'program' => 'string(x:Program)',
@@ -48,16 +58,10 @@ class LoyaltyProgram implements ILoyaltyProgram
         $this->subpayloadExtractionPaths = [
             'customAttributes' => 'x:CustomAttributes',
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
-        $this->payloadMap = $payloadMap;
-        $this->payloadFactory = new PayloadFactory;
 
-        $this->customAttributes = $this->payloadFactory->buildPayload(
-            $this->payloadMap->getConcreteType(static::CUSTOM_ATTRIBUTE_ITERABLE_INTERFACE),
-            $this->payloadMap
-        );
+        $this->customAttributes = $this->buildPayloadForInterface(static::CUSTOM_ATTRIBUTE_ITERABLE_INTERFACE);
     }
+
     public function getAccount()
     {
         return $this->account;

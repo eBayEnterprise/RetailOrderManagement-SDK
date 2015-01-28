@@ -15,6 +15,11 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 
@@ -23,6 +28,16 @@ class CustomAttributeTest extends \PHPUnit_Framework_TestCase
     use TPayloadTest;
 
     const FULL_FIXTURE_FILE = 'CustomAttribute.xml';
+
+    /** @var IValidator (stub) */
+    protected $stubValidator;
+    /** @var IValidatorIterator */
+    protected $validatorIterator;
+    /** @var ISchemaValidator (stub) */
+    protected $stubSchemaValidator;
+    /** @var IPayloadMap */
+    protected $payloadMap;
+
     /**
      * Setup a stub validator and validator iterator for each payload to use
      */
@@ -31,6 +46,8 @@ class CustomAttributeTest extends \PHPUnit_Framework_TestCase
         // use stub to allow validation success/failure to be scripted.
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
+        $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
+        $this->payloadMap = new PayloadMap;
 
         $this->fullPayload = $this->buildPayload(['setKey' => 'the key', 'setValue' => 'the value']);
     }
@@ -43,7 +60,7 @@ class CustomAttributeTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return new CustomAttribute($this->validatorIterator);
+        return new CustomAttribute($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
     }
 
     protected function getCompleteFixtureFile()
