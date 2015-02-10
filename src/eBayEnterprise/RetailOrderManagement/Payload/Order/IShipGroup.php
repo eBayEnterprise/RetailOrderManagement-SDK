@@ -16,7 +16,6 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Order;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
-use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestination;
 
 interface IShipGroup extends IPayload, IOrderItemReferenceContainer, IGifting
 {

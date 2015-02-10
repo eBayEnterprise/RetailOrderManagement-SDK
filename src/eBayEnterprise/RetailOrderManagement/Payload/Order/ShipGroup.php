@@ -15,7 +15,6 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Order;
 
-use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestination;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
