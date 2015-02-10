@@ -107,6 +107,7 @@ class OrderItem implements IOrderItem
             'lineNumber' => 'string(@webLineId)',
             'itemId' => 'string(x:ItemId)',
             'quantity' => 'number(x:Quantity)',
+            'includeGiftWrapping' => 'boolean(x:Gifting/x:GiftCard)',
         ];
         $this->optionalExtractionPaths = [
             'subscriptionId' => '@subscriptionId',

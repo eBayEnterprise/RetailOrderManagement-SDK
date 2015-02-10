@@ -60,6 +60,7 @@ class ShipGroup implements IShipGroup
             'id' => 'string(@id)',
             'chargeType' => 'string(@chargeType)',
             'destinationId' => 'string(x:DestinationTarget/@ref)',
+            'includeGiftWrapping' => 'boolean(x:Gifting/x:GiftCard)',
         ];
         $this->optionalExtractionPaths = [
             'giftItemId' => 'x:Gifting/x:Gift/x:ItemId',

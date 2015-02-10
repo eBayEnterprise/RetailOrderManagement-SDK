@@ -55,6 +55,19 @@ interface IGifting
     public function setGiftPricing(IPriceGroup $giftPricing);
 
     /**
+     * Indicates if the gifting includes gift wrapping.
+     *
+     * @return bool
+     */
+    public function getIncludeGiftWrapping();
+
+    /**
+     * @param bool
+     * @return self
+     */
+    public function setIncludeGiftWrapping($includeGiftWrapping);
+
+    /**
      * Person receiving the gift.
      *
      * @return string

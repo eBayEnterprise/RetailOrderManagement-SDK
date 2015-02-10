@@ -23,6 +23,8 @@ trait TGifting
     protected $giftItemId;
     /** @var IPriceGroup */
     protected $giftPricing;
+    /** @var bool */
+    protected $includeGiftWrapping;
     /** @var string */
     protected $giftMessageTo;
     /** @var string */
@@ -70,6 +72,17 @@ trait TGifting
     public function setGiftPricing(IPriceGroup $giftPricing)
     {
         $this->giftPricing = $giftPricing;
+        return $this;
+    }
+
+    public function getIncludeGiftWrapping()
+    {
+        return $this->includeGiftWrapping;
+    }
+
+    public function setIncludeGiftWrapping($includeGiftWrapping)
+    {
+        $this->includeGiftWrapping = (bool) $includeGiftWrapping;
         return $this;
     }
 
@@ -255,7 +268,11 @@ trait TGifting
             $this->getGiftCardFrom(),
             $this->getGiftCardMessage()
         );
-        return $messageSerialization ? "<GiftCard>$messageSerialization</GiftCard>" : '';
+        // If the gifting includes gift wrapping, the gift card node
+        // must always be included.
+        return ($messageSerialization || $this->getIncludeGiftWrapping())
+            ? "<GiftCard>$messageSerialization</GiftCard>"
+            : '';
     }
 
     /**

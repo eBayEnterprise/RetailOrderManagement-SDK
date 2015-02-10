@@ -161,13 +161,7 @@
                                 <Message>Hello</Message> <!-- [0..1] -->
                             </Message> <!-- [0..1] -->
                         </Gift> <!-- [0..1] -->
-                        <GiftCard>
-                            <Message>
-                                <To localizedDisplayText="Para">Me</To>
-                                <From localizedDisplayText="De">World</From>
-                                <Message>Goodbye</Message> <!-- [0..1] -->
-                            </Message>
-                        </GiftCard> <!-- [0..1] -->
+                        <GiftCard></GiftCard> <!-- [0..1] -->
                         <Packslip>
                             <Message>
                                 <To localizedDisplayText="Para">There</To>
