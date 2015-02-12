@@ -1,10 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.1.0-alpha-1] - 2015-02-12
 ### Added
-- Support for the following Retail Order Management Public API operations:
-  - order/create
+- Support for the order/create Retail Order Management Public API operation
 - Links from child payloads to parent payloads
 
 ### Changed
@@ -21,7 +20,7 @@ All notable changes to this project will be documented in this file.
   - `eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IProductDescription` => `eBayEnterprise\RetailOrderManagement\Payload\Order\IProductDescription`
   - `eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\IStoreFrontDetails` => `eBayEnterprise\RetailOrderManagement\Payload\Order\IStoreFrontDetails`
 
-## [1.1.0-alpha-1][1.1.0-alpha-1] - 2015-01-29
+## [1.1.0-alpha-1] - 2015-01-29
 ### Fixed
 - Make PayPal Express Checkout functional when `Transfer Cart Line Items` is turn off in the backend.
 
@@ -58,5 +57,5 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
-[Unreleased]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-alpha-1...HEAD
+[1.1.0-alpha-2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-alpha-1...1.1.0-alpha-2
 [1.1.0-alpha-1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.0.0...1.1.0-alpha-1
