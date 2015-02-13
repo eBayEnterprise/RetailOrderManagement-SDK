@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.1.0-alpha-1] - 2015-02-12
+## [1.1.0-alpha-2] - 2015-02-12
 ### Added
 - Support for the order/create Retail Order Management Public API operation
 - Links from child payloads to parent payloads
