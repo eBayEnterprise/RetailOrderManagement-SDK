@@ -48,6 +48,7 @@ return call_user_func(function () {
     $customAttributeParams = ['getKey', 'getValue'];
     $iLineItemContainerParams = ['getLineItemsTotal', 'getShippingTotal', 'getTaxTotal',];
     $taxDataParams = ['getType', 'getTaxability', 'getSitus', 'getEffectiveRate', 'getCalculatedTax'];
+    $addressValidationHeaderParams = ['getMaxSuggestions'];
 
     // Payload validators shared by multiple payloads.
     $prepaidPaymentValidators = [
@@ -2230,6 +2231,106 @@ return call_user_func(function () {
                     '\eBayEnterprise\RetailOrderManagement\Payload\Order\Template'
             ],
         ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Address\ValidationReply'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge($physicalAddressParams, $addressValidationHeaderParams),
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getSuggestedAddresses', 'getErrorLocations'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Address\ISuggestedAddressIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Address\SuggestedAddressIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Address\IErrorLocationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Address\ErrorLocationIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Address\ValidationRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge($physicalAddressParams, $addressValidationHeaderParams),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Address\SuggestedAddressIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Address\ISuggestedAddress' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Address\SuggestedAddress',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Address\SuggestedAddress'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $physicalAddressParams,
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getErrorLocations'],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Address\IErrorLocationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Address\ErrorLocationIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Address\ErrorLocationIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Address\IErrorLocation' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Address\ErrorLocation',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Address\ErrorLocation'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getFieldName'],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
     ];
     return $map;
 });

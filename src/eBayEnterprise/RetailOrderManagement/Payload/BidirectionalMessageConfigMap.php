@@ -19,6 +19,10 @@
  */
 return call_user_func(function () {
     $map = [];
+    $map['address/validate'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Address\ValidationRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Address\ValidationReply',
+    ];
     $map['orders/create'] = [
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateReply',

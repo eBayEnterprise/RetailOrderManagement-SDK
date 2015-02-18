@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SuggestedAddress xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Line1>123 Main Ave</Line1>
+    <Line2>Suite 3</Line2>
+    <Line3>BLDG 5</Line3>
+    <Line4>FL 2</Line4>
+    <City>King of Prussia</City>
+    <MainDivision>PA</MainDivision>
+    <CountryCode>US</CountryCode>
+    <PostalCode>19406-1234</PostalCode>
+    <FormattedAddress>123 Main Ave
+Suite 3
+BLDG 5
+FL 2
+King of Prussia, PA 19406-1234</FormattedAddress>
+    <ErrorLocations>
+        <ErrorLocation>Line1</ErrorLocation>
+        <ErrorLocation>Line2</ErrorLocation>
+        <ErrorLocation>PostalCode</ErrorLocation>
+    </ErrorLocations>
+</SuggestedAddress>
