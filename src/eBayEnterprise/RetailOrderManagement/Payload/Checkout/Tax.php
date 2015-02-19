@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Order\Tax as OrderTax;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class Tax extends OrderTax implements ITax
 {
@@ -37,6 +39,7 @@ class Tax extends OrderTax implements ITax
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -44,10 +47,12 @@ class Tax extends OrderTax implements ITax
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
-        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $logger, $parentPayload);
 
+        $this->logger = $logger;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory;
 

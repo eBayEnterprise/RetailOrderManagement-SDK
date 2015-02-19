@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TIdentity;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class MailingAddress extends CheckoutMailingAddress implements IMailingAddress
 {
@@ -35,6 +37,7 @@ class MailingAddress extends CheckoutMailingAddress implements IMailingAddress
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -42,10 +45,12 @@ class MailingAddress extends CheckoutMailingAddress implements IMailingAddress
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
-        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $logger, $parentPayload);
 
+        $this->logger = $logger;
         $this->extractionPaths = array_merge(
             $this->extractionPaths,
             ['id' => 'string(@id)']

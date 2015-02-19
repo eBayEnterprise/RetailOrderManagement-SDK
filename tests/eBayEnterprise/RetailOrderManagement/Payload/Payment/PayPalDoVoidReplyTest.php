@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\NullLogger;
 
 class PayPalDoVoidReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,7 +39,7 @@ class PayPalDoVoidReplyTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoVoidReply');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoVoidReply', null, null, new NullLogger());
     }
 
     /**

@@ -20,6 +20,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ReservationPayment implements IReservationPayment
 {
@@ -32,6 +34,7 @@ class ReservationPayment implements IReservationPayment
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -39,8 +42,10 @@ class ReservationPayment implements IReservationPayment
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->parentPayload = $parentPayload;
     }

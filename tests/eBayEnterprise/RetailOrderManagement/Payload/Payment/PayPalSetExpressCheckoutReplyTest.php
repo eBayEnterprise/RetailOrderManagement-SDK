@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
+use Psr\Log\NullLogger;
 
 class PayPalSetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,6 +63,6 @@ class PayPalSetExpressCheckoutReplyTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutReply');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalSetExpressCheckoutReply', null, null, new NullLogger());
     }
 }

@@ -17,6 +17,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class OmnidirectionalMessageFactory implements IMessageFactory
 {
@@ -24,14 +26,17 @@ class OmnidirectionalMessageFactory implements IMessageFactory
     protected $messageTypeMap;
     /** @var IPayloadFactory */
     protected $payloadFactory;
+    /** @var LoggerInterface */
+    protected $logger;
 
     /**
      * @param IConfig $config
      * @param IPayloadFactory $payloadFactory
      * @param array $messageMapping key/value pairs of config key => payload type
      */
-    public function __construct(IPayloadFactory $payloadFactory = null, array $messageMapping = [])
+    public function __construct(IPayloadFactory $payloadFactory = null, array $messageMapping = [], LoggerInterface $logger = null)
     {
+        $this->logger = $logger ?: new NullLogger();
         $this->payloadFactory = $payloadFactory ?: new PayloadFactory();
         $this->messageTypeMap = $messageMapping ?: require('OmnidirectionalMessageConfigMap.php');
     }
@@ -39,7 +44,7 @@ class OmnidirectionalMessageFactory implements IMessageFactory
     public function messagePayload($type)
     {
         if (isset($this->messageTypeMap[$type])) {
-            return $this->payloadFactory->buildPayload($this->messageTypeMap[$type]);
+            return $this->payloadFactory->buildPayload($this->messageTypeMap[$type], null, null, $this->logger);
         }
         throw new UnsupportedPayload("No payload found for '$type'");
     }

@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SPLObjectStorage;
 
 class GiftCardActivationIterable extends SPLObjectStorage implements IGiftCardActivationIterable
@@ -33,6 +35,7 @@ class GiftCardActivationIterable extends SPLObjectStorage implements IGiftCardAc
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -40,8 +43,10 @@ class GiftCardActivationIterable extends SPLObjectStorage implements IGiftCardAc
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->parentPayload = $parentPayload;

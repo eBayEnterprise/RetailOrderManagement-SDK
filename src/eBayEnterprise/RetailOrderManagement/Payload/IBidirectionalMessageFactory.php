@@ -16,10 +16,11 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
+use Psr\Log\LoggerInterface;
 
 interface IBidirectionalMessageFactory extends IMessageFactory
 {
-    public function __construct(IConfig $config, IPayloadFactory $payloadFactory = null, array $messageMapping = []);
+    public function __construct(IConfig $config, IPayloadFactory $payloadFactory = null, array $messageMapping = [], LoggerInterface $logger = null);
 
     /**
      * Returns a request payload object based on the configuration information passed in the constructor

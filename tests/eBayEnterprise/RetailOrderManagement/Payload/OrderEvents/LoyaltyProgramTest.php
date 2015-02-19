@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
+use Psr\Log\NullLogger;
 
 class LoyaltyProgramTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,7 +48,7 @@ class LoyaltyProgramTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return $this->payloadFactory->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgram');
+        return $this->payloadFactory->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\LoyaltyProgram', null, null, new NullLogger());
     }
 
     protected function getCompleteFixtureFile()

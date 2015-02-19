@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
+use Psr\Log\NullLogger;
 
 class OrderAcceptedTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +40,7 @@ class OrderAcceptedTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderAccepted');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderAccepted', null, null, new NullLogger());
     }
 
     /**

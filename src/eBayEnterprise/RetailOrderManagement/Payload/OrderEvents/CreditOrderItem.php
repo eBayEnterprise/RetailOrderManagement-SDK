@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class CreditOrderItem extends OrderItem implements ICreditOrderItem
 {
@@ -39,6 +41,7 @@ class CreditOrderItem extends OrderItem implements ICreditOrderItem
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -46,10 +49,11 @@ class CreditOrderItem extends OrderItem implements ICreditOrderItem
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
-        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
-
+        parent::__construct($validators, $schemaValidator, $payloadMap, $logger, $parentPayload);
+        $this->logger = $logger;
         // extract parent data as well as additional data needed
         // for the subclass
         $this->extractionPaths = array_merge(

@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
+use Psr\Log\NullLogger;
 
 class PayPalDoAuthorizationRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -68,6 +69,6 @@ class PayPalDoAuthorizationRequestTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoAuthorizationRequest');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoAuthorizationRequest', null, null, new NullLogger());
     }
 }

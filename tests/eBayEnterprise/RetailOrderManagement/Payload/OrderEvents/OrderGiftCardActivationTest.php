@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\NullLogger;
 
 class OrderGiftCardActivatedTest extends \PHPUnit_Framework_TestCase
 {
@@ -58,7 +59,7 @@ class OrderGiftCardActivatedTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return $this->payloadFactory->buildPayload(self::PAYLOAD_CLASS);
+        return $this->payloadFactory->buildPayload(self::PAYLOAD_CLASS, null, null, new NullLogger());
     }
 
     /**

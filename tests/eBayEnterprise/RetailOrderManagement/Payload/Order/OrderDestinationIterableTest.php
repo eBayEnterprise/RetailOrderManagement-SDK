@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Order;
 
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\NullLogger;
 
 class OrderDestinationIterableTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,6 +68,6 @@ class OrderDestinationIterableTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderDestinationIterable');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderDestinationIterable', null, null, new NullLogger());
     }
 }

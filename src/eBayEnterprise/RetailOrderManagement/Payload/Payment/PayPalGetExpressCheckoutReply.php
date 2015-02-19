@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
 {
@@ -54,6 +56,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -61,8 +64,10 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;

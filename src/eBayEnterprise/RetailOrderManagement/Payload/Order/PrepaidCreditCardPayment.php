@@ -19,6 +19,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class PrepaidCreditCardPayment extends PrepaidPayment implements IPrepaidCreditCardPayment
 {
@@ -31,6 +33,7 @@ class PrepaidCreditCardPayment extends PrepaidPayment implements IPrepaidCreditC
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -38,10 +41,12 @@ class PrepaidCreditCardPayment extends PrepaidPayment implements IPrepaidCreditC
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
-        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $logger, $parentPayload);
 
+        $this->logger = $logger;
         $this->optionalExtractionPaths = array_merge(
             $this->optionalExtractionPaths,
             ['brand' => 'x:Brand']

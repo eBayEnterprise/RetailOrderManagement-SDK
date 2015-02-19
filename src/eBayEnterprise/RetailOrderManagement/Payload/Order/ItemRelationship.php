@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ItemRelationship implements IItemRelationship
 {
@@ -49,6 +51,7 @@ class ItemRelationship implements IItemRelationship
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -56,8 +59,10 @@ class ItemRelationship implements IItemRelationship
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;

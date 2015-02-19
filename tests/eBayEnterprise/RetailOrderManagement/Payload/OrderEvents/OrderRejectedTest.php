@@ -23,6 +23,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
+use Psr\Log\NullLogger;
 
 class OrderRejectedTest extends \PHPUnit_Framework_TestCase
 {
@@ -134,7 +135,7 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return new OrderRejected($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
+        return new OrderRejected($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap, new NullLogger());
     }
 
     /**

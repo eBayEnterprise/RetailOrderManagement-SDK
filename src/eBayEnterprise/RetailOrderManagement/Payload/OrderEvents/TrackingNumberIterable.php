@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SPLObjectStorage;
 
 class TrackingNumberIterable extends SPLObjectStorage implements ITrackingNumberIterable
@@ -31,6 +33,7 @@ class TrackingNumberIterable extends SPLObjectStorage implements ITrackingNumber
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -38,8 +41,10 @@ class TrackingNumberIterable extends SPLObjectStorage implements ITrackingNumber
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();

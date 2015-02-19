@@ -14,12 +14,18 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 interface IPayloadFactory
 {
     /**
      * Construct a new payload instance
+     * @param  string
+     * @param  IPayloadMap | null
+     * @param  IPayload | null
+     * @param  LoggerInterface
      * @return IPayload
      */
-    public function buildPayload($type);
+    public function buildPayload($type, IPayloadMap $cascadedPayloadMap = null, IPayload $parentPayload = null, LoggerInterface $logger = null);
 }

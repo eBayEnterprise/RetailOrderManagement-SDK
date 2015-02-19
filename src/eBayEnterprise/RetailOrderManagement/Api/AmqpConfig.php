@@ -14,6 +14,8 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Api;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Class AmqpConfig
@@ -21,6 +23,8 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
  */
 class AmqpConfig implements IAmqpConfig
 {
+    /** @var LoggerInterface */
+    protected $logger;
     protected $connectionConfigTypes = [
         '\PhpAmqpLib\Connection\AMQPSSLConnection' =>
             '\eBayEnterprise\RetailOrderManagement\Api\Amqp\SslConnectionConfig',
@@ -145,6 +149,7 @@ class AmqpConfig implements IAmqpConfig
      * @param bool $queueExclusive
      * @param bool $queueAutoDelete
      * @param bool $queueNowait
+     * @param LoggerInterface $logger
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -166,8 +171,10 @@ class AmqpConfig implements IAmqpConfig
         $queueDurable,
         $queueExclusive,
         $queueAutoDelete,
-        $queueNowait
+        $queueNowait,
+        LoggerInterface $logger = null
     ) {
+        $this->logger = $logger ?: new NullLogger();
         $this->connectionType = $connectionType;
         $this->maxMessagesToProcess = $maxMessagesToProcess;
 

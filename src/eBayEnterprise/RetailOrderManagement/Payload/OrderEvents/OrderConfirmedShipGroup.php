@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class OrderConfirmedShipGroup implements IShipGroup
 {
@@ -30,6 +32,7 @@ class OrderConfirmedShipGroup implements IShipGroup
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -37,8 +40,10 @@ class OrderConfirmedShipGroup implements IShipGroup
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;

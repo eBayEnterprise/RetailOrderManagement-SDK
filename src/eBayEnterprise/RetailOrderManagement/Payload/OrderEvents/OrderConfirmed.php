@@ -16,6 +16,8 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class OrderConfirmed implements IOrderConfirmed
 {
@@ -26,12 +28,22 @@ class OrderConfirmed implements IOrderConfirmed
     /** @var IOrderConfirmedShipGroupIterable */
     protected $shipGroups;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param LoggerInterface
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         Payload\IValidatorIterator $validators,
         Payload\ISchemaValidator $schemaValidator,
         Payload\IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         Payload\IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;

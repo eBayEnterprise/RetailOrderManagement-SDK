@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\NullLogger;
 
 class OrderShippedTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,7 +58,7 @@ class OrderShippedTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderShipped');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderShipped', null, null, new NullLogger());
     }
 
     /**

@@ -20,6 +20,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class CancelledOrderItem extends OrderItem implements ICancelledOrderItem
 {
@@ -32,6 +34,7 @@ class CancelledOrderItem extends OrderItem implements ICancelledOrderItem
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -39,10 +42,11 @@ class CancelledOrderItem extends OrderItem implements ICancelledOrderItem
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
-        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
-
+        parent::__construct($validators, $schemaValidator, $payloadMap, $logger, $parentPayload);
+        $this->logger = $logger;
         $this->optionalExtractionPaths = array_merge(
             $this->optionalExtractionPaths,
             [

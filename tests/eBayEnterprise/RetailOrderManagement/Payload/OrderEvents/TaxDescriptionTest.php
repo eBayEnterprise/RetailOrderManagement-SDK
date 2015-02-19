@@ -21,6 +21,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
+use Psr\Log\NullLogger;
 
 class TaxDescriptionTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,7 +48,7 @@ class TaxDescriptionTest extends \PHPUnit_Framework_TestCase
 
     protected function createNewPayload()
     {
-        return new TaxDescription($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
+        return new TaxDescription($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap, new NullLogger());
     }
 
     protected function getCompleteFixtureFile()

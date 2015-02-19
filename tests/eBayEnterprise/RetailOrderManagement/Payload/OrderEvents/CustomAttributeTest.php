@@ -22,6 +22,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
+use Psr\Log\NullLogger;
 
 class CustomAttributeTest extends \PHPUnit_Framework_TestCase
 {
@@ -60,7 +61,7 @@ class CustomAttributeTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return new CustomAttribute($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
+        return new CustomAttribute($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap, new NullLogger());
     }
 
     protected function getCompleteFixtureFile()

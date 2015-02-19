@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\NullLogger;
 
 class OrderBackorderTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +29,7 @@ class OrderBackorderTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->payloadFactory = new PayloadFactory;
+        $this->payloadFactory = new PayloadFactory();
     }
 
     /**
@@ -57,7 +58,7 @@ class OrderBackorderTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderBackorder');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderBackorder', null, null, new NullLogger());
     }
 
     /**

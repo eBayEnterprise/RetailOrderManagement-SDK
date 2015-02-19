@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class Payment implements IPayment
 {
@@ -39,6 +41,7 @@ class Payment implements IPayment
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow parent payload to be passed
      * @param IPayloadMap unused, kept to allow parent payload to be passed
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -46,8 +49,10 @@ class Payment implements IPayment
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->parentPayload = $parentPayload;
 

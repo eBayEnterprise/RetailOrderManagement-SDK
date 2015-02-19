@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
+use Psr\Log\NullLogger;
 
 class CustomAttributeIterableTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +52,7 @@ class CustomAttributeIterableTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CustomAttributeIterable');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\CustomAttributeIterable', null, null, new NullLogger());
     }
 
     /**

@@ -22,6 +22,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class PriceGroup implements IPriceGroup
 {
@@ -42,6 +44,7 @@ class PriceGroup implements IPriceGroup
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -49,8 +52,10 @@ class PriceGroup implements IPriceGroup
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;

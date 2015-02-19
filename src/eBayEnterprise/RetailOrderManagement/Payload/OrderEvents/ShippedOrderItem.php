@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ShippedOrderItem extends OrderItem implements IShippedOrderItem
 {
@@ -29,14 +31,24 @@ class ShippedOrderItem extends OrderItem implements IShippedOrderItem
         TAmount::sanitizeAmount insteadof TProductPrice;
     }
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param LoggerInterface
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
-        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $logger, $parentPayload);
 
+        $this->logger = $logger;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
 

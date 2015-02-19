@@ -22,6 +22,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class OrderRejected implements IOrderRejected
 {
@@ -54,6 +56,7 @@ class OrderRejected implements IOrderRejected
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -61,8 +64,10 @@ class OrderRejected implements IOrderRejected
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->parentPayload = $parentPayload;

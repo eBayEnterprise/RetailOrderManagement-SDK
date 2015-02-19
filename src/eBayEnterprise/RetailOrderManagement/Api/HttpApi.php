@@ -17,7 +17,8 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
 use eBayEnterprise\RetailOrderManagement\Payload;
-
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -33,15 +34,19 @@ class HttpApi implements IBidirectionalApi
     protected $messageFactory;
     /** @var  \Requests_Response Response object from the last call to Requests */
     protected $lastRequestsResponse;
+    /** @var LoggerInterface */
+    protected $logger;
 
     /**
      * Configure the api by supplying an object that informs
      * what payload object to use, what URI to send to, etc.
      *
      * @param IHttpConfig $config
+     * @param LoggerInterface $logger
      */
-    public function __construct(IHttpConfig $config)
+    public function __construct(IHttpConfig $config, LoggerInterface $logger = null)
     {
+        $this->logger = $logger ?: new NullLogger();
         $this->config = $config;
 
         \Requests::register_autoloader();

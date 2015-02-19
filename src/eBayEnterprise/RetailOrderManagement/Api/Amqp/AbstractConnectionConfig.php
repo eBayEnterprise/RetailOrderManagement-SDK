@@ -14,6 +14,8 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Api\Amqp;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Abstract Class AbstractConnectionConfig
@@ -43,6 +45,8 @@ abstract class AbstractConnectionConfig implements IConnectionConfig
     protected $connectionTimeout;
     /** @var string */
     protected $connectionReadWriteTimeout;
+    /** @var LoggerInterface */
+    protected $logger;
 
     /**
      * @param string $connectionHostname
@@ -56,6 +60,7 @@ abstract class AbstractConnectionConfig implements IConnectionConfig
      * @param string|null $connectionLocale
      * @param int|null $connectionTimeout
      * @param int|null $connectionReadWriteTimeout
+     * @param LoggerInterface $logger
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -69,8 +74,10 @@ abstract class AbstractConnectionConfig implements IConnectionConfig
         $connectionLoginMethod = null,
         $connectionLocale = null,
         $connectionTimeout = null,
-        $connectionReadWriteTimeout = null
+        $connectionReadWriteTimeout = null,
+        LoggerInterface $logger = null
     ) {
+        $this->logger = $logger ?: new NullLogger();
         $this->connectionHostname = $connectionHostname;
         $this->connectionPort = $connectionPort;
         $this->connectionUsername = $connectionUsername;

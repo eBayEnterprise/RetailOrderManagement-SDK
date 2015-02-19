@@ -22,6 +22,8 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Exception\AMQPExceptionInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use ReflectionClass;
 
 /**
@@ -41,6 +43,8 @@ class AmqpApi implements IAmqpApi
     protected $isQueueSetup = false;
     /** @var Payload\OmnidirectionalMessageFactory */
     protected $messageFactory;
+    /** @var LoggerInterface */
+    protected $logger;
 
     /**
      * Inject config and allow a connection and channel to be injected.
@@ -48,9 +52,11 @@ class AmqpApi implements IAmqpApi
      * @param mixed[] $args May contain:
      *                            - 'connection' => AbstractConnection
      *                            - 'channel' => AMQPChannel
+     * @param LoggerInterface $logger
      */
-    public function __construct(IAmqpConfig $config, array $args = [])
+    public function __construct(IAmqpConfig $config, array $args = [], LoggerInterface $logger = null)
     {
+        $this->logger = $logger ?: new NullLogger();
         $this->config = $config;
         // injectable primarily for testing purposes
         list($this->connection, $this->channel) = $this->checkTypes(

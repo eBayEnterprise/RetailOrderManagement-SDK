@@ -23,6 +23,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class AcceptedOrderItem extends OrderItem implements IAcceptedOrderItem
 {
@@ -35,10 +37,12 @@ class AcceptedOrderItem extends OrderItem implements IAcceptedOrderItem
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
-        parent::__construct($validators, $schemaValidator, $payloadMap, $parentPayload);
+        parent::__construct($validators, $schemaValidator, $payloadMap, $logger, $parentPayload);
 
+        $this->logger = $logger;
         $this->payloadMap = $payloadMap;
         $this->payloadFactory = new PayloadFactory();
 

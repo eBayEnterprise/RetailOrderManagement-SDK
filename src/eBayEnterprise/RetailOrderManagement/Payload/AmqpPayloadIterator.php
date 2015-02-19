@@ -18,6 +18,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Api\IAmqpApi;
 use OutOfBoundsException;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Class AmqpPayloadIterator
@@ -37,14 +39,18 @@ class AmqpPayloadIterator implements IPayloadIterator
     protected $messages = [];
     /** @var IPayload[] */
     protected $payloads = [];
+    /** @var LoggerInterface */
+    protected $logger;
 
     /**
      * @param IAmqpApi $api AMQP Api instance used to get messages from a queue
      * @param IMessageFactory $messageFactory Maps the message type to a payload for each message received
      * @param int $maxMessages Max messages to retrieve from the queue
+     * @param LoggerInterface $logger
      */
-    public function __construct(IAmqpApi $api, IMessageFactory $messageFactory, $maxMessages)
+    public function __construct(IAmqpApi $api, IMessageFactory $messageFactory, $maxMessages, LoggerInterface $logger = null)
     {
+        $this->logger = $logger ?: new NullLogger();
         $this->api = $api;
         $this->messageFactory = $messageFactory;
         $this->maxMessages = $maxMessages;

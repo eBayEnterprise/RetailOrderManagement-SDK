@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload;
+use Psr\Log\NullLogger;
 
 /**
  * Class StoredValueRedeemReplyTest
@@ -150,7 +151,7 @@ XML;
      */
     protected function buildPayload(array $properties)
     {
-        $payload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
+        $payload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap, new NullLogger());
 
         foreach ($properties as $property => $value) {
             $payload->$property($value);
@@ -210,7 +211,7 @@ XML;
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $xml = $this->xmlInvalidTestString();
 
-        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
+        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap, new NullLogger());
         $newPayload->deserialize($xml);
     }
 
@@ -238,7 +239,7 @@ XML;
             ->will($this->throwException(new Payload\Exception\InvalidPayload));
         $xml = $this->xmlInvalidTestString();
 
-        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
+        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap, new NullLogger());
         $newPayload->deserialize($xml);
     }
 
@@ -251,7 +252,7 @@ XML;
         $payload = $this->buildPayload($payloadData);
         $xml = $this->xmlTestString();
 
-        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap);
+        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap, new NullLogger());
         $newPayload->deserialize($xml);
 
         $this->assertEquals($payload, $newPayload);

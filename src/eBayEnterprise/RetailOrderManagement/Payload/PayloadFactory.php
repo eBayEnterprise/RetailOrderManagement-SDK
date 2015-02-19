@@ -16,12 +16,19 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class PayloadFactory implements IPayloadFactory
 {
     /** @var array maps a payload type to configuration used to construct the payload */
     protected $payloadTypeMap;
+    /** @var LoggerInterface */
+    protected $logger;
 
+    /**
+     * @param LoggerInterface
+     */
     public function __construct()
     {
         $this->payloadTypeMap = require('PayloadConfigMap.php');
@@ -31,11 +38,12 @@ class PayloadFactory implements IPayloadFactory
      * Build a payload using the payload config mappings.
      * @param string $type Concrete payload type
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @return IPayload
      * @throws UnsupportedPayload If the payload type is not configured
      */
-    public function buildPayload($type, IPayloadMap $cascadedPayloadMap = null, IPayload $parentPayload = null)
+    public function buildPayload($type, IPayloadMap $cascadedPayloadMap = null, IPayload $parentPayload = null, LoggerInterface $logger = null)
     {
         if (isset($this->payloadTypeMap[$type])) {
             $payloadConfig = $this->payloadTypeMap[$type];
@@ -54,7 +62,7 @@ class PayloadFactory implements IPayloadFactory
                 $payloadMap->merge($cascadedPayloadMap);
             }
 
-            return new $type($validatorIterator, $schemaValidator, $payloadMap, $parentPayload);
+            return new $type($validatorIterator, $schemaValidator, $payloadMap, $logger ?: new NullLogger(), $parentPayload);
         }
         throw new UnsupportedPayload("No configuration found for '$type'");
     }

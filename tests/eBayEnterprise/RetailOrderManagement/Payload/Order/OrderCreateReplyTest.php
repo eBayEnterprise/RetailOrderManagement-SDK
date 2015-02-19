@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Order;
 
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\NullLogger;
 
 class OrderCreateReplyTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,7 +38,7 @@ class OrderCreateReplyTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateReply');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCreateReply', null, null, new NullLogger());
     }
 
     /**

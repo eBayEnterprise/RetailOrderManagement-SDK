@@ -17,6 +17,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Api\IConfig;
 use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class BidirectionalMessageFactory implements IBidirectionalMessageFactory
 {
@@ -26,9 +28,12 @@ class BidirectionalMessageFactory implements IBidirectionalMessageFactory
     protected $messageTypeMap;
     /** @var IPayloadFactory */
     protected $payloadFactory;
+    /** @var LoggerInterface */
+    protected $logger;
 
-    public function __construct(IConfig $config, IPayloadFactory $payloadFactory = null, array $messageMapping = [])
+    public function __construct(IConfig $config, IPayloadFactory $payloadFactory = null, array $messageMapping = [], LoggerInterface $logger = null)
     {
+        $this->logger = $logger ?: new NullLogger();
         $this->config = $config;
         $this->messageTypeMap = $messageMapping ?: require('BidirectionalMessageConfigMap.php');
         $this->payloadFactory = $payloadFactory ?: new PayloadFactory();
@@ -50,7 +55,7 @@ class BidirectionalMessageFactory implements IBidirectionalMessageFactory
     {
         $key = $this->config->getConfigKey();
         if (isset($this->messageTypeMap[$key])) {
-            return $this->payloadFactory->buildPayload($this->messageTypeMap[$key][$type]);
+            return $this->payloadFactory->buildPayload($this->messageTypeMap[$key][$type], null, null, $this->logger);
         }
         throw new UnsupportedPayload("No payload found for '$key'");
     }

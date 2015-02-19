@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
+use Psr\Log\NullLogger;
 
 class TrackingNumberIterableTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,7 +58,7 @@ class TrackingNumberIterableTest extends \PHPUnit_Framework_TestCase
      */
     protected function createNewPayload()
     {
-        return new TrackingNumberIterable($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap);
+        return new TrackingNumberIterable($this->validatorIterator, $this->stubSchemaValidator, $this->payloadMap, new NullLogger());
     }
 
     /**

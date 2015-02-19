@@ -20,6 +20,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class TrackingNumber implements ITrackingNumber
 {
@@ -34,6 +36,7 @@ class TrackingNumber implements ITrackingNumber
      * @param IValidatorIterator
      * @param ISchemaValidator unused, kept to allow parent payload to be passed
      * @param IPayloadMap unused, kept to allow parent payload to be passed
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -41,8 +44,10 @@ class TrackingNumber implements ITrackingNumber
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->parentPayload = $parentPayload;
 

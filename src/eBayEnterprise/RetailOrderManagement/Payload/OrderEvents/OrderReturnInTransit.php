@@ -22,17 +22,29 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class OrderReturnInTransit implements IOrderReturnInTransit
 {
     use TTopLevelPayload, TCurrency, TLoyaltyProgramCustomer, TOrderEvent;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator unused, kept to allow IPayloadMap to be passed
+     * @param IPayloadMap
+     * @param LoggerInterface
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->schemaValidator = $schemaValidator;
         $this->payloadMap = $payloadMap;

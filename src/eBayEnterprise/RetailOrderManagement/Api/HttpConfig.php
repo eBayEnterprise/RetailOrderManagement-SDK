@@ -15,6 +15,8 @@
 
 
 namespace eBayEnterprise\RetailOrderManagement\Api;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Class HttpConfig
@@ -32,6 +34,8 @@ class HttpConfig implements IHttpConfig
     protected $endpointParams;
     protected $action = 'post';
     protected $contentType = 'text/xml';
+    /** @var LoggerInterface */
+    protected $logger;
 
     /**
      * @param string $apiKey
@@ -43,6 +47,7 @@ class HttpConfig implements IHttpConfig
      * @param string $operation
      * @param array $endpointParams If additional params are provided, they will be joined on '/' and appended
      *                               with a '/' to the operation at the end of the endpoint URI.
+     * @param LoggerInterface $logger
      */
     public function __construct(
         $apiKey,
@@ -52,8 +57,10 @@ class HttpConfig implements IHttpConfig
         $storeId,
         $service,
         $operation,
-        array $endpointParams = []
+        array $endpointParams = [],
+        LoggerInterface $logger = null
     ) {
+        $this->logger = $logger ?: new NullLogger();
         $this->apiKey = $apiKey;
         $this->host = $host;
         $this->majorVersion = $majorVersion;

@@ -53,6 +53,8 @@ trait TPayload
      *            will be deserialized by that payload
      */
     protected $subpayloadExtractionPaths = [];
+    /** @var LoggerInterface enabled PSR-3 logging */
+    protected $logger;
 
     /**
      * Fill out this payload object with data from the supplied string.
@@ -195,7 +197,8 @@ trait TPayload
         return $this->payloadFactory->buildPayload(
             $this->payloadMap->getConcreteType($interface),
             $this->payloadMap,
-            $this
+            $this,
+            $this->logger
         );
     }
 

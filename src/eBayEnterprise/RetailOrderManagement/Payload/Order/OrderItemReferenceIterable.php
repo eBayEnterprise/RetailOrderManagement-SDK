@@ -21,6 +21,8 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TIterablePayload;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SPLObjectStorage;
 
 class OrderItemReferenceIterable extends SPLObjectStorage implements IOrderItemReferenceIterable
@@ -36,6 +38,7 @@ class OrderItemReferenceIterable extends SPLObjectStorage implements IOrderItemR
      * @param IValidatorIterator
      * @param ISchemaValidator
      * @param IPayloadMap
+     * @param LoggerInterface
      * @param IPayload
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -43,8 +46,10 @@ class OrderItemReferenceIterable extends SPLObjectStorage implements IOrderItemR
         IValidatorIterator $validators,
         ISchemaValidator $schemaValidator,
         IPayloadMap $payloadMap,
+        LoggerInterface $logger,
         IPayload $parentPayload = null
     ) {
+        $this->logger = $logger;
         $this->validators = $validators;
         $this->payloadMap = $payloadMap;
         $this->parentPayload = $parentPayload;

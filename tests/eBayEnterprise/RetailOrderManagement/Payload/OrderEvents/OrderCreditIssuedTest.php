@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\OrderEvents;
 
 use DOMDocument;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use Psr\Log\NullLogger;
 
 class OrderCreditIssuedTest extends \PHPUnit_Framework_TestCase
 {
@@ -58,7 +59,7 @@ class OrderCreditIssuedTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderCreditIssued');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\OrderCreditIssued', null, null, new NullLogger());
     }
 
     /**
