@@ -14,6 +14,7 @@
  */
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
+
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
