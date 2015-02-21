@@ -19,6 +19,7 @@ use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
