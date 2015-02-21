@@ -21,6 +21,7 @@
         <MainDivision>PA</MainDivision>
         <CountryCode>US</CountryCode>
         <PostalCode>19406</PostalCode>
+        <AddressStatus>b-a-status</AddressStatus>
     </BillingAddress>
     <PayerPhone>848-129-8433</PayerPhone>
     <ShippingAddress>
@@ -32,5 +33,6 @@
         <MainDivision>PA</MainDivision>
         <CountryCode>US</CountryCode>
         <PostalCode>19406</PostalCode>
+        <AddressStatus>s-a-status</AddressStatus>
     </ShippingAddress>
 </PayPalGetExpressCheckoutReply>
