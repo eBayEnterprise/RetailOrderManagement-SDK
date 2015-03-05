@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
+use eBayEnterprise\RetailOrderManagement\Api\TLogger;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -25,6 +26,8 @@ use Psr\Log\NullLogger;
  */
 class HttpApi implements IBidirectionalApi
 {
+    use TLogger;
+
     /** @var IConfig */
     protected $config;
     /** @var Payload\IPayload */
@@ -53,6 +56,8 @@ class HttpApi implements IBidirectionalApi
         \Requests::register_autoloader();
 
         $this->messageFactory = new Payload\BidirectionalMessageFactory($this->config);
+
+        $this->logRequestUrl();
     }
 
     public function setRequestBody(Payload\IPayload $payload)
@@ -175,5 +180,21 @@ class HttpApi implements IBidirectionalApi
             $this->buildHeader()
         );
         return $this->lastRequestsResponse->success;
+    }
+
+    protected function getRequestUrlLogData()
+    {
+        $context = $this->getContext();
+        $logData = ['rom_request_url' => $this->config->getEndpoint()];
+        return $context ? $context->getMetaData(__CLASS__, $logData) : [];
+    }
+
+    protected function logRequestUrl()
+    {
+        if ($this->hasValidLogger()) {
+            $logMessage = 'SDK API endpoint: {rom_request_url}';
+            $this->logger->debug($logMessage, $this->getRequestUrlLogData());
+        }
+        return $this;
     }
 }

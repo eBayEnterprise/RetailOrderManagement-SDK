@@ -16,6 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Api\Exception\ConnectionError;
+use eBayEnterprise\RetailOrderManagement\Api\TLogger;
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Payload\AmqpPayloadIterator;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -33,6 +34,8 @@ use ReflectionClass;
  */
 class AmqpApi implements IAmqpApi
 {
+    use TLogger;
+
     /** @var IAmqpConfig */
     protected $config;
     /** @var AbstractConnection */
@@ -64,6 +67,8 @@ class AmqpApi implements IAmqpApi
             isset($args['channel']) ? $args['channel'] : null
         );
         $this->messageFactory = new Payload\OmnidirectionalMessageFactory();
+
+        $this->logRequestUrl();
     }
 
     /**
@@ -204,6 +209,25 @@ class AmqpApi implements IAmqpApi
             $this->connection->close();
         }
         $this->isQueueSetup = false;
+        return $this;
+    }
+
+    protected function getRequestUrlLogData()
+    {
+        $context = $this->getContext();
+        $logData = [
+            'rom_request_url' => $this->config->getEndpoint(),
+            'queue_name' => $this->config->getQueueName(),
+        ];
+        return $context ? $context->getMetaData(__CLASS__, $logData) : [];
+    }
+
+    protected function logRequestUrl()
+    {
+        if ($this->hasValidLogger()) {
+            $logMessage = 'AMQP API to: {rom_request_url} for queue {queue_name}';
+            $this->logger->debug($logMessage, $this->getRequestUrlLogData());
+        }
         return $this;
     }
 }

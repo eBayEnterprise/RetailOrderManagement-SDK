@@ -130,6 +130,9 @@ class AmqpConfig implements IAmqpConfig
     /** @var Amqp\IConnectionConfig */
     protected $connectionConfig;
 
+    /** @var string */
+    protected $endpoint;
+
     /**
      * @param string $connectionType
      * @param int $maxMessagesToProcess
@@ -178,6 +181,9 @@ class AmqpConfig implements IAmqpConfig
         $this->logger = $logger ?: new NullLogger();
         $this->connectionType = $connectionType;
         $this->maxMessagesToProcess = $maxMessagesToProcess;
+
+        $vhost = urlencode($connectionVhost);
+        $this->endpoint = "amqp://{$connectionUsername}@{$connectionHostname}:{$connectionPort}/{$vhost}";
 
         $this->connectionConfig = new $this->connectionConfigTypes[$this->connectionType](
             $connectionHostname,
@@ -232,5 +238,10 @@ class AmqpConfig implements IAmqpConfig
     public function getMaxMessagesToProcess()
     {
         return $this->maxMessagesToProcess;
+    }
+
+    public function getEndpoint()
+    {
+        return $this->endpoint;
     }
 }
