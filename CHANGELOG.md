@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+### Added
+- Constant values for the taxAndDutyDisplay attribute
+
 ## [1.1.0-alpha-3] - 2015-02-26
 ### Added
 - Support for the address/validate Retail Order Management Public API operation

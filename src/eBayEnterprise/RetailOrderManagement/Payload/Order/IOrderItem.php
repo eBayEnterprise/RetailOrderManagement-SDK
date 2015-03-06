@@ -32,6 +32,11 @@ interface IOrderItem extends IPayload, IIdentity, IFeeContainer, IEstimatedDeliv
     const FULFILLMENT_CHANNEL_STORE_PICK_UP = 'STORE_PICK_UP';
     const FULFILLMENT_CHANNEL_SHIP_TO_HOME = 'SHIP_TO_HOME';
     const FULFILLMENT_CHANNEL_STORE_RESERVATION = 'STORE_RESERVATION';
+    // Acceptable Tax and Duty Display Types
+    const TAX_AND_DUTY_DISPLAY_CONSOLIDATED = 'Consolidated Taxes Only';
+    const TAX_AND_DUTY_DISPLAY_INDIVIDUAL = 'Individual Taxes Only';
+    const TAX_AND_DUTY_DISPLAY_SINGLE_AMOUNT = 'Taxes and Duties Consolidated in a Single Amount';
+    const TAX_AND_DUTY_DISPLAY_NONE = 'No Taxes or Duties';
 
     /**
      * Get a new, empty price group for merchandise, shipping and duty prices.
