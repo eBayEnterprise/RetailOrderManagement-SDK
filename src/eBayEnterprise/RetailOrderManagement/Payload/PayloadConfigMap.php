@@ -1384,7 +1384,6 @@ return call_user_func(function () {
                         'getContentTypes',
                         'getEncoding',
                         'getLanguage',
-                        'getCharSet',
                     ]
                 )
             ],
