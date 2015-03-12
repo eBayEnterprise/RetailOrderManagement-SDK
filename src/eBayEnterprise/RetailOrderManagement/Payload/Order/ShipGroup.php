@@ -21,17 +21,16 @@ use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TIdentity;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class ShipGroup implements IShipGroup
 {
-    use TPayload, TOrderItemReferenceContainer, TGifting;
+    use TPayload, TIdentity, TOrderItemReferenceContainer, TGifting;
 
     const ROOT_NODE = 'ShipGroup';
 
-    /** @var string */
-    protected $id;
     /** @var string */
     protected $chargeType;
     /** @var string */
@@ -89,17 +88,6 @@ class ShipGroup implements IShipGroup
         $this->itemReferences = $this->buildPayloadForInterface(
             self::ITEM_REFERENCE_ITERABLE_INTERFACE
         );
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
     }
 
     public function getChargeType()
