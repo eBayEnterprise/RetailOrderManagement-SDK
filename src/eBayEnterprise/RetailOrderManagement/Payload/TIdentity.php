@@ -29,7 +29,9 @@ trait TIdentity
     public function getId()
     {
         if (is_null($this->id)) {
-            $this->id = uniqid();
+            // xs:ID's cannot start with a number so the underscore is added
+            // to prevent generating an invalid id
+            $this->id = uniqid('_');
         }
         return $this->id;
     }
