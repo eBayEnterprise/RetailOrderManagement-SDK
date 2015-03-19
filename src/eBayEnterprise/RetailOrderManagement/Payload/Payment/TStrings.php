@@ -95,4 +95,14 @@ trait TStrings
     {
         return preg_match('#^[a-z_][\w.-]*$#i', $string) ? $string : null;
     }
+
+    /**
+     * encode string to be safe for xml
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function xmlEncode($value)
+    {
+        return htmlentities($value, ENT_XML1);
+    }
 }
