@@ -512,7 +512,7 @@ class OrderCreateRequest implements IOrderCreateRequest
             . $this->getHolds()->serialize()
             . $this->getCustomAttributes()->serialize()
             . $this->getTemplates()->serialize()
-            . $this->serializeOptionalValue('OrderHistoryUrl', $this->getOrderHistoryUrl())
+            . $this->serializeOptionalValue('OrderHistoryUrl', $this->xmlEncode($this->getOrderHistoryUrl()))
             . $this->serializeVatInclusivePricing()
             . $this->serializeOptionalAmount('OrderTotal', $this->getOrderTotal())
             . '</Order>';
