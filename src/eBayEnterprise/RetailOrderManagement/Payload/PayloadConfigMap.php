@@ -1365,27 +1365,24 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => array_merge(
-                    $personNameParams,
-                    [
-                        'getRequestId',
-                        'getOrderId',
-                        'getCreateTime',
-                        'getBillingAddress',
-                        'getCurrency',
-                        'getLocale',
-                        'getOrderTotal',
-                        'getHostname',
-                        'getIpAddress',
-                        'getSessionId',
-                        'getUserAgent',
-                        'getJavascriptData',
-                        'getReferrer',
-                        'getContentTypes',
-                        'getEncoding',
-                        'getLanguage',
-                    ]
-                )
+                'params' => [
+                    'getRequestId',
+                    'getOrderId',
+                    'getCreateTime',
+                    'getBillingAddress',
+                    'getCurrency',
+                    'getLocale',
+                    'getOrderTotal',
+                    'getHostname',
+                    'getIpAddress',
+                    'getSessionId',
+                    'getUserAgent',
+                    'getJavascriptData',
+                    'getReferrer',
+                    'getContentTypes',
+                    'getEncoding',
+                    'getLanguage',
+                ]
             ],
             [
                 'validator' => $optionalGroupValidator,
@@ -1450,10 +1447,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => array_merge(
-                    $personNameParams,
-                    $physicalAddressParams
-                ),
+                'params' => $physicalAddressParams,
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -1808,7 +1802,6 @@ return call_user_func(function () {
             [
                 'validator' => $requiredFieldsValidator,
                 'params' => array_merge(
-                    $personNameParams,
                     $physicalAddressParams,
                     ['getId']
                 ),
