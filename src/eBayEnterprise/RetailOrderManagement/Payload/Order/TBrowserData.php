@@ -249,22 +249,22 @@ trait TBrowserData
         return '<BrowserData>'
             . "<HostName>{$this->getHostname()}</HostName>"
             . "<IPAddress>{$this->getIpAddress()}</IPAddress>"
-            . "<SessionId>{$this->getSessionId()}</SessionId>"
-            . "<UserAgent>{$this->getUserAgent()}</UserAgent>"
-            . $this->serializeOptionalValue('Connection', $this->getConnection())
-            . $this->serializeOptionalValue('Cookies', $this->getCookies())
-            . $this->serializeOptionalValue('UserCookie', $this->getUserCookie())
-            . $this->serializeOptionalValue('UserAgentOS', $this->getUserAgentOs())
-            . $this->serializeOptionalValue('UserAgentCPU', $this->getUserAgentCpu())
-            . $this->serializeOptionalValue('HeaderFrom', $this->getHeaderFrom())
-            . $this->serializeOptionalValue('EmbeddedWebBrowserFrom', $this->getWebBrowserName())
-            . "<JavascriptData>{$this->getJavascriptData()}</JavascriptData>"
-            . "<Referrer>{$this->getReferrer()}</Referrer>"
+            . '<SessionId>' . $this->xmlEncode($this->getSessionId()) . '</SessionId>'
+            . '<UserAgent>' . $this->xmlEncode($this->getUserAgent()) . '</UserAgent>'
+            . $this->serializeOptionalValue('Connection', $this->xmlEncode($this->getConnection()))
+            . $this->serializeOptionalValue('Cookies', $this->xmlEncode($this->getCookies()))
+            . $this->serializeOptionalValue('UserCookie', $this->xmlEncode($this->getUserCookie()))
+            . $this->serializeOptionalValue('UserAgentOS', $this->xmlEncode($this->getUserAgentOs()))
+            . $this->serializeOptionalValue('UserAgentCPU', $this->xmlEncode($this->getUserAgentCpu()))
+            . $this->serializeOptionalValue('HeaderFrom', $this->xmlEncode($this->getHeaderFrom()))
+            . $this->serializeOptionalValue('EmbeddedWebBrowserFrom', $this->xmlEncode($this->getWebBrowserName()))
+            . '<JavascriptData>' . $this->xmlEncode($this->getJavascriptData()) . '</JavascriptData>'
+            . '<Referrer>' . $this->xmlEncode($this->getReferrer()) . '</Referrer>'
             . "<HTTPAcceptData>"
-            . "<ContentTypes>{$this->getContentTypes()}</ContentTypes>"
-            . "<Encoding>{$this->getEncoding()}</Encoding>"
+            . '<ContentTypes>' . $this->xmlEncode($this->getContentTypes()) . '</ContentTypes>'
+            . '<Encoding>' . $this->xmlEncode($this->getEncoding()) . '</Encoding>'
             . "<Language>{$this->getLanguage()}</Language>"
-            . "<CharSet>{$this->getCharSet()}</CharSet>"
+            . '<CharSet>' . $this->xmlEncode($this->getCharSet()) . '</CharSet>'
             . "</HTTPAcceptData>"
             . '</BrowserData>';
     }
