@@ -154,6 +154,18 @@ class PriceGroup implements IPriceGroup
     }
 
     /**
+     * perform additional sanitization
+     * @return self
+     */
+    protected function deserializeExtra()
+    {
+        $this->amount = $this->sanitizeAmount($this->amount);
+        $this->remainder = $this->sanitizeAmount($this->remainder);
+        $this->unitPrice = $this->sanitizeAmount($this->unitPrice);
+        return $this;
+    }
+
+    /**
      * If a root node name has been injected, use that as the root node name
      * for the serialization, otherwise, fall back to the static const.
      *

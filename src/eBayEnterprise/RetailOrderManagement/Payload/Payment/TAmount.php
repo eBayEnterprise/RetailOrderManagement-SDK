@@ -41,7 +41,7 @@ trait TAmount
      */
     protected function sanitizeAmount($amount)
     {
-        if (is_numeric($amount)) {
+        if (!is_nan($amount) && is_numeric($amount)) {
             return round($amount, 2, PHP_ROUND_HALF_UP);
         }
         return null;

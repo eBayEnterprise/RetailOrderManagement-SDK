@@ -2041,10 +2041,6 @@ return call_user_func(function () {
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\PriceGroup'] = [
         'validators' => [
             [
-                'validator' => $requiredFieldsValidator,
-                'params' => ['getAmount'],
-            ],
-            [
                 'validator' => $optionalSubpayloadValidator,
                 'params' => ['getTaxes', 'getDiscounts'],
             ]
