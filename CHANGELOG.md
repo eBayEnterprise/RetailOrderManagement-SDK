@@ -1,9 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [1.1.0-alpha-4] -  2015-03-26
 ### Added
 - Constant values for the taxAndDutyDisplay attribute
+### Changed
+- Relaxed the validation constraints of some payloads
 
 ## [1.1.0-alpha-3] - 2015-02-26
 ### Added
