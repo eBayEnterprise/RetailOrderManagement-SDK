@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [1.1.0-alpha-4] -  2015-03-26
 ### Added
 - Constant values for the taxAndDutyDisplay attribute
+
 ### Changed
 - Relaxed the validation constraints of some payloads
 
@@ -67,6 +68,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.1.0-alpha-4]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-alpha-3...1.1.0-alpha-4
 [1.1.0-alpha-3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-alpha-2...1.1.0-alpha-3
 [1.1.0-alpha-2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-alpha-1...1.1.0-alpha-2
 [1.1.0-alpha-1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.0.0...1.1.0-alpha-1
