@@ -39,9 +39,9 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-1.0": "1.0.x-dev",
+            "dev-1.0": "1.0.x-dev"
         }
-    }
+    },
     "autoload": {
         "psr-0": {
             "eBayEnterprise\\": "src/"
