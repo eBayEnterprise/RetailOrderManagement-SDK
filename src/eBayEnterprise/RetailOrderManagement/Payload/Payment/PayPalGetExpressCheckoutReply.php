@@ -15,42 +15,63 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload\Payment;
 
-use eBayEnterprise\RetailOrderManagement\Payload;
-use eBayEnterprise\RetailOrderManagement\Payload\Exception;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
+use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
+use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 
 class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
 {
+    use TTopLevelPayload, TOrderId, TBillingAddress, TShippingAddress;
+
     const ADDRESS_INTERFACE = '\eBayEnterprise\RetailOrderManagement\Payload\Payment\IPayPalAddress';
     const SUCCESS = 'Success';
 
-    use Payload\TTopLevelPayload, TOrderId, TBillingAddress, TShippingAddress;
-
-    /** @var string * */
+    /** @var string */
     protected $responseCode;
-    /** @var string * */
+    /** @var string */
     protected $payerEmail;
-    /** @var string * */
+    /** @var string */
     protected $payerId;
-    /** @var string * */
+    /** @var string */
     protected $payerStatus;
-    /** @var string * */
+    /** @var string */
     protected $payerNameHonorific;
-    /** @var string * */
+    /** @var string */
     protected $payerLastName;
-    /** @var string * */
+    /** @var string */
     protected $payerMiddleName;
-    /** @var string * */
+    /** @var string */
     protected $payerFirstName;
-    /** @var string * */
+    /** @var string */
     protected $payerCountry;
-    /** @var string * */
+    /** @var string */
     protected $payerPhone;
+    /** @var string */
+    protected $billingAddressStatus;
+    /** @var string */
+    protected $shippingAddressStatus;
 
+    /**
+     * @param IValidatorIterator
+     * @param ISchemaValidator
+     * @param IPayloadMap
+     * @param LoggerInterface
+     * @param IPayload
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(
-        Payload\IValidatorIterator $validators,
-        Payload\ISchemaValidator $schemaValidator,
-        Payload\IPayloadMap $payloadMap
+        IValidatorIterator $validators,
+        ISchemaValidator $schemaValidator,
+        IPayloadMap $payloadMap
     ) {
+        $this->validators = $validators;
+        $this->schemaValidator = $schemaValidator;
+        $this->payloadMap = $payloadMap;
+        $this->payloadFactory = new PayloadFactory();
+
         $this->extractionPaths = [
             'orderId' => 'string(x:OrderId)',
             'responseCode' => 'string(x:ResponseCode)',
@@ -73,6 +94,8 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
             'billingPostalCode' => 'x:BillingAddress/x:PostalCode',
             'shipToMainDivision' => 'x:ShippingAddress/x:MainDivision',
             'shipToPostalCode' => 'x:ShippingAddress/x:PostalCode',
+            'billingAddressStatus' => 'x:BillingAddress/x:AddressStatus',
+            'shippingAddressStatus' => 'x:ShippingAddress/x:AddressStatus',
         ];
         $this->addressLinesExtractionMap = [
             [
@@ -84,10 +107,6 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
                 'xPath' => "x:ShippingAddress/*[starts-with(name(), 'Line')]"
             ]
         ];
-        $this->validators = $validators;
-        $this->schemaValidator = $schemaValidator;
-        $this->payloadMap = $payloadMap;
-        $this->payloadFactory = new Payload\PayloadFactory();
     }
 
     /**
@@ -133,9 +152,9 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
         . $this->serializePayerStatus()
         . $this->serializePayerName()
         . $this->serializePayerCountry()
-        . $this->serializeBillingAddress()
+        . $this->serializeBillingAddressWithStatus()
         . $this->serializePayerPhone()
-        . $this->serializeShippingAddress();
+        . $this->serializeShippingAddressWithStatus();
     }
 
     /**
@@ -232,6 +251,46 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     public function setPayerStatus($payerStatus)
     {
         $this->payerStatus = $payerStatus;
+        return $this;
+    }
+
+    /**
+     * Billing address status to be sent to the Order Management System
+     *
+     * @return string
+     */
+    public function getBillingAddressStatus()
+    {
+        return $this->billingAddressStatus;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setBillingAddressStatus($status)
+    {
+        $this->billingAddressStatus = $status;
+        return $this;
+    }
+
+    /**
+     * Shipping address status to be sent to the Order Management System
+     *
+     * @return string
+     */
+    public function getShippingAddressStatus()
+    {
+        return $this->shippingAddressStatus;
+    }
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setShippingAddressStatus($status)
+    {
+        $this->shippingAddressStatus = $status;
         return $this;
     }
 
@@ -427,5 +486,46 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
+    }
+
+    /**
+     * add the address status element to a serialized IBillingAddress or
+     * IShippingAddress
+     * @param  string $status
+     * @param  string $serializedAddress
+     * @return string
+     */
+    protected function injectAddressStatus($status, $serializedAddress)
+    {
+        if ($status) {
+            $closeTagPos = strrpos($serializedAddress, '</');
+            $serializedAddress = substr_replace(
+                $serializedAddress,
+                "<AddressStatus>$status</AddressStatus>",
+                $closeTagPos,
+                0
+            );
+        }
+        return $serializedAddress;
+    }
+
+    /**
+     * serialize the billing address along with the address
+     * status
+     * @return string
+     */
+    protected function serializeBillingAddressWithStatus()
+    {
+        return $this->injectAddressStatus($this->getBillingAddressStatus(), $this->serializeBillingAddress());
+    }
+
+    /**
+     * serialize the shipping address along with the address
+     * status
+     * @return string
+     */
+    protected function serializeShippingAddressWithStatus()
+    {
+        return $this->injectAddressStatus($this->getShippingAddressStatus(), $this->serializeShippingAddress());
     }
 }

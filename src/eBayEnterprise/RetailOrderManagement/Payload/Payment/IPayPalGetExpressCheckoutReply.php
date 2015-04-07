@@ -153,6 +153,32 @@ interface IPayPalGetExpressCheckoutReply extends IPayPalGetExpressCheckout, IBil
     public function setPayerPhone($phone);
 
     /**
+     * Billing address status to be sent to the Order Management System
+     *
+     * @return string
+     */
+    public function getBillingAddressStatus();
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setBillingAddressStatus($status);
+
+    /**
+     * Shipping address status to be sent to the Order Management System
+     *
+     * @return string
+     */
+    public function getShippingAddressStatus();
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setShippingAddressStatus($status);
+
+    /**
      * Should downstream systems consider this reply a success?
      *
      * @return bool

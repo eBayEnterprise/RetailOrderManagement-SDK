@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## UNRELEASED
+### Added
+- Add billing and shipping address status fields to the get express reply
+
+
 ## [1.0.1][1.0.1] - 2015-01-29
 ### Fixed
 - Make PayPal Express Checkout functional when `Transfer Cart Line Items` is turn off in the backend.
