@@ -37,11 +37,6 @@
         "sebastian/phpcpd": "~2.0",
         "squizlabs/php_codesniffer": "~1.5"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.1.x-dev"
-        }
-    },
     "autoload": {
         "psr-0": {
             "eBayEnterprise\\": "src/"
