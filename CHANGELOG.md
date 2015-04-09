@@ -1,12 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## UNRELEASED
+## [1.0.2] - 2015-04-09
 ### Added
-- Add billing and shipping address status fields to the get express reply
+- Billing and shipping address status fields to the PayPal Get Express reply
 
-
-## [1.0.1][1.0.1] - 2015-01-29
+## [1.0.1] - 2015-01-29
 ### Fixed
 - Make PayPal Express Checkout functional when `Transfer Cart Line Items` is turn off in the backend.
 
@@ -43,4 +42,5 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.0.2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.0.0...1.0.1
