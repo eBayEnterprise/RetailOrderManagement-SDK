@@ -1,0 +1,166 @@
+<TaxDutyQuoteRequest xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Currency>USD</Currency>
+    <VATInclusivePricing>false</VATInclusivePricing>
+    <CustomerTaxId>12345</CustomerTaxId>
+    <BillingInformation ref="bill_dest1"/>
+    <Shipping>
+        <ShipGroups>
+            <ShipGroup id="shipgroup_1">
+                <DestinationTarget ref="dest1"/>
+                <Items>
+                    <OrderItem lineNumber="1">
+                        <ItemId>123</ItemId>
+                        <ItemDesc>Black Tennis Shoes</ItemDesc>
+                        <HTSCode>duty code</HTSCode>
+                        <Origins>
+                            <AdminOrigin>
+                                <Line1>11400, sawtelle blvd</Line1>
+                                <Line2>line 2</Line2>
+                                <Line3>line 3</Line3>
+                                <Line4>line 4</Line4>
+                                <BuildingName>building name</BuildingName>
+                                <PoBox>4023</PoBox>
+                                <City>Santa Monica</City>
+                                <MainDivision>California</MainDivision>
+                                <MainDivisionCode>CA</MainDivisionCode>
+                                <CountryCode>US</CountryCode>
+                                <PostalCode>90405</PostalCode>
+                            </AdminOrigin>
+                            <ShippingOrigin>
+                                <Line1>4 Whatever Rd</Line1>
+                                <City>Louisville</City>
+                                <MainDivision>KY</MainDivision>
+                                <CountryCode>US</CountryCode>
+                                <PostalCode>40258</PostalCode>
+                            </ShippingOrigin>
+                            <ManufacturingCountryCode>US</ManufacturingCountryCode>
+                        </Origins>
+                        <Quantity>2</Quantity>
+                        <Pricing>
+                            <Merchandise>
+                                <Amount>1000.00</Amount>
+                                <TaxClass>76800</TaxClass>
+                                <PromotionalDiscounts>
+                                    <Discount calculateDuty="false" id="334">
+                                        <Amount>20.00</Amount>
+                                    </Discount>
+                                </PromotionalDiscounts>
+                                <UnitPrice>500.00</UnitPrice>
+                            </Merchandise>
+                            <Shipping>
+                                <Amount>20.00</Amount>
+                            </Shipping>
+                            <Duty>
+                                <Amount>4.00</Amount>
+                            </Duty>
+                            <Fees>
+                                <Fee>
+                                    <FeeType>testing fee</FeeType>
+                                    <Description>fee description</Description>
+                                    <FeeId>123</FeeId>
+                                    <Charge>
+                                        <Amount>5.00</Amount>
+                                        <TaxClass>76800</TaxClass>
+                                        <PromotionalDiscounts>
+                                            <Discount calculateDuty="false" id="334">
+                                                <Amount>0.05</Amount>
+                                            </Discount>
+                                        </PromotionalDiscounts>
+                                    </Charge>
+                                </Fee>
+                            </Fees>
+                        </Pricing>
+                        <Gifting id="someid">
+                            <ItemId>itemgiftid</ItemId>
+                            <ItemDesc>item gifting</ItemDesc>
+                            <Pricing>
+                                <Amount>2.10</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount calculateDuty="false" id="334">
+                                        <Amount>2.10</Amount>
+                                    </Discount>
+                                </PromotionalDiscounts>
+                                <UnitPrice>0.21</UnitPrice>
+                            </Pricing>
+                        </Gifting>
+                        <Customization>
+                            <CustomFeatureList>
+                                <CustomFeature id="custfeatid">
+                                    <CustomizationId>cust id</CustomizationId>
+                                    <ItemId>customitemid</ItemId>
+                                    <ItemDesc>custom description</ItemDesc>
+                                    <Upcharge>
+                                        <Amount>0.50</Amount>
+                                        <PromotionalDiscounts>
+                                            <Discount calculateDuty="false" id="334">
+                                                <Amount>0.50</Amount>
+                                            </Discount>
+                                        </PromotionalDiscounts>
+                                        <UnitPrice>0.50</UnitPrice>
+                                    </Upcharge>
+                                </CustomFeature>
+                            </CustomFeatureList>
+                            <BasePrice>
+                                <Amount>1.00</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount calculateDuty="false" id="334">
+                                        <Amount>1.00</Amount>
+                                    </Discount>
+                                </PromotionalDiscounts>
+                                <UnitPrice>1.00</UnitPrice>
+                            </BasePrice>
+                        </Customization>
+                    </OrderItem>
+                </Items>
+                <Gifting id="someid">
+                    <ItemId>shipgroupgiftid</ItemId>
+                    <ItemDesc>shipgroup gifting</ItemDesc>
+                    <Pricing>
+                        <Amount>1.10</Amount>
+                        <PromotionalDiscounts>
+                            <Discount calculateDuty="false" id="334">
+                                <Amount>1.10</Amount>
+                            </Discount>
+                        </PromotionalDiscounts>
+                        <UnitPrice>0.21</UnitPrice>
+                    </Pricing>
+                </Gifting>
+            </ShipGroup>
+        </ShipGroups>
+        <Destinations>
+            <MailingAddress id="dest1">
+                <PersonName>
+                    <LastName>dest1 lastname</LastName>
+                    <FirstName>Suresh</FirstName>
+                </PersonName>
+                <Address>
+                    <Line1>123 Elm</Line1>
+                    <City>Philadelphia</City>
+                    <MainDivision>PA</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>19128</PostalCode>
+                </Address>
+            </MailingAddress>
+            <MailingAddress id="bill_dest1">
+                <PersonName>
+                    <LastName>Billing lastname</LastName>
+                    <FirstName>Suresh</FirstName>
+                </PersonName>
+                <Address>
+                    <Line1>630 Allendale Road</Line1>
+                    <City>King Of Prussia</City>
+                    <MainDivision>PA</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>19406</PostalCode>
+                </Address>
+            </MailingAddress>
+            <Email id="dest2">
+                <Customer>
+                    <LastName>dest1 lastname</LastName>
+                    <FirstName>Suresh</FirstName>
+                </Customer>
+                <EmailAddress>Foo@booDiddly.com</EmailAddress>
+            </Email>
+        </Destinations>
+    </Shipping>
+</TaxDutyQuoteRequest>

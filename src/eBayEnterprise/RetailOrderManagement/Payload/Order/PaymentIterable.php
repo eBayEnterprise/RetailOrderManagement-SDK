@@ -26,6 +26,9 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SPLObjectStorage;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PaymentIterable extends SPLObjectStorage implements IPaymentIterable
 {
     use TIterablePayload;

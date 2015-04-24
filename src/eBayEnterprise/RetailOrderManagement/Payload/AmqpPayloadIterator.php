@@ -24,6 +24,7 @@ use Psr\Log\NullLogger;
 /**
  * Class AmqpPayloadIterator
  * @package eBayEnterprise\RetailOrderManagement\Payload\Iterator
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AmqpPayloadIterator implements IPayloadIterator
 {

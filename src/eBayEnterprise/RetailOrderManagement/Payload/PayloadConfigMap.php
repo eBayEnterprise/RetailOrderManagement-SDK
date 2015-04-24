@@ -2320,5 +2320,624 @@ return call_user_func(function () {
         'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxDutyFeeQuoteRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getCurrency',
+                    'getBillingInformation',
+                ]
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => [
+                    'getShipGroups',
+                    'getDestinations',
+                ],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IShipGroupIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ShipGroupIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestinationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\DestinationIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ShipGroupIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IShipGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ShipGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ShipGroup'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getChargeType'],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getItems'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getGiftPricing'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IOrderItemRequestIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\OrderItemRequestIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IMerchandisePriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\MerchandisePriceGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\OrderItemRequestIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IOrderItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\OrderItemRequest',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\DestinationIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IMailingAddress' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\MailingAddress',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IEmailAddressDestination' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\EmailAddressDestination',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\MailingAddress'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge($physicalAddressParams, $personNameParams),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\EmailAddressDestination'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getEmailAddress'],
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => ['getFirstName', 'getLastName'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\OriginPhysicalAddress'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => $physicalAddressParams,
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\OrderItemRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getLineNumber',
+                    'getItemId',
+                    'getQuantity',
+                    'getAdminOrigin',
+                    'getShippingOrigin',
+                ],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getMerchandisePricing'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => [
+                    'getShippingPricing',
+                    'getDutyPricing',
+                    'getFees',
+                    'getGiftPricing',
+                    'getCustomizationBasePricing',
+                    'getCustomizations',
+                ],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IOriginPhysicalAddress' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\OriginPhysicalAddress',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\PriceGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IMerchandisePriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\MerchandisePriceGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IDutyPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\DutyPriceGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IFeeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\FeeIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ICustomizationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\CustomizationIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ICustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\CustomAttributeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\FeeIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IFee' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\Fee',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\Fee'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getType'],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getCharge'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\PriceGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\CustomizationIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ICustomization' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\Customization',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\Discount'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getAmount'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\DiscountIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IDiscount' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\Discount'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\EmailAddressDestination'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getEmailAddress'],
+            ],
+            [
+                'validator' => $optionalGroupValidator,
+                'params' => ['getFirstName', 'getLastName'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\PriceGroup'] = [
+        'validators' => [
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getDiscounts'],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IDiscountIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\DiscountIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\MerchandisePriceGroup'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\PriceGroup'];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\DutyPriceGroup'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\PriceGroup'];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxDutyFeeQuoteReply'] = [
+        'validators' => [
+            [
+                'validator' => $subpayloadValidator,
+                'params' => [
+                    'getShipGroups',
+                    'getDestinations',
+                ],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedShipGroupIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedShipGroupIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestinationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\DestinationIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedShipGroupIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedShipGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedShipGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedShipGroup'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getChargeType'],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getItems'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getGiftPricing'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedOrderItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedOrderItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedMerchandisePriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedMerchandisePriceGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedOrderItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => [
+                    'getLineNumber',
+                    'getItemId',
+                    'getQuantity',
+                ],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getMerchandisePricing'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => [
+                    'getShippingPricing',
+                    'getDutyPricing',
+                    'getFees',
+                    'getGiftPricing',
+                    'getCustomizationBasePricing',
+                    'getCustomizations',
+                ],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedPriceGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedMerchandisePriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedMerchandisePriceGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedDutyPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedDutyPriceGroup',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedFeeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedFeeIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedCustomizationIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedCustomizationIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedCustomAttributeIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedCustomAttributeIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedPriceGroup'] = [
+        'validators' => [
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getDiscounts', 'getTaxes'],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedDiscountIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedDiscountIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedMerchandisePriceGroup'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedPriceGroup'];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedDutyPriceGroup'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedPriceGroup'];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedOrderItemIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ]
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedOrderItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedOrderItem',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedFeeIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedFee' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedFee',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedCustomizationIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedCustomization' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedCustomization',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\ITax' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\Tax',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedDiscountIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedDiscount' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedDiscount'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedDiscount'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getId', 'getAmount'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getTaxes'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxIterable'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedFee'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getType'],
+            ],
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getCharge'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedPriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedPriceGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\Customization'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getItemId'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getUpCharge'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IMerchandisePriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\MerchandisePriceGroup',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedCustomization'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getItemId'],
+            ],
+            [
+                'validator' => $optionalSubpayloadValidator,
+                'params' => ['getUpCharge'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\ITaxedMerchandisePriceGroup' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxedMerchandisePriceGroup',
+            ],
+        ],
+    ];
     return $map;
 });

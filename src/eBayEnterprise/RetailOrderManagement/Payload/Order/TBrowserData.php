@@ -239,6 +239,11 @@ trait TBrowserData
         return $this;
     }
 
+    public function serializeOptionalXmlEncodedValue($name, $value)
+    {
+        return $this->serializeOptionalValue($name, ($value) ? $this->xmlEncode($value) : null);
+    }
+
     /**
      * Serialize browser data associated with the order.
      *
@@ -251,13 +256,13 @@ trait TBrowserData
             . "<IPAddress>{$this->getIpAddress()}</IPAddress>"
             . '<SessionId>' . $this->xmlEncode($this->getSessionId()) . '</SessionId>'
             . '<UserAgent>' . $this->xmlEncode($this->getUserAgent()) . '</UserAgent>'
-            . $this->serializeOptionalValue('Connection', $this->xmlEncode($this->getConnection()))
-            . $this->serializeOptionalValue('Cookies', $this->xmlEncode($this->getCookies()))
-            . $this->serializeOptionalValue('UserCookie', $this->xmlEncode($this->getUserCookie()))
-            . $this->serializeOptionalValue('UserAgentOS', $this->xmlEncode($this->getUserAgentOs()))
-            . $this->serializeOptionalValue('UserAgentCPU', $this->xmlEncode($this->getUserAgentCpu()))
-            . $this->serializeOptionalValue('HeaderFrom', $this->xmlEncode($this->getHeaderFrom()))
-            . $this->serializeOptionalValue('EmbeddedWebBrowserFrom', $this->xmlEncode($this->getWebBrowserName()))
+            . $this->serializeOptionalXmlEncodedValue('Connection', $this->getConnection())
+            . $this->serializeOptionalXmlEncodedValue('Cookies', $this->getCookies())
+            . $this->serializeOptionalXmlEncodedValue('UserCookie', $this->getUserCookie())
+            . $this->serializeOptionalXmlEncodedValue('UserAgentOS', $this->getUserAgentOs())
+            . $this->serializeOptionalXmlEncodedValue('UserAgentCPU', $this->getUserAgentCpu())
+            . $this->serializeOptionalXmlEncodedValue('HeaderFrom', $this->getHeaderFrom())
+            . $this->serializeOptionalXmlEncodedValue('EmbeddedWebBrowserFrom', $this->xmlEncode($this->getWebBrowserName()))
             . '<JavascriptData>' . $this->xmlEncode($this->getJavascriptData()) . '</JavascriptData>'
             . '<Referrer>' . $this->xmlEncode($this->getReferrer()) . '</Referrer>'
             . "<HTTPAcceptData>"

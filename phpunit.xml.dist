@@ -20,7 +20,7 @@
         stopOnFailure="false"
         stopOnIncomplete="false"
         stopOnSkipped="false"
-        strict="true"
+        strict="false"
         verbose="true"
         timeoutForSmallTests="1"
         bootstrap="vendor/autoload.php">

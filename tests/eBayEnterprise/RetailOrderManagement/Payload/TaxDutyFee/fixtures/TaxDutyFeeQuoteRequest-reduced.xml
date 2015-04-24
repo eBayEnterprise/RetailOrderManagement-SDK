@@ -1,0 +1,115 @@
+<TaxDutyQuoteRequest xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Currency>USD</Currency>
+    <BillingInformation ref="bill_dest1"/>
+    <Shipping>
+        <ShipGroups>
+            <ShipGroup id="shipgroup_1">
+                <DestinationTarget ref="dest1"/>
+                <Items>
+                    <OrderItem lineNumber="1">
+                        <ItemId>123</ItemId>
+                        <Origins>
+                            <AdminOrigin>
+                                <Line1>11400, sawtelle blvd</Line1>
+                                 <City>Santa Monica</City>
+                                <MainDivision>CA</MainDivision>
+                                <CountryCode>US</CountryCode>
+                                <PostalCode>90405</PostalCode>
+                            </AdminOrigin>
+                            <ShippingOrigin>
+                                <Line1>4 Whatever Rd</Line1>
+                                <City>Louisville</City>
+                                <MainDivision>KY</MainDivision>
+                                <CountryCode>US</CountryCode>
+                                <PostalCode>40258</PostalCode>
+                            </ShippingOrigin>
+                        </Origins>
+                        <Quantity>2</Quantity>
+                        <Pricing>
+                            <Merchandise>
+                                <Amount>980.00</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount>
+                                        <Amount>20.00</Amount>
+                                    </Discount>
+                                </PromotionalDiscounts>
+                                <UnitPrice>500.00</UnitPrice>
+                            </Merchandise>
+                        </Pricing>
+                    </OrderItem>
+                </Items>
+            </ShipGroup>
+            <ShipGroup id="shipgroup_2">
+                <DestinationTarget ref="dest2"/>
+                <Items>
+                    <OrderItem lineNumber="2">
+                        <ItemId>123</ItemId>
+                        <Origins>
+                            <AdminOrigin>
+                                <Line1>11400, sawtelle blvd</Line1>
+                                 <City>Santa Monica</City>
+                                <MainDivision>CA</MainDivision>
+                                <CountryCode>US</CountryCode>
+                                <PostalCode>90405</PostalCode>
+                            </AdminOrigin>
+                            <ShippingOrigin>
+                                <Line1>4 Whatever Rd</Line1>
+                                <City>Louisville</City>
+                                <MainDivision>KY</MainDivision>
+                                <CountryCode>US</CountryCode>
+                                <PostalCode>40258</PostalCode>
+                            </ShippingOrigin>
+                        </Origins>
+                        <Quantity>1</Quantity>
+                        <Pricing>
+                            <Merchandise>
+                                <Amount>490.00</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount>
+                                        <Amount>10.00</Amount>
+                                    </Discount>
+                                </PromotionalDiscounts>
+                                <UnitPrice>500.00</UnitPrice>
+                            </Merchandise>
+                        </Pricing>
+                    </OrderItem>
+                </Items>
+            </ShipGroup>
+        </ShipGroups>
+        <Destinations>
+            <MailingAddress id="dest1">
+                <PersonName>
+                    <LastName>dest1 lastname</LastName>
+                    <FirstName>Suresh</FirstName>
+                </PersonName>
+                <Address>
+                    <Line1>123 Elm</Line1>
+                    <City>Philadelphia</City>
+                    <MainDivision>PA</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>19128</PostalCode>
+                </Address>
+            </MailingAddress>
+            <MailingAddress id="bill_dest1">
+                <PersonName>
+                    <LastName>Billing lastname</LastName>
+                    <FirstName>Suresh</FirstName>
+                </PersonName>
+                <Address>
+                    <Line1>630 Allendale Road</Line1>
+                    <City>King Of Prussia</City>
+                    <MainDivision>PA</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>19406</PostalCode>
+                </Address>
+            </MailingAddress>
+            <Email id="dest2">
+                <Customer>
+                    <LastName>dest1 lastname</LastName>
+                    <FirstName>Suresh</FirstName>
+                </Customer>
+                <EmailAddress>Foo@booDiddly.com</EmailAddress>
+            </Email>
+        </Destinations>
+    </Shipping>
+</TaxDutyQuoteRequest>

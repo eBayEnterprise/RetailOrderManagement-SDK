@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TaxDutyQuoteResponse xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+  <Shipping>
+      <ShipGroups>
+         <ShipGroup id="shipgroup_1">
+            <DestinationTarget ref="dest1"/>
+            <Items>
+               <OrderItem lineNumber="1">
+                  <ItemId>123</ItemId>
+                  <ItemDesc>Black Tennis Shoes</ItemDesc>
+                  <HTSCode>duty code</HTSCode>
+
+                  <Quantity>2</Quantity>
+                  <Pricing>
+                     <Merchandise>
+                        <Amount>1000.00</Amount>
+                        <TaxData>
+                           <TaxClass>76800</TaxClass>
+                           <Taxes>
+                              <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                 <Situs>DESTINATION</Situs>
+                                 <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                 <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                 <EffectiveRate>0.06</EffectiveRate>
+                                 <TaxableAmount>980.00</TaxableAmount>
+                                 <CalculatedTax>58.80</CalculatedTax>
+                              </Tax>
+                           </Taxes>
+                        </TaxData>
+                        <PromotionalDiscounts>
+                           <Discount id="334" calculateDuty="false">
+                              <Amount>20.00</Amount>
+                              <Taxes>
+                                 <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                    <Situs>DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>0.00</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                 </Tax>
+                              </Taxes>
+                           </Discount>
+                        </PromotionalDiscounts>
+
+                        <UnitPrice>500.00</UnitPrice>
+                            </Merchandise>
+                     <Shipping>
+                        <Amount>20.00</Amount>
+                        <TaxData>
+                           <Taxes>
+                              <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                 <Situs>DESTINATION</Situs>
+                                 <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                 <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                 <EffectiveRate>0.06</EffectiveRate>
+                                 <TaxableAmount>20.00</TaxableAmount>
+                                 <CalculatedTax>1.20</CalculatedTax>
+                              </Tax>
+                           </Taxes>
+                        </TaxData>
+
+                     </Shipping>
+                     <Duty>
+                        <Amount>4.00</Amount>
+                        <TaxData>
+                           <TaxClass>DUTY</TaxClass>
+                           <Taxes>
+                              <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                 <Situs>DESTINATION</Situs>
+                                 <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                 <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                 <EffectiveRate>0.06</EffectiveRate>
+                                 <TaxableAmount>4.00</TaxableAmount>
+                                 <CalculatedTax>0.24</CalculatedTax>
+                              </Tax>
+                           </Taxes>
+                        </TaxData>
+
+                     </Duty>
+                     <Fees>
+                        <Fee>
+                           <FeeType>testing fee</FeeType>
+                           <Description>fee description</Description>
+                           <FeeId>123</FeeId>
+                           <Charge>
+                              <Amount>5.00</Amount>
+                              <TaxData>
+                                 <TaxClass>89999</TaxClass>
+                                 <Taxes>
+                                    <Tax taxType="SELLER_USE" taxability="EXEMPT">
+                                       <Situs>DESTINATION</Situs>
+                                       <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                       <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                       <EffectiveRate>0.00</EffectiveRate>
+                                       <TaxableAmount>0.00</TaxableAmount>
+                                       <ExemptAmount>4.95</ExemptAmount>
+                                       <CalculatedTax>0.00</CalculatedTax>
+                                    </Tax>
+                                 </Taxes>
+                              </TaxData>
+                              <PromotionalDiscounts>
+                                 <Discount id="334" calculateDuty="false">
+                                    <Amount>0.05</Amount>
+                                    <Taxes>
+                                       <Tax taxType="SELLER_USE" taxability="EXEMPT">
+                                          <Situs>DESTINATION</Situs>
+                                          <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                          <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                          <EffectiveRate>0.00</EffectiveRate>
+                                          <TaxableAmount>0.00</TaxableAmount>
+                                          <ExemptAmount>0.00</ExemptAmount>
+                                          <CalculatedTax>0.00</CalculatedTax>
+                                       </Tax>
+                                    </Taxes>
+                                 </Discount>
+                              </PromotionalDiscounts>
+
+                           </Charge>
+                                </Fee>
+                     </Fees>
+                  </Pricing>
+                  <Gifting id="someid">
+                     <ItemId>itemgiftid</ItemId>
+                     <ItemDesc>item gifting</ItemDesc>
+                     <Pricing>
+                        <Amount>2.10</Amount>
+                        <TaxData>
+                           <Taxes>
+                              <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                 <Situs>DESTINATION</Situs>
+                                 <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                 <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                 <EffectiveRate>0.00</EffectiveRate>
+                                 <TaxableAmount>0.00</TaxableAmount>
+                                 <CalculatedTax>0.00</CalculatedTax>
+                              </Tax>
+                           </Taxes>
+                        </TaxData>
+                        <PromotionalDiscounts>
+                           <Discount id="334" calculateDuty="false">
+                              <Amount>2.10</Amount>
+                              <Taxes>
+                                 <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                    <Situs>DESTINATION</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>0.00</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                 </Tax>
+                              </Taxes>
+                           </Discount>
+                        </PromotionalDiscounts>
+
+                        <UnitPrice>0.21</UnitPrice>
+                      </Pricing>
+                  </Gifting>
+                  <Customization>
+                     <CustomFeatureList>
+                        <CustomFeature>
+                           <CustomizationId>cust id</CustomizationId>
+                           <ItemId>customitemid</ItemId>
+                           <ItemDesc>custom description</ItemDesc>
+                           <Upcharge>
+                              <Amount>0.50</Amount>
+                              <TaxData>
+                                 <Taxes>
+                                    <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                       <Situs>DESTINATION</Situs>
+                                       <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                       <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                       <EffectiveRate>0.00</EffectiveRate>
+                                       <TaxableAmount>0.00</TaxableAmount>
+                                       <CalculatedTax>0.00</CalculatedTax>
+                                    </Tax>
+                                 </Taxes>
+                              </TaxData>
+                              <PromotionalDiscounts>
+                                 <Discount id="334" calculateDuty="false">
+                                    <Amount>0.50</Amount>
+                                    <Taxes>
+                                       <Tax taxType="SELLER_USE" taxability="TAXABLE">
+                                          <Situs>DESTINATION</Situs>
+                                          <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                          <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                          <EffectiveRate>0.00</EffectiveRate>
+                                          <TaxableAmount>0.00</TaxableAmount>
+                                          <CalculatedTax>0.00</CalculatedTax>
+                                       </Tax>
+                                    </Taxes>
+                                 </Discount>
+                              </PromotionalDiscounts>
+
+                              <UnitPrice>0.50</UnitPrice>
+                           </Upcharge>
+                        </CustomFeature>
+                     </CustomFeatureList>
+                  </Customization>
+               </OrderItem>
+            </Items>
+            <Gifting id="someid">
+               <ItemId>someitemid</ItemId>
+               <ItemDesc>shipgroup gifting</ItemDesc>
+               <Pricing>
+                  <Amount>2.10</Amount>
+                  <TaxData>
+                     <Taxes>
+                        <Tax taxType="SALES" taxability="TAXABLE">
+                           <Situs>DESTINATION</Situs>
+                           <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                           <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                           <EffectiveRate>0.00</EffectiveRate>
+                           <TaxableAmount>0.00</TaxableAmount>
+                           <CalculatedTax>0.00</CalculatedTax>
+                        </Tax>
+                        <Tax taxType="SALES" taxability="TAXABLE">
+                           <Situs>DESTINATION</Situs>
+                           <Jurisdiction jurisdictionLevel="CITY" jurisdictionId="33126">PHILADELPHIA</Jurisdiction>
+                           <Imposition impositionType="General Sales and Use Tax">Local Sales and Use Tax</Imposition>
+                           <EffectiveRate>0.00</EffectiveRate>
+                           <TaxableAmount>0.00</TaxableAmount>
+                           <CalculatedTax>0.00</CalculatedTax>
+                        </Tax>
+                     </Taxes>
+                  </TaxData>
+                  <PromotionalDiscounts>
+                     <Discount id="334" calculateDuty="false">
+                        <Amount>2.10</Amount>
+                        <Taxes>
+                           <Tax taxType="SALES" taxability="TAXABLE">
+                              <Situs>DESTINATION</Situs>
+                              <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                              <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                              <EffectiveRate>0.00</EffectiveRate>
+                              <TaxableAmount>0.00</TaxableAmount>
+                              <CalculatedTax>0.00</CalculatedTax>
+                           </Tax>
+                           <Tax taxType="SALES" taxability="TAXABLE">
+                              <Situs>DESTINATION</Situs>
+                              <Jurisdiction jurisdictionLevel="CITY" jurisdictionId="33126">PHILADELPHIA</Jurisdiction>
+                              <Imposition impositionType="General Sales and Use Tax">Local Sales and Use Tax</Imposition>
+                              <EffectiveRate>0.00</EffectiveRate>
+                              <TaxableAmount>0.00</TaxableAmount>
+                              <CalculatedTax>0.00</CalculatedTax>
+                           </Tax>
+                        </Taxes>
+                     </Discount>
+                  </PromotionalDiscounts>
+
+                  <UnitPrice>0.21</UnitPrice>
+                    </Pricing>
+                </Gifting>
+         </ShipGroup>
+      </ShipGroups>
+      <Destinations>
+         <MailingAddress id="dest1">
+            <PersonName>
+               <LastName>dest1 lastname</LastName>
+               <FirstName>Suresh</FirstName>
+            </PersonName>
+            <Address>
+               <Line1>123 Elm</Line1>
+               <City>Philadelphia</City>
+               <MainDivision>PA</MainDivision>
+
+               <CountryCode>US</CountryCode>
+               <PostalCode>19128</PostalCode>
+            </Address>
+         </MailingAddress>
+         <MailingAddress id="bill_dest1">
+            <PersonName>
+               <LastName>Billing lastname</LastName>
+               <FirstName>Suresh</FirstName>
+            </PersonName>
+            <Address>
+               <Line1>630 Allendale Road</Line1>
+               <City>King Of Prussia</City>
+               <MainDivision>PA</MainDivision>
+
+               <CountryCode>US</CountryCode>
+               <PostalCode>19406</PostalCode>
+            </Address>
+         </MailingAddress>
+         <Email id="dest2">
+            <Customer>
+               <LastName>dest1 lastname</LastName>
+               <FirstName>Suresh</FirstName>
+            </Customer>
+            <EmailAddress>Foo@booDiddly.com</EmailAddress>
+         </Email>
+      </Destinations>
+    </Shipping>
+</TaxDutyQuoteResponse>

@@ -101,36 +101,8 @@ class OrderCreateRequest implements IOrderCreateRequest
         $this->parentPayload = $parentPayload;
         $this->payloadFactory = new PayloadFactory;
 
-        $this->loyaltyPrograms = $this->buildPayloadForInterface(
-            static::LOYALTY_PROGRAM_ITERABLE_INTERFACE
-        );
-        $this->orderItems = $this->buildPayloadForInterface(
-            static::ORDER_ITEM_ITERABLE_INTERFACE
-        );
-        $this->payments = $this->buildPayloadForInterface(
-            static::PAYMENT_ITERABLE_INTERFACE
-        );
-        $this->shipGroups = $this->buildPayloadForInterface(
-            static::SHIP_GROUP_ITERABLE_INTERFACE
-        );
-        $this->destinations = $this->buildPayloadForInterface(
-            static::DESTINATION_ITERABLE_INTERFACE
-        );
-        $this->itemRelationships = $this->buildPayloadForInterface(
-            static::ITEM_RELATIONSHIP_ITERABLE_INTERFACE
-        );
-        $this->holds = $this->buildPayloadForInterface(
-            static::ORDER_HOLD_ITERABLE_INTERFACE
-        );
-        $this->customAttributes = $this->buildPayloadForInterface(
-            static::CUSTOM_ATTRIBUTE_ITERABLE_INTERFACE
-        );
-        $this->templates = $this->buildPayloadForInterface(
-            static::TEMPLATE_ITERABLE_INTERFACE
-        );
-        $this->orderContextCustomAttributes = $this->buildPayloadForInterface(
-            static::ORDER_CONTEXT_CUSTOM_ATTRIBUTE_ITERABLE_INTERFACE
-        );
+        $this->setupSubPayloads();
+
         $this->extractionPaths = array_merge(
             [
                 'requestId' => 'string(@requestId)',
@@ -451,6 +423,40 @@ class OrderCreateRequest implements IOrderCreateRequest
         return $this;
     }
 
+    protected function setupSubPayloads()
+    {
+        $this->loyaltyPrograms = $this->buildPayloadForInterface(
+            static::LOYALTY_PROGRAM_ITERABLE_INTERFACE
+        );
+        $this->orderItems = $this->buildPayloadForInterface(
+            static::ORDER_ITEM_ITERABLE_INTERFACE
+        );
+        $this->payments = $this->buildPayloadForInterface(
+            static::PAYMENT_ITERABLE_INTERFACE
+        );
+        $this->shipGroups = $this->buildPayloadForInterface(
+            static::SHIP_GROUP_ITERABLE_INTERFACE
+        );
+        $this->destinations = $this->buildPayloadForInterface(
+            static::DESTINATION_ITERABLE_INTERFACE
+        );
+        $this->itemRelationships = $this->buildPayloadForInterface(
+            static::ITEM_RELATIONSHIP_ITERABLE_INTERFACE
+        );
+        $this->holds = $this->buildPayloadForInterface(
+            static::ORDER_HOLD_ITERABLE_INTERFACE
+        );
+        $this->customAttributes = $this->buildPayloadForInterface(
+            static::CUSTOM_ATTRIBUTE_ITERABLE_INTERFACE
+        );
+        $this->templates = $this->buildPayloadForInterface(
+            static::TEMPLATE_ITERABLE_INTERFACE
+        );
+        $this->orderContextCustomAttributes = $this->buildPayloadForInterface(
+            static::ORDER_CONTEXT_CUSTOM_ATTRIBUTE_ITERABLE_INTERFACE
+        );
+    }
+
     protected function deserializeExtra($serializedPayload)
     {
         $xpath = $this->getPayloadAsXPath($serializedPayload);
@@ -512,7 +518,7 @@ class OrderCreateRequest implements IOrderCreateRequest
             . $this->getHolds()->serialize()
             . $this->getCustomAttributes()->serialize()
             . $this->getTemplates()->serialize()
-            . $this->serializeOptionalValue('OrderHistoryUrl', $this->xmlEncode($this->getOrderHistoryUrl()))
+            . ($this->getOrderHistoryUrl() ? "<OrderHistoryUrl>{$this->xmlEncode($this->getOrderHistoryUrl())}</OrderHistoryUrl>" : "")
             . $this->serializeVatInclusivePricing()
             . $this->serializeOptionalAmount('OrderTotal', $this->getOrderTotal())
             . '</Order>';

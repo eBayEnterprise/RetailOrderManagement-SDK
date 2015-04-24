@@ -63,5 +63,9 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoVoidRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\PayPalDoVoidReply',
     ];
+    $map['taxes/quote'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxDutyFeeQuoteRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\TaxDutyFeeQuoteReply',
+    ];
     return $map;
 });

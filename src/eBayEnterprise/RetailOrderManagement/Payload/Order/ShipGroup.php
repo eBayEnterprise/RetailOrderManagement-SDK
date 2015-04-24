@@ -22,6 +22,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\TIdentity;
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout\TDestinationTarget;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
