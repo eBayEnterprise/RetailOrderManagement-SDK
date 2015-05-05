@@ -27,12 +27,12 @@ use Psr\Log\NullLogger;
 trait TLogger
 {
     /**
-     * Check if we have a valid logger that is not null and not a an instance of NullLogger.
+     * Check if the logger has a method name 'getContext'.
      * @return bool
      */
-    protected function hasValidLogger()
+    protected function hasContext()
     {
-        return ($this->logger && !$this->logger instanceof NullLogger);
+        return method_exists($this->logger, 'getContext');
     }
 
     /**
@@ -41,7 +41,25 @@ trait TLogger
      */
     protected function getContext()
     {
-        return $this->hasValidLogger() ? $this->logger->getContext() : null;
+        return $this->hasContext() ? $this->logger->getContext() : null;
+    }
+
+    /**
+     * Add the request/response payload body to the log context.
+     *
+     * @param  string
+     * @param  string
+     * @return array
+     */
+    protected function addLogContext($key, $xmlPayload)
+    {
+        $context = $this->getContext();
+        $logData = [
+            'app_context' => 'http',
+            'rom_request_url' => $this->config->getEndpoint(),
+            $key => $xmlPayload,
+        ];
+        return $context ? $context->getMetaData(__CLASS__, $logData) : $logData;
     }
 
     /**

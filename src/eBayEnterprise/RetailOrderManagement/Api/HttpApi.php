@@ -68,7 +68,8 @@ class HttpApi implements IBidirectionalApi
 
     public function send()
     {
-        $this->getRequestBody()->serialize();
+        $requestData = $this->getRequestBody()->serialize();
+        $this->logPayloadMessage($requestData, 'Payload request body', 'rom_request_body');
 
         // actually do the request
         try {
@@ -90,6 +91,7 @@ class HttpApi implements IBidirectionalApi
         }
 
         $responseData = $this->lastRequestsResponse->body;
+        $this->logPayloadMessage($responseData, 'Payload response body', 'rom_response_body');
         $this->getResponseBody()->deserialize($responseData);
 
         return $this;
@@ -191,10 +193,22 @@ class HttpApi implements IBidirectionalApi
 
     protected function logRequestUrl()
     {
-        if ($this->hasValidLogger()) {
-            $logMessage = 'SDK API endpoint: {rom_request_url}';
-            $this->logger->debug($logMessage, $this->getRequestUrlLogData());
-        }
+        $logMessage = 'SDK API endpoint: {rom_request_url}';
+        $this->logger->debug($logMessage, $this->getRequestUrlLogData());
+        return $this;
+    }
+
+    /**
+     * Log the request payload.
+     *
+     * @param  string
+     * @param  string
+     * @param  string
+     * @return self
+     */
+    protected function logPayloadMessage($xmlPayload, $logMessage, $key)
+    {
+        $this->logger->debug($logMessage, $this->addLogContext($key, $xmlPayload));
         return $this;
     }
 }

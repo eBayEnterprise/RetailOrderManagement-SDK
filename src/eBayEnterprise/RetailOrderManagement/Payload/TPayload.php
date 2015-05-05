@@ -300,6 +300,18 @@ trait TPayload
     abstract protected function serializeContents();
 
     /**
+     * Serialize required value as an xml element with the given node name.
+     *
+     * @param string
+     * @param mixed
+     * @return string
+     */
+    protected function serializeRequireValue($nodeName, $value)
+    {
+        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
+    }
+
+    /**
      * Serialize the value as an xml element with the given node name. When
      * given an empty value, returns an empty string instead of an empty
      * element.
@@ -310,7 +322,7 @@ trait TPayload
      */
     protected function serializeOptionalValue($nodeName, $value)
     {
-        return !is_null($value) ? sprintf('<%s>%s</%1$s>', $nodeName, $value) : '';
+        return !is_null($value) ? $this->serializeRequireValue($nodeName, $value) : '';
     }
 
     /**

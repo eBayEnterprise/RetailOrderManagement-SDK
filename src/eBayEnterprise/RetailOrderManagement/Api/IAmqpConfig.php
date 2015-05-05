@@ -58,4 +58,10 @@ interface IAmqpConfig
      * @return array
      */
     public function getQueueConfiguration();
+
+    /**
+     * Constructing the AMQP full uri.
+     * @return string
+     */
+    public function getEndpoint();
 }

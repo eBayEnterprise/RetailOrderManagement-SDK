@@ -2939,5 +2939,27 @@ return call_user_func(function () {
             ],
         ],
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCancelRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getCustomerOrderId', 'getReasonCode'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCancelResponse'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getResponseStatus'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
     return $map;
 });

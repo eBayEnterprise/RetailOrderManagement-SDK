@@ -219,15 +219,13 @@ class AmqpApi implements IAmqpApi
             'rom_request_url' => $this->config->getEndpoint(),
             'queue_name' => $this->config->getQueueName(),
         ];
-        return $context ? $context->getMetaData(__CLASS__, $logData) : [];
+        return $context ? $context->getMetaData(__CLASS__, $logData) : $logData;
     }
 
     protected function logRequestUrl()
     {
-        if ($this->hasValidLogger()) {
-            $logMessage = 'AMQP API to: {rom_request_url} for queue {queue_name}';
-            $this->logger->debug($logMessage, $this->getRequestUrlLogData());
-        }
+        $logMessage = 'AMQP API to: {rom_request_url} for queue {queue_name}';
+        $this->logger->debug($logMessage, $this->getRequestUrlLogData());
         return $this;
     }
 }

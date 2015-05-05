@@ -64,4 +64,28 @@ trait TTestReflection
         $requestProperty->setValue($object, $value);
         return $this;
     }
+
+    /**
+     * Gets protected or private property value
+     * @param string|object $object class name
+     * @param string $property
+     * @return mixed
+     * @throws RuntimeException
+     */
+    public static function getRestrictedPropertyValue($object, $property)
+    {
+        $reflection = new ReflectionClass($object);
+
+        while (!$reflection->hasProperty($property)) {
+            if ($reflection->getParentClass()) {
+                $reflection = $reflection->getParentClass();
+            } else {
+                break;
+            }
+        }
+
+        $reflectionProperty = $reflection->getProperty($property);
+        $reflectionProperty->setAccessible(true);
+        return $reflectionProperty->getValue((is_string($object) ? null : $object));
+    }
 }

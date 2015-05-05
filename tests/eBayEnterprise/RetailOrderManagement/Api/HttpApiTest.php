@@ -18,6 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Api;
 
 use eBayEnterprise\RetailOrderManagement\Payload;
 use eBayEnterprise\RetailOrderManagement\Util\TTestReflection;
+use eBayEnterprise\RetailOrderManagement\Api\Exception\UnsupportedOperation;
 use Requests_Exception_HTTP;
 
 class HttpApiTest extends \PHPUnit_Framework_TestCase
@@ -171,5 +172,114 @@ class HttpApiTest extends \PHPUnit_Framework_TestCase
         $actual = $this->invokeRestrictedMethod($stub, 'sendRequest');
 
         $this->assertTrue($actual);
+    }
+
+    /**
+     * Test that the method HttpApi::logPayloadMessage() once invoked, will
+     * be passed in as first parameter a string of xml payload, as second parameter
+     * a string value literal, and a second parameter another string value literal.
+     * Then, the following methods will be invoked: LoggerInterface::debug(),
+     * and HttpApi::addLogContext(). The method LoggerInterface::debug() will be passed in
+     * as first parameter a string message value, and as second parameter
+     * the return array from calling the method HttpApi::addLogContext(). The method
+     * HttpApi::addLogContext() will be passed in as first parameter the string value literal
+     * and the passed in string of xml payload as second parameter. Finally, the method
+     * HttpApi::logPayloadMessage() will return itself.
+     */
+    public function testLogPayloadMessage()
+    {
+        $requestData = '<request/>';
+        /** @var string */
+        $logMessage = 'Payload request body';
+        /** @var string */
+        $key = 'rom_request_body';
+        /** @var null */
+        $void = null;
+        /** @var array */
+        $context = [
+            'app_context' => 'http',
+            'rom_request_url' => 'https://test-api.example.com/inventory/request.xml',
+            $key => $requestData,
+        ];
+        /** @var LoggerInterface */
+        $logger = $this->getMock('Psr\Log\NullLogger', ['debug']);
+        $logger->expects($this->once())
+            ->method('debug')
+            ->with($this->identicalTo($logMessage), $this->identicalTo($context))
+            ->will($this->returnValue($void));
+
+        /** @var HttpApi */
+        $api = $this->getMockBuilder('eBayEnterprise\RetailOrderManagement\Api\HttpApi')
+            ->setMethods(['addLogContext'])
+            // Disabling the constructor because it is not necessary for this test.
+            ->disableOriginalConstructor()
+            ->getMock();
+        $api->expects($this->once())
+            ->method('addLogContext')
+            ->with($this->identicalTo($key), $this->identicalTo($requestData))
+            ->will($this->returnValue($context));
+
+        $this->setRestrictedPropertyValues($api, ['logger' => $logger]);
+        $this->assertSame($api, $this->invokeRestrictedMethod($api, 'logPayloadMessage', [$requestData, $logMessage, $key]));
+    }
+
+    /**
+     * Test that the method HttpApi::addLogContext() once invoked, will
+     * be passed in as first parameter a string literal, and as second parameter
+     * an IPayload object. Then, the method HttpApi::getContext() will be invoked
+     * and return an object that must have a method call getMetadata(). For the purpose
+     * of this test, the stdClass class is being mocked in order to show the behavior of this
+     * method. Then, the method HttpConfig::getEndpoint() will be invoked and the return value
+     * will be map an array with key 'rom_request_url', then the passed in key will be
+     * another key in the array, mapped to the passed in xml payload parameter.
+     * Then, if the method HttpApi::getContext() return
+     * a valid object, the method getMetadata() is invoked on that object passing in as
+     * first parameter a string value of the class name, and as second parameter
+     * an array with key/value pairs is passed in.Finally, the HttpApi::addLogContext()
+     * will return this array of key/value pairs.
+     */
+    public function testAddLogContext()
+    {
+        $apiClass = 'eBayEnterprise\RetailOrderManagement\Api\HttpApi';
+        $key = 'rom_request_body';
+        $endPoint = 'https://test-api.example.com/inventory/request.xml';
+        $xml = '<request/>';
+        /** @var array */
+        $context = [
+            'app_context' => 'http',
+            'rom_request_url' => $endPoint,
+            $key => $xml,
+        ];
+
+        // Faking a context class that must have the method getMetaData()
+        $concreteContext = $this->getMock('stdClass', ['getMetaData']);
+        $concreteContext->expects($this->once())
+            ->method('getMetaData')
+            ->with($this->identicalTo($apiClass), $this->identicalTo($context))
+            ->will($this->returnValue($context));
+
+        $config = $this->getMock(
+            'eBayEnterprise\RetailOrderManagement\Api\HttpConfig',
+            ['getEndpoint'],
+            ['key', 'host', 'major', 'minor', 'store', 'service', 'operation']
+        );
+        $config->expects($this->once())
+            ->method('getEndpoint')
+            ->will($this->returnValue($endPoint));
+
+        /** @var HttpApi */
+        $api = $this->getMockBuilder($apiClass, 'getContext')
+            ->setMethods(['getContext'])
+            // Disabling the constructor because it is not necessary for this test.
+            ->disableOriginalConstructor()
+            ->getMock();
+        $api->expects($this->once())
+            ->method('getContext')
+            ->will($this->returnValue($concreteContext));
+
+        $this->setRestrictedPropertyValues($api, [
+            'config' => $config,
+        ]);
+        $this->assertSame($context, $this->invokeRestrictedMethod($api, 'addLogContext', [$key, $xml]));
     }
 }
