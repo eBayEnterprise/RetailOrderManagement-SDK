@@ -79,5 +79,9 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityReply',
     ];
+    $map['inventory/details/get'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\InventoryDetailsRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\InventoryDetailsReply',
+    ];
     return $map;
 });

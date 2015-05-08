@@ -93,4 +93,9 @@ class TaxedPriceGroup implements ITaxedPriceGroup
     {
         return self::XML_NS;
     }
+
+    protected function getRootNodeName()
+    {
+        return !is_null($this->rootNodeName) ? $this->rootNodeName : static::ROOT_NODE;
+    }
 }

@@ -49,6 +49,7 @@ return call_user_func(function () {
     $iLineItemContainerParams = ['getLineItemsTotal', 'getShippingTotal', 'getTaxTotal',];
     $taxDataParams = ['getType', 'getTaxability', 'getSitus', 'getEffectiveRate', 'getCalculatedTax'];
     $addressValidationHeaderParams = ['getMaxSuggestions'];
+    $inventoryAddressParams = ['getAddressLines', 'getAddressCity', 'getAddressCountryCode'];
 
     // Payload validators shared by multiple payloads.
     $prepaidPaymentValidators = [
@@ -69,7 +70,6 @@ return call_user_func(function () {
         'payloadMap' => $payloadMap,
         'types' => [],
     ];
-
     $map['\eBayEnterprise\RetailOrderManagement\Payload\Payment\CreditCardAuthRequest'] = [
         'validators' => [
             [
@@ -3091,6 +3091,128 @@ return call_user_func(function () {
         'validatorIterator' => $validatorIterator,
         'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\InventoryDetailsRequest'] = [
+        'validators' => [
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getItems'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IShippingItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\CompliantShippingItem',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ItemIterable'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                // NOTE: the ShippingItem implementation is being overridden in the
+                // InventoryDetailsRequest payload configuration
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IShippingItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ShippingItem',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IInStorePickUpItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\InStorePickUpItem',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IDetailItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\DetailItem',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IUnavailableItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\UnavailableItem',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ShippingItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $inventoryAddressParams,
+                    ['getItemId', 'getLineId', 'getQuantity', 'getShippingMethod']
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\CompliantShippingItem'] =
+        $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ShippingItem'];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\InStorePickUpItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $inventoryAddressParams,
+                    ['getItemId', 'getLineId', 'getQuantity', 'getStoreFrontId', 'getStoreFrontName']
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\InventoryDetailsReply'] = [
+        'validators' => [
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getDetailItems', 'getUnavailableItems'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IDetailItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IUnavailableItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ItemIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\DetailItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => array_merge(
+                    $inventoryAddressParams,
+                    [
+                        'getItemId',
+                        'getLineId',
+                        'getDeliveryWindowFromDate',
+                        'getDeliveryWindowToDate',
+                        'getShippingWindowFromDate',
+                        'getShippingWindowToDate',
+                        'getDeliveryEstimateCreationTime',
+                        'getDeliveryEstimateDisplayFlag',
+                    ]
+                ),
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\UnavailableItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getItemId', 'getLineId'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads
     ];
     return $map;
 });

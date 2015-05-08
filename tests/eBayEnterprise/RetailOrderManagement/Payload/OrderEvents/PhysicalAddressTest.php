@@ -28,7 +28,9 @@ class PhysicalAddressTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->testTrait = $this
-            ->getMockForTrait('\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TPhysicalAddress');
+            ->getMockForTrait(
+                '\eBayEnterprise\RetailOrderManagement\Payload\OrderEvents\TPhysicalAddress', [],'',true,true,true,['cleanString']
+            );
         $this->testTrait->expects($this->any())
             ->method('getPhysicalAddressRootNodeName')
             ->will($this->returnValue('Address'));

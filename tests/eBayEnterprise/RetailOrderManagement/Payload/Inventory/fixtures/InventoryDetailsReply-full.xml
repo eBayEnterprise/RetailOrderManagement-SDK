@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InventoryDetailsResponseMessage xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <InventoryDetails>
+        <InventoryDetail lineId="_line1" itemId="TEST-1234">
+            <DeliveryEstimate>
+                <DeliveryWindow>
+                    <From>2000-02-16T15:56:00+00:00</From>
+                    <To>2000-02-21T15:56:00+00:00</To>
+                </DeliveryWindow>
+                <ShippingWindow>
+                    <From>2000-02-10T15:56:00+00:00</From>
+                    <To>2000-02-14T15:56:00+00:00</To>
+                </ShippingWindow>
+                <CreationTime>2000-02-08T15:56:00+00:00</CreationTime>
+                <Display>true</Display>
+                <Message>This is a message</Message>
+            </DeliveryEstimate>
+            <ShipFromAddress>
+                <Line1>One Bagshot Row</Line1>
+                <Line2>address line 2</Line2>
+                <Line3>address line 3</Line3>
+                <Line4>address line 4</Line4>
+                <City>Bag End</City>
+                <MainDivision>PA</MainDivision>
+                <CountryCode>US</CountryCode>
+                <PostalCode>19123</PostalCode>
+            </ShipFromAddress>
+        </InventoryDetail>
+    </InventoryDetails>
+    <UnavailableItems>
+        <UnavailableItem lineId="_line2" itemId="TEST-2345"></UnavailableItem>
+    </UnavailableItems>
+</InventoryDetailsResponseMessage>

@@ -70,17 +70,4 @@ trait TPriceGroup
     {
         return "<Amount>{$this->formatAmount($this->getAmount())}</Amount>";
     }
-
-    abstract protected function sanitizeAmount($amount);
-
-    /**
-     * If a root node name has been injected, use that as the root node name
-     * for the serialization, otherwise, fall back to the static const.
-     *
-     * @return string
-     */
-    protected function getRootNodeName()
-    {
-        return !is_null($this->rootNodeName) ? $this->rootNodeName : static::ROOT_NODE;
-    }
 }

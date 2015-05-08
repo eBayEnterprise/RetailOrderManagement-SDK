@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## Unreleased
 ### Added
 - Support for the inventory/quantity Retail Order Management Public API operation
+- Support for the inventory details Retail Order Management Public API operation
 
 ## [1.2.0-alpha-2] - 2015-05-21
 ### Added

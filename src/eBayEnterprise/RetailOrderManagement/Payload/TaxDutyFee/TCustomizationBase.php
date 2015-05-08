@@ -79,14 +79,4 @@ trait TCustomizationBase
         $this->itemDescription = $description;
         return $this;
     }
-
-    protected function getRootNodeName()
-    {
-        return static::ROOT_NODE;
-    }
-
-    protected function getXmlNamespace()
-    {
-        return self::XML_NS;
-    }
 }

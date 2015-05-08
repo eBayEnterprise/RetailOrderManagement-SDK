@@ -31,9 +31,6 @@ class TaxedFee implements ITaxedFee
 
     const ROOT_NODE = 'Fee';
 
-    /** @var ITaxedPriceGroup */
-    protected $charge;
-
     /**
      * @param IValidatorIterator
      * @param ISchemaValidator

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InventoryDetailsRequestMessage xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <OrderItem lineId="_line1" itemId="TEST-1234">
+        <Quantity>5</Quantity>
+        <ShipmentDetails>
+            <ShippingMethod>STANDARD</ShippingMethod>
+            <ShipToAddress>
+                <Line1>One Bagshot Row</Line1>
+                <City>Bag End</City>
+                <CountryCode>US</CountryCode>
+            </ShipToAddress>
+        </ShipmentDetails>
+    </OrderItem>
+    <OrderItem lineId="_line2" itemId="TEST-2345">
+        <Quantity>5</Quantity>
+        <InStorePickupDetails>
+            <StoreFrontId>store-123</StoreFrontId>
+            <StoreFrontName>the store</StoreFrontName>
+            <StoreFrontAddress>
+                <Line1>One Bagshot Row</Line1>
+                <City>Bag End</City>
+                <CountryCode>US</CountryCode>
+            </StoreFrontAddress>
+        </InStorePickupDetails>
+    </OrderItem>
+</InventoryDetailsRequestMessage>

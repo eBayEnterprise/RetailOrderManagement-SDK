@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InventoryDetailsRequestMessage xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <OrderItem lineId="_line1" itemId="TEST-1234">
+        <Quantity>5</Quantity>
+        <ShipmentDetails>
+            <ShippingMethod mode="Ground" displayText="Standard Shipping">STANDARD</ShippingMethod>
+            <ShipToAddress>
+                <Line1>One Bagshot Row</Line1>
+                <Line2>address line 2</Line2>
+                <Line3>address line 3</Line3>
+                <Line4>address line 4</Line4>
+                <City>Bag End</City>
+                <MainDivision>PA</MainDivision>
+                <CountryCode>US</CountryCode>
+                <PostalCode>19123</PostalCode>
+            </ShipToAddress>
+        </ShipmentDetails>
+        <GiftwrapRequested>true</GiftwrapRequested>
+    </OrderItem>
+    <OrderItem lineId="_line2" itemId="TEST-2345">
+        <Quantity>5</Quantity>
+        <InStorePickupDetails>
+            <StoreFrontId>store-123</StoreFrontId>
+            <StoreFrontName>the store</StoreFrontName>
+            <StoreFrontAddress>
+                <Line1>One Bagshot Row</Line1>
+                <Line2>address line 2</Line2>
+                <Line3>address line 3</Line3>
+                <Line4>address line 4</Line4>
+                <City>Bag End</City>
+                <MainDivision>PA</MainDivision>
+                <CountryCode>US</CountryCode>
+                <PostalCode>19123</PostalCode>
+            </StoreFrontAddress>
+        </InStorePickupDetails>
+        <GiftwrapRequested>false</GiftwrapRequested>
+    </OrderItem>
+</InventoryDetailsRequestMessage>

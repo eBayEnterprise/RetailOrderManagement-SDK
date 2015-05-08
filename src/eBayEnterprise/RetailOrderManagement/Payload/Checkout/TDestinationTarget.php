@@ -70,6 +70,4 @@ trait TDestinationTarget
     {
         return $this->getAncestorPayloadOfType(static::DESTINATION_CONTAINER);
     }
-
-    abstract protected function getAncestorPayloadOfType($payload);
 }

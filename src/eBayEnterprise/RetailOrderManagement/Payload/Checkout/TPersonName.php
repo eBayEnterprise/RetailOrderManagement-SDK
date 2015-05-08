@@ -87,15 +87,4 @@ trait TPersonName
      * @return string
      */
     abstract protected function getPersonNameRootNodeName();
-
-    /**
-     * Serialize the value as an xml element with the given node name. When
-     * given an empty value, returns an empty string instead of an empty
-     * element.
-     *
-     * @param string
-     * @param mixed
-     * @return string
-     */
-    abstract protected function serializeOptionalValue($nodeName, $value);
 }

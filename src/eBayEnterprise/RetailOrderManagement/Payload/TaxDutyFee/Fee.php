@@ -31,9 +31,6 @@ class Fee implements IFee
 
     const ROOT_NODE = 'Fee';
 
-    /** @var IPriceGroup */
-    protected $charge;
-
     /**
      * @param IValidatorIterator
      * @param ISchemaValidator
