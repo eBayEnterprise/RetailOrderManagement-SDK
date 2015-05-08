@@ -17,7 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee;
 
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\IIdentity;
-use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestination;
+use eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestination as ICheckoutDestination;
 
 interface ITaxedShipGroup extends IPayload, IIdentity, ITaxedOrderItemContainer, ITaxedGifting
 {
@@ -65,7 +65,7 @@ interface ITaxedShipGroup extends IPayload, IIdentity, ITaxedOrderItemContainer,
      * @param ICheckoutDestination
      * @return self
      */
-    public function setDestination(IDestination $destination);
+    public function setDestination(ICheckoutDestination $destination);
 
     /**
      * Return the id of the destination referenced by the ship group.

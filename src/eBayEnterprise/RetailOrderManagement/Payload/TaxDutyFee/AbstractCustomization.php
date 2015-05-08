@@ -62,13 +62,13 @@ abstract class AbstractCustomization
 
     public function getEmptyPriceGroup()
     {
-        return $this->buildPayloadForInterface(self::PRICE_GROUP_INTERFACE);
+        return $this->buildPayloadForInterface(static::PRICE_GROUP_INTERFACE);
     }
 
     /**
      * @return IMerchandisePriceGroup|ItaxedMerchandisePriceGroup
      */
-    abstract public function getCharge();
+    abstract public function getUpCharge();
 
     protected function serializeContents()
     {
@@ -99,6 +99,6 @@ abstract class AbstractCustomization
 
     protected function getXmlNamespace()
     {
-        return self::XML_NS;
+        return static::XML_NS;
     }
 }
