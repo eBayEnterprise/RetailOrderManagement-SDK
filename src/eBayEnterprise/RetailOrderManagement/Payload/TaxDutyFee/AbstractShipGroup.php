@@ -33,7 +33,7 @@ abstract class AbstractShipGroup
 
     const ROOT_NODE = 'ShipGroup';
     const DESTINATION_CONTAINER =
-        '\eBayEnterprise\RetailOrderManagement\Payload\Checkout\IDestinationContainer';
+        '\eBayEnterprise\RetailOrderManagement\Payload\TaxDutyFee\IDestinationContainer';
 
     /** @var string */
     protected $chargeType;

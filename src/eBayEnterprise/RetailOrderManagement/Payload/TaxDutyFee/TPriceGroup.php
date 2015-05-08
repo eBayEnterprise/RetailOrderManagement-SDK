@@ -19,8 +19,6 @@ trait TPriceGroup
 {
     /** @var float */
     protected $amount;
-    /** @var string */
-    protected $taxClass;
     /** @var float */
     protected $unitPrice;
     /** @var string */
@@ -84,10 +82,5 @@ trait TPriceGroup
     protected function getRootNodeName()
     {
         return !is_null($this->rootNodeName) ? $this->rootNodeName : static::ROOT_NODE;
-    }
-
-    protected function getXmlNamespace()
-    {
-        return self::XML_NS;
     }
 }

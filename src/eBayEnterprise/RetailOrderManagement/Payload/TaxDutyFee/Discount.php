@@ -59,8 +59,10 @@ class Discount implements IDiscount
         $this->payloadFactory = new PayloadFactory;
 
         $this->extractionPaths = [
-            'id' => 'string(@id)',
             'amount' => 'number(x:Amount)',
+        ];
+        $this->optionalExtractionPaths = [
+            'id' => '@id',
         ];
         $this->booleanExtractionPaths = [
             'calculateDutyFlag' => 'string(@calculateDuty)',

@@ -40,8 +40,6 @@ class TaxedOrderItem implements ITaxedOrderItem
     protected $shippingPricing;
     /** @var ITaxedDutyPriceGroup */
     protected $dutyPricing;
-    /** @var ITaxedFeeIterable */
-    protected $fees;
 
     /**
      * @param IValidatorIterator
@@ -104,17 +102,6 @@ class TaxedOrderItem implements ITaxedOrderItem
     public function getEmptyDutyPriceGroup()
     {
         return $this->buildPayloadForInterface(static::DUTY_PRICE_GROUP_INTERFACE);
-    }
-
-    public function getFees()
-    {
-        return $this->fees;
-    }
-
-    public function setFees(ITaxedFeeIterable $fees)
-    {
-        $this->fees = $fees;
-        return $this;
     }
 
     public function getMerchandisePricing()

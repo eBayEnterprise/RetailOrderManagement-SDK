@@ -25,13 +25,13 @@ interface IOrderItem extends IPayload
     /**
      * Web order line number assigned by the webstore.
      *
-     * restrictions: positive integer
-     * @return int
+     * restrictions: string with length >= 1
+     * @return string
      */
     public function getLineNumber();
 
     /**
-     * @param int
+     * @param string
      * @return self
      */
     public function setLineNumber($lineNumber);
@@ -53,12 +53,12 @@ interface IOrderItem extends IPayload
     /**
      * Quantity of the item ordered.
      *
-     * @return float
+     * @return int
      */
     public function getQuantity();
 
     /**
-     * @param float
+     * @param int
      * @return self
      */
     public function setQuantity($quantity);

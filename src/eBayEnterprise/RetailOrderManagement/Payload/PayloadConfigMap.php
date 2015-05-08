@@ -2575,7 +2575,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => ['getId', 'getAmount'],
+                'params' => ['getAmount'],
             ],
         ],
         'validatorIterator' => $validatorIterator,
@@ -2859,7 +2859,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => ['getId', 'getAmount'],
+                'params' => ['getAmount'],
             ],
             [
                 'validator' => $optionalSubpayloadValidator,

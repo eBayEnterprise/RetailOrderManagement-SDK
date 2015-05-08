@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
 
 trait TOrderItem
 {
-    /** @var int */
+    /** @var string */
     protected $lineNumber;
     /** @var string */
     protected $itemId;
@@ -50,9 +50,7 @@ trait TOrderItem
 
     public function setLineNumber($lineNumber)
     {
-        if ($lineNumber > 0) {
-            $this->lineNumber = $lineNumber;
-        }
+        $this->lineNumber = $lineNumber;
         return $this;
     }
 
@@ -74,7 +72,7 @@ trait TOrderItem
 
     public function setQuantity($quantity)
     {
-        $this->quantity = $quantity;
+        $this->quantity = (int) $quantity;
         return $this;
     }
 

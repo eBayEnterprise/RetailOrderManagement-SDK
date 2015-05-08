@@ -31,9 +31,6 @@ class TaxedPriceGroup implements ITaxedPriceGroup
 
     const ROOT_NODE = 'Pricing';
 
-    /** @var string */
-    protected $rootNodeName;
-
     /**
      * @param IValidatorIterator
      * @param ISchemaValidator
@@ -75,19 +72,6 @@ class TaxedPriceGroup implements ITaxedPriceGroup
         );
     }
 
-    /**
-     * Dynamically set the name of the root node the price group gets serialized
-     * with. As this type can represent a variant of pricing information,
-     * serializations will vary based upon context.
-     *
-     * @param string Must be a valid XML node name
-     */
-    public function setRootNodeName($nodeName)
-    {
-        $this->rootNodeName = $nodeName;
-        return $this;
-    }
-
     protected function serializeContents()
     {
         return $this->serializePriceGroupAmount()
@@ -103,17 +87,6 @@ class TaxedPriceGroup implements ITaxedPriceGroup
     {
         $this->setAmount($this->amount);
         return $this;
-    }
-
-    /**
-     * If a root node name has been injected, use that as the root node name
-     * for the serialization, otherwise, fall back to the static const.
-     *
-     * @return string
-     */
-    protected function getRootNodeName()
-    {
-        return !is_null($this->rootNodeName) ? $this->rootNodeName : static::ROOT_NODE;
     }
 
     protected function getXmlNamespace()
