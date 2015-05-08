@@ -25,13 +25,13 @@ document:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
-    entrypoint: phpdoc
+    entrypoint: vendor/bin/phpdoc
     command: -d src -t build/doc
 pdepend:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
-    entrypoint: pdepend
+    entrypoint: vendor/bin/pdepend
     command: --jdepend-chart=build/pdepend-chart.svg
              --overview-pyramid=build/pdepend-overview-pyramid.svg
              src,tests
@@ -39,13 +39,13 @@ phpcpd:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
-    entrypoint: phpcpd
+    entrypoint: vendor/bin/phpcpd
     command: --fuzzy --progress src tests
 phpcs:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
-    entrypoint: phpcs
+    entrypoint: vendor/bin/phpcs
     command: -p --standard=PSR2 src tests
 phplint:
     image: kojiromike/magento_tools
@@ -57,19 +57,23 @@ phploc:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
-    entrypoint: phploc
+    entrypoint: vendor/bin/phploc
     command: --count-tests --progress src tests
 phpmd:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
-    entrypoint: phpmd
+    entrypoint:
+        - php
+        - -d
+        - date.timezone=UTC
+        - vendor/bin/phpmd
     command: src,tests text phpmd.xml
 phpunit:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
-    entrypoint: phpunit
+    entrypoint: vendor/bin/phpunit
 xmllint:
     image: kojiromike/magento_tools
     volumes:
