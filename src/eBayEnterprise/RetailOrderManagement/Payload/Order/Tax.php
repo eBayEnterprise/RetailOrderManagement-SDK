@@ -61,6 +61,7 @@ class Tax implements ITax
         self::TAX_TYPE_CONSUMER_USE,
         self::TAX_TYPE_VAT,
         self::TAX_TYPE_IMPORT_VAT,
+        self::TAX_TYPE_NONE,
     ];
     /** @var array */
     protected $allowedTaxabilities = [

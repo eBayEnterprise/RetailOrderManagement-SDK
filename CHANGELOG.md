@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+### Fixed
+- "NONE" tax type missing
+
 ## [1.2.0-alpha-1] - 2015-05-07
 ### Added
 - Support for the tax/quote Retail Order Management Public API operation

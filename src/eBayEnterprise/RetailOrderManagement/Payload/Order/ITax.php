@@ -25,6 +25,7 @@ interface ITax extends IPayload
     const TAX_TYPE_CONSUMER_USE = 'CONSUMER_USE';
     const TAX_TYPE_VAT = 'VAT';
     const TAX_TYPE_IMPORT_VAT = 'IMPORT_VAT';
+    const TAX_TYPE_NONE = 'NONE';
     const TAXABILITY_TAXABLE = 'TAXABLE';
     const TAXABILITY_NONTAXABLE = 'NONTAXABLE';
     const TAXABILITY_EXEMPT = 'EXEMPT';
