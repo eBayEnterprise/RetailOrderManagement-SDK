@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuantityRequestMessage xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <QuantityRequest lineId="_item-3" itemId="45-12345">
+        <FulfillmentLocationId type="ISPU">fulfillment-location-id-1</FulfillmentLocationId>
+    </QuantityRequest>
+    <QuantityRequest lineId="_item-4" itemId="45-54321"/>
+</QuantityRequestMessage>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuantityResponseMessage xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+        <QuantityResponse lineId="_item-1" itemId="45-12345">
+            <Quantity>12</Quantity>
+        </QuantityResponse>
+        <QuantityResponse lineId="_item-2" itemId="45-54321">
+            <Quantity>15</Quantity>
+        </QuantityResponse>
+</QuantityResponseMessage>

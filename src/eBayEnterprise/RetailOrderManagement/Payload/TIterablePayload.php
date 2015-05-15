@@ -17,6 +17,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use DOMDocument;
 use DOMXPath;
+use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 trait TIterablePayload
 {
@@ -63,4 +64,11 @@ trait TIterablePayload
      * @return string
      */
     abstract protected function getSubpayloadXPath();
+
+    /**
+     * Get a new, empty instance of payloads the iterable contains.
+     *
+     * @return IPayload
+     */
+    abstract protected function getNewSubpayload();
 }

@@ -3034,5 +3034,63 @@ return call_user_func(function () {
         'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityRequest'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IQuantityItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IQuantityItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\RequestQuantityItem',
+            ]
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityReply'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IQuantityItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityItemIterable',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IQuantityItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ReplyQuantityItem',
+            ]
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityItemIterable'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IQuantityItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityItem',
+            ]
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\QuantityItem'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\RequestQuantityItem'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ReplyQuantityItem'] = [
+        'validators' => [],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
     return $map;
 });
