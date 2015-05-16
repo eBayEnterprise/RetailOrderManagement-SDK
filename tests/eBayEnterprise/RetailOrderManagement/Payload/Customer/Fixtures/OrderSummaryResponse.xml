@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderSummaryResponse xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+   <OrderSummary id="order-117737383838222122" orderType="SALES" orderPurpose="EXCHANGE" testType="TEST_WEBONLY" modifiedTime="2015-05-15T13:02:37+00:00" cancellable="true">
+      <CustomerOrderId>0000000000000000001</CustomerOrderId>
+      <CustomerId>00008140</CustomerId>
+      <OrderDate>2015-05-14T20:32:33+00:00</OrderDate>
+      <DashboardRepId>1234</DashboardRepId>
+      <Status>Created</Status>
+      <OrderTotal>200.00</OrderTotal>
+      <Source>WEBSTORE</Source>
+      <ChainedOrder parentRef="117737383838222122" type="DROP_SHIP"></ChainedOrder>
+      <DerivedOrder parentRef="117737383838222122"></DerivedOrder>
+   </OrderSummary>
+   <OrderSummary id="order-89283388222323244232" orderType="SALES" orderPurpose="EXCHANGE"  testType="TEST_WEBONLY" modifiedTime="2015-05-15T13:02:37+00:00" cancellable="false">
+      <CustomerOrderId>0000000000000000002</CustomerOrderId>
+      <CustomerId>00008140</CustomerId>
+      <OrderDate>2015-05-14T20:36:30+00:00</OrderDate>
+      <DashboardRepId>1234</DashboardRepId>
+      <Status>Scheduled</Status>
+      <OrderTotal>300.00</OrderTotal>
+      <Source>DASHBOARD</Source>
+      <ChainedOrder parentRef="89283388222323244232" type="DROP_SHIP"></ChainedOrder>
+      <DerivedOrder parentRef="89283388222323244232"></DerivedOrder>
+   </OrderSummary>
+   <OrderSummary id="order-10039399222314345345" orderType="SALES" orderPurpose="EXCHANGE"  testType="TEST_WEBONLY" modifiedTime="2015-05-15T13:02:37+00:00" cancellable="false">
+      <CustomerOrderId>0000000000000000003</CustomerOrderId>
+      <CustomerId>00008140</CustomerId>
+      <OrderDate>2015-05-14T20:43:16+00:00</OrderDate>
+      <DashboardRepId>1234</DashboardRepId>
+      <Status>Cancelled</Status>
+      <OrderTotal>0.00</OrderTotal>
+      <Source>WEBSTORE</Source>
+      <ChainedOrder parentRef="10039399222314345345" type="DROP_SHIP"></ChainedOrder>
+      <DerivedOrder parentRef="10039399222314345345"></DerivedOrder>
+   </OrderSummary>
+</OrderSummaryResponse>

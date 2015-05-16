@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderSummaryRequest xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <OrderSearch>
+        <CustomerOrderId>1000007300088171</CustomerOrderId>
+    </OrderSearch>
+</OrderSummaryRequest>

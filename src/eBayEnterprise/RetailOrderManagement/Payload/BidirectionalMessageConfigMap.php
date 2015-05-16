@@ -71,5 +71,9 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCancelRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\OrderCancelResponse',
     ];
+    $map['customers/orders/get'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Customer\OrderSummaryRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Customer\OrderSummaryResponse',
+    ];
     return $map;
 });

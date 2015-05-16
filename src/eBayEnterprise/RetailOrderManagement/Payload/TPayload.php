@@ -48,6 +48,8 @@ trait TPayload
     protected $booleanExtractionPaths = [];
     /** @var array pair address lines properties with xpaths for extraction */
     protected $addressLinesExtractionMap = [];
+    /** @var array extracting node value and assigned the property as DateTime */
+    protected $datetimeExtractionPaths = [];
     /**
      * @var array property/XPath pairs. if property is a payload, first node matched
      *            will be deserialized by that payload
@@ -80,6 +82,7 @@ trait TPayload
                 $this->$property = $foundNode->nodeValue;
             }
         }
+        $this->deserializeDatetime($xpath);
         // boolean values have to be handled specially
         foreach ($this->booleanExtractionPaths as $property => $path) {
             $value = $xpath->evaluate($path);
@@ -183,6 +186,24 @@ trait TPayload
      */
     protected function deserializeLineItems($serializedPayload)
     {
+        return $this;
+    }
+
+    /**
+     * Extract the node and if the value in the node is a non-empty
+     * string value, then assigned the class property to a DateTime object
+     * passing in the extracted value, otherwise assigned it to null.
+     *
+     * @param \DOMXPath $xpath
+     * @return self
+     */
+    protected function deserializeDatetime(\DOMXPath $xpath)
+    {
+        foreach ($this->datetimeExtractionPaths as $property => $path) {
+            $value = $xpath->evaluate($path);
+            $this->$property = $value ? new DateTime($value) : null;
+        }
+
         return $this;
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderSummaryResponse xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+   <OrderSummary id="order-117737383838222122" modifiedTime="2015-05-15T13:02:37+00:00">
+      <OrderDate>2015-05-14T20:32:33+00:00</OrderDate>
+      <OrderTotal>200.00</OrderTotal>
+   </OrderSummary>
+   <OrderSummary id="order-89283388222323244232"
+                 modifiedTime="2015-05-15T13:02:37+00:00">
+      <OrderDate>2015-05-14T20:36:30+00:00</OrderDate>
+      <OrderTotal>300.00</OrderTotal>
+   </OrderSummary>
+   <OrderSummary id="order-10039399222314345345" modifiedTime="2015-05-15T13:02:37+00:00">
+      <OrderDate>2015-05-14T20:43:16+00:00</OrderDate>
+      <OrderTotal>0.00</OrderTotal>
+   </OrderSummary>
+</OrderSummaryResponse>
