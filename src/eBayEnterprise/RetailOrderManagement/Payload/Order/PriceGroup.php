@@ -135,22 +135,25 @@ class PriceGroup implements IPriceGroup
         return $this->serializePriceGroupAmount()
             . $this->getDiscounts()->serialize()
             . $this->serializeTaxData()
-            . ($unitPrice ? $this->serializeAmount('UnitPrice', $this->getUnitPrice()) : '');
+            . (is_numeric($unitPrice) ? $this->serializeAmount('UnitPrice', $this->getUnitPrice()) : '');
     }
 
     /**
      * Serialize the price group amount value, including a remainder attribute
      * if a remainder amount has been set.
      *
-     * @return string
+     * @return string | null
      */
     protected function serializePriceGroupAmount()
     {
         $rawRemainder = $this->getRemainder();
         $remainder = $rawRemainder ? $this->formatAmount($rawRemainder) : null;
-        return "<Amount {$this->serializeOptionalAttribute('remainder', $remainder)}>"
-            . $this->formatAmount($this->getAmount())
-            . '</Amount>';
+        $amount = $this->getAmount();
+        return is_numeric($amount)
+            ? "<Amount {$this->serializeOptionalAttribute('remainder', $remainder)}>"
+            . $this->formatAmount($amount)
+            . '</Amount>'
+            : null;
     }
 
     /**

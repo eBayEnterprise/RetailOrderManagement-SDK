@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderDetailResponse xmlns="http://api.gsicommerce.com/schema/checkout/1.0" orderType="SALES" cancellable="false">
+    <Order>
+        <Customer>
+            <Name>
+                <LastName>Order</LastName>
+                <FirstName>Guest</FirstName>
+            </Name>
+        </Customer>
+        <CreateTime>2015-05-21T17:54:09+00:00</CreateTime>
+        <OrderItems>
+            <OrderItem id="item20150521175414562005518" webLineId="1">
+                <ItemId>45-MG02-BK-0</ItemId>
+                <Quantity>1</Quantity>
+                <Pricing>
+                    <Merchandise/>
+                </Pricing>
+            </OrderItem>
+        </OrderItems>
+        <Shipping>
+            <ShipGroups>
+                <ShipGroup id="SHIP_GROUP_ID" chargeType="FLAT">
+                    <DestinationTarget ref="MAILING_AD_0_ID"/>
+                    <OrderItems>
+                        <Item ref="item_0_id"/>
+                        <Item ref="item_1_id"/>
+                    </OrderItems>
+                </ShipGroup>
+            </ShipGroups>
+            <Destinations>
+                <MailingAddress id="MAILING_AD_0_ID">
+                    <PersonName>
+                        <Honorific>Mrs.</Honorific>
+                        <LastName>Last</LastName>
+                        <MiddleName>Middle</MiddleName>
+                        <FirstName>First</FirstName>
+                    </PersonName>
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <Line2>Extra 1</Line2>
+                        <Line3>Extra 2</Line3>
+                        <Line4>Extra 3</Line4>
+                        <City>City</City>
+                        <MainDivision>MD</MainDivision>
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>21133</PostalCode>
+                    </Address>
+                    <Phone>555-555-9876</Phone>
+                </MailingAddress>
+            </Destinations>
+        </Shipping>
+        <Currency>USD</Currency>
+    </Order>
+</OrderDetailResponse>

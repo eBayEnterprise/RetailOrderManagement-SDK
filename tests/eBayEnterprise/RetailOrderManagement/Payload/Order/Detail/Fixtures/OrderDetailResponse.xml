@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderDetailResponse xmlns="http://api.gsicommerce.com/schema/checkout/1.0" orderType="SALES" testType="TEST_WEBONLY" cancellable="false">
+    <Order customerOrderId="00054545400500663" levelOfService="REGULAR" hasChainedLines="false" hasDerivedChild="false">
+        <SourceId type="CHANNEL">MAGT1</SourceId>
+        <Customer customerId="00008900b785bb53c74bd328779a195347d26222">
+            <Name>
+                <LastName>Order</LastName>
+                <FirstName>Guest</FirstName>
+            </Name>
+            <Gender>M</Gender>
+            <DateOfBirth>1990-01-19</DateOfBirth>
+            <EmailAddress>guestorder@test-example.com</EmailAddress>
+            <CustomerTaxId>0001</CustomerTaxId>
+            <TaxExemptFlag>false</TaxExemptFlag>
+            <LoyaltyPrograms>
+                <LoyaltyProgram>
+                    <Account>100293939 </Account>
+                    <Program>Buyer's Club</Program>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>Customer Loyalty Number</Key>
+                            <Value>A123</Value>
+                        </Attribute>
+                    </CustomAttributes>
+                </LoyaltyProgram>
+            </LoyaltyPrograms>
+        </Customer>
+        <CreateTime>2015-05-21T17:54:09+00:00</CreateTime>
+        <OrderItems>
+            <OrderItem id="item20150521175414562005518" webLineId="1" isHiddenGift="false" taxAndDutyDisplay="Taxes and Duties Consolidated in a Single Amount" hasChainedLines="false" hasDerivedChild="false" chainedFromOrderHeaderKey="test" derivedFromOrderHeaderKey="test">
+                <ItemId>45-MG02-BK-0</ItemId>
+                <Quantity>1</Quantity>
+                <ShippedQuantity>0</ShippedQuantity>
+                <Description>
+                    <Description>Mens Lumatech Watch</Description>
+                </Description>
+                <Department>Accessories</Department>
+                <Pricing>
+                    <Merchandise>
+                        <Amount remainder="0.10">0.00</Amount>
+                        <PromotionalDiscounts>
+                            <Discount appliedCount="1">
+                                <Id>SFGT</Id>
+                                <Code>UKAAAP</Code>
+                                <Amount>5.67</Amount>
+                                <Description>Get 5% Off</Description>
+                                <EffectType>Item</EffectType>
+                                <TaxData>
+                                    <Taxes>
+                                        <Tax taxType="SALES" taxability="TAXABLE">
+                                            <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                            <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <TaxableAmount>20.38</TaxableAmount>
+                                            <CalculatedTax>0.00</CalculatedTax>
+                                        </Tax>
+                                    </Taxes>
+                                </TaxData>
+                            </Discount>
+                        </PromotionalDiscounts>
+                        <TaxData>
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>20.38</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                </Tax>
+                            </Taxes>
+                        </TaxData>
+                        <UnitPrice>20.38</UnitPrice>
+                    </Merchandise>
+                    <Shipping>
+                        <Amount remainder="0.10">0.00</Amount>
+                        <PromotionalDiscounts>
+                            <Discount appliedCount="1">
+                                <Id>SFGT</Id>
+                                <Code>UKAAAP</Code>
+                                <Amount>5.67</Amount>
+                                <Description>Get 5% Off</Description>
+                                <EffectType>Item</EffectType>
+                                <TaxData>
+                                    <Taxes>
+                                        <Tax taxType="SALES" taxability="TAXABLE">
+                                            <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                            <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <TaxableAmount>20.38</TaxableAmount>
+                                            <CalculatedTax>0.00</CalculatedTax>
+                                        </Tax>
+                                    </Taxes>
+                                </TaxData>
+                            </Discount>
+                        </PromotionalDiscounts>
+                        <TaxData>
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>5.00</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                </Tax>
+                            </Taxes>
+                        </TaxData>
+                        <UnitPrice>1.00</UnitPrice>
+                    </Shipping>
+                    <Duty>
+                        <Amount remainder="0.10">0.00</Amount>
+                        <PromotionalDiscounts>
+                            <Discount appliedCount="1">
+                                <Id>SFGT</Id>
+                                <Code>UKAAAP</Code>
+                                <Amount>5.67</Amount>
+                                <Description>Get 5% Off</Description>
+                                <EffectType>Item</EffectType>
+                                <TaxData>
+                                    <Taxes>
+                                        <Tax taxType="SALES" taxability="TAXABLE">
+                                            <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                            <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <TaxableAmount>20.38</TaxableAmount>
+                                            <CalculatedTax>0.00</CalculatedTax>
+                                        </Tax>
+                                    </Taxes>
+                                </TaxData>
+                            </Discount>
+                        </PromotionalDiscounts>
+                        <TaxData>
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>5.00</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                </Tax>
+                            </Taxes>
+                        </TaxData>
+                        <UnitPrice>1.00</UnitPrice>
+                    </Duty>
+                    <Fees>
+                        <Fee>
+                            <FeeType>ConvenienceStoreSurcharge</FeeType>
+                            <Description>Miscellaneous fees</Description>
+                            <Amount>1.99</Amount>
+                            <ItemId>GWQ6435</ItemId>
+                            <TaxData>
+                                <TaxClass>cosmetics</TaxClass>
+                                <Taxes>
+                                    <Tax taxType="SALES" taxability="TAXABLE">
+                                        <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                        <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                        <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                        <EffectiveRate>0.00</EffectiveRate>
+                                        <TaxableAmount>5.00</TaxableAmount>
+                                        <CalculatedTax>0.00</CalculatedTax>
+                                    </Tax>
+                                </Taxes>
+                            </TaxData>
+                        </Fee>
+                    </Fees>
+                </Pricing>
+                <ShippingProgram authToken="asfasdfa">test</ShippingProgram>
+                <Carrier mode="STD" displayText="Flat Rate - Fixed">ANY</Carrier>
+                <FulfillmentChannel>SHIP_TO_HOME</FulfillmentChannel>
+                <EstimatedDeliveryDate>
+                    <DeliveryWindow>
+                        <From>2015-05-24T17:53:38+00:00</From>
+                        <To>2015-05-27T17:53:38+00:00</To>
+                    </DeliveryWindow>
+                    <ShippingWindow>
+                        <From>2015-05-22T17:53:38+00:00</From>
+                        <To>2015-05-22T17:53:38+00:00</To>
+                    </ShippingWindow>
+                    <Mode>LEGACY</Mode>
+                    <MessageType>DeliveryDate</MessageType>
+                    <Template>TST-234884</Template>
+                    <OriginalExpectedShipmentDate>
+                        <From>2015-05-22T17:53:38+00:00</From>
+                        <To>2015-05-22T17:53:38+00:00</To>
+                    </OriginalExpectedShipmentDate>
+                    <OriginalExpectedDeliveryDate>
+                        <From>2015-05-24T17:53:38+00:00</From>
+                        <To>2015-05-27T17:53:38+00:00</To>
+                    </OriginalExpectedDeliveryDate>
+                </EstimatedDeliveryDate>
+                <NamedDeliveryDate>
+                    <DeliveryDate>2015-05-23</DeliveryDate>
+                    <TimeWindowStart>10:49:00+00:00</TimeWindowStart>
+                    <TimeWindowEnd>15:34:00+00:00</TimeWindowEnd>
+                    <Message>This is a test...</Message>
+                </NamedDeliveryDate>
+                <DeliveryInstructions>More testing...</DeliveryInstructions>
+                <VendorId>28001</VendorId>
+                <VendorName>Ops and CS</VendorName>
+                <Gifting>
+                    <Gift>
+                        <ItemId>GH28939</ItemId>
+                        <Pricing>
+                            <Amount remainder="0.10">0.00</Amount>
+                            <PromotionalDiscounts>
+                                <Discount appliedCount="1">
+                                    <Id>SFGT</Id>
+                                    <Code>UKAAAP</Code>
+                                    <Amount>5.67</Amount>
+                                    <Description>Get 5% Off</Description>
+                                    <EffectType>Item</EffectType>
+                                    <TaxData>
+                                        <Taxes>
+                                            <Tax taxType="SALES" taxability="TAXABLE">
+                                                <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                                <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                                <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                                <EffectiveRate>0.00</EffectiveRate>
+                                                <TaxableAmount>20.38</TaxableAmount>
+                                                <CalculatedTax>0.00</CalculatedTax>
+                                            </Tax>
+                                        </Taxes>
+                                    </TaxData>
+                                </Discount>
+                            </PromotionalDiscounts>
+                            <TaxData>
+                                <Taxes>
+                                    <Tax taxType="SALES" taxability="TAXABLE">
+                                        <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                        <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                        <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                        <EffectiveRate>0.00</EffectiveRate>
+                                        <TaxableAmount>20.38</TaxableAmount>
+                                        <CalculatedTax>0.00</CalculatedTax>
+                                    </Tax>
+                                </Taxes>
+                            </TaxData>
+                            <UnitPrice>20.38</UnitPrice>
+                        </Pricing>
+                        <Message>
+                            <To localizedDisplayText="To">Someone</To>
+                            <From localizedDisplayText="From">Somebody</From>
+                            <Message>Some message</Message>
+                        </Message>
+                    </Gift>
+                    <GiftCard>
+                        <Message>
+                            <To localizedDisplayText="To">Someone</To>
+                            <From localizedDisplayText="From">Somebody</From>
+                            <Message>Some message</Message>
+                        </Message>
+                    </GiftCard>
+                    <Packslip>
+                        <Message>
+                            <To localizedDisplayText="To">Someone</To>
+                            <From localizedDisplayText="From">Somebody</From>
+                            <Message>Some message</Message>
+                        </Message>
+                    </Packslip>
+                </Gifting>
+                <ShopRunnerMessage>Buy 2 get 1 half off.</ShopRunnerMessage>
+                <Customization>
+                    <Customizations>
+                        <Customization>
+                            <CustomizationId>1</CustomizationId>
+                            <Instructions>
+                                <Instructions>
+                                    <Key>Color</Key>
+                                    <Value>Blue</Value>
+                                    <DisplayTitle>The Color Blue</DisplayTitle>
+                                    <DisplayValue>Blue</DisplayValue>
+                                </Instructions>
+                            </Instructions>
+                            <ExtendedPrice>
+                                <Amount remainder="0.10">0.00</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount appliedCount="1">
+                                        <Id>SFGT</Id>
+                                        <Code>UKAAAP</Code>
+                                        <Amount>5.67</Amount>
+                                        <Description>Get 5% Off</Description>
+                                        <EffectType>Item</EffectType>
+                                        <TaxData>
+                                            <Taxes>
+                                                <Tax taxType="SALES" taxability="TAXABLE">
+                                                    <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                                    <EffectiveRate>0.00</EffectiveRate>
+                                                    <TaxableAmount>20.38</TaxableAmount>
+                                                    <CalculatedTax>0.00</CalculatedTax>
+                                                </Tax>
+                                            </Taxes>
+                                        </TaxData>
+                                    </Discount>
+                                </PromotionalDiscounts>
+                                <TaxData>
+                                    <Taxes>
+                                        <Tax taxType="SALES" taxability="TAXABLE">
+                                            <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                            <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <TaxableAmount>20.38</TaxableAmount>
+                                            <CalculatedTax>0.00</CalculatedTax>
+                                        </Tax>
+                                    </Taxes>
+                                </TaxData>
+                                <UnitPrice>20.38</UnitPrice>
+                            </ExtendedPrice>
+                            <ItemId>GEWSA9223</ItemId>
+                            <Item ref="item_0_id"/>
+                        </Customization>
+                    </Customizations>
+                    <BasePrice>
+                        <Amount remainder="0.10">0.00</Amount>
+                        <PromotionalDiscounts>
+                            <Discount appliedCount="1">
+                                <Id>SFGT</Id>
+                                <Code>UKAAAP</Code>
+                                <Amount>5.67</Amount>
+                                <Description>Get 5% Off</Description>
+                                <EffectType>Item</EffectType>
+                                <TaxData>
+                                    <Taxes>
+                                        <Tax taxType="SALES" taxability="TAXABLE">
+                                            <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                            <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <TaxableAmount>20.38</TaxableAmount>
+                                            <CalculatedTax>0.00</CalculatedTax>
+                                        </Tax>
+                                    </Taxes>
+                                </TaxData>
+                            </Discount>
+                        </PromotionalDiscounts>
+                        <TaxData>
+                            <Taxes>
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>20.38</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                </Tax>
+                            </Taxes>
+                        </TaxData>
+                        <UnitPrice>20.38</UnitPrice>
+                    </BasePrice>
+                    <DisplayUrl>http://test.example.com/customatizations/</DisplayUrl>
+                </Customization>
+                <Statuses>
+                    <Status>
+                        <Quantity>1</Quantity>
+                        <Status>CREATED</Status>
+                        <StatusDate>2015-05-21T17:54:50+00:00</StatusDate>
+                        <ExpectedShipmentDate>2015-05-21</ExpectedShipmentDate>
+                        <ExpectedDeliveryDate>2015-05-21</ExpectedDeliveryDate>
+                        <ProductAvailabilityDate>2015-05-21</ProductAvailabilityDate>
+                        <Warehouse>VENDORNET</Warehouse>
+                    </Status>
+                </Statuses>
+                <OMSLineId>1234</OMSLineId>
+                <CustomerCareOrderItemTotals>
+                    <Charges>0.00</Charges>
+                    <Discount>0.00</Discount>
+                    <ExtendedPrice>0.00</ExtendedPrice>
+                    <LineTotal>0.00</LineTotal>
+                    <LineTotalWithoutTax>0.00</LineTotalWithoutTax>
+                    <PricingQty>0.00</PricingQty>
+                    <ShippingCharges>0.00</ShippingCharges>
+                    <ShippingDiscount>0.00</ShippingDiscount>
+                    <ShippingTotal>0.00</ShippingTotal>
+                    <Tax>0.00</Tax>
+                    <UnitPrice>20.38</UnitPrice>
+                    <MinLineStatus description="Cancelled">9000</MinLineStatus>
+                    <MaxLineStatus description="Cancelled">9000</MaxLineStatus>
+                </CustomerCareOrderItemTotals>
+                <SerialNumber>532342</SerialNumber>
+                <CustomAttributes>
+                    <Attribute>
+                        <Key>Store Name</Key>
+                        <Value>Magento</Value>
+                    </Attribute>
+                </CustomAttributes>
+                <GiftRegistryCancelUrl>https://test.example.com/gift-registry/cancel/</GiftRegistryCancelUrl>
+                <ReservationId>103939</ReservationId>
+                <ChargeGroups>
+                    <ChargeGroup name="Tax" adjustmentCategory="TaxCredit">
+                        <ReferencedCharges>
+                            <TaxCharge name="Price" category="Price" isDiscount="false" isPromotion="false" informational="false" unitPrice="0.00" linePrice="0.00" amount="0.00" taxType="SALES">
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>20.38</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                </Tax>
+                            </TaxCharge>
+                            <TaxCharge name="Shipping" category="Shipping" isDiscount="false" isPromotion="false" informational="false" unitPrice="0.00" linePrice="0.00" amount="0.00" taxType="SALES">
+                                <Tax taxType="SALES" taxability="TAXABLE">
+                                    <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                                    <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                                    <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <TaxableAmount>5.00</TaxableAmount>
+                                    <CalculatedTax>0.00</CalculatedTax>
+                                </Tax>
+                            </TaxCharge>
+                        </ReferencedCharges>
+                        <AdjustmentCharges/>
+                    </ChargeGroup>
+                    <ChargeGroup name="Shipping" adjustmentCategory="ShippingCredit">
+                        <ReferencedCharges>
+                            <Charge name="Shipping" category="Shipping" isDiscount="false" isPromotion="false" informational="false" unitPrice="0.00" linePrice="0.00" amount="0.00"/>
+                        </ReferencedCharges>
+                        <AdjustmentCharges/>
+                    </ChargeGroup>
+                    <ChargeGroup name="Merchandise" adjustmentCategory="PriceAdjustment">
+                        <ReferencedCharges>
+                            <Charge name="Merchandise" category="Merchandise" isDiscount="false" isPromotion="false" informational="false" unitPrice="20.38" amount="0.00"/>
+                        </ReferencedCharges>
+                        <AdjustmentCharges/>
+                    </ChargeGroup>
+                </ChargeGroups>
+            </OrderItem>
+        </OrderItems>
+        <Shipping>
+            <ShipGroups>
+                <ShipGroup id="SHIP_GROUP_ID" chargeType="FLAT">
+                    <DestinationTarget ref="MAILING_AD_0_ID"/>
+                    <OrderItems>
+                        <Item ref="item_0_id"/>
+                        <Item ref="item_1_id"/>
+                    </OrderItems>
+                    <Gifting>
+                        <Gift>
+                            <ItemId>SHIP_0_ITEM_ID</ItemId>
+                            <Pricing>
+                                <Amount remainder="0.01">5.98</Amount>
+                                <PromotionalDiscounts>
+                                    <Discount appliedCount="1">
+                                        <Id>SHIP_GIFT_ID</Id>
+                                        <Code>SHIP_GIFT_CODE</Code>
+                                        <Amount>1.00</Amount>
+                                        <Description>Shipping gift promo description</Description>
+                                        <EffectType>VALUE</EffectType>
+                                        <TaxData>
+                                            <TaxClass>SHIP_GIFT_PROMO_TAX_CLASS</TaxClass>
+                                            <Taxes>
+                                                <Tax taxType="Tax_GIFT_PROMO" taxability="TAXABLE">
+                                                    <Situs>Tax_DESTINATION</Situs>
+                                                    <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
+                                                    <Imposition impositionType="imp">gift promo imposition</Imposition>
+                                                    <EffectiveRate>0.02</EffectiveRate>
+                                                    <TaxableAmount>1.00</TaxableAmount>
+                                                    <CalculatedTax>0.02</CalculatedTax>
+                                                    <SellerRegistrationId>GIFT_PROMO_TAX_SELLER_REG</SellerRegistrationId>
+                                                </Tax>
+                                            </Taxes>
+                                        </TaxData>
+                                    </Discount>
+                                </PromotionalDiscounts>
+                                <TaxData>
+                                    <TaxClass>SHIP_GIFT_TAX_CLASS</TaxClass>
+                                    <Taxes>
+                                        <Tax taxType="Tax_SHIPPING_GIFT" taxability="DEFERRED">
+                                            <Situs>Tax_DESTINATION</Situs>
+                                            <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
+                                            <Imposition impositionType="imp">tax shipping gift imposition</Imposition>
+                                            <EffectiveRate>0.05</EffectiveRate>
+                                            <TaxableAmount>5.98</TaxableAmount>
+                                            <CalculatedTax>0.30</CalculatedTax>
+                                            <SellerRegistrationId>TAX_SHIP_GIFT_SELL_REG</SellerRegistrationId>
+                                        </Tax>
+                                    </Taxes>
+                                </TaxData>
+                                <UnitPrice>5.99</UnitPrice>
+                            </Pricing>
+                            <Message>
+                                <To localizedDisplayText="Para">World</To>
+                                <From localizedDisplayText="De">Me</From>
+                                <Message>Hello</Message>
+                            </Message>
+                        </Gift>
+                        <GiftCard>
+                            <Message>
+                                <To localizedDisplayText="Para">Me</To>
+                                <From localizedDisplayText="De">World</From>
+                                <Message>Goodbye</Message>
+                            </Message>
+                        </GiftCard>
+                        <Packslip>
+                            <Message>
+                                <To localizedDisplayText="Para">There</To>
+                                <From localizedDisplayText="De">Here</From>
+                                <Message>Happy Day</Message>
+                            </Message>
+                        </Packslip>
+                    </Gifting>
+                </ShipGroup>
+            </ShipGroups>
+            <Destinations>
+                <MailingAddress id="MAILING_AD_0_ID">
+                    <PersonName>
+                        <Honorific>Mrs.</Honorific>
+                        <LastName>Last</LastName>
+                        <MiddleName>Middle</MiddleName>
+                        <FirstName>First</FirstName>
+                    </PersonName>
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <Line2>Extra 1</Line2>
+                        <Line3>Extra 2</Line3>
+                        <Line4>Extra 3</Line4>
+                        <City>City</City>
+                        <MainDivision>MD</MainDivision>
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>21133</PostalCode>
+                    </Address>
+                    <Phone>555-555-9876</Phone>
+                </MailingAddress>
+                <StoreLocation id="STORE_LOC_0_ID">
+                    <StoreCode>LOC 0 CODE</StoreCode>
+                    <StoreName>Location Zero</StoreName>
+                    <StoreEmail>store@example.com</StoreEmail>
+                    <Address>
+                        <Line1>123 Main St</Line1>
+                        <Line2>Extra 1</Line2>
+                        <Line3>Extra 2</Line3>
+                        <Line4>Extra 3</Line4>
+                        <City>City</City>
+                        <MainDivision>MD</MainDivision>
+                        <CountryCode>US</CountryCode>
+                        <PostalCode>21133</PostalCode>
+                    </Address>
+                </StoreLocation>
+                <Email id="EMAIL_0_ID">
+                    <EmailAddress>email@example.com</EmailAddress>
+                    <PersonName>
+                        <Honorific>Mrs.</Honorific>
+                        <LastName>Last</LastName>
+                        <MiddleName>Middle</MiddleName>
+                        <FirstName>First</FirstName>
+                    </PersonName>
+                </Email>
+            </Destinations>
+            <Shipments>
+                <Shipment id="SHIPMENT_ID" destinationRef="SHIP_0_ITEM_ID">
+                    <ShippedItems>
+                        <ShippedItem>
+                            <Item ref="item_0_id"/>
+                            <Quantity>1</Quantity>
+                            <InvoiceNo>1000919828</InvoiceNo>
+                            <TrackingNumbers>
+                                <TrackingNumber>100393338388</TrackingNumber>
+                            </TrackingNumbers>
+                        </ShippedItem>
+                    </ShippedItems>
+                    <Warehouse>VENDORNET</Warehouse>
+                    <Carrier mode="test" displayText="test">UPS</Carrier>
+                    <TotalWeight>1.89</TotalWeight>
+                    <ShippedDate>2015-05-24T17:53:38+00:00</ShippedDate>
+                </Shipment>
+            </Shipments>
+        </Shipping>
+        <Payment>
+            <BillingAddress ref="MAILING_AD_0_ID"/>
+            <Payments>
+                <CreditCard>
+                    <PaymentContext>
+                        <PaymentSessionId>CUSTOMER_ORDER_ID</PaymentSessionId>
+                        <TenderType>DC</TenderType>
+                        <PaymentAccountUniqueId isToken="true">41123sdafaw3rfagae1111</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <PaymentRequestId>PAYMENT_REQUEST_ID</PaymentRequestId>
+                    <Amount>15.03</Amount>
+                    <Authorization>
+                        <ResponseCode>V</ResponseCode>
+                        <BankAuthorizationCode>BANK_AUTH_CODE</BankAuthorizationCode>
+                        <CVV2ResponseCode>CVV2_RESP_CODE</CVV2ResponseCode>
+                        <AVSResponseCode>AVS_RESP_CODE</AVSResponseCode>
+                        <PhoneResponseCode>PHONE_RESP_CODE</PhoneResponseCode>
+                        <NameResponseCode>NAME_RESP_CODE</NameResponseCode>
+                        <EmailResponseCode>EMAIL_RESP_CODE</EmailResponseCode>
+                        <ExtendedAuthorizationResponseCodes>
+                            <ResponseCodeDescription>EXT_RESP_CODE_DESC</ResponseCodeDescription>
+                            <ReasonCode>REASON_CODE</ReasonCode>
+                        </ExtendedAuthorizationResponseCodes>
+                        <AmountAuthorized>15.03</AmountAuthorized>
+                    </Authorization>
+                    <ExpirationDate>2016-01</ExpirationDate>
+                    <StartDate>2010-01</StartDate>
+                    <IssueNumber>ISSUE_NO</IssueNumber>
+                    <SecureVerificationData>
+                        <AuthenticationAvailable>AUTH_AVAIL</AuthenticationAvailable>
+                        <AuthenticationStatus>Y</AuthenticationStatus>
+                        <CavvUcaf>CAVV_UCAF</CavvUcaf>
+                        <TransactionId>TRANSACTION_ID</TransactionId>
+                        <ECI>CC_ECI</ECI>
+                        <PayerAuthenticationResponse>PAYER_AUTH_RESPONSE</PayerAuthenticationResponse>
+                    </SecureVerificationData>
+                    <PurchasePlanCode>PURCHASE_PLAN_CODE</PurchasePlanCode>
+                    <PurchasePlanDescription>PURCHASE_PLAN_DESC</PurchasePlanDescription>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>KEY</Key>
+                            <Value>VALUE</Value>
+                        </Attribute>
+                    </CustomAttributes>
+                </CreditCard>
+                <PrepaidCreditCard>
+                    <Amount>5.12</Amount>
+                    <Brand>PREPAID_CARD_BRAND</Brand>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>PCC-Key</Key>
+                            <Value>PCC-Value</Value>
+                        </Attribute>
+                        <Attribute>
+                            <Key>PCC-Key2</Key>
+                            <Value>PCC-Value2</Value>
+                        </Attribute>
+                    </CustomAttributes>
+                </PrepaidCreditCard>
+                <Points>
+                    <Amount>25.00</Amount>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>PointsKey</Key>
+                            <Value>PointsValue</Value>
+                        </Attribute>
+                    </CustomAttributes>
+                </Points>
+                <StoredValueCard>
+                    <PaymentContext>
+                        <PaymentSessionId>CUSTOMER_ORDER_ID</PaymentSessionId>
+                        <TenderType>SVC</TenderType>
+                        <PaymentAccountUniqueId isToken="true">1122abcdef3344</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <PaymentRequestId>PAYMENT_REQUEST_ID</PaymentRequestId>
+                    <Pin>123456</Pin>
+                    <Amount>15.00</Amount>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>SVCCustomKey</Key>
+                            <Value>SVCCustomerValue</Value>
+                        </Attribute>
+                    </CustomAttributes>
+                </StoredValueCard>
+                <PayPal>
+                    <Amount>19.93</Amount>
+                    <AmountAuthorized>19.93</AmountAuthorized>
+                    <PaymentContext>
+                        <PaymentSessionId>CUSTOMER_ORDER_ID</PaymentSessionId>
+                        <TenderType>PP_TENDER_TYPE</TenderType>
+                        <PaymentAccountUniqueId isToken="true">PP_ACCT_TOKEN</PaymentAccountUniqueId>
+                    </PaymentContext>
+                    <CreateTimeStamp>2015-01-16T10:33:03-05:00</CreateTimeStamp>
+                    <PaymentRequestId>PP_REQUEST_ID</PaymentRequestId>
+                    <Authorization>
+                        <ResponseCode>PP_AUTH_RESP_CODE</ResponseCode>
+                    </Authorization>
+                    <CustomAttributes>
+                        <Attribute>
+                            <Key>PPCustomKey</Key>
+                            <Value>PPCustomValue</Value>
+                        </Attribute>
+                    </CustomAttributes>
+                </PayPal>
+                <PrepaidCashOnDelivery>
+                    <Amount>27.28</Amount>
+                    <CustomAttributes>
+                        <Attribute><Key>CODCustomKey</Key><Value>CODCustomValue</Value></Attribute>
+                    </CustomAttributes>
+                </PrepaidCashOnDelivery>
+            </Payments>
+            <Status>Created</Status>
+        </Payment>
+        <ChargeGroups>
+            <ChargeGroup name="HFR" adjustmentCategory="HFRCredit">
+                <ReferencedCharges>
+                    <Charge name="HFR" category="HFR" isDiscount="false" isPromotion="false" informational="true" unitPrice="0.00" linePrice="0.00" amount="0.00"/>
+                </ReferencedCharges>
+                <AdjustmentCharges/>
+            </ChargeGroup>
+        </ChargeGroups>
+        <Fees>
+            <Fee>
+                <FeeType>ConvenienceStoreSurcharge</FeeType>
+                <Description>Miscellaneous fees</Description>
+                <Amount>1.99</Amount>
+                <ItemId>GWQ6435</ItemId>
+                <TaxData>
+                    <TaxClass>cosmetics</TaxClass>
+                    <Taxes>
+                        <Tax taxType="SALES" taxability="TAXABLE">
+                            <Situs>ADMINISTRATIVE_ORIGIN</Situs>
+                            <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
+                            <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
+                            <EffectiveRate>0.00</EffectiveRate>
+                            <TaxableAmount>5.00</TaxableAmount>
+                            <CalculatedTax>0.00</CalculatedTax>
+                        </Tax>
+                    </Taxes>
+                </TaxData>
+            </Fee>
+        </Fees>
+        <ShopRunnerMessage>Shop runner message at the whole order level</ShopRunnerMessage>
+        <Currency>USD</Currency>
+        <Associate>
+            <Name>First Last</Name>
+            <Number>83838</Number>
+            <Store>Some Store</Store>
+        </Associate>
+        <TaxHeader>
+            <Error>false</Error>
+        </TaxHeader>
+        <PrintedCatalogCode>UVS8832</PrintedCatalogCode>
+        <Locale>en_US</Locale>
+        <Relationships>
+            <Relationship parent="CUSTOMER_ORDER_ID">
+                <Members>
+                    <Item ref="item_0_id"/>
+                    <Item ref="item_1_id"/>
+                </Members>
+                <Type>WARRANTY</Type>
+                <Name>5 years warranty</Name>
+            </Relationship>
+        </Relationships>
+        <Shipments>
+            <Shipment id="SHIPMENT_ID" destinationRef="SHIP_0_ITEM_ID">
+                <ShippedItems>
+                    <ShippedItem>
+                        <Item ref="item_0_id"/>
+                        <Quantity>1</Quantity>
+                        <InvoiceNo>1000919828</InvoiceNo>
+                        <TrackingNumbers>
+                            <TrackingNumber>100393338388</TrackingNumber>
+                        </TrackingNumbers>
+                    </ShippedItem>
+                </ShippedItems>
+                <Warehouse>VENDORNET</Warehouse>
+                <Carrier mode="test" displayText="test">UPS</Carrier>
+                <TotalWeight>1.89</TotalWeight>
+                <ShippedDate>2015-05-24T17:53:38+00:00</ShippedDate>
+            </Shipment>
+        </Shipments>
+        <DashboardRepId>REP_ID</DashboardRepId>
+        <OrderSource type="TYPE_NAME">SOME_SOURCE</OrderSource>
+        <Status>CREATED</Status>
+        <CustomAttributes>
+            <Attribute>
+                <Key>Customer Loyalty Number</Key>
+                <Value>A123</Value>
+            </Attribute>
+        </CustomAttributes>
+        <Templates>
+            <Template id="TEMPLATE_ID">
+                <Key>TEMPLATE_KEY</Key>
+                <Value>Template value</Value>
+            </Template>
+        </Templates>
+        <OrderHistoryUrl>https://test.example.com/sales/order/history</OrderHistoryUrl>
+        <VATInclusivePricing>true</VATInclusivePricing>
+        <ExchangeOrders>
+            <ExchangeOrder>
+                <CustomerOrderId>ORDER_1_ID</CustomerOrderId>
+            </ExchangeOrder>
+            <ExchangeOrder>
+                <CustomerOrderId>ORDER_2_ID</CustomerOrderId>
+            </ExchangeOrder>
+        </ExchangeOrders>
+    </Order>
+</OrderDetailResponse>

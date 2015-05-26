@@ -57,6 +57,8 @@ trait TPayload
     protected $subpayloadExtractionPaths = [];
     /** @var LoggerInterface enabled PSR-3 logging */
     protected $logger;
+    /** @var bool flag to determine to either serialize empty node not or to serialize empty node. */
+    protected $isSerializeEmptyNode = true;
 
     /**
      * Fill out this payload object with data from the supplied string.
@@ -138,6 +140,7 @@ trait TPayload
         try {
             $d->loadXML($xmlString);
         } catch (\Exception $e) {
+            print_r($xmlString);
             throw $e;
         }
         return $d;
@@ -249,14 +252,13 @@ trait TPayload
     {
         // validate the payload data
         $this->validate();
-        $xmlString = sprintf(
-            '<%s %s>%s</%1$s>',
-            $this->getRootNodeName(),
-            $this->serializeRootAttributes(),
-            $this->serializeContents()
-        );
-        $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
-        $this->schemaValidate($canonicalXml);
+        $canonicalXml = '';
+        $contents = $this->serializeContents();
+        if ($this->isSerializeEmptyNode || $contents) {
+            $xmlString = sprintf('<%s %s>%s</%1$s>', $this->getRootNodeName(), $this->serializeRootAttributes(), $contents);
+            $canonicalXml = $this->getPayloadAsDoc($xmlString)->C14N();
+            $this->schemaValidate($canonicalXml);
+        }
         return $canonicalXml;
     }
 
@@ -386,5 +388,15 @@ trait TPayload
     protected function serializeOptionalDateValue($nodeName, $format, DateTime $date = null)
     {
         return $date ? "<$nodeName>{$date->format($format)}</$nodeName>" : '';
+    }
+
+    /**
+     * Get a new PayloadFactory instance.
+     *
+     * @return PayloadFactory
+     */
+    protected function getNewPayloadFactory()
+    {
+        return new PayloadFactory();
     }
 }

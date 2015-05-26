@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrderDetailRequest xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <CustomerOrderId>100393828888811121</CustomerOrderId>
+</OrderDetailRequest>
