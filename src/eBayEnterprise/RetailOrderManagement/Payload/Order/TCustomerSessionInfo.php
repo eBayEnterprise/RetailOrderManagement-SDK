@@ -140,7 +140,7 @@ trait TCustomerSessionInfo
     protected function serializeTimeSpentOnSite()
     {
         $timeOnSite = $this->getTimeSpentOnSite();
-        return $timeOnSite ? "<TimeSpentOnSite>{$timeOnSite->format('%h:%i:%s')}</TimeSpentOnSite>" : '';
+        return $timeOnSite ? "<TimeSpentOnSite>{$timeOnSite->format('%H:%I:%S')}</TimeSpentOnSite>" : '';
     }
 
     /**
