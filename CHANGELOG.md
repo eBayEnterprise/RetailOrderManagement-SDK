@@ -1,11 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [1.2.0-alpha-3] - 2015-06-04
 ### Added
 - Support for the inventory/quantity Retail Order Management Public API operation
-- Support for the inventory details Retail Order Management Public API operation
-- Support for the order detail Retail Order Management Public API operation
+- Support for the inventory/details Retail Order Management Public API operation
+- Support for the order/detail Retail Order Management Public API operation
 
 ## [1.2.0-alpha-2] - 2015-05-21
 ### Added
@@ -90,6 +90,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.2.0-alpha-3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-2...1.2.0-alpha-3
 [1.2.0-alpha-2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-1...1.2.0-alpha-2
 [1.2.0-alpha-1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-beta-1...1.2.0-alpha-1
 [1.1.0-beta-1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-alpha-4...1.1.0-beta-1
