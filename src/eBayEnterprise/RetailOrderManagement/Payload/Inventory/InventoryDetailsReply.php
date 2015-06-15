@@ -160,6 +160,6 @@ class InventoryDetailsReply implements IInventoryDetailsReply
 
     protected function getSchemaFile()
     {
-        return static::XSD;
+        return $this->getSchemaDir() . static::XSD;
     }
 }

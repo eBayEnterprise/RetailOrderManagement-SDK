@@ -3100,7 +3100,7 @@ return call_user_func(function () {
             ],
         ],
         'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xmlValidator,
+        'schemaValidator' => $xsdSchemaValidator,
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [
@@ -3169,7 +3169,7 @@ return call_user_func(function () {
             ],
         ],
         'validatorIterator' => $validatorIterator,
-        'schemaValidator' => $xmlValidator,
+        'schemaValidator' => $xsdSchemaValidator,
         'childPayloads' => [
             'payloadMap' => $payloadMap,
             'types' => [

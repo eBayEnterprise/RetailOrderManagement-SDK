@@ -113,6 +113,6 @@ class InventoryDetailsRequest implements IInventoryDetailsRequest
 
     protected function getSchemaFile()
     {
-        return static::XSD;
+        return $this->getSchemaDir() . static::XSD;
     }
 }
