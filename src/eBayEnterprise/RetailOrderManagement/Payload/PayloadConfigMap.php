@@ -3808,5 +3808,91 @@ return call_user_func(function () {
         'schemaValidator' => $xmlValidator,
         'childPayloads' => $noChildPayloads,
     ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocatedItemIterable'] = [
+        'validators' => [
+            [
+                'validator' => $iterableValidator,
+                'params' => [],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IAllocatedItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocatedItem'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocatedItem'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getItemId', 'getLineId'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xmlValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationReply'] = [
+        'validators' => [
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getAllocatedItems'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IAllocatedItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocatedItemIterable'
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRequest'] = [
+        'validators' => [
+            [
+                'validator' => $subpayloadValidator,
+                'params' => ['getItems'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => [
+            'payloadMap' => $payloadMap,
+            'types' => [
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IShippingItem' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\CompliantShippingItem',
+                '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\IItemIterable' =>
+                    '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\ItemIterable',
+            ],
+        ],
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidRequest'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getRequestId', 'getReservationId'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidReply'] = [
+        'validators' => [
+            [
+                'validator' => $requiredFieldsValidator,
+                'params' => ['getReservationId'],
+            ],
+        ],
+        'validatorIterator' => $validatorIterator,
+        'schemaValidator' => $xsdSchemaValidator,
+        'childPayloads' => $noChildPayloads,
+    ];
     return $map;
 });

@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
  */
 class ShippingItem implements IShippingItem
 {
-    use TPayload, TItem, TOrderItem, TPhysicalAddress {
+    use TPayload, TItem, TAmount, TOrderItem, TPhysicalAddress {
         TPhysicalAddress::getLines as getAddressLines;
         TPhysicalAddress::setLines as setAddressLines;
         TPhysicalAddress::getCity as getAddressCity;
@@ -165,7 +165,7 @@ class ShippingItem implements IShippingItem
 
     protected function serializeContents()
     {
-        return "<Quantity>{$this->getQuantity()}</Quantity>"
+        return $this->serializeQuantity()
             . "<ShipmentDetails>"
             . $this->serializeShippingMethod()
             . $this->serializePhysicalAddress()

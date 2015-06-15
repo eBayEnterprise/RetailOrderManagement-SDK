@@ -70,6 +70,12 @@ trait TOrderItem
             "<GiftwrapRequested>{$this->convertBooleanToString($this->getGiftWrapRequested())}</GiftwrapRequested>";
     }
 
+    protected function serializeQuantity()
+    {
+        $quantity = $this->sanitizeAmount($this->getQuantity());
+        return is_null($quantity) ? '' : '<Quantity>' . (int) $quantity . '</Quantity>';
+    }
+
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;

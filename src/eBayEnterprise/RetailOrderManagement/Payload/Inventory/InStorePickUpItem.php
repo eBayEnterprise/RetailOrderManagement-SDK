@@ -23,6 +23,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
 use eBayEnterprise\RetailOrderManagement\Payload\TIdentity;
 use eBayEnterprise\RetailOrderManagement\Payload\Checkout\TPhysicalAddress;
+use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -30,7 +31,7 @@ use Psr\Log\LoggerInterface;
  */
 class InStorePickUpItem implements IInStorePickUpItem
 {
-    use TPayload, TItem, TOrderItem, TPhysicalAddress {
+    use TPayload, TItem, TAmount, TOrderItem, TPhysicalAddress {
         TPhysicalAddress::getLines as getAddressLines;
         TPhysicalAddress::setLines as setAddressLines;
         TPhysicalAddress::getCity as getAddressCity;
@@ -136,7 +137,7 @@ class InStorePickUpItem implements IInStorePickUpItem
 
     protected function serializeContents()
     {
-        return "<Quantity>{$this->getQuantity()}</Quantity>"
+        return $this->serializeQuantity()
             . "<InStorePickupDetails>"
             . "<StoreFrontId>{$this->getStoreFrontId()}</StoreFrontId>"
             . "<StoreFrontName>{$this->getStoreFrontName()}</StoreFrontName>"

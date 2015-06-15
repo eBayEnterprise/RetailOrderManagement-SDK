@@ -161,8 +161,8 @@ class Discount implements IDiscount
 
     protected function getRootAttributes()
     {
-        $appliedCount = $this->getAppliedCount();
-        return !is_null($appliedCount) ? ['appliedCount' => $appliedCount] : [];
+        $appliedCount = $this->sanitizeAmount($this->getAppliedCount());
+        return !is_null($appliedCount) ? ['appliedCount' => (int) $appliedCount] : [];
     }
 
     protected function getRootNodeName()

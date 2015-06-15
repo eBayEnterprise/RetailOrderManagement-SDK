@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Unreleased Changes
+### Added
+- Support for inventory allocation create/rollback operations
+
+### Fixed
+- Inventory details request/reply payloads not using the XSD schema validator
+
 ## [1.2.0-alpha-3] - 2015-06-04
 ### Added
 - Support for the inventory/quantity Retail Order Management Public API operation

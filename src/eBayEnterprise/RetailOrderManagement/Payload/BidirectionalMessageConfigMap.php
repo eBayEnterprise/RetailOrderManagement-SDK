@@ -87,5 +87,13 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\Detail\OrderDetailRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\Detail\OrderDetailResponse',
     ];
+    $map['allocations/create'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationReply',
+    ];
+    $map['allocations/delete'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidReply',
+    ];
     return $map;
 });

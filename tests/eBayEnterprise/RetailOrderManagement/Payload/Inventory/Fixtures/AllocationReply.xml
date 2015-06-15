@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AllocationResponseMessage xmlns="http://api.gsicommerce.com/schema/checkout/1.0"
+                          reservationId="23faa211-dcfd-485e-a879-492e33f76f91">
+    <AllocationResponse lineId="_line1" itemId="item1">
+        <AmountAllocated>5</AmountAllocated>
+    </AllocationResponse>
+    <AllocationResponse lineId="_line2" itemId="item2">
+        <AmountAllocated>5</AmountAllocated>
+    </AllocationResponse>
+    <AllocationResponse lineId="_line3" itemId="item3">
+        <AmountAllocated>5</AmountAllocated>
+    </AllocationResponse>
+</AllocationResponseMessage>
