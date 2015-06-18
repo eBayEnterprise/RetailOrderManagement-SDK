@@ -1,12 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Unreleased Changes
+## [1.2.0] - 2015-06-18
 ### Added
-- Support for inventory allocation create/rollback operations
+- Support for inventory/allocations/create Retail Order Management Public API operation
+- Support for inventory/allocations/delete Retail Order Management Public API operation
 
 ### Fixed
-- Inventory details request/reply payloads not using the XSD schema validator
+- Inventory Details configured to use xml schema validator instead of xsd schema validator
+- `/OrderCreateRequest/.../TimeSpentOnSite` formatting can produce xsd-invalid results
 
 ## [1.2.0-alpha-3] - 2015-06-04
 ### Added
@@ -97,6 +99,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.2.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-3...1.2.0
 [1.2.0-alpha-3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-2...1.2.0-alpha-3
 [1.2.0-alpha-2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-1...1.2.0-alpha-2
 [1.2.0-alpha-1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.1.0-beta-1...1.2.0-alpha-1
