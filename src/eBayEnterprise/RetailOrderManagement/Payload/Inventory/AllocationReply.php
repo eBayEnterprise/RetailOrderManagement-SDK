@@ -24,13 +24,15 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 use Psr\Log\LoggerInterface;
 
 /**
- * Inventory reserved for an order
+ * Results of a request to allocation inventory for an order
  */
 class AllocationReply implements IAllocationReply
 {
     use TTopLevelPayload;
 
+    /** @var string */
     protected $reservationId;
+    /** @var IIterablePayload */
     protected $allocatedItems;
 
     /**

@@ -92,8 +92,8 @@ return call_user_func(function () {
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationReply',
     ];
     $map['allocations/delete'] = [
-        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidRequest',
-        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidReply',
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackReply',
     ];
     return $map;
 });

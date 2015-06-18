@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Inventory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 
-class AllocationVoidReplyTest extends \PHPUnit_Framework_TestCase
+class AllocationRollbackReplyTest extends \PHPUnit_Framework_TestCase
 {
     use TPayloadTest;
 
@@ -39,7 +39,7 @@ class AllocationVoidReplyTest extends \PHPUnit_Framework_TestCase
     public function provideSerializedDataFile()
     {
         return [
-            [__DIR__ . '/Fixtures/AllocationVoidReply.xml'],
+            [__DIR__ . '/Fixtures/AllocationRollbackReply.xml'],
         ];
     }
 
@@ -66,6 +66,6 @@ class AllocationVoidReplyTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidReply');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackReply');
     }
 }

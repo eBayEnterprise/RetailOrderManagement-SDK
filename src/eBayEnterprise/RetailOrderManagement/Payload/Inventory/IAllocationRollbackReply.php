@@ -18,26 +18,12 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Inventory;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 /**
- * Operation is used undo a reservation for inventory for an order.
+ * Response to the allocation rollback request
  */
-interface IAllocationVoidRequest extends IPayload, IAllocationVoidMessage
+interface IAllocationRollbackReply extends IPayload, IAllocationRollbackMessage
 {
     /**
-     * Uniquely identifies a request operation
-     *
-     * restrictions: required, 1 < length <= 40
-     * @return string
-     */
-    public function getRequestId();
-
-    /**
-     * @param string
-     * @return self
-     */
-    public function setRequestId($requestId);
-
-    /**
-     * Identifies the inventory reservation which is created by this operation.
+     * Identifies the inventory reservation that was undone.
      *
      * restrictions: required, length 40
      * @return string

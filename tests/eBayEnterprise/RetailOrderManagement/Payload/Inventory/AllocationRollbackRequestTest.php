@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Inventory;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
 
-class AllocationVoidRequestTest extends \PHPUnit_Framework_TestCase
+class AllocationRollbackRequestTest extends \PHPUnit_Framework_TestCase
 {
     use TPayloadTest;
 
@@ -32,14 +32,14 @@ class AllocationVoidRequestTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Provide paths to fixutre files containing  valid, serialized allocation
-     * void requests
+     * rollback requests
      *
      * @return array
      */
     public function provideSerializedDataFile()
     {
         return [
-            [__DIR__ . '/Fixtures/AllocationVoidRequest.xml'],
+            [__DIR__ . '/Fixtures/AllocationRollbackRequest.xml'],
         ];
     }
 
@@ -66,6 +66,6 @@ class AllocationVoidRequestTest extends \PHPUnit_Framework_TestCase
     protected function createNewPayload()
     {
         return $this->payloadFactory
-            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidRequest');
+            ->buildPayload('\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackRequest');
     }
 }

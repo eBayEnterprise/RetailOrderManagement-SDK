@@ -18,7 +18,7 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Inventory;
 use eBayEnterprise\RetailOrderManagement\Payload\IPayload;
 
 /**
- * Inventory reserved for an order
+ * Response to a request to reserve inventory for an order
  */
 interface IAllocationReply extends IPayload, IAllocationMessage, IAllocatedItemContainer
 {

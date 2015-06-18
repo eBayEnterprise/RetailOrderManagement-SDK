@@ -33,7 +33,8 @@ class AllocatedItem implements IAllocatedItem
 
     const ROOT_NODE = 'AllocationResponse';
 
-    protected $quantity;
+    /** @var int */
+    protected $amountAllocated;
 
     /**
      * @param IValidatorIterator
@@ -61,27 +62,28 @@ class AllocatedItem implements IAllocatedItem
         $this->extractionPaths = [
             'itemId' => 'string(@itemId)',
             'id' => 'string(@lineId)',
-            'quantity' => 'string(x:AmountAllocated)'
+            'amountAllocated' => 'string(x:AmountAllocated)'
         ];
     }
 
     /**
      * Quantity of the items actually allocated for the order
      *
+     * restrictions: optional
      * @return int
      */
-    public function getQuantity()
+    public function getAmountAllocated()
     {
-        return $this->quantity;
+        return $this->amountAllocated;
     }
 
     /**
      * @param int
      * @return self
      */
-    public function setQuantity($quantity)
+    public function setAmountAllocated($amountAllocated)
     {
-        $this->quantity = $quantity;
+        $this->amountAllocated = $amountAllocated;
         return $this;
     }
 
@@ -91,7 +93,7 @@ class AllocatedItem implements IAllocatedItem
      */
     protected function serializeContents()
     {
-        $quantity = (int) $this->sanitizeAmount($this->getQuantity());
+        $quantity = (int) $this->sanitizeAmount($this->getAmountAllocated());
         return "<AmountAllocated>$quantity</AmountAllocated>";
     }
 

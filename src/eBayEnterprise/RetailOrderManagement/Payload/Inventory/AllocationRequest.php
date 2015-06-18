@@ -24,7 +24,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 use Psr\Log\LoggerInterface;
 
 /**
- * Inventory reserved for an order
+ * Reserves inventory for an order
  */
 class AllocationRequest implements IAllocationRequest
 {

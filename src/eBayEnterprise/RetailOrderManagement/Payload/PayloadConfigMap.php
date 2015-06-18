@@ -3872,7 +3872,7 @@ return call_user_func(function () {
             ],
         ],
     ];
-    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidRequest'] = [
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackRequest'] = [
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
@@ -3883,7 +3883,7 @@ return call_user_func(function () {
         'schemaValidator' => $xsdSchemaValidator,
         'childPayloads' => $noChildPayloads,
     ];
-    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationVoidReply'] = [
+    $map['\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackReply'] = [
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,

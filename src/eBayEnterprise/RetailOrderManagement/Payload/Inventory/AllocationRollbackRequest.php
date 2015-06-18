@@ -24,9 +24,9 @@ use eBayEnterprise\RetailOrderManagement\Payload\TTopLevelPayload;
 use Psr\Log\LoggerInterface;
 
 /**
- * Inventory reserved for an order
+ * Request to rollback a previous allocation
  */
-class AllocationVoidRequest implements IAllocationVoidRequest
+class AllocationRollbackRequest implements IAllocationRollbackRequest
 {
     use TTopLevelPayload;
 
@@ -88,7 +88,7 @@ class AllocationVoidRequest implements IAllocationVoidRequest
     }
 
     /**
-     * Identifies the inventory reservation which is created by this operation.
+     * Identifies the inventory reservation to be undone.
      *
      * restrictions: optional
      * @return string

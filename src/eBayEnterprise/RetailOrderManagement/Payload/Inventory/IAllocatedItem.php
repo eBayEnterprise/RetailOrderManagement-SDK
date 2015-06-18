@@ -25,11 +25,11 @@ interface IAllocatedItem extends IItem
      *
      * @return int
      */
-    public function getQuantity();
+    public function getAmountAllocated();
 
     /**
      * @param int
      * @return self
      */
-    public function setQuantity($quantity);
+    public function setAmountAllocated($amountAllocated);
 }

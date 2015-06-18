@@ -16,9 +16,9 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Inventory;
 
 /**
- * Inventory Allocation Void Message
+ * message used when undoing a previous allocation
  */
-interface IAllocationVoidMessage
+interface IAllocationRollbackMessage
 {
     const XML_NS = 'http://api.gsicommerce.com/schema/checkout/1.0';
     const XSD = '/checkout/1.0/Inventory-Service-RollbackAllocation-1.0.xsd';

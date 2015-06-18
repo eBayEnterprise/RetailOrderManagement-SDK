@@ -16,7 +16,7 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload\Inventory;
 
 /**
- * Inventory Allocation Message
+ * Message type used when allocating inventory for an order
  */
 interface IAllocationMessage
 {
