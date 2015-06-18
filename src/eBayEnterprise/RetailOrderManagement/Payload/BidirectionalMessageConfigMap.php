@@ -87,11 +87,11 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\Detail\OrderDetailRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Order\Detail\OrderDetailResponse',
     ];
-    $map['allocations/create'] = [
+    $map['inventory/allocations/create'] = [
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationReply',
     ];
-    $map['allocations/delete'] = [
+    $map['inventory/allocations/delete'] = [
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackReply',
     ];
