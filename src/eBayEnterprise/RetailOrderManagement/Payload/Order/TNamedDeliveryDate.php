@@ -84,9 +84,13 @@ trait TNamedDeliveryDate
         if (!is_null($message)) {
             return '<NamedDeliveryDate>'
                 . $this->serializeOptionalDateValue('DeliveryDate', 'Y-m-d', $this->getNamedDeliveryDate())
-                . $this->serializeOptionalDateValue('TimeWindowStart', 'H:i:sP', $this->getNamedDeliveryTimeWindowStart())
+                . $this->serializeOptionalDateValue(
+                    'TimeWindowStart',
+                    'H:i:sP',
+                    $this->getNamedDeliveryTimeWindowStart()
+                )
                 . $this->serializeOptionalDateValue('TimeWindowEnd', 'H:i:sP', $this->getNamedDeliveryTimeWindowEnd())
-                . "<Message>$message</Message>"
+                . "<Message>{$this->xmlEncode($message)}</Message>"
                 . '</NamedDeliveryDate>';
         }
         return '';

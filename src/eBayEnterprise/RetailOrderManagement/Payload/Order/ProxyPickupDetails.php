@@ -154,13 +154,13 @@ class ProxyPickupDetails implements IProxyPickupDetails
 
     protected function serializeContents()
     {
-        return $this->serializeOptionalValue('PersonName', $this->getFullName())
-            . $this->serializeOptionalValue('FirstName', $this->getFirstName())
-            . $this->serializeOptionalValue('LastName', $this->getLastName())
-            . $this->serializeOptionalValue('Email', $this->getEmail())
-            . $this->serializeOptionalValue('Phone', $this->getPhone())
+        return $this->serializeOptionalXmlEncodedValue('PersonName', $this->getFullName())
+            . $this->serializeOptionalXmlEncodedValue('FirstName', $this->getFirstName())
+            . $this->serializeOptionalXmlEncodedValue('LastName', $this->getLastName())
+            . $this->serializeOptionalXmlEncodedValue('Email', $this->getEmail())
+            . $this->serializeOptionalXmlEncodedValue('Phone', $this->getPhone())
             . $this->serializePhysicalAddress()
-            . $this->serializeOptionalValue('Relationship', $this->getRelationship());
+            . $this->serializeOptionalXmlEncodedValue('Relationship', $this->getRelationship());
     }
 
     protected function getRootNodeName()

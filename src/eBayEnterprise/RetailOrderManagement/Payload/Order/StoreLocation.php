@@ -112,9 +112,9 @@ class StoreLocation implements IStoreLocation
 
     protected function serializeContents()
     {
-        return $this->serializeOptionalValue('StoreCode', $this->getStoreCode())
-            . $this->serializeOptionalValue('StoreName', $this->getStoreName())
-            . $this->serializeOptionalValue('StoreEmail', $this->getEmailAddress())
+        return $this->serializeOptionalXmlEncodedValue('StoreCode', $this->getStoreCode())
+            . $this->serializeOptionalXmlEncodedValue('StoreName', $this->getStoreName())
+            . $this->serializeOptionalXmlEncodedValue('StoreEmail', $this->getEmailAddress())
             . $this->serializePhysicalAddress();
     }
 

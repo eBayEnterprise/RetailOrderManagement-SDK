@@ -65,7 +65,7 @@ trait TItemCustomization
             return '<Customization>'
                 . $this->getCustomizations()->serialize()
                 . ($this->getCustomizationBasePrice() ? $this->getCustomizationBasePrice()->setRootNodeName('BasePrice')->serialize() : '')
-                . $this->serializeOptionalValue('DisplayUrl', $this->getCustomizationDisplayUrl())
+                . $this->serializeOptionalXmlEncodedValue('DisplayUrl', $this->getCustomizationDisplayUrl())
                 . '</Customization>';
         }
         return '';

@@ -112,7 +112,7 @@ trait TOrderCustomer
             . $this->serializePersonName()
             . $this->serializeOptionalValue('Gender', $this->getGender())
             . $this->serializeOptionalDateValue('DateOfBirth', 'Y-m-d', $this->getDateOfBirth())
-            . $this->serializeOptionalValue('EmailAddress', $this->getEmailAddress())
+            . $this->serializeOptionalXmlEncodedValue('EmailAddress', $this->getEmailAddress())
             . $this->serializeOptionalValue('CustomerTaxId', $this->getTaxId())
             . $this->serializeTaxExemptFlag()
             . $this->getLoyaltyPrograms()->serialize()

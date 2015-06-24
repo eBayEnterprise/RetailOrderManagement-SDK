@@ -90,8 +90,8 @@ class CustomAttribute implements ICustomAttribute
     {
         return sprintf(
             '<Key>%s</Key><Value>%s</Value>',
-            $this->getKey(),
-            $this->getValue()
+            $this->xmlEncode($this->getKey()),
+            $this->xmlEncode($this->getValue())
         );
     }
 

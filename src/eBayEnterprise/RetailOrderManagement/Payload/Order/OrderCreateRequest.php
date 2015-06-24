@@ -513,7 +513,7 @@ class OrderCreateRequest implements IOrderCreateRequest
             . $this->serializeOptionalValue('PrintedCatalogCode', $this->getPrintedCatalogCode())
             . "<Locale>{$this->getLocale()}</Locale>"
             . $this->getItemRelationships()->serialize()
-            . $this->serializeOptionalValue('DashboardRepId', $this->getDashboardRepId())
+            . $this->serializeOptionalXmlEncodedValue('DashboardRepId', $this->getDashboardRepId())
             . $this->serializeOrderSource()
             . $this->getHolds()->serialize()
             . $this->getCustomAttributes()->serialize()
@@ -564,7 +564,9 @@ class OrderCreateRequest implements IOrderCreateRequest
     {
         $orso = $this->getOrderSource();
         if (!is_null($orso)) {
-            return "<OrderSource type='{$this->getOrderSourceType()}'>$orso</OrderSource>";
+            return sprintf('<OrderSource type="%s">', $this->xmlEncode($this->getOrderSourceType()))
+                . $this->xmlEncode($orso)
+                . '</OrderSource>';
         }
         return '';
     }

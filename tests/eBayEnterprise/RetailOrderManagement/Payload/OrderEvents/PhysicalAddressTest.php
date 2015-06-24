@@ -37,6 +37,17 @@ class PhysicalAddressTest extends \PHPUnit_Framework_TestCase
         $this->testTrait->expects($this->any())
             ->method('cleanString')
             ->will($this->returnArgument(0));
+        $this->testTrait->expects($this->any())
+            ->method('xmlEncode')
+            ->will($this->returnArgument(0));
+        $this->testTrait->expects($this->any())
+            ->method('serializeOptionalXmlEncodedValue')
+            ->will($this->returnValueMap([
+                ['MainDivision', 'PA', '<MainDivision>PA</MainDivision>'],
+                ['MainDivision', null, ''],
+                ['PostalCode', '19406', '<PostalCode>19406</PostalCode>'],
+                ['PostalCode', null, ''],
+            ]));
     }
 
     /**

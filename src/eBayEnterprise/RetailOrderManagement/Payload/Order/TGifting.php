@@ -285,7 +285,7 @@ trait TGifting
     {
         $messageSerialization = $this->serializeGiftingMessage(
             $this->getPackslipTo(),
-            $this->packslipFrom,
+            $this->getPackslipFrom(),
             $this->getPackslipMessage()
         );
         return $messageSerialization ? "<Packslip>$messageSerialization</Packslip>" : '';
@@ -302,13 +302,19 @@ trait TGifting
      */
     protected function serializeGiftingMessage($toName, $fromName, $messageText)
     {
-        $localizedTo = $this->serializeOptionalAttribute('localizedDisplayText', $this->getLocalizedToLabel());
-        $localizedFrom = $this->serializeOptionalAttribute('localizedDisplayText', $this->getLocalizedFromLabel());
+        $localizedTo = $this->serializeOptionalAttribute(
+            'localizedDisplayText',
+            $this->xmlEncode($this->getLocalizedToLabel())
+        );
+        $localizedFrom = $this->serializeOptionalAttribute(
+            'localizedDisplayText',
+            $this->xmlEncode($this->getLocalizedFromLabel())
+        );
         return $toName && $fromName
             ? '<Message>'
-                . "<To $localizedTo>$toName</To>"
-                . "<From $localizedFrom>$fromName</From>"
-                . $this->serializeOptionalValue('Message', $messageText)
+                . "<To $localizedTo>{$this->xmlEncode($toName)}</To>"
+                . "<From $localizedFrom>{$this->xmlEncode($fromName)}</From>"
+                . $this->serializeOptionalXmlEncodedValue('Message', $messageText)
                 . '</Message>'
             : '';
     }

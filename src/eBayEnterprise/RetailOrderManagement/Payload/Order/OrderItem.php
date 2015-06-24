@@ -482,7 +482,7 @@ class OrderItem implements IOrderItem
         return "<ItemId>{$this->getItemId()}</ItemId>"
             . "<Quantity>{$this->getQuantity()}</Quantity>"
             . $this->serializeDescription()
-            . $this->serializeOptionalValue('Department', $this->getDepartment())
+            . $this->serializeOptionalXmlEncodedValue('Department', $this->getDepartment())
             . $this->serializePricing()
             . $this->serializeShippingProgram()
             . $this->serializeShippingMethod()
@@ -491,15 +491,15 @@ class OrderItem implements IOrderItem
             . $this->serializeOptionalSubpayload($this->getProxyPickupDetails())
             . $this->serializeEstimatedDeliveryDate()
             . $this->serializeNamedDeliveryDate()
-            . $this->serializeOptionalValue('DeliveryInstructions', $this->getDeliveryInstructions())
+            . $this->serializeOptionalXmlEncodedValue('DeliveryInstructions', $this->getDeliveryInstructions())
             . $this->serializeOptionalValue('VendorId', $this->getVendorId())
-            . $this->serializeOptionalValue('VendorName', $this->getVendorName())
+            . $this->serializeOptionalXmlEncodedValue('VendorName', $this->getVendorName())
             . $this->serializeGifting()
-            . $this->serializeOptionalValue('ShopRunnerMessage', $this->getShopRunnerMessage())
+            . $this->serializeOptionalXmlEncodedValue('ShopRunnerMessage', $this->getShopRunnerMessage())
             . $this->serializeCustomizations()
             . $this->serializeOptionalValue('SerialNumber', $this->getSerialNumber())
             . $this->getCustomAttributes()->serialize()
-            . $this->serializeOptionalValue('GiftRegistryCancelUrl', $this->getGiftRegistryCancelUrl())
+            . $this->serializeOptionalXmlEncodedValue('GiftRegistryCancelUrl', $this->getGiftRegistryCancelUrl())
             . $this->serializeOptionalValue('ReservationId', $this->getReservationId());
     }
 
@@ -515,7 +515,7 @@ class OrderItem implements IOrderItem
                 . $this->serializeProductDescription()
                 . $this->serializeColor()
                 . $this->serializeSize()
-                . $this->serializeOptionalValue('ScreenSize', $this->getScreenSize())
+                . $this->serializeOptionalXmlEncodedValue('ScreenSize', $this->getScreenSize())
                 . '</Description>';
         }
         return '';

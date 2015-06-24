@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Unreleased Changes
+### Fixed
+- Invalid xml character sequences were being added to the order create request without being escaped.
+
 ## [1.2.0] - 2015-06-18
 ### Added
 - Support for inventory/allocations/create Retail Order Management Public API operation

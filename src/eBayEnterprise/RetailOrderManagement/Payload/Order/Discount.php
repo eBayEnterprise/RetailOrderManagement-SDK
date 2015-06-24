@@ -152,9 +152,9 @@ class Discount implements IDiscount
     protected function serializeContents()
     {
         return "<Id>{$this->getId()}</Id>"
-            . $this->serializeOptionalValue('Code', $this->getCode())
+            . $this->serializeOptionalXmlEncodedValue('Code', $this->getCode())
             . $this->serializeAmount('Amount', $this->getAmount())
-            . $this->serializeOptionalValue('Description', $this->getDescription())
+            . $this->serializeOptionalXmlEncodedValue('Description', $this->getDescription())
             . $this->serializeOptionalValue('EffectType', $this->getEffectType())
             . $this->serializeTaxData();
     }

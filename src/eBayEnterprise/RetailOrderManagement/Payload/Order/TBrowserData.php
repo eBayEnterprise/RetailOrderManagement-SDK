@@ -239,11 +239,6 @@ trait TBrowserData
         return $this;
     }
 
-    public function serializeOptionalXmlEncodedValue($name, $value)
-    {
-        return $this->serializeOptionalValue($name, ($value) ? $this->xmlEncode($value) : null);
-    }
-
     /**
      * Serialize browser data associated with the order.
      *

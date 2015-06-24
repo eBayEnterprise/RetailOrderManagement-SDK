@@ -43,6 +43,7 @@ class OrderCreateRequestTest extends \PHPUnit_Framework_TestCase
             [__DIR__ . '/Fixtures/OrderCreateRequest.xml'],
             [__DIR__ . '/Fixtures/OrderCreateRequestMinimalOrderItem.xml'],
             [__DIR__ . '/Fixtures/OrderCreateRequestMinimalData.xml'],
+            [__DIR__ . '/Fixtures/OrderCreateRequestHtmlEntities.xml'],
         ];
     }
 

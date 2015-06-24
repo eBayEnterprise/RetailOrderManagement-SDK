@@ -75,7 +75,7 @@ class MailingAddress extends CheckoutMailingAddress implements IMailingAddress
     protected function serializeContents()
     {
         return parent::serializeContents()
-            . "<Phone>{$this->getPhone()}</Phone>";
+            . "<Phone>{$this->xmlEncode($this->getPhone())}</Phone>";
     }
 
     protected function getRootNodeName()

@@ -38,6 +38,6 @@ trait TProductDescription
      */
     protected function serializeProductDescription()
     {
-        return "<Description>{$this->getDescription()}</Description>";
+        return "<Description>{$this->xmlEncode($this->getDescription())}</Description>";
     }
 }

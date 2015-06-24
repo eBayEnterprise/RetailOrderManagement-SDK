@@ -167,9 +167,9 @@ class StoreFrontDetails implements IStoreFrontDetails
      */
     protected function serializeLocation()
     {
-        return $this->serializeOptionalValue('StoreCode', $this->getStoreCode())
-            . $this->serializeOptionalValue('StoreName', $this->getStoreName())
-            . $this->serializeOptionalValue('StoreEmail', $this->getEmailAddress())
+        return $this->serializeOptionalXmlEncodedValue('StoreCode', $this->getStoreCode())
+            . $this->serializeOptionalXmlEncodedValue('StoreName', $this->getStoreName())
+            . $this->serializeOptionalXmlEncodedValue('StoreEmail', $this->getEmailAddress())
             . $this->serializePhysicalAddress();
     }
 
@@ -180,9 +180,9 @@ class StoreFrontDetails implements IStoreFrontDetails
      */
     protected function serializeDetails()
     {
-        return $this->serializeOptionalValue('StoreDirections', $this->getDirections())
-            . $this->serializeOptionalValue('StoreHours', $this->getHours())
-            . $this->serializeOptionalValue('StoreFrontPhoneNumber', $this->getPhoneNumber());
+        return $this->serializeOptionalXmlEncodedValue('StoreDirections', $this->getDirections())
+            . $this->serializeOptionalXmlEncodedValue('StoreHours', $this->getHours())
+            . $this->serializeOptionalXmlEncodedValue('StoreFrontPhoneNumber', $this->getPhoneNumber());
     }
 
     protected function getPhysicalAddressRootNodeName()

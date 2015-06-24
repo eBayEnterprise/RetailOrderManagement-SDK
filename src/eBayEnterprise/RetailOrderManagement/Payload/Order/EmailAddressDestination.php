@@ -79,7 +79,7 @@ class EmailAddressDestination implements IEmailAddressDestination
 
     protected function serializeContents()
     {
-        return "<EmailAddress>{$this->getEmailAddress()}</EmailAddress>"
+        return "<EmailAddress>{$this->xmlEncode($this->getEmailAddress())}</EmailAddress>"
             . ($this->getLastName() && $this->getFirstName() ? $this->serializePersonName() : '');
     }
 

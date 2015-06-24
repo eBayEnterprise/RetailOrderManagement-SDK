@@ -74,10 +74,10 @@ trait TPersonName
     {
         $rootNode = $this->getPersonNameRootNodeName();
         return "<$rootNode>"
-            . $this->serializeOptionalValue('Honorific', $this->getHonorificName())
-            . "<LastName>{$this->getLastName()}</LastName>"
-            . $this->serializeOptionalValue('MiddleName', $this->getMiddleName())
-            . "<FirstName>{$this->getFirstName()}</FirstName>"
+            . $this->serializeOptionalXmlEncodedValue('Honorific', $this->getHonorificName())
+            . "<LastName>{$this->xmlEncode($this->getLastName())}</LastName>"
+            . $this->serializeOptionalXmlEncodedValue('MiddleName', $this->getMiddleName())
+            . "<FirstName>{$this->xmlEncode($this->getFirstName())}</FirstName>"
             . "</$rootNode>";
     }
 

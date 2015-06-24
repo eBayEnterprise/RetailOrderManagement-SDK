@@ -140,7 +140,7 @@ trait TOrderItemDescription
                 '<%s %s>%s</%1$s>',
                 $nodeName,
                 ($id ? "id='$id'" : ''),
-                $val
+                $this->xmlEncode($val)
             );
         }
         return '';

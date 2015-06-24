@@ -399,4 +399,17 @@ trait TPayload
     {
         return new PayloadFactory();
     }
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    public function serializeOptionalXmlEncodedValue($name, $value)
+    {
+        return $this->serializeOptionalValue($name, $this->xmlEncode($value));
+    }
 }

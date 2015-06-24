@@ -164,7 +164,7 @@ trait TEstimatedDeliveryDate
                 )
                 . $this->serializeOptionalValue('Mode', $this->getEstimatedDeliveryMode())
                 . "<MessageType>{$this->getEstimatedDeliveryMessageType()}</MessageType>"
-                . $this->serializeOptionalValue('Template', $this->getEstimatedDeliveryTemplate())
+                . $this->serializeOptionalXmlEncodedValue('Template', $this->getEstimatedDeliveryTemplate())
                 . '</EstimatedDeliveryDate>';
         }
         return '';

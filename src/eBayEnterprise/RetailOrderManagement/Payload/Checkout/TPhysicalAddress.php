@@ -99,12 +99,14 @@ trait TPhysicalAddress
             $lines[] = sprintf(
                 '<Line%d>%s</Line%1$d>',
                 $idx,
-                $line
+                $this->xmlEncode($line)
             );
         }
         // If we don't have any address lines, we treat as having no address at all.
         return $idx ? $this->buildPhysicalAddressNodes($lines) : '';
     }
+
+    abstract protected function xmlEncode($str);
 
     /**
      * Build the Shipping Address Node
@@ -118,12 +120,14 @@ trait TPhysicalAddress
             '<%s>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</%1$s>',
             $this->getPhysicalAddressRootNodeName(),
             implode('', $lines),
-            $this->getCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getMainDivision()),
-            $this->getCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getPostalCode())
+            $this->xmlEncode($this->getCity()),
+            $this->serializeOptionalXmlEncodedValue('MainDivision', $this->getMainDivision()),
+            $this->xmlEncode($this->getCountryCode()),
+            $this->serializeOptionalXmlEncodedValue('PostalCode', $this->getPostalCode())
         );
     }
+
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
 
     /**
      * Make sure we have max 4 address lines of 70 chars max
