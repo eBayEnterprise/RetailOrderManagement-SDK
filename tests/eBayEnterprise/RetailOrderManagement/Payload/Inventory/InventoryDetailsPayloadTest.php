@@ -45,9 +45,9 @@ class InventoryDetailsPayloadTest extends \PHPUnit_Framework_TestCase
     public function provideSerializedDataFile()
     {
         return [
-            [static::REQUEST, __DIR__ . '/fixtures/InventoryDetailsRequest-reduced.xml'],
-            [static::REPLY, __DIR__ . '/fixtures/InventoryDetailsReply-full.xml'],
-            [static::REPLY, __DIR__ . '/fixtures/InventoryDetailsReply-reduced.xml'],
+            [static::REQUEST, __DIR__ . '/Fixtures/InventoryDetailsRequest-reduced.xml'],
+            [static::REPLY, __DIR__ . '/Fixtures/InventoryDetailsReply-full.xml'],
+            [static::REPLY, __DIR__ . '/Fixtures/InventoryDetailsReply-reduced.xml'],
         ];
     }
 
@@ -76,8 +76,8 @@ class InventoryDetailsPayloadTest extends \PHPUnit_Framework_TestCase
     public function provideSerializedDataFileForFullRequest()
     {
         return [
-            [static::FULL_PAYLOAD, __DIR__ . '/fixtures/InventoryDetailsRequest-full.xml'],
-            [static::COMPLIANT_PAYLOAD, __DIR__ . '/fixtures/InventoryDetailsRequest-compliant.xml'],
+            [static::FULL_PAYLOAD, __DIR__ . '/Fixtures/InventoryDetailsRequest-full.xml'],
+            [static::COMPLIANT_PAYLOAD, __DIR__ . '/Fixtures/InventoryDetailsRequest-compliant.xml'],
         ];
     }
 
@@ -93,7 +93,7 @@ class InventoryDetailsPayloadTest extends \PHPUnit_Framework_TestCase
     public function testRequestFullRequestPayload($shippingItemPayload, $outputFile)
     {
         $payload = static::REQUEST;
-        $input = __DIR__ . '/fixtures/InventoryDetailsRequest-full.xml';
+        $input = __DIR__ . '/Fixtures/InventoryDetailsRequest-full.xml';
         $this->injectShippingItemImplementation($shippingItemPayload);
         $payload = $this->createNewPayload($payload);
         // test deserializing the full request

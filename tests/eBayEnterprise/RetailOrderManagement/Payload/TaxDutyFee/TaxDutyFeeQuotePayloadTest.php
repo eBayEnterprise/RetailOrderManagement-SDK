@@ -42,12 +42,12 @@ class TaxDutyFeeQuotePayloadTest extends \PHPUnit_Framework_TestCase
     public function provideSerializedDataFile()
     {
         return [
-            [static::REQUEST, __DIR__ . '/fixtures/TaxDutyFeeQuoteRequest-reduced.xml'],
-            [static::REQUEST, __DIR__ . '/fixtures/TaxDutyFeeQuoteRequest-multiship.xml'],
-            [static::REQUEST, __DIR__ . '/fixtures/TaxDutyFeeQuoteRequest-full.xml'],
-            [static::REPLY, __DIR__ . '/fixtures/TaxDutyFeeQuoteReply-reduced.xml'],
-            [static::REPLY, __DIR__ . '/fixtures/TaxDutyFeeQuoteReply-multiship.xml'],
-            [static::REPLY, __DIR__ . '/fixtures/TaxDutyFeeQuoteReply-full.xml'],
+            [static::REQUEST, __DIR__ . '/Fixtures/TaxDutyFeeQuoteRequest-reduced.xml'],
+            [static::REQUEST, __DIR__ . '/Fixtures/TaxDutyFeeQuoteRequest-multiship.xml'],
+            [static::REQUEST, __DIR__ . '/Fixtures/TaxDutyFeeQuoteRequest-full.xml'],
+            [static::REPLY, __DIR__ . '/Fixtures/TaxDutyFeeQuoteReply-reduced.xml'],
+            [static::REPLY, __DIR__ . '/Fixtures/TaxDutyFeeQuoteReply-multiship.xml'],
+            [static::REPLY, __DIR__ . '/Fixtures/TaxDutyFeeQuoteReply-full.xml'],
         ];
     }
 
@@ -59,8 +59,8 @@ class TaxDutyFeeQuotePayloadTest extends \PHPUnit_Framework_TestCase
     public function provideOutOfOrderDestinationSerializedDataFile()
     {
         return [
-            [static::REQUEST, __DIR__ . '/fixtures/TaxDutyFeeQuoteRequest-reduced.xml'],
-            [static::REPLY, __DIR__ . '/fixtures/TaxDutyFeeQuoteReply-reduced.xml'],
+            [static::REQUEST, __DIR__ . '/Fixtures/TaxDutyFeeQuoteRequest-reduced.xml'],
+            [static::REPLY, __DIR__ . '/Fixtures/TaxDutyFeeQuoteReply-reduced.xml'],
         ];
     }
 
