@@ -1,9 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Unreleased Changes
+## [1.2.1] - 2015-07-02
 ### Fixed
-- Invalid xml character sequences were being added to the order create request without being escaped.
+- Invalid xml character sequences were being added to the order create request without being escaped
+- Rename Allocation Rollback Payloads
+- Fix Allocation Message Config
 
 ## [1.2.0] - 2015-06-18
 ### Added
@@ -103,6 +105,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.2.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-3...1.2.0
 [1.2.0-alpha-3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-2...1.2.0-alpha-3
 [1.2.0-alpha-2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-1...1.2.0-alpha-2
