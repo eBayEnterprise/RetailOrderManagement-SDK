@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Unreleased Changes
+### Fixed
+- UnitAmount field in the PayPal set express request is not supposed to be optional
+
 ## [1.2.1] - 2015-07-02
 ### Fixed
 - Invalid xml character sequences were being added to the order create request without being escaped
