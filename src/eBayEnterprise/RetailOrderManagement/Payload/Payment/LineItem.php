@@ -156,14 +156,11 @@ class LineItem implements ILineItem
      */
     protected function serializeUnitAmount()
     {
-        if ($this->getUnitAmount()) {
-            return $this->serializeCurrencyAmount(
-                'UnitAmount',
-                $this->getUnitAmount(),
-                $this->getCurrencyCode()
-            );
-        }
-        return '';
+        return $this->serializeCurrencyAmount(
+            'UnitAmount',
+            $this->getUnitAmount(),
+            $this->getCurrencyCode()
+        );
     }
 
     /**
