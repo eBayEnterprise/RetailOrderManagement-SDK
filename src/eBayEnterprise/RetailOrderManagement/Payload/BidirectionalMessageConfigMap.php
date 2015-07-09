@@ -95,5 +95,9 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Inventory\AllocationRollbackReply',
     ];
+    $map['payments/tendertype/lookup'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\TenderType\LookupRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\TenderType\LookupReply',
+    ];
     return $map;
 });

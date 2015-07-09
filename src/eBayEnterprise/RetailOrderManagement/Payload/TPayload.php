@@ -408,8 +408,20 @@ trait TPayload
      * @param string
      * @return string
      */
-    public function serializeOptionalXmlEncodedValue($name, $value)
+    protected function serializeOptionalXmlEncodedValue($name, $value)
     {
         return $this->serializeOptionalValue($name, $this->xmlEncode($value));
+    }
+
+    /**
+     * serialize a required field to an xml string
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    protected function serializeRequiredValue($name, $value)
+    {
+        return "<$name>$value</$name>";
     }
 }

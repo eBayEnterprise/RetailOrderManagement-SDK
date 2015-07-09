@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!--
+/**
+ */
+-->
+<TenderTypeLookupReply xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <TenderType>VC</TenderType>
+    <ResponseCode>TENDER_TYPE_FOUND</ResponseCode>
+</TenderTypeLookupReply>

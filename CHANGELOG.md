@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
+### Added
+- Support for payments tender type lookup Retail Order Management API operation
+
 ### Fixed
 - UnitAmount field in the PayPal set express request is not supposed to be optional
 
