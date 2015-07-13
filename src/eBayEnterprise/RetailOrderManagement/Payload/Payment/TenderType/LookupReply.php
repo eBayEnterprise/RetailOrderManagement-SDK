@@ -52,15 +52,15 @@ class LookupReply implements ILookupReply
             'responseCode' => 'string(x:ResponseCode)',
         ];
         $this->responseCodeMessage = [
-            TENDER_TYPE_FOUND => 'A matching tender type is found by account number,'
+            static::TENDER_TYPE_FOUND => 'A matching tender type is found by account number,'
                 . ' tender class, currency code and store id.',
-            PAN_FAILS_LUHN_CHECK => 'The account number fails to pass Luhn check.'
+            static::PAN_FAILS_LUHN_CHECK => 'The account number fails to pass Luhn check.'
                 . ' http://en.wikipedia.org/wiki/Luhn_algorithm',
-            NO_TENDER_TYPE_FOUND => 'No tender type matches the account number, tender class,'
+            static::NO_TENDER_TYPE_FOUND => 'No tender type matches the account number, tender class,'
                 . ' currency code and store id',
-            PAN_NOT_CONFIGURED_TO_STORE => 'Tender type matches the account number, tender class'
-                . 'and currency code but not the store id',
-            UNKNOWN_FAILURE => 'Failed to find a tender type for unknown cause/s',
+            static::PAN_NOT_CONFIGURED_TO_STORE => 'Tender type matches the account number, tender class'
+                . ' and currency code but not the store id',
+            static::UNKNOWN_FAILURE => 'Failed to find a tender type for unknown cause/s',
         ];
     }
 
