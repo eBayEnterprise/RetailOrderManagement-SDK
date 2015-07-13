@@ -17,12 +17,6 @@ class LookupReply implements ILookupReply
     }
 
     const ROOT_NODE = 'TenderTypeLookupReply';
-    // response codes
-    const TENDER_TYPE_FOUND = 'TENDER_TYPE_FOUND';
-    const PAN_FAILS_LUHN_CHECK = 'PAN_FAILS_LUHN_CHECK';
-    const NO_TENDER_TYPE_FOUND = 'NO_TENDER_TYPE_FOUND';
-    const PAN_NOT_CONFIGURED_TO_STORE = 'PAN_NOT_CONFIGURED_TO_STORE';
-    const UNKNOWN_FAILURE = 'UNKNOWN_FAILURE';
 
     /** @var string */
     protected $tenderType;
