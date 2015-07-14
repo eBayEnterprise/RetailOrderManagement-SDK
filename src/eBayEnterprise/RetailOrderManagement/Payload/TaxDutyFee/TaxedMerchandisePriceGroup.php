@@ -68,7 +68,7 @@ class TaxedMerchandisePriceGroup extends TaxedPriceGroup implements ITaxedMercha
         return $this->serializePriceGroupAmount()
             . $this->serializeTaxData()
             . $this->getDiscounts()->serialize()
-            . ($unitPrice ? $this->serializeAmount('UnitPrice', $this->getUnitPrice()) : '');
+            . $this->serializeAmount('UnitPrice', $this->getUnitPrice());
     }
 
     /**

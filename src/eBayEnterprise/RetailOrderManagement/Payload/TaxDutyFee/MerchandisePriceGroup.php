@@ -54,7 +54,7 @@ class MerchandisePriceGroup extends PriceGroup implements IMerchandisePriceGroup
         return $this->serializePriceGroupAmount()
             . $this->serializeOptionalValue('TaxClass', $this->getTaxClass())
             . $this->getDiscounts()->serialize()
-            . ($unitPrice ? $this->serializeAmount('UnitPrice', $this->getUnitPrice()) : '');
+            . $this->serializeAmount('UnitPrice', $this->getUnitPrice());
     }
 
     /**
