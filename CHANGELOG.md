@@ -1,9 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Unreleased Changes
+## [1.3.0] - 2015-07-16
 ### Added
-- Support for payments tender type lookup Retail Order Management API operation
+- Support for payments/tendertype/lookup Retail Order Management Public API operation
 
 ### Fixed
 - UnitAmount field in the PayPal set express request is not supposed to be optional
@@ -112,6 +112,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.3.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.1...1.3.0
 [1.2.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-3...1.2.0
 [1.2.0-alpha-3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.0-alpha-2...1.2.0-alpha-3
