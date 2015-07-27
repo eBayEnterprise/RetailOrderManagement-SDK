@@ -66,6 +66,7 @@ interface IOrderItem extends IPayload
     /**
      * Customer facing description of the item.
      *
+     * restrictions: string with length <= 20
      * @return string
      */
     public function getDescription();

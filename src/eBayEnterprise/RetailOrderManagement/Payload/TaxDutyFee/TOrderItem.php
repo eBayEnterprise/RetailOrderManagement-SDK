@@ -105,7 +105,7 @@ trait TOrderItem
 
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = $this->cleanString($description, 20);
         return $this;
     }
 
