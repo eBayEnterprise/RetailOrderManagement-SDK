@@ -50,6 +50,7 @@ interface ITax extends IPayload
     const JURISDICTION_LEVEL_TOWNSHIP = 'TOWNSHIP';
     const JURISDICTION_LEVEL_TRADE_BLOCK = 'TRADE_BLOCK';
     const JURISDICTION_LEVEL_TRANSIT_DISTRICT = 'TRANSIT_DISTRICT';
+    const JURISDICTION_LEVEL_PROVINCE = 'PROVINCE';
 
     /**
      * Type of tax indicated by tax service. Expected to be one of:
@@ -118,7 +119,7 @@ interface ITax extends IPayload
     /**
      * Jurisdiction's classification based on its geopolitical and/or taxing context.
      * Allowed values: APO, BOROUGH, CITY, COUNTRY, COUNTY, DISTRICT,
-     * FPO LOCAL_IMPROVEMENT_DISTRICT, PARISH, PROVINCE SPECIAL_PURPOSE_DISTRICT,
+     * FPO LOCAL_IMPROVEMENT_DISTRICT, PARISH, PROVINCE, SPECIAL_PURPOSE_DISTRICT,
      * STATE, TERRITORY, TOWNSHIP, TRADE_BLOCK, TRANSIT_DISTRICT
      *
      * restrictions: optional

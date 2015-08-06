@@ -95,6 +95,7 @@ class Tax implements ITax
         self::JURISDICTION_LEVEL_TOWNSHIP,
         self::JURISDICTION_LEVEL_TRADE_BLOCK,
         self::JURISDICTION_LEVEL_TRANSIT_DISTRICT,
+        self::JURISDICTION_LEVEL_PROVINCE,
     ];
 
     /**
