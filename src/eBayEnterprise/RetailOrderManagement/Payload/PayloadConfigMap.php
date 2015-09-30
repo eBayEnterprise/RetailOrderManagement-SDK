@@ -3741,7 +3741,7 @@ return call_user_func(function () {
         'validators' => [
             [
                 'validator' => $requiredFieldsValidator,
-                'params' => $orderPaymentContextParams,
+                'params' => ['getOrderId', 'getTenderType', 'getAccountUniqueId', 'getPaymentRequestId'],
             ],
             [
                 'validator' => $optionalSubpayloadValidator,
