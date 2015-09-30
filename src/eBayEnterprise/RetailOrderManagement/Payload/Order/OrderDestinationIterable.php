@@ -79,6 +79,27 @@ class OrderDestinationIterable extends SPLObjectStorage implements IOrderDestina
         return $this;
     }
 
+    protected function serializeContents()
+    {
+        // Destinations must be ordered by type. Build out three separate
+        // serializations, one for each type, to keep destinations of a certain
+        // type together.
+        $mailingDestinations = '';
+        $storeLocations = '';
+        $emailDestinations = '';
+        foreach ($this as $destination) {
+            if ($destination instanceof IEmailAddressDestination) {
+                $emailDestinations .= $destination->serialize();
+            } elseif ($destination instanceof IStoreLocation) {
+                $storeLocations .= $destination->serialize();
+            } else {
+                $mailingDestinations .= $destination->serialize();
+            }
+        }
+        // Concatenate the serializations together in the required order.
+        return $mailingDestinations . $storeLocations . $emailDestinations;
+    }
+
     public function getNewSubpayload()
     {
         throw new BadMethodCallException('Method not supported for this type.');

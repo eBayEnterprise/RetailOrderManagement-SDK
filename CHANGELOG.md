@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2015-09-30
+### Fixed
+- Order create destinations out of sequence
+
 ## [1.3.3] - 2015-09-30
 ### Fixed
 - Order Detail Payload Invalid Payload Error for payload with no pan is token data
@@ -120,6 +124,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.3.4]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.3...1.3.4
 [1.3.3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.2...1.3.3
 [1.3.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.2.1...1.3.0
