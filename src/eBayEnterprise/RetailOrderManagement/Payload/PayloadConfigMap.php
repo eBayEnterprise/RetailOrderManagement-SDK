@@ -36,7 +36,7 @@ return call_user_func(function () {
     // payload map types
     $payloadMap = '\eBayEnterprise\RetailOrderManagement\Payload\PayloadMap';
 
-    // Common sets of required fields, typically consiting of required fields
+    // Common sets of required fields, typically consisting of required fields
     // implemented by a common trait and reused by multiple payloads.
     $paymentAccountUniqueIdParams = ['getCardNumber'];
     $paymentContextParams = array_merge($paymentAccountUniqueIdParams, ['getOrderId']);

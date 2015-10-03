@@ -29,6 +29,8 @@ class StoreFrontDetails implements IStoreFrontDetails
     use TPayload, TPhysicalAddress;
 
     /** @var string */
+    protected $id;
+    /** @var string */
     protected $storeCode;
     /** @var string */
     protected $storeName;
@@ -61,15 +63,16 @@ class StoreFrontDetails implements IStoreFrontDetails
         $this->parentPayload = $parentPayload;
 
         $this->extractionPaths = [
-            'city' => 'string(x:Address/x:City)',
-            'countryCode' => 'string(x:Address/x:CountryCode)',
+            'city' => 'string(x:StoreFrontLocation/x:Address/x:City)',
+            'countryCode' => 'string(x:StoreFrontLocation/x:Address/x:CountryCode)',
         ];
         $this->optionalExtractionPaths = [
-            'mainDivision' => 'x:Address/x:MainDivision',
-            'postalCode' => 'x:Address/x:PostalCode',
-            'storeCode' => 'x:StoreCode',
-            'storeName' => 'x:StoreName',
-            'emailAddress' => 'x:StoreEmail',
+            'id' => 'x:StoreFrontLocation/@id',
+            'mainDivision' => 'x:StoreFrontLocation/x:Address/x:MainDivision',
+            'postalCode' => 'x:StoreFrontLocation/x:Address/x:PostalCode',
+            'storeCode' => 'x:StoreFrontLocation/x:StoreCode',
+            'storeName' => 'x:StoreFrontLocation/x:StoreName',
+            'emailAddress' => 'x:StoreFrontLocation/x:StoreEmail',
             'directions' => 'x:StoreDirections',
             'hours' => 'x:StoreHours',
             'phoneNumber' => 'x:StoreFrontPhoneNumber',
@@ -77,9 +80,20 @@ class StoreFrontDetails implements IStoreFrontDetails
         $this->addressLinesExtractionMap = [
             [
                 'property' => 'lines',
-                'xPath' => 'x:Address/*[starts-with(name(), "Line")]'
+                'xPath' => 'x:StoreFrontLocation/x:Address/*[starts-with(name(), "Line")]'
             ],
         ];
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getStoreCode()
@@ -167,10 +181,12 @@ class StoreFrontDetails implements IStoreFrontDetails
      */
     protected function serializeLocation()
     {
-        return $this->serializeOptionalXmlEncodedValue('StoreCode', $this->getStoreCode())
+        return sprintf('<StoreFrontLocation%s>', $this->serializeOptionalAttribute('id', $this->getId()))
+            . $this->serializeOptionalXmlEncodedValue('StoreCode', $this->getStoreCode())
             . $this->serializeOptionalXmlEncodedValue('StoreName', $this->getStoreName())
             . $this->serializeOptionalXmlEncodedValue('StoreEmail', $this->getEmailAddress())
-            . $this->serializePhysicalAddress();
+            . $this->serializePhysicalAddress()
+            . '</StoreFrontLocation>';
     }
 
     /**

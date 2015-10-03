@@ -27,6 +27,20 @@ interface IStoreFrontDetails extends ICheckoutDestination, IPhysicalAddress
     const EMAIL_ADDRESS_MAX_LENGTH = 70;
 
     /**
+     * The id field is used to uniquely identify the destination
+     * within an XML document to allow XML references.
+     *
+     * @return string
+     */
+    public function getId();
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setId($id);
+
+    /**
      * The unique string that identifies a specific store.
      *
      * xsd restrictions: max length 40 characters

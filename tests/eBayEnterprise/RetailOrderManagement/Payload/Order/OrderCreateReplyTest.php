@@ -42,7 +42,7 @@ class OrderCreateReplyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Provide paths to fixutre files containing valid serializations of
+     * Provide paths to fixture files containing valid serializations of
      * order create reply payloads.
      *
      * @return array
@@ -62,7 +62,7 @@ class OrderCreateReplyTest extends \PHPUnit_Framework_TestCase
      * @param string path to fixture file
      * @dataProvider provideSerializedDataFile
      */
-    public function testDeserializeSerialize($serializedDataFile)
+    public function testOrderCreateReplyDeserializeSerialize($serializedDataFile)
     {
         $payload = $this->buildPayload();
         $serializedData = $this->loadXmlTestString($serializedDataFile);

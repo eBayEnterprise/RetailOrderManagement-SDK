@@ -199,19 +199,21 @@
                 <ShippingProgram authToken="SHOPRUNNER_AUTH_TOKEN">SHOPRUNNER_PROGRAM</ShippingProgram> <!-- [0..1] -->
                 <ShippingMethod displayText="Standard">FLAT_RATE</ShippingMethod> <!-- [0..1] -->
                 <StoreFrontDetails>
-                    <StoreCode>STORE_CODE&amp;amp;</StoreCode> <!-- [0..1] -->
-                    <StoreName>Store Name&amp;amp;</StoreName> <!-- [0..1] -->
-                    <StoreEmail>store@example.com&amp;amp;</StoreEmail> <!-- [0..1] -->
-                    <Address>
-                        <Line1>123 Main St&amp;amp;</Line1>
-                        <Line2>Bldg. 4&amp;amp;</Line2> <!-- [0..1] -->
-                        <Line3>STE 2&amp;amp;</Line3> <!-- [0..1] -->
-                        <Line4>RM 15&amp;amp;</Line4> <!-- [0..1] -->
-                        <City>King of Prussia&amp;amp;</City>
-                        <MainDivision>PA&amp;amp;</MainDivision> <!-- [0..1] -->
-                        <CountryCode>US&amp;amp;</CountryCode>
-                        <PostalCode>19460&amp;amp;</PostalCode> <!-- [0..1] -->
-                    </Address>
+                    <StoreFrontLocation id="STORE_LOCATION_ID">
+                        <StoreCode>STORE_CODE&amp;amp;</StoreCode> <!-- [0..1] -->
+                        <StoreName>Store Name&amp;amp;</StoreName> <!-- [0..1] -->
+                        <StoreEmail>store@example.com&amp;amp;</StoreEmail> <!-- [0..1] -->
+                        <Address>
+                            <Line1>123 Main St&amp;amp;</Line1>
+                            <Line2>Bldg. 4&amp;amp;</Line2> <!-- [0..1] -->
+                            <Line3>STE 2&amp;amp;</Line3> <!-- [0..1] -->
+                            <Line4>RM 15&amp;amp;</Line4> <!-- [0..1] -->
+                            <City>King of Prussia&amp;amp;</City>
+                            <MainDivision>PA&amp;amp;</MainDivision> <!-- [0..1] -->
+                            <CountryCode>US&amp;amp;</CountryCode>
+                            <PostalCode>19460&amp;amp;</PostalCode> <!-- [0..1] -->
+                        </Address>
+                    </StoreFrontLocation>
                     <StoreDirections>Directions to store&amp;amp;</StoreDirections> <!-- [0..1] -->
                     <StoreHours>8 A.M. - 9 P.M.&amp;amp;</StoreHours> <!-- [0..1] -->
                     <StoreFrontPhoneNumber>555-555-5555&amp;amp;</StoreFrontPhoneNumber> <!-- [0..1] -->

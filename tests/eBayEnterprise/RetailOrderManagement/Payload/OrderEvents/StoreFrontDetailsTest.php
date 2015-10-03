@@ -22,6 +22,7 @@ use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\ValidatorIterator;
+use eBayEnterprise\RetailOrderManagement\Payload\Order\StoreFrontLocation;
 use Psr\Log\NullLogger;
 
 class StoreFrontDetailsTest extends \PHPUnit_Framework_TestCase
@@ -48,9 +49,9 @@ class StoreFrontDetailsTest extends \PHPUnit_Framework_TestCase
         $this->stubValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $this->validatorIterator = new ValidatorIterator([$this->stubValidator]);
         $this->stubSchemaValidator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator');
-        $this->payloadMap = new PayloadMap;
-
+        $this->payloadMap = new PayloadMap();
         $this->fullPayload = $this->buildPayload([
+            'setId' => '_560ee99cc5ace',
             'setLines' => '123 Main St',
             'setCity' => 'King of Prussia',
             'setMainDivision' => 'PA',
@@ -75,7 +76,7 @@ class StoreFrontDetailsTest extends \PHPUnit_Framework_TestCase
         return __DIR__ . '/Fixtures/' . static::FULL_FIXTURE_FILE;
     }
 
-    public function testSerialize()
+    public function testStoreFrontDetailsSerialize()
     {
         $this->assertSame(
             $this->loadXmlTestString($this->getCompleteFixtureFile(), true),
@@ -83,12 +84,13 @@ class StoreFrontDetailsTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDeserialize()
+    public function testStoreFrontDetailsDeserialize()
     {
         $payload = $this->buildPayload();
-        $this->assertEquals(
-            $this->fullPayload,
-            $payload->deserialize($this->loadXmlTestString($this->getCompleteFixtureFile()))
-        );
+        $serializedData = $this->loadXmlTestString($this->getCompleteFixtureFile());
+        $payload->deserialize($serializedData);
+        // Removing the XML name-space since only the top level payload will have a name-space.
+        $serializedData = str_replace(' xmlns="http://api.gsicommerce.com/schema/checkout/1.0"', '', $serializedData);
+        $this->assertXmlStringEqualsXmlString($serializedData, $payload->serialize());
     }
 }

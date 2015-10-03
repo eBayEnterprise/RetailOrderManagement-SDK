@@ -172,19 +172,21 @@
     <ShippingProgram authToken="SHOPRUNNER_AUTH_TOKEN">SHOPRUNNER_PROGRAM</ShippingProgram>
     <ShippingMethod displayText="Standard">FLAT_RATE</ShippingMethod>
     <StoreFrontDetails>
-        <StoreCode>STORE_CODE</StoreCode>
-        <StoreName>Store Name</StoreName>
-        <StoreEmail>store@example.com</StoreEmail>
-        <Address>
-            <Line1>123 Main St</Line1>
-            <Line2>Bldg. 4</Line2>
-            <Line3>STE 2</Line3>
-            <Line4>RM 15</Line4>
-            <City>King of Prussia</City>
-            <MainDivision>PA</MainDivision>
-            <CountryCode>US</CountryCode>
-            <PostalCode>19460</PostalCode>
-        </Address>
+        <StoreFrontLocation id="STORE_LOCATION_ID">
+            <StoreCode>STORE_CODE</StoreCode>
+            <StoreName>Store Name</StoreName>
+            <StoreEmail>store@example.com</StoreEmail>
+            <Address>
+                <Line1>123 Main St</Line1>
+                <Line2>Bldg. 4</Line2>
+                <Line3>STE 2</Line3>
+                <Line4>RM 15</Line4>
+                <City>King of Prussia</City>
+                <MainDivision>PA</MainDivision>
+                <CountryCode>US</CountryCode>
+                <PostalCode>19460</PostalCode>
+            </Address>
+        </StoreFrontLocation>
         <StoreDirections>Directions to store</StoreDirections>
         <StoreHours>8 A.M. - 9 P.M.</StoreHours>
         <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>

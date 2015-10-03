@@ -46,29 +46,6 @@ Aliases: N/A
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType name="OrderContext">
-    <xsd:annotation>
-      <xsd:documentation> Provides contextual information regarding the Order. Primarily pass-through values
-used for fraud filtering and marketing reporting</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="BrowserData" type="BrowserData" minOccurs="0"/>
-      <xsd:element name="TdlOrderTimestamp" type="xsd:dateTime" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>This time stamp is used to prevent fraud.
-
-Allowable Values: Date text: ISO 8601 standard with offset from UTC in datetime data format which is yyyy-mm-ddTHH:mm:ss-hh:mm for e.g. 2012-01-11T14:19:05-06:00.
-Required: No
-Default Value: No Value
-Restrictions: N/A
-Aliases: N/A</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="SessionInfo" type="CustomerSessionInfo" minOccurs="0"/>
-      <xsd:element name="PayPalPayerInfo" type="PayPalPayerInfo" minOccurs="0"/>
-      <xsd:element name="CustomAttributes" type="CustomAttributesType" minOccurs="0" maxOccurs="1"/>
-    </xsd:sequence>
-  </xsd:complexType>
   <xsd:complexType name="OrderCreateRequest">
     <xsd:sequence>
       <xsd:element name="Order" type="OrderRequestType"/>

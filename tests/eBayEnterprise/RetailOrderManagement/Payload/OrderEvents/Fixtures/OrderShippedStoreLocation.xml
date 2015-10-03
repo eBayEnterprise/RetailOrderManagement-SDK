@@ -57,19 +57,21 @@
     </ShippedOrderItems>
     <ShippedDestination>
         <StoreFrontAddress>
-            <StoreCode>STORE_CODE_664</StoreCode>
-            <StoreName>Store Store No. 664</StoreName>
-            <StoreEmail>store@example.com</StoreEmail>
-            <Address>
-                <Line1>123 Main St</Line1>
-                <Line2>Ste B</Line2>
-                <Line3>Bldg 2</Line3>
-                <Line4>Fl 6</Line4>
-                <City>Saskatoon</City>
-                <MainDivision>Ok</MainDivision>
-                <CountryCode>US</CountryCode>
-                <PostalCode>91234</PostalCode>
-            </Address>
+            <StoreFrontLocation id="STORE_LOCATION_ID">
+                <StoreCode>STORE_CODE_664</StoreCode>
+                <StoreName>Store Store No. 664</StoreName>
+                <StoreEmail>store@example.com</StoreEmail>
+                <Address>
+                    <Line1>123 Main St</Line1>
+                    <Line2>Ste B</Line2>
+                    <Line3>Bldg 2</Line3>
+                    <Line4>Fl 6</Line4>
+                    <City>Saskatoon</City>
+                    <MainDivision>Ok</MainDivision>
+                    <CountryCode>US</CountryCode>
+                    <PostalCode>91234</PostalCode>
+                </Address>
+            </StoreFrontLocation>
             <StoreDirections>http://example.com/directions_url</StoreDirections>
             <StoreHours>8 AM - 8 PM</StoreHours>
             <StoreFrontPhoneNumber>555-555-5555</StoreFrontPhoneNumber>
