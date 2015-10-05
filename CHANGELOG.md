@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2015-10-05
+### Updated
+- Order Common Data Type XSD for StoreFrontDetail and StoreFrontLocation node
+
 ## [1.3.4] - 2015-09-30
 ### Fixed
 - Order create destinations out of sequence
@@ -124,6 +128,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[2.0.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.4...2.0.0
 [1.3.4]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.3...1.3.4
 [1.3.3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.2...1.3.3
 [1.3.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.0...1.3.1
