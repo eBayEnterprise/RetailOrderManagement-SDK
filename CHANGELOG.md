@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Order Detail Payload Invalid Payload Error for payload with no pan is token data
 
+## [1.3.2] - 2015-08-06
+### Fixed
+- Fix Tax Jurisdiction Level in Order Create Request
+
 ## [1.3.1] - 2015-07-30
 ### Fixed
 - ItemDesc is too long for XSD validation in tax/quote
