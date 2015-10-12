@@ -114,7 +114,7 @@ class StoredValueRedeemVoidReply implements IStoredValueRedeemVoidReply
     {
         return sprintf(
             '<ResponseCode>%s</ResponseCode>',
-            $this->getResponseCode()
+            $this->xmlEncode($this->getResponseCode())
         );
     }
 

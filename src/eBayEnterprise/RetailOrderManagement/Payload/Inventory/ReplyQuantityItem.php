@@ -69,12 +69,12 @@ class ReplyQuantityItem extends QuantityItem implements IReplyQuantityItem
      */
     public function setQuantity($quantity)
     {
-        $this->quantity = $quantity;
+        $this->quantity = (int) $quantity;
         return $this;
     }
 
     protected function serializeContents()
     {
-        return $this->serializeRequireValue('Quantity', $this->getQuantity());
+        return $this->serializeRequiredValue('Quantity', $this->getQuantity());
     }
 }

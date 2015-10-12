@@ -131,7 +131,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         return $this->serializeOrderId()
         . $this->serializeToken() // TToken
         . $this->serializePayerId()
-        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
+        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->xmlEncode($this->getCurrencyCode()))
         . $this->serializePickupStoreId()
         . $this->serializeShipToName()
         . $this->serializeShippingAddress() // TShippingAddress
@@ -144,7 +144,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     protected function serializePayerId()
     {
-        return "<PayerId>{$this->getPayerId()}</PayerId>";
+        return "<PayerId>{$this->xmlEncode($this->getPayerId())}</PayerId>";
     }
 
     /**
@@ -196,7 +196,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     protected function serializePickupStoreId()
     {
-        return $this->nodeNullCoalesce("ShipToName", $this->getPickupStoreId());
+        return $this->serializeOptionalXmlEncodedValue("ShipToName", $this->getPickupStoreId());
     }
 
     /**
@@ -226,7 +226,7 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
      */
     protected function serializeShipToName()
     {
-        return $this->nodeNullCoalesce("ShipToName", $this->getShipToName());
+        return $this->serializeOptionalXmlEncodedValue("ShipToName", $this->getShipToName());
     }
 
     /**
@@ -274,19 +274,6 @@ class PayPalDoExpressCheckoutRequest implements IPayPalDoExpressCheckoutRequest
         return static::ROOT_NODE;
     }
 
-    /**
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    protected function nodeNullCoalesce($nodeName, $value)
-    {
-        if (!$value) {
-            return '';
-        }
-
-        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
-    }
     /**
      * Name, value pairs of root attributes
      *

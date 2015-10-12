@@ -91,10 +91,10 @@ trait TPaymentContext
     protected function serializePaymentContext()
     {
         return '<PaymentContext>'
-            . "<PaymentSessionId>{$this->getOrderId()}</PaymentSessionId>"
-            . "<TenderType>{$this->getTenderType()}</TenderType>"
+            . "<PaymentSessionId>{$this->xmlEncode($this->getOrderId())}</PaymentSessionId>"
+            . "<TenderType>{$this->xmlEncode($this->getTenderType())}</TenderType>"
             . "<PaymentAccountUniqueId isToken='{$this->convertBooleanToString($this->getPanIsToken())}'>"
-            . $this->getAccountUniqueId()
+            . $this->xmlEncode($this->getAccountUniqueId())
             . '</PaymentAccountUniqueId>'
             . '</PaymentContext>';
     }
@@ -106,6 +106,25 @@ trait TPaymentContext
      */
     protected function serializePaymentRequestId()
     {
-        return $this->serializeOptionalValue('PaymentRequestId', $this->getPaymentRequestId());
+        return $this->serializeOptionalXmlEncodedValue('PaymentRequestId', $this->getPaymentRequestId());
     }
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

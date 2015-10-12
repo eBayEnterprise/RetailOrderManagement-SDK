@@ -41,10 +41,10 @@ class OrderDetailCreditCardPayment extends CreditCardPayment implements IOrderDe
             . $this->serializeAuthorizations()
             . $this->serializeOptionalDateValue('ExpirationDate', 'Y-m', $this->getExpirationDate())
             . $this->serializeOptionalDateValue('StartDate', 'Y-m', $this->getStartDate())
-            . $this->serializeOptionalValue('IssueNumber', $this->getIssueNumber())
+            . $this->serializeOptionalXmlEncodedValue('IssueNumber', $this->getIssueNumber())
             . $this->serializeSecureVerificationData()
-            . $this->serializeOptionalValue('PurchasePlanCode', $this->getPurchasePlanCode())
-            . $this->serializeOptionalValue('PurchasePlanDescription', $this->getPurchasePlanDescription())
+            . $this->serializeOptionalXmlEncodedValue('PurchasePlanCode', $this->getPurchasePlanCode())
+            . $this->serializeOptionalXmlEncodedValue('PurchasePlanDescription', $this->getPurchasePlanDescription())
             . $this->getCustomAttributes()->serialize();
     }
 }

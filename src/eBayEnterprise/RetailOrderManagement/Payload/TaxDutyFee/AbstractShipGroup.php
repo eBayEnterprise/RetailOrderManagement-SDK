@@ -105,7 +105,7 @@ abstract class AbstractShipGroup
     {
         // May have an actual destination object to reference or just the
         // the id - such as when creating the payload outside a larger context of payloads.
-        return "<DestinationTarget ref='{$this->getDestinationId()}'/>"
+        return "<DestinationTarget ref='{$this->xmlEncode($this->getDestinationId())}'/>"
             . $this->getItems()->serialize()
             . $this->serializeGifting();
     }

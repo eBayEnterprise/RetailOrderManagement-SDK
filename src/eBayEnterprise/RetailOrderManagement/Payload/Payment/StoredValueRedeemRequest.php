@@ -125,11 +125,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
      */
     protected function serializePin()
     {
-        $pin = $this->getPin();
-        if ($pin === '') {
-            return '';
-        }
-        return "<Pin>{$this->getPin()}</Pin>";
+        return $this->serializeOptionalXmlEncodedValue('Pin', $this->getPin());
     }
 
     public function getPin()
@@ -149,7 +145,11 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
      */
     protected function serializeAmount()
     {
-        return sprintf('<Amount currencyCode="%s">%1.02F</Amount>', $this->getCurrencyCode(), $this->getAmount());
+        return sprintf(
+            '<Amount currencyCode="%s">%1.02F</Amount>',
+            $this->xmlEncode($this->getCurrencyCode()),
+            $this->getAmount()
+        );
     }
 
     public function getCurrencyCode()
@@ -238,7 +238,7 @@ class StoredValueRedeemRequest implements IStoredValueRedeemRequest
             'xmlns',
             static::XML_NS,
             'requestId',
-            $this->getRequestId()
+            $this->xmlEncode($this->getRequestId())
         );
     }
 

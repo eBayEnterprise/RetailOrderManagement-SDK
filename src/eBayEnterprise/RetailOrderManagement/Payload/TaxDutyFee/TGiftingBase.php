@@ -68,9 +68,9 @@ trait TGiftingBase
     {
         if ($this->getGiftItemId()) {
             $pricing = $this->getGiftPricing();
-            return "<Gifting {$this->serializeOptionalAttribute('id', $this->getGiftId())}>"
-                . "<ItemId>{$this->getGiftItemId()}</ItemId>"
-                . $this->serializeOptionalValue('ItemDesc', $this->getGiftDescription())
+            return "<Gifting {$this->serializeOptionalAttribute('id', $this->xmlEncode($this->getGiftId()))}>"
+                . "<ItemId>{$this->xmlEncode($this->getGiftItemId())}</ItemId>"
+                . $this->serializeOptionalXmlEncodedValue('ItemDesc', $this->getGiftDescription())
                 . ($pricing ? $pricing->setRootNodeName('Pricing')->serialize() : '')
                 . '</Gifting>';
         }
@@ -103,4 +103,23 @@ trait TGiftingBase
      * @return IPayload
      */
     abstract public function buildPayloadForInterface($interface);
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

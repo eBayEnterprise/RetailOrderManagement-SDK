@@ -115,7 +115,7 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
      */
     protected function serializeResponseCode()
     {
-        return '<ResponseCode>' . $this->getResponseCode() . '</ResponseCode>';
+        return '<ResponseCode>' . $this->xmlEncode($this->getResponseCode()) . '</ResponseCode>';
     }
 
     /**
@@ -124,7 +124,7 @@ class PayPalSetExpressCheckoutReply implements IPayPalSetExpressCheckoutReply
      */
     protected function serializeErrorMessage()
     {
-        return $this->getErrorMessage() ? '<ErrorMessage>' . $this->getErrorMessage() . '</ErrorMessage>' : '';
+        return $this->serializeOptionalXmlEncodedValue('<ErrorMessage>', $this->getErrorMessage());
     }
 
     /**

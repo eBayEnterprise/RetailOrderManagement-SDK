@@ -181,7 +181,7 @@ class OrderDetailPayment implements IOrderDetailPayment
     {
         return $this->serializeBillingAddressValue('BillingAddress')
             . $this->getPayments()->serialize()
-            . $this->serializeOptionalValue('Status', $this->getStatus());
+            . $this->serializeOptionalXmlEncodedValue('Status', $this->getStatus());
     }
 
     /**
@@ -210,7 +210,7 @@ class OrderDetailPayment implements IOrderDetailPayment
     protected function serializeBillingAddressValue($nodeName)
     {
         $ref = $this->getRef();
-        $refAttribute = $this->serializeOptionalAttribute('ref', $ref);
+        $refAttribute = $this->serializeOptionalAttribute('ref', $this->xmlEncode($ref));
         return $ref ? sprintf('<%s %s/>', $nodeName, $refAttribute) : null;
     }
 }

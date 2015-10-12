@@ -125,10 +125,10 @@ class Fee implements IFee
 
     protected function serializeContents()
     {
-        return "<FeeType>{$this->getType()}</FeeType>"
-            . $this->serializeOptionalValue('Description', $this->getDescription())
+        return "<FeeType>{$this->xmlEncode($this->getType())}</FeeType>"
+            . $this->serializeOptionalXmlEncodedValue('Description', $this->getDescription())
             . $this->serializeAmount('Amount', $this->getAmount())
-            . "<ItemId>{$this->getItemId()}</ItemId>"
+            . "<ItemId>{$this->xmlEncode($this->getItemId())}</ItemId>"
             . $this->serializeTaxData();
     }
 

@@ -72,9 +72,9 @@ abstract class AbstractCustomization
 
     protected function serializeContents()
     {
-        return $this->serializeOptionalValue('CustomizationId', $this->getCustomizationId())
-            . $this->serializeOptionalValue('ItemId', $this->getItemId())
-            . $this->serializeOptionalValue('ItemDesc', $this->getItemDescription())
+        return $this->serializeOptionalXmlEncodedValue('CustomizationId', $this->getCustomizationId())
+            . $this->serializeOptionalXmlEncodedValue('ItemId', $this->getItemId())
+            . $this->serializeOptionalXmlEncodedValue('ItemDesc', $this->getItemDescription())
             . (!is_null($this->getUpCharge()) ? $this->getUpCharge()->setRootNodeName('Upcharge')->serialize() : '');
     }
 

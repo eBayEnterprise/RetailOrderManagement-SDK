@@ -137,8 +137,8 @@ class LookupReply implements ILookupReply
 
     protected function serializeContents()
     {
-        return $this->serializeRequiredValue('TenderType', $this->getTenderType())
-            . $this->serializeRequiredValue('ResponseCode', $this->getResponseCode());
+        return $this->serializeRequiredValue('TenderType', $this->xmlEncode($this->getTenderType()))
+            . $this->serializeRequiredValue('ResponseCode', $this->xmlEncode($this->getResponseCode()));
     }
     protected function deseraializeExtra()
     {

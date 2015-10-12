@@ -494,7 +494,7 @@ class OrderCreateRequest implements IOrderCreateRequest
      */
     protected function serializeOrder()
     {
-        return "<Order customerOrderId='{$this->getOrderId()}' levelOfService='{$this->getLevelOfService()}'>"
+        return "<Order customerOrderId='{$this->xmlEncode($this->getOrderId())}' levelOfService='{$this->xmlEncode($this->getLevelOfService())}'>"
             . $this->serializeOrderCustomer()
             . "<CreateTime>{$this->getCreateTime()->format('c')}</CreateTime>"
             . $this->getOrderItems()->serialize()
@@ -503,15 +503,15 @@ class OrderCreateRequest implements IOrderCreateRequest
             . $this->getDestinations()->serialize()
             . '</Shipping>'
             . '<Payment>'
-            . "<BillingAddress ref='{$this->getBillingAddress()->getId()}' />"
+            . "<BillingAddress ref='{$this->xmlEncode($this->getBillingAddress()->getId())}' />"
             . $this->getPayments()->serialize()
             . '</Payment>'
-            . $this->serializeOptionalValue('ShopRunnerMessage', $this->getShopRunnerMessage())
-            . "<Currency>{$this->getCurrency()}</Currency>"
+            . $this->serializeOptionalXmlEncodedValue('ShopRunnerMessage', $this->getShopRunnerMessage())
+            . "<Currency>{$this->xmlEncode($this->getCurrency())}</Currency>"
             . $this->serializeAssociate()
             . $this->serializeTaxHeader()
-            . $this->serializeOptionalValue('PrintedCatalogCode', $this->getPrintedCatalogCode())
-            . "<Locale>{$this->getLocale()}</Locale>"
+            . $this->serializeOptionalXmlEncodedValue('PrintedCatalogCode', $this->getPrintedCatalogCode())
+            . "<Locale>{$this->xmlEncode($this->getLocale())}</Locale>"
             . $this->getItemRelationships()->serialize()
             . $this->serializeOptionalXmlEncodedValue('DashboardRepId', $this->getDashboardRepId())
             . $this->serializeOrderSource()
@@ -533,9 +533,9 @@ class OrderCreateRequest implements IOrderCreateRequest
     {
         if (!is_null($this->getAssociateNumber())) {
             return '<Associate>'
-                 . "<Name>{$this->getAssociateName()}</Name>"
-                 . "<Number>{$this->getAssociateNumber()}</Number>"
-                 . "<Store>{$this->getAssociateStore()}</Store>"
+                 . "<Name>{$this->xmlEncode($this->getAssociateName())}</Name>"
+                 . "<Number>{$this->xmlEncode($this->getAssociateNumber())}</Number>"
+                 . "<Store>{$this->xmlEncode($this->getAssociateStore())}</Store>"
                  . '</Associate>';
         }
         return '';

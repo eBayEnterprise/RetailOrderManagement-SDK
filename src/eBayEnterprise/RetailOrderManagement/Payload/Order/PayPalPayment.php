@@ -132,7 +132,7 @@ class PayPalPayment implements IPayPalPayment
             . $this->serializePaymentContext()
             . "<CreateTimeStamp>{$this->getCreateTimeStamp()->format('c')}</CreateTimeStamp>"
             . $this->serializePaymentRequestId()
-            . "<Authorization><ResponseCode>{$this->getAuthorizationResponseCode()}</ResponseCode></Authorization>"
+            . "<Authorization><ResponseCode>{$this->xmlEncode($this->getAuthorizationResponseCode())}</ResponseCode></Authorization>"
             . $this->getCustomAttributes()->serialize();
     }
 

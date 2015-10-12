@@ -103,7 +103,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
      */
     protected function serializeResponseCodes()
     {
-        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
+        return "<ResponseCode>{$this->xmlEncode($this->getResponseCode())}</ResponseCode>";
     }
 
     public function getResponseCode()
@@ -125,7 +125,7 @@ class StoredValueBalanceReply implements IStoredValueBalanceReply
     {
         return sprintf(
             '<BalanceAmount currencyCode="%s">%01.2F</BalanceAmount>',
-            $this->getCurrencyCode(),
+            $this->xmlEncode($this->getCurrencyCode()),
             $this->getBalanceAmount()
         );
     }

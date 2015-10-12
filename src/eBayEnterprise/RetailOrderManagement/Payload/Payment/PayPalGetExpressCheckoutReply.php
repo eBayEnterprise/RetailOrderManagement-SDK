@@ -169,7 +169,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      */
     protected function serializeResponseCode()
     {
-        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
+        return "<ResponseCode>{$this->xmlEncode($this->getResponseCode())}</ResponseCode>";
     }
 
     /**
@@ -178,7 +178,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      */
     protected function serializePayerEmail()
     {
-        return "<PayerEmail>{$this->getPayerEmail()}</PayerEmail>";
+        return "<PayerEmail>{$this->xmlEncode($this->getPayerEmail())}</PayerEmail>";
     }
 
     /**
@@ -207,7 +207,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      */
     protected function serializePayerId()
     {
-        return "<PayerId>{$this->getPayerId()}</PayerId>";
+        return "<PayerId>{$this->xmlEncode($this->getPayerId())}</PayerId>";
     }
 
     /**
@@ -236,7 +236,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      */
     protected function serializePayerStatus()
     {
-        return "<PayerStatus>{$this->getPayerStatus()}</PayerStatus>";
+        return "<PayerStatus>{$this->xmlEncode($this->getPayerStatus())}</PayerStatus>";
     }
 
     /**
@@ -307,10 +307,10 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     protected function serializePayerName()
     {
         return "<PayerName>"
-        . "<Honorific>{$this->getPayerNameHonorific()}</Honorific>"
-        . "<LastName>{$this->getPayerLastName()}</LastName>"
-        . "<MiddleName>{$this->getPayerMiddleName()}</MiddleName>"
-        . "<FirstName>{$this->getPayerFirstName()}</FirstName>"
+        . "<Honorific>{$this->xmlEncode($this->getPayerNameHonorific())}</Honorific>"
+        . "<LastName>{$this->xmlEncode($this->getPayerLastName())}</LastName>"
+        . "<MiddleName>{$this->xmlEncode($this->getPayerMiddleName())}</MiddleName>"
+        . "<FirstName>{$this->xmlEncode($this->getPayerFirstName())}</FirstName>"
         . "</PayerName>";
     }
 
@@ -400,7 +400,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      */
     protected function serializePayerCountry()
     {
-        return "<PayerCountry>{$this->getPayerCountry()}</PayerCountry>";
+        return "<PayerCountry>{$this->xmlEncode($this->getPayerCountry())}</PayerCountry>";
     }
 
     /**
@@ -431,7 +431,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
      */
     protected function serializePayerPhone()
     {
-        return "<PayerPhone>{$this->getPayerPhone()}</PayerPhone>";
+        return "<PayerPhone>{$this->xmlEncode($this->getPayerPhone())}</PayerPhone>";
     }
 
     /**
@@ -457,21 +457,6 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
     protected function getSchemaFile()
     {
         return $this->getSchemaDir() . self::XSD;
-    }
-
-    /**
-     * Return a serialized XML node if it has a value, empty string otherwise.
-     *
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    protected function nodeNullCoalesce($nodeName, $value)
-    {
-        if (!$value) {
-            return '';
-        }
-        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
     }
 
     /**
@@ -507,7 +492,7 @@ class PayPalGetExpressCheckoutReply implements IPayPalGetExpressCheckoutReply
             $closeTagPos = strrpos($serializedAddress, '</');
             $serializedAddress = substr_replace(
                 $serializedAddress,
-                "<AddressStatus>$status</AddressStatus>",
+                "<AddressStatus>{$this->xmlEncode($status)}</AddressStatus>",
                 $closeTagPos,
                 0
             );

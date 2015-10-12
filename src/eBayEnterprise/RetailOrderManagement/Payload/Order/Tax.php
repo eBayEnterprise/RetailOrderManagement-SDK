@@ -270,13 +270,13 @@ class Tax implements ITax
 
     protected function serializeContents()
     {
-        return "<Situs>{$this->getSitus()}</Situs>"
+        return "<Situs>{$this->xmlEncode($this->getSitus())}</Situs>"
             . $this->serializeJurisdiction()
             . $this->serializeImposition()
             . sprintf('<EffectiveRate>%0.2f</EffectiveRate>', $this->getEffectiveRate())
             . $this->serializeOptionalAmount('TaxableAmount', $this->getTaxableAmount())
             . $this->serializeAmount('CalculatedTax', $this->getCalculatedTax())
-            . $this->serializeOptionalValue('SellerRegistrationId', $this->getSellerRegistrationId());
+            . $this->serializeOptionalXmlEncodedValue('SellerRegistrationId', $this->getSellerRegistrationId());
     }
 
     /**
@@ -289,9 +289,9 @@ class Tax implements ITax
         $jurisdiction = $this->getJurisdiction();
         return !is_null($jurisdiction)
             ? '<Jurisdiction'
-                . $this->serializeOptionalAttribute('jurisdictionId', $this->getJurisdictionId())
-                . $this->serializeOptionalAttribute('jurisdictionLevel', $this->getJurisdictionLevel())
-                . ">$jurisdiction</Jurisdiction>"
+                . $this->serializeOptionalAttribute('jurisdictionId', $this->xmlEncode($this->getJurisdictionId()))
+                . $this->serializeOptionalAttribute('jurisdictionLevel', $this->xmlEncode($this->getJurisdictionLevel()))
+                . ">{$this->xmlEncode($jurisdiction)}</Jurisdiction>"
             : '';
     }
 
@@ -305,8 +305,8 @@ class Tax implements ITax
         $imposition = $this->getImposition();
         return !is_null($imposition)
             ? '<Imposition'
-                . $this->serializeOptionalAttribute('impositionType', $this->getImpositionType())
-                . ">$imposition</Imposition>"
+                . $this->serializeOptionalAttribute('impositionType', $this->xmlEncode($this->getImpositionType()))
+                . ">{$this->xmlEncode($imposition)}</Imposition>"
             : '';
     }
 

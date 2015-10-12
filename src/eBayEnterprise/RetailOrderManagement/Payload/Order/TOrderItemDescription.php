@@ -139,7 +139,7 @@ trait TOrderItemDescription
             return sprintf(
                 '<%s %s>%s</%1$s>',
                 $nodeName,
-                ($id ? "id='$id'" : ''),
+                ($id ? "id='{$this->xmlEncode($id)}'" : ''),
                 $this->xmlEncode($val)
             );
         }

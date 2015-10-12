@@ -66,17 +66,17 @@ trait TBillingAddress
             $lines[] = sprintf(
                 '<Line%d>%s</Line%1$d>',
                 $idx,
-                $line
+                $this->xmlEncode($line)
             );
         }
 
         return sprintf(
             '<BillingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</BillingAddress>',
             implode('', $lines),
-            $this->getBillingCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getBillingMainDivision()),
-            $this->getBillingCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getBillingPostalCode())
+            $this->xmlEncode($this->getBillingCity()),
+            $this->serializeOptionalXmlEncodedValue('MainDivision', $this->getBillingMainDivision()),
+            $this->xmlEncode($this->getBillingCountryCode()),
+            $this->serializeOptionalXmlEncodedValue('PostalCode', $this->getBillingPostalCode())
         );
     }
 
@@ -90,15 +90,6 @@ trait TBillingAddress
         $this->billingCity = $this->cleanString($city, 35);
         return $this;
     }
-
-    /**
-     * Return a serialized XML node if it has a value, empty string otherwise.
-     *
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    abstract protected function nodeNullCoalesce($nodeName, $value);
 
     public function getBillingMainDivision()
     {
@@ -144,4 +135,23 @@ trait TBillingAddress
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

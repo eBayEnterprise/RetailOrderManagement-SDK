@@ -139,9 +139,9 @@ class OrderCancelRequest implements IOrderCancelRequest
      */
     protected function serializeContents()
     {
-        return $this->serializeRequireValue('CustomerOrderId', $this->getCustomerOrderId())
-            . $this->serializeRequireValue('ReasonCode', $this->getReasonCode())
-            . $this->serializeOptionalValue('Reason', $this->getReason());
+        return $this->serializeRequiredValue('CustomerOrderId', $this->xmlEncode($this->getCustomerOrderId()))
+            . $this->serializeRequiredValue('ReasonCode', $this->xmlEncode($this->getReasonCode()))
+            . $this->serializeOptionalXmlEncodedValue('Reason', $this->getReason());
     }
 
     /**

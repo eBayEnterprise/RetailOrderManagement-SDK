@@ -127,11 +127,11 @@ class OrderHold implements IOrderHold
 
     protected function serializeContents()
     {
-        return "<HoldType>{$this->getType()}</HoldType>"
+        return "<HoldType>{$this->xmlEncode($this->getType())}</HoldType>"
             . "<LastHoldTypeDate>{$this->getHoldDate()->format('c')}</LastHoldTypeDate>"
-            . "<ReasonText>{$this->getReason()}</ReasonText>"
-            . $this->serializeOptionalValue('ResolverUserId', $this->getResolverUserId())
-            . "<StatusDescription>{$this->getStatusDescription()}</StatusDescription>";
+            . "<ReasonText>{$this->xmlEncode($this->getReason())}</ReasonText>"
+            . $this->serializeOptionalXmlEncodedValue('ResolverUserId', $this->getResolverUserId())
+            . "<StatusDescription>{$this->xmlEncode($this->getStatusDescription())}</StatusDescription>";
     }
 
     protected function deserializeExtra($serializedPayload)

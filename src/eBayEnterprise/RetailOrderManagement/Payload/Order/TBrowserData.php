@@ -247,8 +247,8 @@ trait TBrowserData
     protected function serializeBrowserData()
     {
         return '<BrowserData>'
-            . "<HostName>{$this->getHostname()}</HostName>"
-            . "<IPAddress>{$this->getIpAddress()}</IPAddress>"
+            . "<HostName>{$this->xmlEncode($this->getHostname())}</HostName>"
+            . "<IPAddress>{$this->xmlEncode($this->getIpAddress())}</IPAddress>"
             . '<SessionId>' . $this->xmlEncode($this->getSessionId()) . '</SessionId>'
             . '<UserAgent>' . $this->xmlEncode($this->getUserAgent()) . '</UserAgent>'
             . $this->serializeOptionalXmlEncodedValue('Connection', $this->getConnection())
@@ -257,15 +257,34 @@ trait TBrowserData
             . $this->serializeOptionalXmlEncodedValue('UserAgentOS', $this->getUserAgentOs())
             . $this->serializeOptionalXmlEncodedValue('UserAgentCPU', $this->getUserAgentCpu())
             . $this->serializeOptionalXmlEncodedValue('HeaderFrom', $this->getHeaderFrom())
-            . $this->serializeOptionalXmlEncodedValue('EmbeddedWebBrowserFrom', $this->xmlEncode($this->getWebBrowserName()))
+            . $this->serializeOptionalXmlEncodedValue('EmbeddedWebBrowserFrom', $this->getWebBrowserName())
             . '<JavascriptData>' . $this->xmlEncode($this->getJavascriptData()) . '</JavascriptData>'
             . '<Referrer>' . $this->xmlEncode($this->getReferrer()) . '</Referrer>'
             . "<HTTPAcceptData>"
             . '<ContentTypes>' . $this->xmlEncode($this->getContentTypes()) . '</ContentTypes>'
             . '<Encoding>' . $this->xmlEncode($this->getEncoding()) . '</Encoding>'
-            . "<Language>{$this->getLanguage()}</Language>"
+            . "<Language>{$this->xmlEncode($this->getLanguage())}</Language>"
             . '<CharSet>' . $this->xmlEncode($this->getCharSet()) . '</CharSet>'
             . "</HTTPAcceptData>"
             . '</BrowserData>';
     }
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

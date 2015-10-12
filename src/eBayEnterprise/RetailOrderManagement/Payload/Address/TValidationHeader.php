@@ -26,7 +26,7 @@ trait TValidationHeader
 
     public function setMaxSuggestions($maxSuggestions)
     {
-        $this->maxSuggestions = $maxSuggestions;
+        $this->maxSuggestions = (int) $maxSuggestions;
         return $this;
     }
 

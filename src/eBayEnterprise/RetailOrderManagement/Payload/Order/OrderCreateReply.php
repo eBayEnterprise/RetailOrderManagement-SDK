@@ -126,13 +126,13 @@ class OrderCreateReply implements IOrderCreateReply
 
     protected function serializeStatus()
     {
-        return "<ResponseStatus>{$this->getStatus()}</ResponseStatus>";
+        return "<ResponseStatus>{$this->xmlEncode($this->getStatus())}</ResponseStatus>";
     }
 
     protected function serializeDescription()
     {
         $description = $this->getDescription();
-        return $description ? "<ResponseDescription>$description</ResponseDescription>" : '';
+        return $description ? "<ResponseDescription>{$this->xmlEncode($description)}</ResponseDescription>" : '';
     }
 
     protected function getSchemaFile()

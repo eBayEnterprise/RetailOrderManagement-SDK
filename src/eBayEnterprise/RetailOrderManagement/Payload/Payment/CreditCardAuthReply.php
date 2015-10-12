@@ -194,10 +194,10 @@ class CreditCardAuthReply implements ICreditCardAuthReply
             . '<AVSResponseCode>%s</AVSResponseCode>';
         return sprintf(
             $template,
-            $this->getAuthorizationResponseCode(),
-            $this->getBankAuthorizationCode(),
-            $this->getCVV2ResponseCode(),
-            $this->getAVSResponseCode()
+            $this->xmlEncode($this->getAuthorizationResponseCode()),
+            $this->xmlEncode($this->getBankAuthorizationCode()),
+            $this->xmlEncode($this->getCVV2ResponseCode()),
+            $this->xmlEncode($this->getAVSResponseCode())
         );
     }
 
@@ -213,9 +213,9 @@ class CreditCardAuthReply implements ICreditCardAuthReply
      */
     protected function serializeAdditionalResponseCodes()
     {
-        $phoneResponseCode = $this->getPhoneResponseCode();
-        $nameResponseCode = $this->getNameResponseCode();
-        $emailResponseCode = $this->getEmailResponseCode();
+        $phoneResponseCode = $this->xmlEncode($this->getPhoneResponseCode());
+        $nameResponseCode = $this->xmlEncode($this->getNameResponseCode());
+        $emailResponseCode = $this->xmlEncode($this->getEmailResponseCode());
         return ($phoneResponseCode ? "<PhoneResponseCode>{$phoneResponseCode}</PhoneResponseCode>" : '')
         . ($nameResponseCode ? "<NameResponseCode>{$nameResponseCode}</NameResponseCode>" : '')
         . ($emailResponseCode ? "<EmailResponseCode>{$emailResponseCode}</EmailResponseCode>" : '');
@@ -244,7 +244,7 @@ class CreditCardAuthReply implements ICreditCardAuthReply
     {
         return sprintf(
             '<AmountAuthorized currencyCode="%s">%01.2F</AmountAuthorized>',
-            $this->getCurrencyCode(),
+            $this->xmlEncode($this->getCurrencyCode()),
             $this->getAmountAuthorized()
         );
     }

@@ -104,7 +104,7 @@ class OrderDetailRequest implements IOrderDetailRequest
      */
     protected function serializeContents()
     {
-        return $this->serializeRequireValue('CustomerOrderId', $this->getCustomerOrderId());
+        return $this->serializeRequiredValue('CustomerOrderId', $this->xmlEncode($this->getCustomerOrderId()));
     }
 
     /**

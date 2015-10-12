@@ -130,6 +130,6 @@ class PayPalDoVoidReply implements IPayPalDoVoidReply
      */
     protected function serializeResponseCode()
     {
-        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
+        return "<ResponseCode>{$this->xmlEncode($this->getResponseCode())}</ResponseCode>";
     }
 }

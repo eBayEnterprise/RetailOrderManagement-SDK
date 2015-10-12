@@ -100,7 +100,7 @@ class PayPalDoAuthorizationReply implements IPayPalDoAuthorizationReply
     protected function serializeContents()
     {
         return $this->serializeOrderId()
-        . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
+        . "<ResponseCode>{$this->xmlEncode($this->getResponseCode())}</ResponseCode>"
         . "<AuthorizationInfo>"
         . $this->serializePayPalPaymentInfo()
         . "</AuthorizationInfo>";

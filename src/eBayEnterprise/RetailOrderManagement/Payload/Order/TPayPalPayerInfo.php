@@ -67,9 +67,9 @@ trait TPayPalPayerInfo
     {
         if ($this->getPayPalPayerId() || $this->getPayPalPayerStatus() || $this->getPayPalAddressStatus()) {
             return '<PayPalPayerInfo>'
-                . $this->serializeOptionalValue('PayPalPayerID', $this->getPayPalPayerId())
-                . $this->serializeOptionalValue('PayPalPayerStatus', $this->getPayPalPayerStatus())
-                . $this->serializeOptionalValue('PayPalAddressStatus', $this->getPayPalAddressStatus())
+                . $this->serializeOptionalXmlEncodedValue('PayPalPayerID', $this->getPayPalPayerId())
+                . $this->serializeOptionalXmlEncodedValue('PayPalPayerStatus', $this->getPayPalPayerStatus())
+                . $this->serializeOptionalXmlEncodedValue('PayPalAddressStatus', $this->getPayPalAddressStatus())
                 . '</PayPalPayerInfo>';
         }
         return '';

@@ -179,7 +179,7 @@ trait TLineItemContainer
         return $this->serializeCurrencyAmount(
             'LineItemsTotal',
             $this->getLineItemsTotal(),
-            $this->getCurrencyCode()
+            $this->xmlEncode($this->getCurrencyCode())
         );
     }
 
@@ -189,7 +189,7 @@ trait TLineItemContainer
      */
     protected function serializeShippingTotal()
     {
-        return $this->serializeCurrencyAmount('ShippingTotal', $this->getShippingTotal(), $this->getCurrencyCode());
+        return $this->serializeCurrencyAmount('ShippingTotal', $this->getShippingTotal(), $this->xmlEncode($this->getCurrencyCode()));
     }
 
     /**
@@ -198,6 +198,15 @@ trait TLineItemContainer
      */
     protected function serializeTaxTotal()
     {
-        return $this->serializeCurrencyAmount('TaxTotal', $this->getTaxTotal(), $this->getCurrencyCode());
+        return $this->serializeCurrencyAmount('TaxTotal', $this->getTaxTotal(), $this->xmlEncode($this->getCurrencyCode()));
     }
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

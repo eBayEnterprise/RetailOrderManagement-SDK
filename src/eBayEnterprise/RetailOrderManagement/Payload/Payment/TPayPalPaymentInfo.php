@@ -36,9 +36,9 @@ trait TPayPalPaymentInfo
      */
     protected function serializePayPalPaymentInfo()
     {
-        return "<PaymentStatus>{$this->getPaymentStatus()}</PaymentStatus>"
-            . "<PendingReason>{$this->getPendingReason()}</PendingReason>"
-            . "<ReasonCode>{$this->getReasonCode()}</ReasonCode>";
+        return "<PaymentStatus>{$this->xmlEncode($this->getPaymentStatus())}</PaymentStatus>"
+            . "<PendingReason>{$this->xmlEncode($this->getPendingReason())}</PendingReason>"
+            . "<ReasonCode>{$this->xmlEncode($this->getReasonCode())}</ReasonCode>";
     }
 
     /**
@@ -103,4 +103,13 @@ trait TPayPalPaymentInfo
         $this->reasonCode = $code;
         return $this;
     }
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

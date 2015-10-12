@@ -33,7 +33,7 @@ class OrderDetailStoredValueCardPayment extends StoredValueCardPayment implement
     {
         return $this->serializePaymentContext()
             . $this->serializePaymentRequestId()
-            . $this->serializeOptionalValue('Pin', $this->getPin())
+            . $this->serializeOptionalXmlEncodedValue('Pin', $this->getPin())
             . $this->serializeAmount('Amount', $this->getAmount())
             . $this->getCustomAttributes()->serialize();
     }

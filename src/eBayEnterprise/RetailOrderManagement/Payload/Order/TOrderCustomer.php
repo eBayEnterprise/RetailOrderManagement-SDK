@@ -108,12 +108,12 @@ trait TOrderCustomer
      */
     protected function serializeOrderCustomer()
     {
-        return '<Customer ' . $this->serializeOptionalAttribute('customerId', $this->getCustomerId()) . '>'
+        return '<Customer ' . $this->serializeOptionalAttribute('customerId', $this->xmlEncode($this->getCustomerId())) . '>'
             . $this->serializePersonName()
-            . $this->serializeOptionalValue('Gender', $this->getGender())
+            . $this->serializeOptionalValue('Gender', $this->xmlEncode($this->getGender()))
             . $this->serializeOptionalDateValue('DateOfBirth', 'Y-m-d', $this->getDateOfBirth())
             . $this->serializeOptionalXmlEncodedValue('EmailAddress', $this->getEmailAddress())
-            . $this->serializeOptionalValue('CustomerTaxId', $this->getTaxId())
+            . $this->serializeOptionalXmlEncodedValue('CustomerTaxId', $this->getTaxId())
             . $this->serializeTaxExemptFlag()
             . $this->getLoyaltyPrograms()->serialize()
             . '</Customer>';

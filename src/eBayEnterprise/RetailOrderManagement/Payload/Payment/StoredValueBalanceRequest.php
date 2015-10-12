@@ -114,7 +114,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
         . $this->serializePin()
         . sprintf(
             '<CurrencyCode>%s</CurrencyCode>',
-            $this->getCurrencyCode()
+            $this->xmlEncode($this->getCurrencyCode())
         );
     }
 
@@ -125,7 +125,7 @@ class StoredValueBalanceRequest implements IStoredValueBalanceRequest
      */
     protected function serializePin()
     {
-        return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
+        return $this->serializeOptionalXmlEncodedValue('Pin', $this->getPin());
     }
 
     /**

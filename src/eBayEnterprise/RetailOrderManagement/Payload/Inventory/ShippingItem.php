@@ -176,14 +176,17 @@ class ShippingItem implements IShippingItem
     protected function serializeShippingMethod()
     {
         return "<ShippingMethod "
-            . " {$this->serializeOptionalAttribute('mode', $this->getShippingMethodMode())}"
-            . " {$this->serializeOptionalAttribute('displayText', $this->getShippingMethodDisplayText())}"
-            . ">{$this->getShippingMethod()}</ShippingMethod>";
+            . " {$this->serializeOptionalAttribute('mode', $this->xmlEncode($this->getShippingMethodMode()))}"
+            . " {$this->serializeOptionalAttribute('displayText', $this->xmlEncode($this->getShippingMethodDisplayText()))}"
+            . ">{$this->xmlEncode($this->getShippingMethod())}</ShippingMethod>";
     }
 
     protected function getRootAttributes()
     {
-        return ['itemId' => $this->getItemId(), 'lineId' => $this->getId()];
+        return [
+            'itemId' => $this->getItemId(),
+            'lineId' => $this->getId(),
+        ];
     }
 
     protected function getPhysicalAddressRootNodeName()

@@ -124,8 +124,8 @@ class PayPalDoExpressCheckoutReply implements IPayPalDoExpressCheckoutReply
     protected function serializeContents()
     {
         return $this->serializeOrderId()
-        . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
-        . "<TransactionID>{$this->getTransactionId()}</TransactionID>"
+        . "<ResponseCode>{$this->xmlEncode($this->getResponseCode())}</ResponseCode>"
+        . "<TransactionID>{$this->xmlEncode($this->getTransactionId())}</TransactionID>"
         . "<PaymentInfo>"
         . $this->serializePayPalPaymentInfo()
         . "</PaymentInfo>";

@@ -76,7 +76,11 @@ class PayPalDoAuthorizationRequest implements IPayPalDoAuthorizationRequest
      */
     protected function serializeAmount()
     {
-        return $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode());
+        return $this->serializeCurrencyAmount(
+            'Amount',
+            $this->getAmount(),
+            $this->xmlEncode($this->getCurrencyCode())
+        );
     }
 
     /**

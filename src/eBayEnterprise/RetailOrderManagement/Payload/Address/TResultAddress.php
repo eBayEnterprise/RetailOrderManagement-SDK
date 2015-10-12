@@ -41,12 +41,31 @@ trait TResultAddress
             '<%s>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s%s%s</%1$s>',
             $this->getPhysicalAddressRootNodeName(),
             implode('', $lines),
-            $this->getCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getMainDivision()),
-            $this->getCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getPostalCode()),
-            $this->nodeNullCOalesce('FormattedAddress', $this->getFormattedAddress()),
+            $this->xmlEncode($this->getCity()),
+            $this->serializeOptionalXmlEncodedValue('MainDivision', $this->getMainDivision()),
+            $this->xmlEncode($this->getCountryCode()),
+            $this->serializeOptionalXmlEncodedValue('PostalCode', $this->getPostalCode()),
+            $this->serializeOptionalXmlEncodedValue('FormattedAddress', $this->getFormattedAddress()),
             $this->getErrorLocations()->serialize()
         );
     }
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

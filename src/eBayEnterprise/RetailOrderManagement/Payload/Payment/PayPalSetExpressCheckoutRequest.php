@@ -102,7 +102,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
         return $this->serializeOrderId()
         . $this->serializeUrls()
         . $this->serializeLocaleCode()
-        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->getCurrencyCode())
+        . $this->serializeCurrencyAmount('Amount', $this->getAmount(), $this->xmlEncode($this->getCurrencyCode()))
         . $this->serializeAddressOverride()
         . $this->serializeShippingAddress()
         . $this->serializeLineItemsContainer();
@@ -114,8 +114,8 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
      */
     protected function serializeUrls()
     {
-        return "<ReturnUrl>{$this->getReturnUrl()}</ReturnUrl>"
-        . "<CancelUrl>{$this->getCancelUrl()}</CancelUrl>";
+        return "<ReturnUrl>{$this->xmlEncode($this->getReturnUrl())}</ReturnUrl>"
+        . "<CancelUrl>{$this->xmlEncode($this->getCancelUrl())}</CancelUrl>";
     }
 
     /**
@@ -166,7 +166,7 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
      */
     protected function serializeLocaleCode()
     {
-        return "<LocaleCode>{$this->getLocaleCode()}</LocaleCode>";
+        return "<LocaleCode>{$this->xmlEncode($this->getLocaleCode())}</LocaleCode>";
     }
 
     /**
@@ -273,19 +273,5 @@ class PayPalSetExpressCheckoutRequest implements IPayPalSetExpressCheckoutReques
     protected function getRootNodeName()
     {
         return static::ROOT_NODE;
-    }
-
-    /**
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    protected function nodeNullCoalesce($nodeName, $value)
-    {
-        if (!$value) {
-            return '';
-        }
-
-        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
     }
 }

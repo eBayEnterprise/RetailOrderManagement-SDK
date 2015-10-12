@@ -128,7 +128,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
         . $this->serializePin()
         . sprintf(
             '<Amount currencyCode="%s">%s</Amount>',
-            $this->getCurrencyCode(),
+            $this->xmlEncode($this->getCurrencyCode()),
             $this->getAmount()
         );
     }
@@ -145,9 +145,9 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
             . '</PaymentContext>';
         return sprintf(
             $template,
-            $this->getOrderId(),
+            $this->xmlEncode($this->getOrderId()),
             $this->getPanIsToken() ? 'true' : 'false',
-            $this->getCardNumber()
+            $this->xmlEncode($this->getCardNumber())
         );
     }
 
@@ -158,7 +158,7 @@ class StoredValueRedeemVoidRequest implements IStoredValueRedeemVoidRequest
      */
     protected function serializePin()
     {
-        return $this->pin ? sprintf('<Pin>%s</Pin>', $this->getPin()) : '';
+        return $this->serializeOptionalXmlEncodedValue('Pin', $this->getPin());
     }
 
     /**

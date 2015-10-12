@@ -82,13 +82,13 @@ trait TPhysicalAddress
     protected function serializeInnerPhysicalAddressData(array $lines)
     {
         return implode('', $lines)
-            . $this->nodeNullCoalesce('BuildingName', $this->getBuildingName())
-            . $this->nodeNullCoalesce('PoBox', $this->getPoBox())
-            . "<City>{$this->getCity()}</City>"
-            . $this->nodeNullCoalesce('MainDivision', $this->getMainDivisionName())
-            . $this->nodeNullCoalesce('MainDivisionCode', $this->getMainDivision())
-            . $this->nodeNullCoalesce('CountryName', $this->getCountryName())
-            . "<CountryCode>{$this->getCountryCode()}</CountryCode>"
-            . $this->nodeNullCoalesce('PostalCode', $this->getPostalCode());
+            . $this->serializeOptionalXmlEncodedValue('BuildingName', $this->getBuildingName())
+            . $this->serializeOptionalXmlEncodedValue('PoBox', $this->getPoBox())
+            . "<City>{$this->xmlEncode($this->getCity())}</City>"
+            . $this->serializeOptionalXmlEncodedValue('MainDivision', $this->getMainDivisionName())
+            . $this->serializeOptionalXmlEncodedValue('MainDivisionCode', $this->getMainDivision())
+            . $this->serializeOptionalXmlEncodedValue('CountryName', $this->getCountryName())
+            . "<CountryCode>{$this->xmlEncode($this->getCountryCode())}</CountryCode>"
+            . $this->serializeOptionalXmlEncodedValue('PostalCode', $this->getPostalCode());
     }
 }

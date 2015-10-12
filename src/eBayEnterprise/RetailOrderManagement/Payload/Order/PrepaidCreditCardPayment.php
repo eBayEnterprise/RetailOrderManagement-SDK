@@ -67,7 +67,7 @@ class PrepaidCreditCardPayment extends PrepaidPayment implements IPrepaidCreditC
     protected function serializeContents()
     {
         return $this->serializeAmount('Amount', $this->getAmount())
-            . $this->serializeOptionalValue('Brand', $this->getBrand())
+            . $this->serializeOptionalValue('Brand', $this->xmlEncode($this->getBrand()))
             . $this->getCustomAttributes()->serialize();
     }
 }

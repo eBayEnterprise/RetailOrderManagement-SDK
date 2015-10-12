@@ -200,8 +200,8 @@ class ShippedItem implements IShippedItem
     protected function serializeContents()
     {
         return $this->serializeItemValue('Item', $this->getItem())
-            . $this->serializeRequireValue('Quantity', $this->getQuantity())
-            . $this->serializeOptionalValue('InvoiceNo', $this->getInvoiceNo())
+            . $this->serializeRequiredValue('Quantity', $this->xmlEncode($this->getQuantity()))
+            . $this->serializeOptionalXmlEncodedValue('InvoiceNo', $this->getInvoiceNo())
             . $this->getOrderDetailTrackingNumbers()->serialize();
     }
 
@@ -230,7 +230,7 @@ class ShippedItem implements IShippedItem
      */
     protected function serializeItemValue($nodeName, $value)
     {
-        $refAttribute = $this->serializeOptionalAttribute('ref', $this->getRef());
-        return sprintf('<%s %s>%s</%1$s>', $nodeName, $refAttribute, $value);
+        $refAttribute = $this->serializeOptionalAttribute('ref', $this->xmlEncode($this->getRef()));
+        return sprintf('<%s %s>%s</%1$s>', $nodeName, $refAttribute, $this->xmlEncode($value));
     }
 }

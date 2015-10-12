@@ -200,9 +200,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         return sprintf(
             '<ExpirationDate>%s</ExpirationDate>%s<Amount currencyCode="%s">%.2f</Amount>',
-            $this->getExpirationDate(),
+            $this->xmlEncode($this->getExpirationDate()),
             $this->serializeCardSecurityCode(),
-            $this->getCurrencyCode(),
+            $this->xmlEncode($this->getCurrencyCode()),
             $this->getAmount()
         );
     }
@@ -231,7 +231,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return sprintf(
             '<%1$s>%2$s</%1$s>',
             $this->getIsEncrypted() ? self::ENCRYPTED_CVV_NODE : self::RAW_CVV_NODE,
-            $this->getCardSecurityCode()
+            $this->xmlEncode($this->getCardSecurityCode())
         );
     }
 
@@ -298,9 +298,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
             . '<BillingPhoneNo>%s</BillingPhoneNo>';
         return sprintf(
             $template,
-            $this->getBillingFirstName(),
-            $this->getBillingLastName(),
-            $this->getBillingPhone()
+            $this->xmlEncode($this->getBillingFirstName()),
+            $this->xmlEncode($this->getBillingLastName()),
+            $this->xmlEncode($this->getBillingPhone())
         );
     }
 
@@ -373,8 +373,8 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         return sprintf(
             '<CustomerEmail>%s</CustomerEmail><CustomerIPAddress>%s</CustomerIPAddress>',
-            $this->getEmail(),
-            $this->getIp()
+            $this->xmlEncode($this->getEmail()),
+            $this->xmlEncode($this->getIp())
         );
     }
 
@@ -397,9 +397,9 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         return sprintf(
             '<ShipToFirstName>%s</ShipToFirstName><ShipToLastName>%s</ShipToLastName><ShipToPhoneNo>%s</ShipToPhoneNo>',
-            $this->getShipToFirstName(),
-            $this->getShipToLastName(),
-            $this->getShipToPhone()
+            $this->xmlEncode($this->getShipToFirstName()),
+            $this->xmlEncode($this->getShipToLastName()),
+            $this->xmlEncode($this->getShipToPhone())
         );
     }
 
@@ -513,12 +513,12 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
                 . '</SecureVerificationData>';
             return sprintf(
                 $template,
-                $this->getAuthenticationAvailable(),
-                $this->getAuthenticationStatus(),
-                $this->getCavvUcaf(),
-                $this->getTransactionId(),
-                $this->nodeNullCoalesce('ECI', $this->getEci()),
-                $this->getPayerAuthenticationResponse()
+                $this->xmlEncode($this->getAuthenticationAvailable()),
+                $this->xmlEncode($this->getAuthenticationStatus()),
+                $this->xmlEncode($this->getCavvUcaf()),
+                $this->xmlEncode($this->getTransactionId()),
+                $this->serializeOptionalXmlEncodedValue('ECI', $this->getEci()),
+                $this->xmlEncode($this->getPayerAuthenticationResponse())
             );
         } else {
             return '';
@@ -600,20 +600,6 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
         return $this;
     }
 
-    /**
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    protected function nodeNullCoalesce($nodeName, $value)
-    {
-        if (!$value) {
-            return '';
-        }
-
-        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
-    }
-
     public function getEci()
     {
         return $this->eci;
@@ -643,7 +629,7 @@ class CreditCardAuthRequest implements ICreditCardAuthRequest
     {
         return [
             'xmlns' => $this->getXmlNamespace(),
-            'requestId' => $this->getRequestId(),
+            'requestId' => $this->xmlEncode($this->getRequestId()),
         ];
     }
 

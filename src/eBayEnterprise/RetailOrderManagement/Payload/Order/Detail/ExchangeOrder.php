@@ -92,7 +92,7 @@ class ExchangeOrder implements IExchangeOrder
      */
     protected function serializeContents()
     {
-        return $this->serializeOptionalValue('CustomerOrderId', $this->getCustomerOrderId());
+        return $this->serializeOptionalXmlEncodedValue('CustomerOrderId', $this->getCustomerOrderId());
     }
 
     /**

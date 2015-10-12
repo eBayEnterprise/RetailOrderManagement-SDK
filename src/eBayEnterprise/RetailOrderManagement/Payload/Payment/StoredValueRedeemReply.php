@@ -212,8 +212,8 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     {
         return $this->serializePaymentContext()
         . $this->serializeResponseCode()
-        . $this->serializeAmounts('AmountRedeemed')
-        . $this->serializeAmounts('BalanceAmount');
+        . $this->serializeAmounts('AmountRedeemed', $this->getAmountRedeemed(), $this->getAmountRedeemedCurrencyCode())
+        . $this->serializeAmounts('BalanceAmount', $this->getBalanceAmount(), $this->getBalanceAmountCurrencyCode());
     }
 
     /**
@@ -222,7 +222,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
      */
     protected function serializeResponseCode()
     {
-        return "<ResponseCode>{$this->getResponseCode()}</ResponseCode>";
+        return "<ResponseCode>{$this->xmlEncode($this->getResponseCode())}</ResponseCode>";
     }
 
     /**
@@ -247,19 +247,19 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
     }
 
     /**
-     * Build the Amount node
-     * @param string $amountType either 'AmountRedeemed' or 'BalanceAmount'
+     * Build an Amount node
+     * @param string
+     * @param float
+     * @param string
      * @return string
      */
-    protected function serializeAmounts($amountType)
+    protected function serializeAmounts($amountType, $amount, $currencyCode)
     {
-        $getVal = "get{$amountType}";
-        $getCurCode = "{$getVal}CurrencyCode";
         return sprintf(
             '<%s currencyCode="%s">%1.02F</%1$s>',
             $amountType,
-            $this->{$getCurCode}(),
-            $this->{$getVal}()
+            $this->xmlEncode($currencyCode),
+            $amount
         );
     }
 
@@ -270,7 +270,7 @@ class StoredValueRedeemReply implements IStoredValueRedeemReply
      */
     protected function serializePin()
     {
-        return "<Pin>{$this->getPin()}</Pin>";
+        return "<Pin>{$this->xmlEncode($this->getPin())}</Pin>";
     }
 
     public function getPin()

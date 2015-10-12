@@ -94,7 +94,7 @@ class TaxHeader implements ITaxHeader
      */
     protected function serializeContents()
     {
-        return $this->serializeOptionalValue('Error', $this->getError());
+        return $this->serializeOptionalXmlEncodedValue('Error', $this->getError());
     }
 
     /**

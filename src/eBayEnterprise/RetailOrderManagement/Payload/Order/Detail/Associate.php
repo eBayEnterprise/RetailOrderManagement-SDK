@@ -147,9 +147,9 @@ class Associate implements IAssociate
     protected function serializeContents()
     {
         return $this->isSerializable()
-            ? $this->serializeRequireValue('Name', $this->getName())
-            . $this->serializeRequireValue('Number', $this->getNumber())
-            . $this->serializeRequireValue('Store', $this->getStore())
+            ? $this->serializeRequiredValue('Name', $this->xmlEncode($this->getName()))
+            . $this->serializeRequiredValue('Number', $this->xmlEncode($this->getNumber()))
+            . $this->serializeRequiredValue('Store', $this->xmlEncode($this->getStore()))
             : null;
     }
 

@@ -68,7 +68,7 @@ class ErrorLocation implements IErrorLocation
 
     protected function serializeContents()
     {
-        return $this->getFieldName();
+        return $this->xmlEncode($this->getFieldName());
     }
 
     protected function getRootNodeName()

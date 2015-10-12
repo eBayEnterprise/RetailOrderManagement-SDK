@@ -88,7 +88,7 @@ trait TShippingAddress
             $lines[] = sprintf(
                 '<Line%d>%s</Line%1$d>',
                 $idx,
-                $line
+                $this->xmlEncode($line)
             );
         }
         // If we don't have any address lines, we treat as having no address at all.
@@ -105,10 +105,10 @@ trait TShippingAddress
         return sprintf(
             '<ShippingAddress>%s<City>%s</City>%s<CountryCode>%s</CountryCode>%s</ShippingAddress>',
             implode('', $lines),
-            $this->getShipToCity(),
-            $this->nodeNullCoalesce('MainDivision', $this->getShipToMainDivision()),
-            $this->getShipToCountryCode(),
-            $this->nodeNullCoalesce('PostalCode', $this->getShipToPostalCode())
+            $this->xmlEncode($this->getShipToCity()),
+            $this->serializeOptionalXmlEncodedValue('MainDivision', $this->getShipToMainDivision()),
+            $this->xmlEncode($this->getShipToCountryCode()),
+            $this->serializeOptionalXmlEncodedValue('PostalCode', $this->getShipToPostalCode())
         );
     }
 
@@ -122,15 +122,6 @@ trait TShippingAddress
         $this->shipToCity = $this->cleanString($city, 35);
         return $this;
     }
-
-    /**
-     * Return a serialized XML node if it has a value, empty string otherwise.
-     *
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    abstract protected function nodeNullCoalesce($nodeName, $value);
 
     public function getShipToMainDivision()
     {
@@ -176,4 +167,23 @@ trait TShippingAddress
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

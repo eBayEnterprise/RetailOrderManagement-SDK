@@ -93,7 +93,7 @@ class OrderDetailTrackingNumber implements IOrderDetailTrackingNumber
      */
     protected function serializeContents()
     {
-        return $this->getValue();
+        return $this->xmlEncode($this->getValue());
     }
 
     /**

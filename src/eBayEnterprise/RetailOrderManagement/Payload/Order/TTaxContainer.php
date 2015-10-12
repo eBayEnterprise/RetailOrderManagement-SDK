@@ -55,7 +55,7 @@ trait TTaxContainer
         $taxes = $this->getTaxes();
         return (!is_null($taxClass) || count($taxes))
             ? '<TaxData>'
-                . $this->serializeOptionalValue('TaxClass', $this->getTaxClass())
+                . $this->serializeOptionalXmlEncodedValue('TaxClass', $this->getTaxClass())
                 . $this->getTaxes()->serialize()
                 . '</TaxData>'
             : '';

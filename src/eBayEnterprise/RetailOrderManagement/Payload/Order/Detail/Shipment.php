@@ -299,9 +299,9 @@ class Shipment implements IShipment
     protected function serializeContents()
     {
         return $this->getShippedItems()->serialize()
-            . $this->serializeRequireValue('Warehouse', $this->getWarehouse())
+            . $this->serializeRequiredValue('Warehouse', $this->xmlEncode($this->getWarehouse()))
             . $this->serializeCarrierValue('Carrier', $this->getCarrier())
-            . $this->serializeRequireValue('TotalWeight', $this->getTotalWeight())
+            . $this->serializeRequiredValue('TotalWeight', $this->xmlEncode($this->getTotalWeight()))
             . $this->serializeOptionalDateValue('ShippedDate', 'c', $this->getShippedDate());
     }
 
@@ -330,10 +330,10 @@ class Shipment implements IShipment
      */
     protected function serializeCarrierValue($nodeName, $value)
     {
-        $modeAttribute = $this->serializeOptionalAttribute('mode', $this->getMode());
-        $displayTextAttribute = $this->serializeOptionalAttribute('displayText', $this->getDisplayText());
+        $modeAttribute = $this->serializeOptionalAttribute('mode', $this->xmlEncode($this->getMode()));
+        $displayTextAttribute = $this->serializeOptionalAttribute('displayText', $this->xmlEncode($this->getDisplayText()));
         return $value
-            ? sprintf('<%s %s %s>%s</%1$s>', $nodeName, $modeAttribute, $displayTextAttribute, $value) : null;
+            ? sprintf('<%s %s %s>%s</%1$s>', $nodeName, $modeAttribute, $displayTextAttribute, $this->xmlEncode($value)) : null;
     }
 
    /**

@@ -149,7 +149,7 @@ class ShipGroup implements IShipGroup
     {
         // May have an actual destination object to reference or just the
         // the id - such as when creating the payload outside a larger context of payloads.
-        return "<DestinationTarget ref='{$this->getDestinationId()}'/>"
+        return "<DestinationTarget ref='{$this->xmlEncode($this->getDestinationId())}'/>"
             . $this->getItemReferences()->serialize()
             . $this->serializeGifting();
     }
@@ -162,7 +162,10 @@ class ShipGroup implements IShipGroup
 
     protected function getRootAttributes()
     {
-        return ['id' => $this->getId(), 'chargeType' => $this->getChargeType()];
+        return [
+            'id' => $this->getId(),
+            'chargeType' => $this->getChargeType(),
+        ];
     }
 
     protected function getRootNodeName()

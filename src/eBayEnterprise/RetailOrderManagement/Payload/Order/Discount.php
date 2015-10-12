@@ -151,7 +151,7 @@ class Discount implements IDiscount
 
     protected function serializeContents()
     {
-        return "<Id>{$this->getId()}</Id>"
+        return "<Id>{$this->xmlEncode($this->getId())}</Id>"
             . $this->serializeOptionalXmlEncodedValue('Code', $this->getCode())
             . $this->serializeAmount('Amount', $this->getAmount())
             . $this->serializeOptionalXmlEncodedValue('Description', $this->getDescription())

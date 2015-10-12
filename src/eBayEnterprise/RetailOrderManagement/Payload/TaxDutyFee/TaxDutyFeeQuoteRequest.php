@@ -199,14 +199,14 @@ class TaxDutyFeeQuoteRequest implements ITaxDutyFeeQuoteRequest
     {
         $billingInformation = $this->getBillingInformation();
         if ($billingInformation) {
-            return "<BillingInformation ref=\"{$this->billingInformationIdRef}\"></BillingInformation>";
+            return "<BillingInformation ref='{$this->xmlEncode($this->billingInformationIdRef)}'></BillingInformation>";
         }
         return '';
     }
 
     protected function serializeCurrency()
     {
-        return "<Currency>{$this->getCurrency()}</Currency>";
+        return "<Currency>{$this->xmlEncode($this->getCurrency())}</Currency>";
     }
 
     protected function getXmlNameSpace()
@@ -237,7 +237,7 @@ class TaxDutyFeeQuoteRequest implements ITaxDutyFeeQuoteRequest
     {
         $contents = $this->serializeCurrency()
             . $this->serializeVatInclusivePricing()
-            . $this->serializeOptionalValue('CustomerTaxId', $this->getCustomerTaxId())
+            . $this->serializeOptionalXmlEncodedValue('CustomerTaxId', $this->getCustomerTaxId())
             . $this->serializeBillingInformation()
             . $this->serializeShipping();
         return $contents;

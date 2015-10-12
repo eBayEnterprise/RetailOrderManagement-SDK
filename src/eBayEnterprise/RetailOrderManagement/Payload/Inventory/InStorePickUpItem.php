@@ -139,8 +139,8 @@ class InStorePickUpItem implements IInStorePickUpItem
     {
         return $this->serializeQuantity()
             . "<InStorePickupDetails>"
-            . "<StoreFrontId>{$this->getStoreFrontId()}</StoreFrontId>"
-            . "<StoreFrontName>{$this->getStoreFrontName()}</StoreFrontName>"
+            . "<StoreFrontId>{$this->xmlEncode($this->getStoreFrontId())}</StoreFrontId>"
+            . "<StoreFrontName>{$this->xmlEncode($this->getStoreFrontName())}</StoreFrontName>"
             . $this->serializePhysicalAddress()
             . "</InStorePickupDetails>"
             . $this->serializeGiftWrapRequested();
@@ -148,7 +148,10 @@ class InStorePickUpItem implements IInStorePickUpItem
 
     protected function getRootAttributes()
     {
-        return ['itemId' => $this->getItemId(), 'lineId' => $this->getId()];
+        return [
+            'itemId' => $this->getItemId(),
+            'lineId' => $this->getId(),
+        ];
     }
 
     protected function getPhysicalAddressRootNodeName()

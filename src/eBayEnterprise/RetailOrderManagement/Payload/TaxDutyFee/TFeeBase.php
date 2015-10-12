@@ -78,9 +78,9 @@ trait TFeeBase
 
     protected function serializeContents()
     {
-        return "<FeeType>{$this->getType()}</FeeType>"
-            . "<Description>{$this->getDescription()}</Description>"
-            . "<FeeId>{$this->getId()}</FeeId>"
+        return "<FeeType>{$this->xmlEncode($this->getType())}</FeeType>"
+            . "<Description>{$this->xmlEncode($this->getDescription())}</Description>"
+            . "<FeeId>{$this->xmlEncode($this->getId())}</FeeId>"
             . $this->getCharge()->setRootNodeName('Charge')->serialize();
     }
 
@@ -107,4 +107,13 @@ trait TFeeBase
      * @return IPriceGroup|ITaxedPriceGroup
      */
     abstract public function getCharge();
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

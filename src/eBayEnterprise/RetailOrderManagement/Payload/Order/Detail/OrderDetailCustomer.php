@@ -164,10 +164,10 @@ class OrderDetailCustomer implements IOrderDetailCustomer
     protected function serializeOrderDetailCustomer()
     {
         return $this->serializePersonName()
-            . $this->serializeOptionalValue('Gender', $this->getGender())
+            . $this->serializeOptionalXmlEncodedValue('Gender', $this->getGender())
             . $this->serializeOptionalDateValue('DateOfBirth', 'Y-m-d', $this->getDateOfBirth())
-            . $this->serializeOptionalValue('EmailAddress', $this->getEmailAddress())
-            . $this->serializeOptionalValue('CustomerTaxId', $this->getTaxId())
+            . $this->serializeOptionalXmlEncodedValue('EmailAddress', $this->getEmailAddress())
+            . $this->serializeOptionalXmlEncodedValue('CustomerTaxId', $this->getTaxId())
             . $this->serializeTaxExemptFlag()
             . $this->getLoyaltyPrograms()->serialize();
     }

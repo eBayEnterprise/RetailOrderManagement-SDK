@@ -26,7 +26,7 @@ trait TCurrencyCode
      */
     protected function serializeCurrencyCode()
     {
-        return "<CurrencyCode>{$this->getCurrencyCode()}</CurrencyCode>";
+        return "<CurrencyCode>{$this->xmlEncode($this->getCurrencyCode())}</CurrencyCode>";
     }
 
     /**
@@ -53,4 +53,13 @@ trait TCurrencyCode
         $this->currencyCode = (strlen($cleaned) < 3) ? null : $cleaned;
         return $this;
     }
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

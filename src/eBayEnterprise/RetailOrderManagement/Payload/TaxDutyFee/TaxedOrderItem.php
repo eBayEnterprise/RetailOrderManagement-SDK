@@ -139,10 +139,10 @@ class TaxedOrderItem implements ITaxedOrderItem
 
     protected function serializeContents()
     {
-        return "<ItemId>{$this->getItemId()}</ItemId>"
-            . $this->serializeOptionalValue('ItemDesc', $this->getDescription())
-            . $this->serializeOptionalValue('HTSCode', $this->getHtsCode())
-            . $this->serializeOptionalValue('ScreenSize', $this->getScreenSize())
+        return "<ItemId>{$this->xmlEncode($this->getItemId())}</ItemId>"
+            . $this->serializeOptionalXmlEncodedValue('ItemDesc', $this->getDescription())
+            . $this->serializeOptionalXmlEncodedValue('HTSCode', $this->getHtsCode())
+            . $this->serializeOptionalXmlEncodedValue('ScreenSize', $this->getScreenSize())
             . "<Quantity>{$this->getQuantity()}</Quantity>"
             . $this->serializePricing()
             . $this->serializeGifting()

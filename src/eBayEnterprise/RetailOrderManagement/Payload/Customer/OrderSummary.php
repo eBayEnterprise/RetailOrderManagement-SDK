@@ -419,15 +419,15 @@ class OrderSummary implements IOrderSummary
      */
     protected function serializeContents()
     {
-        return $this->serializeOptionalValue('CustomerOrderId', $this->getCustomerOrderId())
-            . $this->serializeOptionalValue('CustomerId', $this->getCustomerId())
+        return $this->serializeOptionalXmlEncodedValue('CustomerOrderId', $this->getCustomerOrderId())
+            . $this->serializeOptionalXmlEncodedValue('CustomerId', $this->getCustomerId())
             . $this->serializeOptionalDateValue('OrderDate', 'c', $this->getOrderDate())
-            . $this->serializeOptionalValue('DashboardRepId', $this->getDashboardRepId())
-            . $this->serializeOptionalValue('Status', $this->getStatus())
-            . $this->serializeRequireValue('OrderTotal', $this->getOrderTotal())
-            . $this->serializeOptionalValue('Source', $this->getSource())
-            . $this->serializeChainedOrder('ChainedOrder', $this->getChainedOrder())
-            . $this->serializeDerivedOrder('DerivedOrder', $this->getDerivedOrder());
+            . $this->serializeOptionalXmlEncodedValue('DashboardRepId', $this->getDashboardRepId())
+            . $this->serializeOptionalXmlEncodedValue('Status', $this->getStatus())
+            . $this->serializeRequiredValue('OrderTotal', $this->xmlEncode($this->getOrderTotal()))
+            . $this->serializeOptionalXmlEncodedValue('Source', $this->getSource())
+            . $this->serializeChainedOrder('ChainedOrder', $this->xmlEncode($this->getChainedOrder()))
+            . $this->serializeDerivedOrder('DerivedOrder', $this->xmlEncode($this->getDerivedOrder()));
     }
 
     /**
@@ -437,8 +437,8 @@ class OrderSummary implements IOrderSummary
     protected function serializeChainedOrder($node, $value)
     {
         $parentRef = $this->getParentRef();
-        $typeAttribute = $this->serializeOptionalAttribute('type', $this->getType());
-        $parentRefAttribute = $this->serializeOptionalAttribute('parentRef', $parentRef);
+        $typeAttribute = $this->serializeOptionalAttribute('type', $this->xmlEncode($this->getType()));
+        $parentRefAttribute = $this->serializeOptionalAttribute('parentRef', $this->xmlEncode($parentRef));
         return $parentRef
             ? sprintf('<%s %s %s>%s</%1$s>', $node, $typeAttribute, $parentRefAttribute, $value) : null;
     }
@@ -450,7 +450,7 @@ class OrderSummary implements IOrderSummary
     protected function serializeDerivedOrder($node, $value)
     {
         $parentRef = $this->getParentRef();
-        $parentRefAttribute = $this->serializeOptionalAttribute('parentRef', $parentRef);
+        $parentRefAttribute = $this->serializeOptionalAttribute('parentRef', $this->xmlEncode($parentRef));
         return $parentRef
             ? sprintf('<%s %s>%s</%1$s>', $node, $parentRefAttribute, $value) : null;
     }

@@ -142,7 +142,7 @@ class ValidationReply implements IValidationReply
 
     public function setResultSuggestionCount($resultSuggestionCount)
     {
-        $this->resultSuggestionCount = $resultSuggestionCount;
+        $this->resultSuggestionCount = (int) $resultSuggestionCount;
         return $this;
     }
 
@@ -190,7 +190,7 @@ class ValidationReply implements IValidationReply
     protected function serializeResults()
     {
         return '<Result>'
-            . $this->serializeOptionalValue('ResultCode', $this->getResultCode())
+            . $this->serializeOptionalXmlEncodedValue('ResultCode', $this->getResultCode())
             . $this->getResultErrorLocations()->serialize()
             . $this->serializeOptionalValue('ResultSuggestionCount', $this->getResultSuggestionCount())
             . $this->getSuggestedAddresses()->serialize()

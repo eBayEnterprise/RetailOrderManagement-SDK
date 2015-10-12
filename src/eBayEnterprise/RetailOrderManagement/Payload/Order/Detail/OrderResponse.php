@@ -648,21 +648,21 @@ class OrderResponse implements IOrderResponse
             . $this->getPayment()->serialize()
             . $this->getChargeGroups()->serialize()
             . $this->getFees()->serialize()
-            . $this->serializeOptionalValue('ShopRunnerMessage', $this->getShopRunnerMessage())
-            . $this->serializeRequireValue('Currency', $this->getCurrency())
+            . $this->serializeOptionalXmlEncodedValue('ShopRunnerMessage', $this->getShopRunnerMessage())
+            . $this->serializeRequiredValue('Currency', $this->xmlEncode($this->getCurrency()))
             . $this->getAssociate()->serialize()
             . $this->getTaxHeader()->serialize()
-            . $this->serializeOptionalValue('PrintedCatalogCode', $this->getPrintedCatalogCode())
-            . $this->serializeOptionalValue('Locale', $this->getLocale())
+            . $this->serializeOptionalXmlEncodedValue('PrintedCatalogCode', $this->getPrintedCatalogCode())
+            . $this->serializeOptionalXmlEncodedValue('Locale', $this->getLocale())
             . $this->getItemRelationships()->serialize()
             . $this->getShipments()->serialize()
-            . $this->serializeOptionalValue('DashboardRepId', $this->getDashboardRepId())
+            . $this->serializeOptionalXmlEncodedValue('DashboardRepId', $this->getDashboardRepId())
             . $this->serializeOrderSourceValue('OrderSource', $this->getOrderSource())
-            . $this->serializeOptionalValue('Status', $this->getStatus())
+            . $this->serializeOptionalXmlEncodedValue('Status', $this->getStatus())
             . $this->getCustomAttributes()->serialize()
             . $this->getTemplates()->serialize()
             . $this->serializeOrderHistoryUrlValue('OrderHistoryUrl', $this->getOrderHistoryUrl())
-            . $this->serializeOptionalValue('VATInclusivePricing', $this->getVatInclusivePricing())
+            . $this->serializeOptionalXmlEncodedValue('VATInclusivePricing', $this->getVatInclusivePricing())
             . $this->getExchangeOrders()->serialize();
     }
 
@@ -677,7 +677,7 @@ class OrderResponse implements IOrderResponse
     {
         $orderHistoryUrl = $this->getOrderHistoryUrl();
         return $orderHistoryUrl
-            ? $this->serializeOptionalValue('OrderHistoryUrl', htmlspecialchars($orderHistoryUrl)) : null;
+            ? $this->serializeOptionalXmlEncodedValue('OrderHistoryUrl', $orderHistoryUrl) : null;
     }
 
     /**
@@ -722,9 +722,9 @@ class OrderResponse implements IOrderResponse
      */
     protected function serializeOrderSourceValue($nodeName, $value)
     {
-        $typeAttribute = $this->serializeOptionalAttribute('type', $this->getOrderSourceType());
+        $typeAttribute = $this->serializeOptionalAttribute('type', $this->xmlEncode($this->getOrderSourceType()));
         return $value
-            ? sprintf('<%s %s>%s</%1$s>', $nodeName, $typeAttribute, $value) : null;
+            ? sprintf('<%s %s>%s</%1$s>', $nodeName, $typeAttribute, $this->xmlEncode($value)) : null;
     }
 
     /**
@@ -736,8 +736,8 @@ class OrderResponse implements IOrderResponse
      */
     protected function serializeSourceIdValue($nodeName, $value)
     {
-        $typeAttribute = $this->serializeOptionalAttribute('type', $this->getSourceIdType());
+        $typeAttribute = $this->serializeOptionalAttribute('type', $this->xmlEncode($this->getSourceIdType()));
         return $value
-            ? sprintf('<%s %s>%s</%1$s>', $nodeName, $typeAttribute, $value) : null;
+            ? sprintf('<%s %s>%s</%1$s>', $nodeName, $typeAttribute, $this->xmlEncode($value)) : null;
     }
 }

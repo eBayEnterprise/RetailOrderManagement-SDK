@@ -71,7 +71,7 @@ class PriceGroup implements IPriceGroup
     protected function serializeContents()
     {
         return $this->serializePriceGroupAmount()
-            . $this->serializeOptionalValue('TaxClass', $this->getTaxClass())
+            . $this->serializeOptionalXmlEncodedValue('TaxClass', $this->getTaxClass())
             . $this->getDiscounts()->serialize();
     }
 

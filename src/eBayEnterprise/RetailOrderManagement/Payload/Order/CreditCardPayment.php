@@ -418,10 +418,10 @@ class CreditCardPayment implements ICreditCardPayment
             . $this->serializeAuthorizations()
             . $this->serializeOptionalDateValue('ExpirationDate', 'Y-m', $this->getExpirationDate())
             . $this->serializeOptionalDateValue('StartDate', 'Y-m', $this->getStartDate())
-            . $this->serializeOptionalValue('IssueNumber', $this->getIssueNumber())
+            . $this->serializeOptionalValue('IssueNumber', $this->xmlEncode($this->getIssueNumber()))
             . $this->serializeSecureVerificationData()
-            . $this->serializeOptionalValue('PurchasePlanCode', $this->getPurchasePlanCode())
-            . $this->serializeOptionalValue('PurchasePlanDescription', $this->getPurchasePlanDescription())
+            . $this->serializeOptionalValue('PurchasePlanCode', $this->xmlEncode($this->getPurchasePlanCode()))
+            . $this->serializeOptionalValue('PurchasePlanDescription', $this->xmlEncode($this->getPurchasePlanDescription()))
             . $this->getCustomAttributes()->serialize();
     }
 
@@ -433,13 +433,13 @@ class CreditCardPayment implements ICreditCardPayment
     protected function serializeAuthorizations()
     {
         return '<Authorization>'
-            . "<ResponseCode>{$this->getResponseCode()}</ResponseCode>"
-            . "<BankAuthorizationCode>{$this->getBankAuthorizationCode()}</BankAuthorizationCode>"
-            . "<CVV2ResponseCode>{$this->getCVV2ResponseCode()}</CVV2ResponseCode>"
-            . "<AVSResponseCode>{$this->getAVSResponseCode()}</AVSResponseCode>"
-            . $this->serializeOptionalValue('PhoneResponseCode', $this->getPhoneResponseCode())
-            . $this->serializeOptionalValue('NameResponseCode', $this->getNameResponseCode())
-            . $this->serializeOptionalValue('EmailResponseCode', $this->getEmailResponseCode())
+            . "<ResponseCode>{$this->xmlEncode($this->getResponseCode())}</ResponseCode>"
+            . "<BankAuthorizationCode>{$this->xmlEncode($this->getBankAuthorizationCode())}</BankAuthorizationCode>"
+            . "<CVV2ResponseCode>{$this->xmlEncode($this->getCVV2ResponseCode())}</CVV2ResponseCode>"
+            . "<AVSResponseCode>{$this->xmlEncode($this->getAVSResponseCode())}</AVSResponseCode>"
+            . $this->serializeOptionalValue('PhoneResponseCode', $this->xmlEncode($this->getPhoneResponseCode()))
+            . $this->serializeOptionalValue('NameResponseCode', $this->xmlEncode($this->getNameResponseCode()))
+            . $this->serializeOptionalValue('EmailResponseCode', $this->xmlEncode($this->getEmailResponseCode()))
             . $this->serializeExtendedAuthorizations()
             . $this->serializeOptionalAmount('AmountAuthorized', $this->getAmountAuthorized())
             . '</Authorization>';
@@ -458,8 +458,8 @@ class CreditCardPayment implements ICreditCardPayment
         $description = $this->getExtendedAuthDescription();
         return $code && $description
             ? '<ExtendedAuthorizationResponseCodes>'
-                . "<ResponseCodeDescription>$description</ResponseCodeDescription>"
-                . "<ReasonCode>$code</ReasonCode>"
+                . "<ResponseCodeDescription>{$this->xmlEncode($description)}</ResponseCodeDescription>"
+                . "<ReasonCode>{$this->xmlEncode($code)}</ReasonCode>"
                 . '</ExtendedAuthorizationResponseCodes>'
             : '';
     }
@@ -475,12 +475,12 @@ class CreditCardPayment implements ICreditCardPayment
         $payerAuthResponse = $this->getPayerAuthenticationResponse();
         if ($payerAuthResponse) {
             return '<SecureVerificationData>'
-                . $this->serializeOptionalValue('AuthenticationAvailable', $this->getAuthenticationAvailable())
-                . $this->serializeOptionalValue('AuthenticationStatus', $this->getAuthenticationStatus())
-                . $this->serializeOptionalValue('CavvUcaf', $this->getCavvUcaf())
-                . $this->serializeOptionalValue('TransactionId', $this->getTransactionId())
-                . $this->serializeOptionalValue('ECI', $this->getECI())
-                . "<PayerAuthenticationResponse>{$this->getPayerAuthenticationResponse()}</PayerAuthenticationResponse>"
+                . $this->serializeOptionalValue('AuthenticationAvailable', $this->xmlEncode($this->getAuthenticationAvailable()))
+                . $this->serializeOptionalValue('AuthenticationStatus', $this->xmlEncode($this->getAuthenticationStatus()))
+                . $this->serializeOptionalValue('CavvUcaf', $this->xmlEncode($this->getCavvUcaf()))
+                . $this->serializeOptionalValue('TransactionId', $this->xmlEncode($this->getTransactionId()))
+                . $this->serializeOptionalValue('ECI', $this->xmlEncode($this->getECI()))
+                . "<PayerAuthenticationResponse>{$this->xmlEncode($this->getPayerAuthenticationResponse())}</PayerAuthenticationResponse>"
                 . '</SecureVerificationData>';
         }
         return '';

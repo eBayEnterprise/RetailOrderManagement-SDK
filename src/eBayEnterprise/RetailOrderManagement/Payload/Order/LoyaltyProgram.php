@@ -97,8 +97,8 @@ class LoyaltyProgram implements ILoyaltyProgram
     {
         return sprintf(
             '<Account>%s</Account><Program>%s</Program>%s',
-            $this->getAccount(),
-            $this->getProgram(),
+            $this->xmlEncode($this->getAccount()),
+            $this->xmlEncode($this->getProgram()),
             $this->getCustomAttributes()->serialize()
         );
     }

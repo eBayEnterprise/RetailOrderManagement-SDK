@@ -67,7 +67,10 @@ class UnavailableItem implements IUnavailableItem
 
     protected function getRootAttributes()
     {
-        return ['itemId' => $this->getItemId(), 'lineId' => $this->getId()];
+        return [
+            'itemId' => $this->getItemId(),
+            'lineId' => $this->getId(),
+        ];
     }
 
     protected function getRootNodeName()

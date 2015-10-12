@@ -31,7 +31,7 @@ trait TOrderId
      */
     protected function serializeOrderId()
     {
-        return "<OrderId>{$this->getOrderId()}</OrderId>";
+        return "<OrderId>{$this->xmlEncode($this->getOrderId())}</OrderId>";
     }
 
     /**
@@ -66,4 +66,13 @@ trait TOrderId
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

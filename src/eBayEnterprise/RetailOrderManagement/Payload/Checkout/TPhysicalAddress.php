@@ -106,8 +106,6 @@ trait TPhysicalAddress
         return $idx ? $this->buildPhysicalAddressNodes($lines) : '';
     }
 
-    abstract protected function xmlEncode($str);
-
     /**
      * Build the Shipping Address Node
      *
@@ -126,8 +124,6 @@ trait TPhysicalAddress
             $this->serializeOptionalXmlEncodedValue('PostalCode', $this->getPostalCode())
         );
     }
-
-    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
 
     /**
      * Make sure we have max 4 address lines of 70 chars max
@@ -164,22 +160,26 @@ trait TPhysicalAddress
     }
 
     /**
-     * Serialize an optional XML node. If the value is non-null, return the
-     * value enclosed in the named node.
-     *
-     * @param string $nodeName
-     * @param string $value
-     * @return string
-     */
-    protected function nodeNullCoalesce($nodeName, $value)
-    {
-        return $value ? sprintf('<%s>%s</%1$s>', $nodeName, $value) : '';
-    }
-
-    /**
      * Node name wrapping the physical address elements.
      *
      * @return string
      */
     abstract protected function getPhysicalAddressRootNodeName();
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     * @param  mixed  $value
+     * @return string | null
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
 }

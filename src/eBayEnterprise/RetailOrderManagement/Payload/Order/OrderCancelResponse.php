@@ -77,7 +77,7 @@ class OrderCancelResponse implements IOrderCancelResponse
      */
     protected function serializeContents()
     {
-        return $this->serializeRequireValue('ResponseStatus', $this->getResponseStatus());
+        return $this->serializeRequiredValue('ResponseStatus', $this->xmlEncode($this->getResponseStatus()));
     }
 
     /**

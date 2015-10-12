@@ -64,6 +64,6 @@ class EmailAddressDestination extends OrderEmailAddressDestination implements IE
     protected function serializeContents()
     {
         return ($this->getLastName() && $this->getFirstName() ? $this->serializePersonName() : '')
-            . "<EmailAddress>{$this->getEmailAddress()}</EmailAddress>";
+            . "<EmailAddress>{$this->xmlEncode($this->getEmailAddress())}</EmailAddress>";
     }
 }

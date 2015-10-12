@@ -479,7 +479,7 @@ class OrderItem implements IOrderItem
 
     protected function serializeContents()
     {
-        return "<ItemId>{$this->getItemId()}</ItemId>"
+        return "<ItemId>{$this->xmlEncode($this->getItemId())}</ItemId>"
             . "<Quantity>{$this->getQuantity()}</Quantity>"
             . $this->serializeDescription()
             . $this->serializeOptionalXmlEncodedValue('Department', $this->getDepartment())
@@ -487,20 +487,20 @@ class OrderItem implements IOrderItem
             . $this->serializeShippingProgram()
             . $this->serializeShippingMethod()
             . $this->serializeOptionalSubpayload($this->getStoreFrontDetails())
-            . $this->serializeOptionalValue('FulfillmentChannel', $this->getFulfillmentChannel())
+            . $this->serializeOptionalXmlEncodedValue('FulfillmentChannel', $this->getFulfillmentChannel())
             . $this->serializeOptionalSubpayload($this->getProxyPickupDetails())
             . $this->serializeEstimatedDeliveryDate()
             . $this->serializeNamedDeliveryDate()
             . $this->serializeOptionalXmlEncodedValue('DeliveryInstructions', $this->getDeliveryInstructions())
-            . $this->serializeOptionalValue('VendorId', $this->getVendorId())
+            . $this->serializeOptionalXmlEncodedValue('VendorId', $this->getVendorId())
             . $this->serializeOptionalXmlEncodedValue('VendorName', $this->getVendorName())
             . $this->serializeGifting()
             . $this->serializeOptionalXmlEncodedValue('ShopRunnerMessage', $this->getShopRunnerMessage())
             . $this->serializeCustomizations()
-            . $this->serializeOptionalValue('SerialNumber', $this->getSerialNumber())
+            . $this->serializeOptionalXmlEncodedValue('SerialNumber', $this->getSerialNumber())
             . $this->getCustomAttributes()->serialize()
             . $this->serializeOptionalXmlEncodedValue('GiftRegistryCancelUrl', $this->getGiftRegistryCancelUrl())
-            . $this->serializeOptionalValue('ReservationId', $this->getReservationId());
+            . $this->serializeOptionalXmlEncodedValue('ReservationId', $this->getReservationId());
     }
 
     /**
@@ -547,8 +547,8 @@ class OrderItem implements IOrderItem
     protected function serializeShippingProgram()
     {
         if (!is_null($this->getShippingProgram())) {
-            return "<ShippingProgram {$this->serializeOptionalAttribute('authToken', $this->getShippingProgramAuthToken())}>"
-                . $this->getShippingProgram()
+            return "<ShippingProgram {$this->serializeOptionalAttribute('authToken', $this->xmlEncode($this->getShippingProgramAuthToken()))}>"
+                . $this->xmlEncode($this->getShippingProgram())
                 .'</ShippingProgram>';
         }
         return '';
@@ -562,8 +562,8 @@ class OrderItem implements IOrderItem
     protected function serializeShippingMethod()
     {
         if (!is_null($this->getShippingMethod())) {
-            return "<ShippingMethod {$this->serializeOptionalAttribute('displayText', $this->getShippingMethodDisplayText())}>"
-                . $this->getShippingMethod()
+            return "<ShippingMethod {$this->serializeOptionalAttribute('displayText', $this->xmlEncode($this->getShippingMethodDisplayText()))}>"
+                . $this->xmlEncode($this->getShippingMethod())
                 .'</ShippingMethod>';
         }
         return '';

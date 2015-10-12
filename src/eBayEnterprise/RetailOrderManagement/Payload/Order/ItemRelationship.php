@@ -154,7 +154,7 @@ class ItemRelationship implements IItemRelationship
     protected function serializeContents()
     {
         return $this->getItemReferences()->setRootNodeName('Members')->serialize()
-            . "<Type>{$this->getType()}</Type>"
+            . "<Type>{$this->xmlEncode($this->getType())}</Type>"
             . $this->serializeOptionalXmlEncodedValue('Name', $this->getName());
     }
 

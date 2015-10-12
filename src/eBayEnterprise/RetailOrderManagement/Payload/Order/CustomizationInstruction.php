@@ -113,7 +113,7 @@ class CustomizationInstruction implements ICustomizationInstruction
 
     protected function serializeContents()
     {
-        return "<Key>{$this->getKey()}</Key>"
+        return "<Key>{$this->xmlEncode($this->getKey())}</Key>"
             . "<Value>{$this->xmlEncode($this->getValue())}</Value>"
             . $this->serializeOptionalXmlEncodedValue('DisplayTitle', $this->getDisplayTitle())
             . $this->serializeOptionalXmlEncodedValue('DisplayValue', $this->getDisplayValue());

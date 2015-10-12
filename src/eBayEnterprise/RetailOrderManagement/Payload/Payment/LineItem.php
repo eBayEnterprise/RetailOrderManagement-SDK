@@ -75,7 +75,7 @@ class LineItem implements ILineItem
      */
     protected function serializeContents()
     {
-        return "<Name>{$this->getName()}</Name>"
+        return "<Name>{$this->xmlEncode($this->getName())}</Name>"
         . $this->serializeSequenceNumber()
         . "<Quantity>{$this->getQuantity()}</Quantity>"
         . $this->serializeUnitAmount();
@@ -107,7 +107,7 @@ class LineItem implements ILineItem
      */
     protected function serializeSequenceNumber()
     {
-        return $this->getSequenceNumber() ? "<SequenceNumber>{$this->getSequenceNumber()}</SequenceNumber>" : '';
+        return $this->serializeOptionalXmlEncodedValue('SequenceNumber', $this->getSequenceNumber());
     }
 
     /**
@@ -146,7 +146,7 @@ class LineItem implements ILineItem
      */
     public function setQuantity($quantity)
     {
-        $this->quantity = $quantity;
+        $this->quantity = (int) $quantity;
         return $this;
     }
 
@@ -159,7 +159,7 @@ class LineItem implements ILineItem
         return $this->serializeCurrencyAmount(
             'UnitAmount',
             $this->getUnitAmount(),
-            $this->getCurrencyCode()
+            $this->xmlEncode($this->getCurrencyCode())
         );
     }
 

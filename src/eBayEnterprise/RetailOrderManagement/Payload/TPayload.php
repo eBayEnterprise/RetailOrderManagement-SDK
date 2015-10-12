@@ -140,7 +140,6 @@ trait TPayload
         try {
             $d->loadXML($xmlString);
         } catch (\Exception $e) {
-            print_r($xmlString);
             throw $e;
         }
         return $d;
@@ -292,7 +291,7 @@ trait TPayload
     {
         $rootAttributes = $this->getRootAttributes();
         $qualifyAttributes = function ($name) use ($rootAttributes) {
-            return sprintf('%s="%s"', $name, $rootAttributes[$name]);
+            return sprintf('%s="%s"', $name, $this->xmlEncode($rootAttributes[$name]));
         };
         $qualifiedAttributes = array_map($qualifyAttributes, array_keys($rootAttributes));
         return implode(' ', $qualifiedAttributes);
@@ -323,18 +322,6 @@ trait TPayload
     abstract protected function serializeContents();
 
     /**
-     * Serialize required value as an xml element with the given node name.
-     *
-     * @param string
-     * @param mixed
-     * @return string
-     */
-    protected function serializeRequireValue($nodeName, $value)
-    {
-        return sprintf('<%s>%s</%1$s>', $nodeName, $value);
-    }
-
-    /**
      * Serialize the value as an xml element with the given node name. When
      * given an empty value, returns an empty string instead of an empty
      * element.
@@ -345,7 +332,7 @@ trait TPayload
      */
     protected function serializeOptionalValue($nodeName, $value)
     {
-        return !is_null($value) ? $this->serializeRequireValue($nodeName, $value) : '';
+        return !is_null($value) ? $this->serializeRequiredValue($nodeName, $value) : '';
     }
 
     /**
@@ -398,6 +385,19 @@ trait TPayload
     protected function getNewPayloadFactory()
     {
         return new PayloadFactory();
+    }
+
+    /**
+     * Serialize a value with a given name. Value will be XML encoded before
+     * being serialized.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    protected function serializeXmlEncodedValue($name, $value)
+    {
+        return $this->serializeRequiredValue($name, $this->xmlEncode($value));
     }
 
     /**

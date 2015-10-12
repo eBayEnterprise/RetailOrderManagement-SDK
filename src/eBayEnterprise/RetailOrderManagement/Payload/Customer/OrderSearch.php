@@ -112,8 +112,8 @@ class OrderSearch implements IOrderSearch
         $customerId = $this->getCustomerId();
         $customerOrderId = $this->getCustomerOrderId();
         return !empty($customerId) || empty($customerOrderId)
-            ? $this->serializeRequireValue('CustomerId', $customerId)
-            : $this->serializeRequireValue('CustomerOrderId', $customerOrderId);
+            ? $this->serializeRequiredValue('CustomerId', $this->xmlEncode($customerId))
+            : $this->serializeRequiredValue('CustomerOrderId', $this->xmlEncode($customerOrderId));
     }
 
     /**

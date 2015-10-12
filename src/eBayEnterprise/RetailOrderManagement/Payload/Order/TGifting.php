@@ -231,7 +231,7 @@ trait TGifting
         if ($this->getGiftItemId()) {
             $pricing = $this->getGiftPricing();
             return '<Gift>'
-                . "<ItemId>{$this->getGiftItemId()}</ItemId>"
+                . "<ItemId>{$this->xmlEncode($this->getGiftItemId())}</ItemId>"
                 . ($pricing ? $pricing->setRootNodeName('Pricing')->serialize() : '')
                 . $this->serializeGiftingGiftMessage()
                 . '</Gift>';
@@ -335,4 +335,23 @@ trait TGifting
         }
         return $this;
     }
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

@@ -66,7 +66,7 @@ class InvoiceTextCode implements IInvoiceTextCode
 
     protected function serializeContents()
     {
-        return $this->getCode();
+        return $this->xmlEncode($this->getCode());
     }
 
     protected function getRootNodeName()

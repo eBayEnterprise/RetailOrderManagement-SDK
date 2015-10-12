@@ -26,7 +26,7 @@ trait TToken
      */
     protected function serializeToken()
     {
-        return "<Token>{$this->getToken()}</Token>";
+        return "<Token>{$this->xmlEncode($this->getToken())}</Token>";
     }
 
     /**
@@ -64,4 +64,13 @@ trait TToken
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

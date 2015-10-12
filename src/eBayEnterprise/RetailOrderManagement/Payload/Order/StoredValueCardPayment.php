@@ -120,7 +120,7 @@ class StoredValueCardPayment implements IStoredValueCardPayment
         return $this->serializePaymentContext()
             . $this->serializePaymentRequestId()
             . "<CreateTimeStamp>{$this->getCreateTimeStamp()->format('c')}</CreateTimeStamp>"
-            . $this->serializeOptionalValue('Pin', $this->getPin())
+            . $this->serializeOptionalXmlEncodedValue('Pin', $this->getPin())
             . $this->serializeAmount('Amount', $this->getAmount())
             . $this->getCustomAttributes()->serialize();
     }

@@ -248,13 +248,13 @@ class Status implements IStatus
      */
     protected function serializeContents()
     {
-        return $this->serializeRequireValue('Quantity', $this->getQuantity())
-            . $this->serializeOptionalValue('Status', $this->getStatus())
+        return $this->serializeRequiredValue('Quantity', $this->xmlEncode($this->getQuantity()))
+            . $this->serializeOptionalXmlEncodedValue('Status', $this->getStatus())
             . $this->serializeOptionalDateValue('StatusDate', 'c', $this->getStatusDate())
             . $this->serializeOptionalDateValue('ExpectedShipmentDate', 'Y-m-d', $this->getExpectedShipmentDate())
             . $this->serializeOptionalDateValue('ExpectedDeliveryDate', 'Y-m-d', $this->getExpectedDeliveryDate())
             . $this->serializeOptionalDateValue('ProductAvailabilityDate', 'Y-m-d', $this->getProductAvailabilityDate())
-            . $this->serializeOptionalValue('Warehouse', $this->getWarehouse());
+            . $this->serializeOptionalXmlEncodedValue('Warehouse', $this->getWarehouse());
     }
 
     /**

@@ -42,7 +42,7 @@ trait TPaymentAccountUniqueId
             '<%1$s %2$s>%3$s</%1$s>',
             $cardNumberNode,
             $this->serializeIsToken(),
-            $this->getCardNumber()
+            $this->xmlEncode($this->getCardNumber())
         );
     }
 
@@ -98,4 +98,13 @@ trait TPaymentAccountUniqueId
      * @return string or null
      */
     abstract protected function cleanString($string, $maxLength);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

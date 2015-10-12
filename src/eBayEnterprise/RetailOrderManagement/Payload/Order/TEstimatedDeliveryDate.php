@@ -162,8 +162,8 @@ trait TEstimatedDeliveryDate
                     $this->getEstimatedShippingWindowFrom(),
                     $this->getEstimatedShippingWindowTo()
                 )
-                . $this->serializeOptionalValue('Mode', $this->getEstimatedDeliveryMode())
-                . "<MessageType>{$this->getEstimatedDeliveryMessageType()}</MessageType>"
+                . $this->serializeOptionalXmlEncodedValue('Mode', $this->getEstimatedDeliveryMode())
+                . "<MessageType>{$this->xmlEncode($this->getEstimatedDeliveryMessageType())}</MessageType>"
                 . $this->serializeOptionalXmlEncodedValue('Template', $this->getEstimatedDeliveryTemplate())
                 . '</EstimatedDeliveryDate>';
         }
@@ -185,4 +185,23 @@ trait TEstimatedDeliveryDate
             ? "<$nodeName><From>{$fromDate->format('c')}</From><To>{$toDate->format('c')}</To></$nodeName>"
             : '';
     }
+
+    /**
+     * Serialize an optional element containing a string. The value will be
+     * xml-encoded if is not null.
+     *
+     * @param string
+     * @param string
+     * @return string
+     */
+    abstract protected function serializeOptionalXmlEncodedValue($name, $value);
+
+    /**
+     * encode the passed in string to be safe for xml if it is not null,
+     * otherwise simply return the null parameter.
+     *
+     * @param string|null
+     * @return string|null
+     */
+    abstract protected function xmlEncode($value = null);
 }

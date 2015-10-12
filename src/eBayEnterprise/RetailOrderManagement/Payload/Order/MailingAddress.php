@@ -86,7 +86,7 @@ class MailingAddress extends CheckoutMailingAddress implements IMailingAddress
     protected function getRootAttributes()
     {
         return [
-            'id' => $this->getId()
+            'id' => $this->getId(),
         ];
     }
 }

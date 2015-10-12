@@ -106,9 +106,9 @@ class RequestQuantityItem extends QuantityItem implements IRequestQuantityItem
         if ($locationId) {
             $typeAttribute = $this->serializeOptionalAttribute(
                 'type',
-                $this->getFulfillmentLocationType()
+                $this->xmlEncode($this->getFulfillmentLocationType())
             );
-            return "<FulfillmentLocationId $typeAttribute>$locationId</FulfillmentLocationId>";
+            return "<FulfillmentLocationId $typeAttribute>{$this->xmlEncode($locationId)}</FulfillmentLocationId>";
         }
         return '';
     }

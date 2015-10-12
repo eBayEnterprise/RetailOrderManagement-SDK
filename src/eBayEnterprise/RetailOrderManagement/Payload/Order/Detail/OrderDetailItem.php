@@ -427,33 +427,33 @@ class OrderDetailItem extends OrderItem implements IOrderDetailItem
 
     protected function serializeContents()
     {
-        return $this->serializeRequireValue('ItemId', $this->getItemId())
-            . $this->serializeRequireValue('Quantity', $this->getQuantity())
-            . $this->serializeOptionalValue('ShippedQuantity', $this->getShippedQuantity())
+        return $this->serializeRequiredValue('ItemId', $this->xmlEncode($this->getItemId()))
+            . $this->serializeRequiredValue('Quantity', $this->xmlEncode($this->getQuantity()))
+            . $this->serializeOptionalXmlEncodedValue('ShippedQuantity', $this->getShippedQuantity())
             . $this->serializeDescription()
-            . $this->serializeOptionalValue('Department', $this->getDepartment())
+            . $this->serializeOptionalXmlEncodedValue('Department', $this->getDepartment())
             . $this->serializePricing()
             . $this->serializeShippingProgram()
             . $this->serializeCarrierValue('Carrier', $this->getCarrier())
             . $this->serializeShippingMethod()
             . $this->serializeOptionalSubpayload($this->getStoreFrontDetails())
-            . $this->serializeOptionalValue('FulfillmentChannel', $this->getFulfillmentChannel())
+            . $this->serializeOptionalXmlEncodedValue('FulfillmentChannel', $this->getFulfillmentChannel())
             . $this->serializeOptionalSubpayload($this->getProxyPickupDetails())
             . $this->serializeEstimatedDeliveryDate()
             . $this->serializeNamedDeliveryDate()
-            . $this->serializeOptionalValue('DeliveryInstructions', $this->getDeliveryInstructions())
-            . $this->serializeOptionalValue('VendorId', $this->getVendorId())
-            . $this->serializeOptionalValue('VendorName', $this->getVendorName())
+            . $this->serializeOptionalXmlEncodedValue('DeliveryInstructions', $this->getDeliveryInstructions())
+            . $this->serializeOptionalXmlEncodedValue('VendorId', $this->getVendorId())
+            . $this->serializeOptionalXmlEncodedValue('VendorName', $this->getVendorName())
             . $this->serializeGifting()
-            . $this->serializeOptionalValue('ShopRunnerMessage', $this->getShopRunnerMessage())
+            . $this->serializeOptionalXmlEncodedValue('ShopRunnerMessage', $this->getShopRunnerMessage())
             . $this->serializeCustomizations()
             . $this->getStatuses()->serialize()
-            . $this->serializeOptionalValue('OMSLineId', $this->getOmsLineId())
+            . $this->serializeOptionalXmlEncodedValue('OMSLineId', $this->getOmsLineId())
             . $this->getCustomerCareOrderItemTotals()->serialize()
-            . $this->serializeOptionalValue('SerialNumber', $this->getSerialNumber())
+            . $this->serializeOptionalXmlEncodedValue('SerialNumber', $this->getSerialNumber())
             . $this->getCustomAttributes()->serialize()
-            . $this->serializeOptionalValue('GiftRegistryCancelUrl', $this->getGiftRegistryCancelUrl())
-            . $this->serializeOptionalValue('ReservationId', $this->getReservationId())
+            . $this->serializeOptionalXmlEncodedValue('GiftRegistryCancelUrl', $this->getGiftRegistryCancelUrl())
+            . $this->serializeOptionalXmlEncodedValue('ReservationId', $this->getReservationId())
             . $this->getChargeGroups()->serialize();
     }
 
@@ -477,9 +477,9 @@ class OrderDetailItem extends OrderItem implements IOrderDetailItem
                     $this->getEstimatedShippingWindowFrom(),
                     $this->getEstimatedShippingWindowTo()
                 )
-                . $this->serializeOptionalValue('Mode', $this->getEstimatedDeliveryMode())
-                . $this->serializeRequireValue('MessageType', $this->getEstimatedDeliveryMessageType())
-                . $this->serializeOptionalValue('Template', $this->getEstimatedDeliveryTemplate())
+                . $this->serializeOptionalXmlEncodedValue('Mode', $this->getEstimatedDeliveryMode())
+                . $this->serializeRequiredValue('MessageType', $this->xmlEncode($this->getEstimatedDeliveryMessageType()))
+                . $this->serializeOptionalXmlEncodedValue('Template', $this->getEstimatedDeliveryTemplate())
                 . $this->serializeEstimatedWindow(
                     'OriginalExpectedShipmentDate',
                     $this->getOriginalExpectedShipmentDateFrom(),
@@ -504,9 +504,9 @@ class OrderDetailItem extends OrderItem implements IOrderDetailItem
      */
     protected function serializeCarrierValue($nodeName, $value)
     {
-        $modeAttribute = $this->serializeOptionalAttribute('mode', $this->getCarrierMode());
-        $displayTextAttribute = $this->serializeOptionalAttribute('displayText', $this->getCarrierDisplayText());
+        $modeAttribute = $this->serializeOptionalAttribute('mode', $this->xmlEncode($this->getCarrierMode()));
+        $displayTextAttribute = $this->serializeOptionalAttribute('displayText', $this->xmlEncode($this->getCarrierDisplayText()));
         return $value
-            ? sprintf('<%s %s %s>%s</%1$s>', $nodeName, $modeAttribute, $displayTextAttribute, $value) : null;
+            ? sprintf('<%s %s %s>%s</%1$s>', $nodeName, $modeAttribute, $displayTextAttribute, $this->xmlEncode($value)) : null;
     }
 }

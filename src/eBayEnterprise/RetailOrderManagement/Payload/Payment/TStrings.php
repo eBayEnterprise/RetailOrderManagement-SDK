@@ -99,10 +99,11 @@ trait TStrings
     /**
      * encode the passed in string to be safe for xml if it is not null,
      * otherwise simply return the null parameter.
-     * @param  mixed  $value
-     * @return string | null
+     *
+     * @param string|null
+     * @return string|null
      */
-    protected function xmlEncode($value)
+    protected function xmlEncode($value = null)
     {
         return !is_null($value) ? htmlentities($value, ENT_XML1) : $value;
     }

@@ -195,10 +195,10 @@ class Customization implements ICustomization
 
     protected function serializeContents()
     {
-        return $this->serializeOptionalValue('CustomizationId', $this->getCustomizationId())
+        return $this->serializeOptionalXmlEncodedValue('CustomizationId', $this->getCustomizationId())
             . $this->getCustomizationInstructions()->serialize()
             . (!is_null($this->getExtendedPrice()) ? $this->getExtendedPrice()->setRootNodeName('ExtendedPrice')->serialize() : '')
-            . "<ItemId>{$this->getItemId()}</ItemId>"
+            . "<ItemId>{$this->xmlEncode($this->getItemId())}</ItemId>"
             . $this->serializeCustomizedItem();
     }
 
@@ -212,7 +212,7 @@ class Customization implements ICustomization
     protected function serializeCustomizedItem()
     {
         $itemId = $this->getCustomizedItemId();
-        return $itemId ? "<Item ref='{$itemId}'/>" : '';
+        return $itemId ? "<Item ref='{$this->xmlEncode($itemId)}'/>" : '';
     }
 
     protected function deserializeExtra($serializedPayload)

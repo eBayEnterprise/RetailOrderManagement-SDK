@@ -122,11 +122,11 @@ trait TCustomerSessionInfo
         return '<SessionInfo>'
             . $this->serializeTimeSpentOnSite()
             . $this->serializeLastLogin()
-            . $this->serializeOptionalValue('UserPassword', $this->getUserPassword())
-            . $this->serializeOptionalValue('TimeOnFile', $this->getTimeOnFile())
-            . $this->serializeOptionalValue('RTCTransactionResponseCode', $this->getRtcTransactionResponseCode())
-            . $this->serializeOptionalValue('RTCReasonCodes', $this->getRtcReasonCode())
-            . $this->serializeOptionalValue('AuthorizationAttempts', $this->getAuthorizationAttempts())
+            . $this->serializeOptionalXmlEncodedValue('UserPassword', $this->getUserPassword())
+            . $this->serializeOptionalXmlEncodedValue('TimeOnFile', $this->getTimeOnFile())
+            . $this->serializeOptionalXmlEncodedValue('RTCTransactionResponseCode', $this->getRtcTransactionResponseCode())
+            . $this->serializeOptionalXmlEncodedValue('RTCReasonCodes', $this->getRtcReasonCode())
+            . $this->serializeOptionalXmlEncodedValue('AuthorizationAttempts', $this->getAuthorizationAttempts())
             . '</SessionInfo>';
     }
 

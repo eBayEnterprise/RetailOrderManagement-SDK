@@ -102,7 +102,7 @@ class LookupRequest implements ILookupRequest
     protected function serializeContents()
     {
         return $this->serializePaymentAccountUniqueId()
-            . $this->serializeRequiredValue('TenderClass', $this->getTenderClass())
+            . $this->serializeRequiredValue('TenderClass', $this->xmlEncode($this->getTenderClass()))
             . $this->serializeCurrencyCode();
     }
 

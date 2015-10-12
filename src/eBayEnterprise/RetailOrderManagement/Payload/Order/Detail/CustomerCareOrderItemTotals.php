@@ -412,7 +412,7 @@ class CustomerCareOrderItemTotals implements ICustomerCareOrderItemTotals
      */
     protected function serializeOptionalNumericValue($nodeName, $value)
     {
-        return is_numeric($value) ? $this->serializeRequireValue($nodeName, $value) : null;
+        return is_numeric($value) ? $this->serializeRequiredValue($nodeName, $value) : null;
     }
 
     /**
@@ -427,7 +427,7 @@ class CustomerCareOrderItemTotals implements ICustomerCareOrderItemTotals
     {
         $descriptionAttribute = $this->serializeOptionalAttribute('description', $description);
         return $value
-            ? sprintf('<%s %s>%s</%1$s>', $nodeName, $descriptionAttribute, $value) : null;
+            ? sprintf('<%s %s>%s</%1$s>', $nodeName, $descriptionAttribute, $this->xmlEncode($value)) : null;
     }
 
     /**

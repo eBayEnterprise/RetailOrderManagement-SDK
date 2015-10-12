@@ -112,7 +112,7 @@ class Tax extends OrderTax implements ITax
 
     protected function serializeContents()
     {
-        return "<Situs>{$this->getSitus()}</Situs>"
+        return "<Situs>{$this->xmlEncode($this->getSitus())}</Situs>"
             . $this->serializeJurisdiction()
             . $this->serializeImposition()
             . sprintf('<EffectiveRate>%0.2f</EffectiveRate>', $this->getEffectiveRate())
@@ -120,7 +120,7 @@ class Tax extends OrderTax implements ITax
             . $this->serializeOptionalAmount('ExemptAmount', $this->getExemptAmount())
             . $this->serializeOptionalAmount('NonTaxableAmount', $this->getNonTaxableAmount())
             . $this->serializeAmount('CalculatedTax', $this->getCalculatedTax())
-            . $this->serializeOptionalValue('SellerRegistrationId', $this->getSellerRegistrationId())
+            . $this->serializeOptionalXmlEncodedValue('SellerRegistrationId', $this->getSellerRegistrationId())
             . $this->getInvoiceTextCodes()->serialize();
     }
 }
