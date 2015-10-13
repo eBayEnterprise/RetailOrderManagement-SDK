@@ -1,0 +1,6 @@
+machine:
+    php:
+        version: 5.4.37
+dependencies:
+    pre:
+        - echo "memory_limit = 256M" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/memory.ini
