@@ -91,11 +91,11 @@ class TenderTypeLookupReplyTest extends \PHPUnit_Framework_TestCase
     public function provideUnsuccessfulResponseCodes()
     {
         return [
-            [TENDER_TYPE_FOUND, true],
-            [PAN_FAILS_LUHN_CHECK, false],
-            [NO_TENDER_TYPE_FOUND, false],
-            [PAN_NOT_CONFIGURED_TO_STORE, false],
-            [UNKNOWN_FAILURE, false],
+            ['TENDER_TYPE_FOUND', true],
+            ['PAN_FAILS_LUHN_CHECK', false],
+            ['NO_TENDER_TYPE_FOUND', false],
+            ['PAN_NOT_CONFIGURED_TO_STORE', false],
+            ['UNKNOWN_FAILURE', false],
             ['randomvalue', false],
         ];
     }
