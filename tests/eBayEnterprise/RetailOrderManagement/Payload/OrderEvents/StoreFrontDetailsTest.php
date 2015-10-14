@@ -31,12 +31,6 @@ class StoreFrontDetailsTest extends \PHPUnit_Framework_TestCase
 
     const FULL_FIXTURE_FILE = 'StoreFrontDetails.xml';
 
-    /** @var IValidator (stub) */
-    protected $stubValidator;
-    /** @var IValidatorIterator */
-    protected $validatorIterator;
-    /** @var ISchemaValidator (stub) */
-    protected $stubSchemaValidator;
     /** @var IPayloadMap */
     protected $payloadMap;
 

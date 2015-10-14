@@ -29,12 +29,6 @@ class OrderRejectedTest extends \PHPUnit_Framework_TestCase
 {
     use TTestReflection;
 
-    /** @var IValidator (stub) */
-    protected $stubValidator;
-    /** @var IValidatorIterator */
-    protected $validatorIterator;
-    /** @var ISchemaValidator (stub) */
-    protected $stubSchemaValidator;
     /** @var IPayloadMap */
     protected $payloadMap;
 

@@ -30,12 +30,6 @@ class CustomAttributeTest extends \PHPUnit_Framework_TestCase
 
     const FULL_FIXTURE_FILE = 'CustomAttribute.xml';
 
-    /** @var IValidator (stub) */
-    protected $stubValidator;
-    /** @var IValidatorIterator */
-    protected $validatorIterator;
-    /** @var ISchemaValidator (stub) */
-    protected $stubSchemaValidator;
     /** @var IPayloadMap */
     protected $payloadMap;
 
