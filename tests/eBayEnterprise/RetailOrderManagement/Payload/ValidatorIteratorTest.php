@@ -25,6 +25,7 @@ class ValidatorIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
+        $this->fail('testing Circle CI merge request integration');
         // create and hold a static reference to the validator in the iterator
         self::$validator = $this->getMock('\eBayEnterprise\RetailOrderManagement\Payload\IValidator');
         $iterator = new ValidatorIterator([self::$validator]);
