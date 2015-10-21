@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.3.7] - 2015-10-21
+### Fixed
+- Make CVV not required in Credit Card Auth Request Payload
+
 ## [1.3.6] - 2015-10-09
 ### Fixed
 - Encode values before serializing to XML
@@ -136,6 +140,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.3.7]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.6...1.3.7
 [1.3.6]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.5...1.3.6
 [1.3.5]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.4...1.3.5
 [1.3.4]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.3...1.3.4
