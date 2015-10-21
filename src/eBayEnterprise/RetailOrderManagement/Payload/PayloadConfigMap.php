@@ -80,7 +80,6 @@ return call_user_func(function () {
                     [
                         'getRequestId',
                         'getExpirationDate',
-                        'getCardSecurityCode',
                         'getAmount',
                         'getCurrencyCode',
                         'getBillingFirstName',
