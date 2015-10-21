@@ -273,10 +273,22 @@ class Tax implements ITax
         return "<Situs>{$this->xmlEncode($this->getSitus())}</Situs>"
             . $this->serializeJurisdiction()
             . $this->serializeImposition()
-            . sprintf('<EffectiveRate>%0.2f</EffectiveRate>', $this->getEffectiveRate())
+            . $this->serializeEffectiveRate()
             . $this->serializeOptionalAmount('TaxableAmount', $this->getTaxableAmount())
             . $this->serializeAmount('CalculatedTax', $this->getCalculatedTax())
             . $this->serializeOptionalXmlEncodedValue('SellerRegistrationId', $this->getSellerRegistrationId());
+    }
+
+    /**
+     * Serialize the EffectiveRate.
+     * Despite the xsd documentation, this value should not be rounded.
+     *
+     * @return string
+     */
+    protected function serializeEffectiveRate()
+    {
+        // As a side effect, sprintf will prevent any xml-unsafe value if getEffectiveRate is a string.
+        return sprintf('<EffectiveRate>%F</EffectiveRate>', $this->getEffectiveRate());
     }
 
     /**

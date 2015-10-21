@@ -115,7 +115,7 @@ class Tax extends OrderTax implements ITax
         return "<Situs>{$this->xmlEncode($this->getSitus())}</Situs>"
             . $this->serializeJurisdiction()
             . $this->serializeImposition()
-            . sprintf('<EffectiveRate>%0.2f</EffectiveRate>', $this->getEffectiveRate())
+            . $this->serializeEffectiveRate()
             . $this->serializeOptionalAmount('TaxableAmount', $this->getTaxableAmount())
             . $this->serializeOptionalAmount('ExemptAmount', $this->getExemptAmount())
             . $this->serializeOptionalAmount('NonTaxableAmount', $this->getNonTaxableAmount())
