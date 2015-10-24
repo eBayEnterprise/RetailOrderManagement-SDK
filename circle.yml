@@ -4,3 +4,6 @@ machine:
 dependencies:
     pre:
         - echo "memory_limit = 256M" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/memory.ini
+test:
+    override:
+        - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit/RetailOrderManagement-SDK.xml
