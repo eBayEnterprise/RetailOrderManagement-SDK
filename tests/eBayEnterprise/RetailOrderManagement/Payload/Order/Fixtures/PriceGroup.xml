@@ -15,7 +15,7 @@
                         <Situs>Duty_DESTINATION</Situs>
                         <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
                         <Imposition impositionType="imp">duty tax imposition</Imposition>
-                        <EffectiveRate>0.02</EffectiveRate>
+                        <EffectiveRate>0.020000</EffectiveRate>
                         <TaxableAmount>9.99</TaxableAmount>
                         <CalculatedTax>2.99</CalculatedTax>
                         <SellerRegistrationId>PROMO_TAX_SELLER_REGISTRATION_ID</SellerRegistrationId>
@@ -31,7 +31,7 @@
                 <Situs>DESTINATION</Situs>
                 <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
                 <Imposition impositionType="imp">imposition</Imposition>
-                <EffectiveRate>0.06</EffectiveRate>
+                <EffectiveRate>0.060000</EffectiveRate>
                 <TaxableAmount>99.99</TaxableAmount>
                 <CalculatedTax>5.99</CalculatedTax>
                 <SellerRegistrationId>suresh123</SellerRegistrationId>
@@ -40,7 +40,7 @@
                 <Situs>DESTINATION</Situs>
                 <Jurisdiction jurisdictionId="PA" jurisdictionLevel="STATE">Pennsylvania</Jurisdiction>
                 <Imposition impositionType="imp">imposition</Imposition>
-                <EffectiveRate>0.06</EffectiveRate>
+                <EffectiveRate>0.060000</EffectiveRate>
                 <TaxableAmount>30.00</TaxableAmount>
                 <CalculatedTax>1.80</CalculatedTax>
             </Tax>

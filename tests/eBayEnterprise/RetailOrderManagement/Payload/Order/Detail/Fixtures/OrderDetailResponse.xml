@@ -51,7 +51,7 @@
                                             <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                             <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <EffectiveRate>0.000000</EffectiveRate>
                                             <TaxableAmount>20.38</TaxableAmount>
                                             <CalculatedTax>0.00</CalculatedTax>
                                         </Tax>
@@ -65,7 +65,7 @@
                                     <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>20.38</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                 </Tax>
@@ -88,7 +88,7 @@
                                             <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                             <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <EffectiveRate>0.000000</EffectiveRate>
                                             <TaxableAmount>20.38</TaxableAmount>
                                             <CalculatedTax>0.00</CalculatedTax>
                                         </Tax>
@@ -102,7 +102,7 @@
                                     <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>5.00</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                 </Tax>
@@ -125,7 +125,7 @@
                                             <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                             <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <EffectiveRate>0.000000</EffectiveRate>
                                             <TaxableAmount>20.38</TaxableAmount>
                                             <CalculatedTax>0.00</CalculatedTax>
                                         </Tax>
@@ -139,7 +139,7 @@
                                     <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>5.00</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                 </Tax>
@@ -160,7 +160,7 @@
                                         <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                         <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                         <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                        <EffectiveRate>0.00</EffectiveRate>
+                                        <EffectiveRate>0.000000</EffectiveRate>
                                         <TaxableAmount>5.00</TaxableAmount>
                                         <CalculatedTax>0.00</CalculatedTax>
                                     </Tax>
@@ -220,7 +220,7 @@
                                                 <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                                 <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                                 <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                                <EffectiveRate>0.00</EffectiveRate>
+                                                <EffectiveRate>0.000000</EffectiveRate>
                                                 <TaxableAmount>20.38</TaxableAmount>
                                                 <CalculatedTax>0.00</CalculatedTax>
                                             </Tax>
@@ -234,7 +234,7 @@
                                         <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                         <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                         <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                        <EffectiveRate>0.00</EffectiveRate>
+                                        <EffectiveRate>0.000000</EffectiveRate>
                                         <TaxableAmount>20.38</TaxableAmount>
                                         <CalculatedTax>0.00</CalculatedTax>
                                     </Tax>
@@ -291,7 +291,7 @@
                                                     <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                                    <EffectiveRate>0.00</EffectiveRate>
+                                                    <EffectiveRate>0.000000</EffectiveRate>
                                                     <TaxableAmount>20.38</TaxableAmount>
                                                     <CalculatedTax>0.00</CalculatedTax>
                                                 </Tax>
@@ -305,7 +305,7 @@
                                             <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                             <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <EffectiveRate>0.000000</EffectiveRate>
                                             <TaxableAmount>20.38</TaxableAmount>
                                             <CalculatedTax>0.00</CalculatedTax>
                                         </Tax>
@@ -332,7 +332,7 @@
                                             <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                             <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                            <EffectiveRate>0.00</EffectiveRate>
+                                            <EffectiveRate>0.000000</EffectiveRate>
                                             <TaxableAmount>20.38</TaxableAmount>
                                             <CalculatedTax>0.00</CalculatedTax>
                                         </Tax>
@@ -346,7 +346,7 @@
                                     <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>20.38</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                 </Tax>
@@ -400,7 +400,7 @@
                                     <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>20.38</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                 </Tax>
@@ -410,7 +410,7 @@
                                     <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>5.00</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                 </Tax>
@@ -460,7 +460,7 @@
                                                     <Situs>Tax_DESTINATION</Situs>
                                                     <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
                                                     <Imposition impositionType="imp">gift promo imposition</Imposition>
-                                                    <EffectiveRate>0.02</EffectiveRate>
+                                                    <EffectiveRate>0.020000</EffectiveRate>
                                                     <TaxableAmount>1.00</TaxableAmount>
                                                     <CalculatedTax>0.02</CalculatedTax>
                                                     <SellerRegistrationId>GIFT_PROMO_TAX_SELLER_REG</SellerRegistrationId>
@@ -476,7 +476,7 @@
                                             <Situs>Tax_DESTINATION</Situs>
                                             <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
                                             <Imposition impositionType="imp">tax shipping gift imposition</Imposition>
-                                            <EffectiveRate>0.05</EffectiveRate>
+                                            <EffectiveRate>0.050000</EffectiveRate>
                                             <TaxableAmount>5.98</TaxableAmount>
                                             <CalculatedTax>0.30</CalculatedTax>
                                             <SellerRegistrationId>TAX_SHIP_GIFT_SELL_REG</SellerRegistrationId>
@@ -706,7 +706,7 @@
                             <Situs>ADMINISTRATIVE_ORIGIN</Situs>
                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                             <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                            <EffectiveRate>0.00</EffectiveRate>
+                            <EffectiveRate>0.000000</EffectiveRate>
                             <TaxableAmount>5.00</TaxableAmount>
                             <CalculatedTax>0.00</CalculatedTax>
                         </Tax>

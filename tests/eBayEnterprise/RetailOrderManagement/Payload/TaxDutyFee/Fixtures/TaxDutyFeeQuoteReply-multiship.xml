@@ -20,7 +20,7 @@
                                  <Situs>DESTINATION</Situs>
                                  <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                  <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                 <EffectiveRate>0.06</EffectiveRate>
+                                 <EffectiveRate>0.060000</EffectiveRate>
                                  <TaxableAmount>960.00</TaxableAmount>
                                  <CalculatedTax>57.60</CalculatedTax>
                               </Tax>
@@ -34,7 +34,7 @@
                                     <Situs>DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>0.00</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                  </Tax>
@@ -66,7 +66,7 @@
                                  <Situs>DESTINATION</Situs>
                                  <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                  <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                 <EffectiveRate>0.06</EffectiveRate>
+                                 <EffectiveRate>0.060000</EffectiveRate>
                                  <TaxableAmount>480.00</TaxableAmount>
                                  <CalculatedTax>28.80</CalculatedTax>
                               </Tax>
@@ -80,7 +80,7 @@
                                     <Situs>DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="31152">PENNSYLVANIA</Jurisdiction>
                                     <Imposition impositionType="General Sales and Use Tax">Sales and Use Tax</Imposition>
-                                    <EffectiveRate>0.00</EffectiveRate>
+                                    <EffectiveRate>0.000000</EffectiveRate>
                                     <TaxableAmount>0.00</TaxableAmount>
                                     <CalculatedTax>0.00</CalculatedTax>
                                  </Tax>

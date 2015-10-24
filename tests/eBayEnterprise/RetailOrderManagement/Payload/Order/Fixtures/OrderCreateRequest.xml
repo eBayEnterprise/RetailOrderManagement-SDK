@@ -53,7 +53,7 @@
                                             <Situs>Duty_DESTINATION</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                             <Imposition impositionType="imp">duty tax imposition</Imposition>
-                                            <EffectiveRate>0.02</EffectiveRate>
+                                            <EffectiveRate>0.020000</EffectiveRate>
                                             <TaxableAmount>9.99</TaxableAmount>
                                             <CalculatedTax>2.99</CalculatedTax>
                                             <SellerRegistrationId>PROMO_TAX_SELLER_REGISTRATION_ID</SellerRegistrationId> <!-- [0..1] -->
@@ -69,7 +69,7 @@
                                     <Situs>DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                     <Imposition impositionType="imp">imposition</Imposition>
-                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <EffectiveRate>0.060000</EffectiveRate>
                                     <TaxableAmount>99.99</TaxableAmount>
                                     <CalculatedTax>5.99</CalculatedTax>
                                     <SellerRegistrationId>suresh123</SellerRegistrationId>
@@ -78,7 +78,7 @@
                                     <Situs>DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                     <Imposition impositionType="imp">imposition</Imposition>
-                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <EffectiveRate>0.060000</EffectiveRate>
                                     <TaxableAmount>30.00</TaxableAmount>
                                     <CalculatedTax>1.80</CalculatedTax>
                                 </Tax>
@@ -102,7 +102,7 @@
                                             <Situs>DESTINATION</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
                                             <Imposition impositionType="imp">SHIP_PROMO_IMP</Imposition> <!-- [0..1] -->
-                                            <EffectiveRate>0.02</EffectiveRate>
+                                            <EffectiveRate>0.020000</EffectiveRate>
                                             <TaxableAmount>4.01</TaxableAmount> <!-- [0..1] -->
                                             <CalculatedTax>0.08</CalculatedTax>
                                             <SellerRegistrationId>SELLER_PROMO_TAX_REG_ID</SellerRegistrationId> <!-- [0..1] -->
@@ -118,7 +118,7 @@
                                     <Situs>SHIP_DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
                                     <Imposition impositionType="imp">SHIP TAX</Imposition> <!-- [0..1] -->
-                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <EffectiveRate>0.060000</EffectiveRate>
                                     <TaxableAmount>9.99</TaxableAmount> <!-- [0..1] -->
                                     <CalculatedTax>0.60</CalculatedTax>
                                     <SellerRegistrationId>SHIP_TAX_REG_ID</SellerRegistrationId> <!-- [0..1] -->
@@ -143,7 +143,7 @@
                                             <Situs>Duty_DESTINATION</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
                                             <Imposition impositionType="imp">DUTY_DISCOUNT_IMP</Imposition> <!-- [0..1] -->
-                                            <EffectiveRate>0.10</EffectiveRate>
+                                            <EffectiveRate>0.100000</EffectiveRate>
                                             <TaxableAmount>1.00</TaxableAmount> <!-- [0..1] -->
                                             <CalculatedTax>0.10</CalculatedTax>
                                             <SellerRegistrationId>DUTY_DIS_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
@@ -159,7 +159,7 @@
                                     <Situs>Duty_DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
                                     <Imposition impositionType="imp">duty tax imposition</Imposition> <!-- [0..1] -->
-                                    <EffectiveRate>0.02</EffectiveRate>
+                                    <EffectiveRate>0.020000</EffectiveRate>
                                     <TaxableAmount>9.99</TaxableAmount> <!-- [0..1] -->
                                     <CalculatedTax>2.99</CalculatedTax>
                                     <SellerRegistrationId>DUTY_TAX_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
@@ -181,7 +181,7 @@
                                         <Situs>Fee_Duty_DESTINATION</Situs> <!-- [0..1] -->
                                         <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction> <!-- [0..1] -->
                                         <Imposition impositionType="imp">fee tax imposition</Imposition> <!-- [0..1] -->
-                                        <EffectiveRate>0.02</EffectiveRate> <!-- [0..1] -->
+                                        <EffectiveRate>0.020000</EffectiveRate> <!-- [0..1] -->
                                         <TaxableAmount>1.95</TaxableAmount> <!-- [0..1] -->
                                         <ExemptAmount>1.00</ExemptAmount> <!-- [0..1] -->
                                         <NonTaxableAmount>0.50</NonTaxableAmount> <!-- [0..1] -->
@@ -275,7 +275,7 @@
                                                 <Situs>Tax_DESTINATION</Situs>
                                                 <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                                 <Imposition impositionType="imp">gift promo imposition</Imposition> <!-- [0..1] -->
-                                                <EffectiveRate>0.05</EffectiveRate>
+                                                <EffectiveRate>0.050000</EffectiveRate>
                                                 <TaxableAmount>1.00</TaxableAmount> <!-- [0..1] -->
                                                 <CalculatedTax>0.05</CalculatedTax>
                                                 <SellerRegistrationId>GIFT_PROMO_TAX_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
@@ -291,7 +291,7 @@
                                             <Situs>Tax_DESTINATION</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                             <Imposition impositionType="imp">gift tax imposition</Imposition> <!-- [0..1] -->
-                                            <EffectiveRate>0.06</EffectiveRate>
+                                            <EffectiveRate>0.060000</EffectiveRate>
                                             <TaxableAmount>3.03</TaxableAmount> <!-- [0..1] -->
                                             <CalculatedTax>0.18</CalculatedTax>
                                             <SellerRegistrationId>GIFT_TAX_SELLER_REG</SellerRegistrationId> <!-- [0..1] -->
@@ -350,7 +350,7 @@
                                                     <Situs>Tax_DESTINATION</Situs>
                                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                                     <Imposition impositionType="imp">custom tax imposition</Imposition> <!-- [0..1] -->
-                                                    <EffectiveRate>0.01</EffectiveRate>
+                                                    <EffectiveRate>0.010000</EffectiveRate>
                                                     <TaxableAmount>1.00</TaxableAmount> <!-- [0..1] -->
                                                     <CalculatedTax>0.01</CalculatedTax>
                                                     <SellerRegistrationId>CUST_TAX_REG</SellerRegistrationId> <!-- [0..1] -->
@@ -366,7 +366,7 @@
                                             <Situs>Tax_DESTINATION</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                             <Imposition impositionType="imp">tax customization imposition</Imposition><!-- [0..1] -->
-                                            <EffectiveRate>0.06</EffectiveRate>
+                                            <EffectiveRate>0.060000</EffectiveRate>
                                             <TaxableAmount>10.00</TaxableAmount><!-- [0..1] -->
                                             <CalculatedTax>0.60</CalculatedTax>
                                             <SellerRegistrationId>CUSTOMIZE_TAX_SELLER_REG</SellerRegistrationId><!-- [0..1] -->
@@ -395,7 +395,7 @@
                                             <Situs>Tax_DESTINATION</Situs>
                                             <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                             <Imposition impositionType="imp">tax imposition</Imposition> <!-- [0..1] -->
-                                            <EffectiveRate>0.06</EffectiveRate>
+                                            <EffectiveRate>0.060000</EffectiveRate>
                                             <TaxableAmount>4.00</TaxableAmount> <!-- [0..1] -->
                                             <CalculatedTax>0.24</CalculatedTax>
                                             <SellerRegistrationId>TAX_SELLER_REGISTRATION_ID</SellerRegistrationId> <!-- [0..1] -->
@@ -411,7 +411,7 @@
                                     <Situs>TAX_ITEMS</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                     <Imposition impositionType="imp">tax imposition</Imposition><!-- [0..1] -->
-                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <EffectiveRate>0.060000</EffectiveRate>
                                     <TaxableAmount>25.00</TaxableAmount><!-- [0..1] -->
                                     <CalculatedTax>1.50</CalculatedTax>
                                     <SellerRegistrationId>SELLER_REGISTRATION_ID</SellerRegistrationId><!-- [0..1] -->
@@ -442,7 +442,7 @@
                                     <Situs>DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                     <Imposition impositionType="imp">imposition</Imposition>
-                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <EffectiveRate>0.060000</EffectiveRate>
                                     <TaxableAmount>99.99</TaxableAmount>
                                     <CalculatedTax>5.99</CalculatedTax>
                                     <SellerRegistrationId>suresh123</SellerRegistrationId>
@@ -451,7 +451,7 @@
                                     <Situs>DESTINATION</Situs>
                                     <Jurisdiction jurisdictionLevel="STATE" jurisdictionId="PA">Pennsylvania</Jurisdiction>
                                     <Imposition impositionType="imp">imposition</Imposition>
-                                    <EffectiveRate>0.06</EffectiveRate>
+                                    <EffectiveRate>0.060000</EffectiveRate>
                                     <TaxableAmount>30.00</TaxableAmount>
                                     <CalculatedTax>1.80</CalculatedTax>
                                 </Tax>
@@ -490,7 +490,7 @@
                                                     <Situs>Tax_DESTINATION</Situs>
                                                     <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
                                                     <Imposition impositionType="imp">gift promo imposition</Imposition><!-- [0..1] -->
-                                                    <EffectiveRate>0.02</EffectiveRate>
+                                                    <EffectiveRate>0.020000</EffectiveRate>
                                                     <TaxableAmount>1.00</TaxableAmount><!-- [0..1] -->
                                                     <CalculatedTax>0.02</CalculatedTax>
                                                     <SellerRegistrationId>GIFT_PROMO_TAX_SELLER_REG</SellerRegistrationId><!-- [0..1] -->
@@ -506,7 +506,7 @@
                                             <Situs>Tax_DESTINATION</Situs>
                                             <Jurisdiction jurisdictionId="STATE" jurisdictionLevel="PA">Pennsylvania</Jurisdiction>
                                             <Imposition impositionType="imp">tax shipping gift imposition</Imposition><!-- [0..1] -->
-                                            <EffectiveRate>0.05</EffectiveRate>
+                                            <EffectiveRate>0.050000</EffectiveRate>
                                             <TaxableAmount>5.98</TaxableAmount><!-- [0..1] -->
                                             <CalculatedTax>0.30</CalculatedTax>
                                             <SellerRegistrationId>TAX_SHIP_GIFT_SELL_REG</SellerRegistrationId><!-- [0..1] -->
