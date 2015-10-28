@@ -3,6 +3,7 @@
 # Retail Order Management Software Development Kit
 
 [![unit test status](https://circleci.com/gh/eBayEnterprise/RetailOrderManagement-SDK/tree/master.svg?style=shield&circle-token=e66bede58bad92544f0228cd361f1beda141b794)](https://circleci.com/gh/eBayEnterprise/RetailOrderManagement-SDK)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/eBayEnterprise/RetailOrderManagement-SDK/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/eBayEnterprise/RetailOrderManagement-SDK/?branch=master)
 
 A PHP implementation of the Retail Order Management API(s) that hides unnecessary details such as request/response handling and XML parsing from the API user in order to provide a minimal interface for remote messages and procedure calls.
 
