@@ -572,6 +572,7 @@
                         <CountryCode>US</CountryCode>
                         <PostalCode>21133</PostalCode> <!-- [0..1] -->
                     </Address>
+                    <Phone>555-555-5555</Phone> <!-- [0..1] -->
                 </StoreLocation> <!-- [0..*] -->
                 <Email id="EMAIL_0_ID">
                     <EmailAddress>email@example.com</EmailAddress>

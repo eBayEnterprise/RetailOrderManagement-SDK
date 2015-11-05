@@ -61,4 +61,18 @@ interface IStoreLocation extends IDestination, IPhysicalAddress
      * @return self
      */
     public function setEmailAddress($emailAddress);
+
+    /**
+     * Phone number that can be used to contact the store location.
+     *
+     * restrictions: optional, string no length required should be a valid phone number
+     * @return string
+     */
+    public function getPhone();
+
+    /**
+     * @param string
+     * @return self
+     */
+    public function setPhone($phone);
 }

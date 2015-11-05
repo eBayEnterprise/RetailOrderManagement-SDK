@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2015-11-05
+### Added
+- Support phone number in StoreLocation Sub-payload
+
 ## [1.3.8] - 2015-10-21
 ### Fixed
 - Do not round EffectiveRate
@@ -144,6 +148,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.4.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.8...1.4.0
 [1.3.8]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.7...1.3.8
 [1.3.7]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.6...1.3.7
 [1.3.6]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.5...1.3.6

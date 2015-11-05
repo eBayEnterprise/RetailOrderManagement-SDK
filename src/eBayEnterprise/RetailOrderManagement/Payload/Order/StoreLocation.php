@@ -38,6 +38,8 @@ class StoreLocation implements IStoreLocation
     protected $storeName;
     /** @var string */
     protected $emailAddress;
+    /** @var string */
+    protected $phone;
 
     /**
      * @param IValidatorIterator
@@ -67,6 +69,7 @@ class StoreLocation implements IStoreLocation
             'storeCode' => 'x:StoreCode',
             'storeName' => 'x:StoreName',
             'emailAddress' => 'x:StoreEmail',
+            'phone' => 'x:Phone',
             'mainDivision' => 'x:Address/x:MainDivision',
             'postalCode' => 'x:Address/x:PostalCode',
         ];
@@ -110,12 +113,24 @@ class StoreLocation implements IStoreLocation
         return $this;
     }
 
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
     protected function serializeContents()
     {
         return $this->serializeOptionalXmlEncodedValue('StoreCode', $this->getStoreCode())
             . $this->serializeOptionalXmlEncodedValue('StoreName', $this->getStoreName())
             . $this->serializeOptionalXmlEncodedValue('StoreEmail', $this->getEmailAddress())
-            . $this->serializePhysicalAddress();
+            . $this->serializePhysicalAddress()
+            . $this->serializeOptionalXmlEncodedValue('Phone', $this->getPhone());
     }
 
     protected function getRootAttributes()
