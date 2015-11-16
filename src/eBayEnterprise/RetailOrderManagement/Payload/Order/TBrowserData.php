@@ -70,7 +70,7 @@ trait TBrowserData
 
     public function setIpAddress($ipAddress)
     {
-        $this->ipAddress = $ipAddress;
+        $this->ipAddress = $this->isValidIpAddress($ipAddress) ? $ipAddress : null;
         return $this;
     }
 
@@ -267,6 +267,18 @@ trait TBrowserData
             . '<CharSet>' . $this->xmlEncode($this->getCharSet()) . '</CharSet>'
             . "</HTTPAcceptData>"
             . '</BrowserData>';
+    }
+
+    /**
+     * Test for an IP address to be a valid IP address. Currently, requires
+     * address to be valid IPv4 addresses only.
+     *
+     * @param string
+     * @return bool
+     */
+    protected function isValidIpAddress($ipAddress)
+    {
+        return (bool) filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
     }
 
     /**
