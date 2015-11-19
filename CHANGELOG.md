@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2015-11-19
+### Fixed
+- Optional address lines in payload return non-null value 
+
 ## [1.4.1] - 2015-11-16
 ### Fixed
 - Fraud can only handle IPv4 addresses
