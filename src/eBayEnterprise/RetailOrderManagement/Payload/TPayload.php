@@ -158,7 +158,7 @@ trait TPayload
         foreach ($this->addressLinesExtractionMap as $address) {
             $lines = $domXPath->query($address['xPath']);
             $property = $address['property'];
-            $this->$property = $this->getAddressLines($lines);
+            $this->$property = $this->addressLinesFromNodeList($lines);
         }
     }
 
@@ -170,7 +170,7 @@ trait TPayload
      * @param string
      * @return array|null
      */
-    protected function getAddressLines(\DOMNodeList $lines)
+    protected function addressLinesFromNodeList(\DOMNodeList $lines)
     {
         $result = [];
         foreach ($lines as $line) {
