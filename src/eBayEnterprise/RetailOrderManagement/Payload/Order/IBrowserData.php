@@ -35,6 +35,7 @@ interface IBrowserData
     /**
      * IP address of the client that sent the request.
      *
+     * restrictions: IPv4 address
      * @return string
      */
     public function getIpAddress();

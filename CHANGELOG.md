@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2015-11-19
+### Fixed
+- Optional address lines in payload return non-null value 
+
+## [1.4.1] - 2015-11-16
+### Fixed
+- Fraud can only handle IPv4 addresses
+
 ## [1.4.0] - 2015-11-05
 ### Added
 - Support phone number in StoreLocation Sub-payload
@@ -148,6 +156,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.4.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.8...1.4.0
 [1.3.8]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.7...1.3.8
 [1.3.7]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.6...1.3.7

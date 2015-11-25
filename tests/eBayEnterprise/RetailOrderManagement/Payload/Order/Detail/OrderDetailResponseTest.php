@@ -85,6 +85,7 @@ class OrderDetailResponseTest extends \PHPUnit_Framework_TestCase
         return [
             [__DIR__ . '/Fixtures/OrderDetailResponse.xml'],
             [__DIR__ . '/Fixtures/OrderDetailResponseMinimalData.xml'],
+            [__DIR__ . '/Fixtures/OrderDetailResponseProxyPickupNoAddress.xml'],
         ];
     }
 
