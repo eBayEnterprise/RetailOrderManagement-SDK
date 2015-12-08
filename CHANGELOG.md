@@ -1,9 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4.3] - 2015-12-09
+### Fixed
+- Allow PFO Jurisdiction Level for Tax Payload
+
 ## [1.4.2] - 2015-11-19
 ### Fixed
-- Optional address lines in payload return non-null value 
+- Optional address lines in payload return non-null value
 
 ## [1.4.1] - 2015-11-16
 ### Fixed
@@ -156,6 +160,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.4.3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.2...1.4.3
 [1.4.2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.1...1.4.2
 [1.4.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.3.8...1.4.0

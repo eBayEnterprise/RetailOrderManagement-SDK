@@ -20,13 +20,14 @@ use eBayEnterprise\RetailOrderManagement\Payload\IPayloadMap;
 use eBayEnterprise\RetailOrderManagement\Payload\ISchemaValidator;
 use eBayEnterprise\RetailOrderManagement\Payload\IValidatorIterator;
 use eBayEnterprise\RetailOrderManagement\Payload\TPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\TPayloadLogger;
 use eBayEnterprise\RetailOrderManagement\Payload\Payment\TAmount;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class Tax implements ITax
 {
-    use TPayload, TAmount;
+    use TPayload, TPayloadLogger, TAmount;
 
     const ROOT_NODE = 'Tax';
 
@@ -87,6 +88,7 @@ class Tax implements ITax
         self::JURISDICTION_LEVEL_COUNTRY,
         self::JURISDICTION_LEVEL_COUNTY,
         self::JURISDICTION_LEVEL_DISTRICT,
+        self::JURISDICTION_LEVEL_FPO,
         self::JURISDICTION_LEVEL_LOCAL_IMPROVEMENT_DISTRICT,
         self::JURISDICTION_LEVEL_PARISH,
         self::JURISDICTION_LEVEL_SPECIAL_PURPOSE_DISTRICT,
@@ -186,9 +188,15 @@ class Tax implements ITax
 
     public function setJurisdictionLevel($jurisdictionLevel)
     {
-        $this->jurisdictionLevel = in_array($jurisdictionLevel, $this->allowedJurisdictionLevels)
-            ? $jurisdictionLevel
-            : null;
+        $isAllowed = in_array($jurisdictionLevel, $this->allowedJurisdictionLevels);
+        $this->jurisdictionLevel = $isAllowed ? $jurisdictionLevel : null;
+        if (!$isAllowed) {
+            $logData = ['jurisdiction_level' => $jurisdictionLevel];
+            $this->logger->warning(
+                'Jurisdiction Level "{jurisdiction_level}" is not allowed.',
+                $this->getLogContextData(__CLASS__, $logData)
+            );
+        }
         return $this;
     }
     public function getJurisdictionId()
