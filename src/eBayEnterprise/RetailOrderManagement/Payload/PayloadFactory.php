@@ -16,22 +16,26 @@
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
 use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
+use eBayEnterprise\RetailOrderManagement\Payload\ConfigLocator;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
+/**
+ * Abstract factory implementation for building payload objects.
+ */
 class PayloadFactory implements IPayloadFactory
 {
-    /** @var array maps a payload type to configuration used to construct the payload */
-    protected $payloadTypeMap;
-    /** @var LoggerInterface */
-    protected $logger;
+    /** @var ILocator Maps a payload type to configuration used to construct the payload */
+    protected $locator;
 
     /**
-     * @param LoggerInterface
+     * @param ILocator
      */
-    public function __construct()
+    public function __construct(ILocator $locator = null)
     {
-        $this->payloadTypeMap = require('PayloadConfigMap.php');
+        // If no custom payload locator is used, default to a locator using
+        // the PayloadConfigMap.
+        $this->locator = $locator ?: new ConfigMapLocator;
     }
 
     /**
@@ -45,8 +49,8 @@ class PayloadFactory implements IPayloadFactory
      */
     public function buildPayload($type, IPayloadMap $cascadedPayloadMap = null, IPayload $parentPayload = null, LoggerInterface $logger = null)
     {
-        if (isset($this->payloadTypeMap[$type])) {
-            $payloadConfig = $this->payloadTypeMap[$type];
+        if ($this->locator->hasPayloadConfig($type)) {
+            $payloadConfig = $this->locator->getPayloadConfig($type);
 
             $validatorIteratorConfig = $payloadConfig['validatorIterator'];
             $validatorsConfig = $payloadConfig['validators'];

@@ -15,17 +15,24 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
-use Psr\Log\LoggerInterface;
+use eBayEnterprise\RetailOrderManagement\Payload\Exception\UnsupportedPayload;
 
-interface IPayloadFactory
+interface ILocator
 {
     /**
-     * Construct a new payload instance
-     * @param  string
-     * @param  IPayloadMap | null
-     * @param  IPayload | null
-     * @param  LoggerInterface
-     * @return IPayload
+     * Indicates if the locator knows about a specific type of payload.
+     *
+     * @param string
+     * @return bool
      */
-    public function buildPayload($type, IPayloadMap $cascadedPayloadMap = null, IPayload $parentPayload = null, LoggerInterface $logger = null);
+    public function hasPayloadConfig($type);
+
+    /**
+     * Get the payload configuration for a specific type of payload.
+     *
+     * @param string
+     * @return array
+     * @throws UnsupportedPayload
+     */
+    public function getPayloadConfig($type);
 }

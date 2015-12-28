@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4.4] - 2016-01-07
+### Fixed
+- Performance issue loading multiple instances of the payload config map
+
 ## [1.4.3] - 2015-12-09
 ### Fixed
 - Allow PFO Jurisdiction Level for Tax Payload
@@ -160,6 +164,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.4.4]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.3...1.4.4
 [1.4.3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.2...1.4.3
 [1.4.2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.1...1.4.2
 [1.4.1]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.0...1.4.1

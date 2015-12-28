@@ -17,6 +17,8 @@ namespace eBayEnterprise\RetailOrderManagement\Payload\Inventory;
 
 use eBayEnterprise\RetailOrderManagement\Payload\TPayloadTest;
 use eBayEnterprise\RetailOrderManagement\Payload\PayloadFactory;
+use eBayEnterprise\RetailOrderManagement\Payload\ConfigMapLocator;
+use eBayEnterprise\RetailOrderManagement\Payload\ConfigLocator;
 use Psr\Log\NullLogger;
 
 class InventoryDetailsPayloadTest extends \PHPUnit_Framework_TestCase
@@ -111,13 +113,34 @@ class InventoryDetailsPayloadTest extends \PHPUnit_Framework_TestCase
      */
     protected function injectShippingItemImplementation($shippingItemPayload)
     {
-        $property = new \ReflectionProperty($this->payloadFactory, 'payloadTypeMap');
+        // Need to create a new payload factory with a payload locator that includes
+        // the custom configuration for this test case - default config with one minor
+        // change to a child payload implementation type.
+
+        // Locator singleton instance has the default config which will be
+        // used as the starting point for building the custom locator config.
+        $configMapLocator = new ConfigMapLocator;
+        $property = new \ReflectionProperty($configMapLocator, 'config');
         $property->setAccessible(true);
-        $payloadTypeMap = $property->getValue($this->payloadFactory);
+        /**
+         * Default payload config map, basis of the custom config for the test.
+         * @see /src/eBayEnterprise/RetailOrderManagement/Payload/PayloadConfigMap.php
+         */
+        $payloadTypeMap = $property->getValue($configMapLocator);
+
+        // Ensure that the default config includes a mapping for the root
+        // payload being tested.
         $this->assertTrue(array_key_exists(static::REQUEST, $payloadTypeMap));
-        $childPayloadTypes = &$payloadTypeMap[static::REQUEST]['childPayloads']['types'];
-        $childPayloadTypes[static::SHIPPING_ITEM_INTERFACE] = $shippingItemPayload;
-        $property->setValue($this->payloadFactory, $payloadTypeMap);
+
+        // Modify the child payloads of the main request payload to use the
+        // proper type for the test case.
+        $payloadTypeMap[static::REQUEST]['childPayloads']['types'][static::SHIPPING_ITEM_INTERFACE]
+            = $shippingItemPayload;
+
+        // Create a new locator with the modified configuration and a new
+        // factory with the locator.
+        $shippingItemLocator = new ConfigLocator($payloadTypeMap);
+        $this->payloadFactory = new PayloadFactory($shippingItemLocator);
     }
 
     /**

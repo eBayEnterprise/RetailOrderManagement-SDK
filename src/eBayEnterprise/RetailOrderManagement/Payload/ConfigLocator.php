@@ -15,17 +15,30 @@
 
 namespace eBayEnterprise\RetailOrderManagement\Payload;
 
-use Psr\Log\LoggerInterface;
-
-interface IPayloadFactory
+/**
+ * Payload locator using injected configuration for describing how to construct
+ * various types of payloads.
+ */
+class ConfigLocator extends AbstractConfigLocator
 {
+    /** @var array */
+    protected $config;
+
     /**
-     * Construct a new payload instance
-     * @param  string
-     * @param  IPayloadMap | null
-     * @param  IPayload | null
-     * @param  LoggerInterface
-     * @return IPayload
+     * @param array $config Payload locator configuration
      */
-    public function buildPayload($type, IPayloadMap $cascadedPayloadMap = null, IPayload $parentPayload = null, LoggerInterface $logger = null);
+    public function __construct(array $config = [])
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * Get the blob of config data.
+     *
+     * @return array
+     */
+    protected function getConfig()
+    {
+        return $this->config;
+    }
 }
