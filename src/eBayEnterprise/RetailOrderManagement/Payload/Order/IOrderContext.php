@@ -28,6 +28,7 @@ interface IOrderContext extends IBrowserData, ICustomerSessionInfo, IPayPalPayer
     public function getTdlOrderTimestamp();
 
     /**
+     * business requirement: Millisecond precision
      * @param DateTime
      * @return self
      */

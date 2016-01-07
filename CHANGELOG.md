@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4.5] - 2016-01-11
+### Changed
+- Order Tdl Timestamp Maintains Milliseconds
+
 ## [1.4.4] - 2016-01-07
 ### Fixed
 - Performance issue loading multiple instances of the payload config map
@@ -164,6 +168,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.4.5]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.4...1.4.5
 [1.4.4]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.3...1.4.4
 [1.4.3]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.2...1.4.3
 [1.4.2]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.1...1.4.2

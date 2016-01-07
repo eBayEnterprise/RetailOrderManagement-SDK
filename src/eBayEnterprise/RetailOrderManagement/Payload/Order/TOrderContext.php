@@ -31,6 +31,12 @@ trait TOrderContext
         return $this->tdlOrderTimestamp;
     }
 
+    /**
+     * The fraud system requires millisecond precision.
+     *
+     * @param DateTime
+     * @return self
+     */
     public function setTdlOrderTimestamp(DateTime $tdlOrderTimestamp)
     {
         $this->tdlOrderTimestamp = $tdlOrderTimestamp;
@@ -109,7 +115,7 @@ trait TOrderContext
     {
         return '<Context>'
             . $this->serializeBrowserData()
-            . $this->serializesTdlOrderTimestamp()
+            . $this->serializeTdlOrderTimestamp()
             . $this->serializeCustomerSessionInfo()
             . $this->serializePayPalPayerInfo()
             . $this->getOrderContextCustomAttributes()->serialize()
@@ -117,15 +123,21 @@ trait TOrderContext
     }
 
     /**
-     * Serialize the TDL order timestamp into an XML node with the timestamp
-     * as an XSD:DateTime valid value.
+     * Serialize the TDL order timestamp into an XML node with an ISO8601 time format with millisecond precision.
      *
      * @return string
      */
-    protected function serializesTdlOrderTimestamp()
+    protected function serializeTdlOrderTimestamp()
     {
         $timestamp = $this->getTdlOrderTimestamp();
-        return $timestamp ? "<TdlOrderTimestamp>{$timestamp->format('c')}</TdlOrderTimestamp>" : '';
+        if (!$timestamp) {
+            return '';
+        }
+        $date = $timestamp->format('Y-m-d');
+        $time = $timestamp->format('H:i:s');
+        $milliseconds = sprintf('%03d', $timestamp->format('u'));
+        $zone = $timestamp->format('P');
+        return "<TdlOrderTimestamp>{$date}T{$time}.{$milliseconds}{$zone}</TdlOrderTimestamp>";
     }
 
     /**

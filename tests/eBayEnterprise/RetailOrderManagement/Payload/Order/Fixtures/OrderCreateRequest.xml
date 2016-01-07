@@ -748,7 +748,7 @@
                 <CharSet>ACCEPT_CHAR_SET</CharSet>
             </HTTPAcceptData>
         </BrowserData> <!-- [0..1] -->
-        <TdlOrderTimestamp>2015-01-16T10:33:06-05:00</TdlOrderTimestamp> <!-- [0..1] -->
+        <TdlOrderTimestamp>2015-01-16T10:33:06.000-05:00</TdlOrderTimestamp> <!-- [0..1] -->
         <SessionInfo>
             <TimeSpentOnSite>11:11:11</TimeSpentOnSite> <!-- [0..1] -->
             <LastLogin>2015-01-01T04:44:32-05:00</LastLogin> <!-- [0..1] -->
