@@ -19,6 +19,7 @@ composer:
     image: kojiromike/magento_tools
     volumes:
         - .:/srv/magento
+        - ~/.composer/auth.json:/root/.composer/auth.json
     entrypoint: composer
     command: list
 document:
