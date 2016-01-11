@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProtectPanReply xmlns="http://api.gsicommerce.com/schema/checkout/1.0">
+    <Token>411111hNXKPA1111</Token>
+</ProtectPanReply>

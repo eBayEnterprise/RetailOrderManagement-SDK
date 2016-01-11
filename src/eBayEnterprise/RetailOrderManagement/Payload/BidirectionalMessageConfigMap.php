@@ -99,5 +99,9 @@ return call_user_func(function () {
         'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\TenderType\LookupRequest',
         'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\TenderType\LookupReply',
     ];
+    $map['payments/pan/protect'] = [
+        'request' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ProtectPanRequest',
+        'reply' => '\eBayEnterprise\RetailOrderManagement\Payload\Payment\ProtectPanReply',
+    ];
     return $map;
 });
