@@ -239,7 +239,7 @@ class Tax implements ITax
 
     public function setEffectiveRate($effectiveRate)
     {
-        $this->effectiveRate = $this->sanitizeAmount($effectiveRate);
+        $this->effectiveRate = $effectiveRate;
         return $this;
     }
 

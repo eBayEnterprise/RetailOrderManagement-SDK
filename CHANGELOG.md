@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4.7] - 2016-01-20
+### Fixed
+- Effective Rate Rounding to 2 decimal places in Order Create Payload
+
 ## [1.4.6] - 2016-01-12
 ### Added
 - Pan Protect Tokenize API Service
@@ -172,6 +176,7 @@ All notable changes to this project will be documented in this file.
 - HTTP API for bidirectional communication.
 - AMQP API for unidirectional messages.
 
+[1.4.7]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.6...1.4.7
 [1.4.6]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.5...1.4.6
 [1.4.5]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.4...1.4.5
 [1.4.4]: https://github.com/eBayEnterprise/RetailOrderManagement-SDK/compare/1.4.3...1.4.4
