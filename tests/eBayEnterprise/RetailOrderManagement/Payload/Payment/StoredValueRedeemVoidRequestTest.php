@@ -63,35 +63,6 @@ class StoredValueRedeemVoidRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Provide paths to fixutre files containing valid serializations of
-     * order shipped payloads.
-     *
-     * @return array
-     */
-    public function provideInvalidSerializedDataFile()
-    {
-        return [
-            [
-                __DIR__ . "/Fixtures/InvalidStoredValueRedeemVoidRequest.xml"
-            ],
-        ];
-    }
-
-    /**
-     * Test deserializing invalid data will throw an InvalidPayload Exception
-     *
-     * @param string path to fixture file
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     * @dataProvider provideInvalidSerializedDataFile
-     */
-    public function testDeserializeInvalidPayload($serializedDataFile)
-    {
-        $payload = $this->buildPayload();
-        $serializedData = $this->loadXmlTestString($serializedDataFile);
-        $payload->deserialize($serializedData);
-    }
-
-    /**
      * Get a new StoredValueRedeemVoidRequest payload.
      * @return StoredValueRedeemVoidRequest
      */

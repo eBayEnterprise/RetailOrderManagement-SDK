@@ -71,33 +71,4 @@ class PayPalDoVoidReplyTest extends \PHPUnit_Framework_TestCase
         $payload->deserialize($serializedData);
         $this->assertSame($serializedData, $payload->serialize());
     }
-
-    /**
-     * Provide paths to fixutre files containing valid serializations of
-     * order shipped payloads.
-     *
-     * @return array
-     */
-    public function provideInvalidSerializedDataFile()
-    {
-        return [
-            [
-                __DIR__ . "/Fixtures/InvalidPayPalDoVoidReplyTest.xml"
-            ],
-        ];
-    }
-
-    /**
-     * Test deserializing invalid data will throw an InvalidPayload Exception
-     *
-     * @param string path to fixture file
-     * @dataProvider provideInvalidSerializedDataFile
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeInvalidPayload($serializedDataFile)
-    {
-        $payload = $this->buildPayload();
-        $serializedData = $this->loadXmlTestString($serializedDataFile);
-        $payload->deserialize($serializedData);
-    }
 }

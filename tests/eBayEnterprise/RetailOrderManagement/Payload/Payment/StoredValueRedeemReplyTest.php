@@ -202,20 +202,6 @@ XML;
     }
 
     /**
-     * @expectedException \eBayEnterprise\RetailOrderManagement\Payload\Exception\InvalidPayload
-     */
-    public function testDeserializeWillFailSchemaValidation()
-    {
-        $this->schemaValidatorStub->expects($this->any())
-            ->method('validate')
-            ->will($this->throwException(new Payload\Exception\InvalidPayload));
-        $xml = $this->xmlInvalidTestString();
-
-        $newPayload = new StoredValueRedeemReply($this->validatorIterator, $this->schemaValidatorStub, $this->payloadMap, new NullLogger());
-        $newPayload->deserialize($xml);
-    }
-
-    /**
      * Read an XML file with invalid payload data and return a canonicalized string
      *
      * @return string

@@ -69,8 +69,6 @@ trait TPayload
      */
     public function deserialize($serializedPayload)
     {
-        // make sure we received a valid serialization of the payload.
-        $this->schemaValidate($serializedPayload);
         $xpath = $this->getPayloadAsXPath($serializedPayload);
         foreach ($this->extractionPaths as $property => $path) {
             $this->$property = $xpath->evaluate($path);
